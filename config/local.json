@@ -1,0 +1,11 @@
+{
+	"angular": {
+		"debug": true
+	},
+	"url": {
+		"base": "/carbon-website/src/"
+	},
+	"carbon": {
+		"domain": "dev.carbonldp.com"
+	}
+}

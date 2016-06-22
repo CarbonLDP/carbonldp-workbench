@@ -1,0 +1,6 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+/* Inverted */
+@invertedBackground: @big-stone;
