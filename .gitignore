@@ -1,9 +1,9 @@
 # Read about how to use .gitignore: https://help.github.com/articles/ignoring-files
-# Improved by Alex Arriaga (@alex_arriaga_m) - http://www.alex-arriaga.com
- 
+
 # Include your project-specific ignores in this section
 # ----- Project ignores
 
+dist/site/
 src/**/*.js
 src/**/*.map
 
