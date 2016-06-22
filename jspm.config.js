@@ -8,6 +8,7 @@ SystemJS.config({
     "npm:*": "jspm_packages/npm/*",
     "carbonldp/": "src/../../CarbonLDP-JS-SDK/dist/",
     "angular2-carbonldp/": "src/../../angular2-carbonldp/dist/",
+    "carbon-panel/": "src/../../carbon-panel/dist/",
     "semantic-ui/": "src/semantic/dist/",
     "app/": "src/app/"
   },
@@ -36,6 +37,12 @@ SystemJS.config({
         "@angular2/core": "npm:@angular/core@2.0.0-rc.1",
         "@angular2/router-deprecated": "npm:@angular/router-deprecated@2.0.0-rc.1",
         "js-cookie": "npm:js-cookie@2.1.2"
+      }
+    },
+    "carbon-panel": {
+	  "defaultExtension": "js",
+      "map": {
+        "@angular2/core": "npm:@angular/core@2.0.0-rc.1"
       }
     },
     "semantic-ui": {

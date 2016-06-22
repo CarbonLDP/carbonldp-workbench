@@ -223,8 +223,7 @@ gulp.task( "build:docker-image|build:image", ( done ) => {
 
 	buildProcess.stdout.on( "data", logStdout );
 	buildProcess.stderr.on( "data", logStderr );
-	//buildProcess.stdout.pipe( process.stdout );
-	//buildProcess.stderr.pipe( process.stderr );
+
 	buildProcess.on( "close", ( code ) => {
 		if( code !== 0 ) done( "Docker build command failed" );
 		else done();
