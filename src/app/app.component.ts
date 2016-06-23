@@ -1,5 +1,7 @@
 import { Component } from "@angular/core";
 
+import Carbon from "carbonldp/Carbon";
+
 import { SimpleComponent } from "carbon-panel/simple.component";
 
 import template from "./app.component.html!";
@@ -10,7 +12,7 @@ import template from "./app.component.html!";
 	directives: [ SimpleComponent ]
 } )
 export class AppComponent {
-
+	
 }
 
 export default AppComponent;
