@@ -36,9 +36,11 @@
     "gulp-tslint": "^5.0.0",
     "gulp-util": "^3.0.7",
     "gulp-webserver": "^0.9.1",
+    "jspm": "^0.17.0-beta.22",
     "run-sequence": "^1.2.1",
     "semantic-ui": "^2.1.8",
     "tslint": "^3.11.0",
+    "typescript": "^1.9.0-dev.20160624-1.0",
     "typings": "^1.0.5",
     "yargs": "^4.7.1",
     "zone.js": "^0.6.6"

@@ -1,7 +1,5 @@
 import { Component } from "@angular/core";
 
-import Carbon from "carbonldp/Carbon";
-
 import { SimpleComponent } from "carbon-panel/simple.component";
 
 import template from "./app.component.html!";

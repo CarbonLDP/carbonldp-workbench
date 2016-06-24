@@ -5,7 +5,12 @@
 		"experimentalDecorators": true,
 		"noImplicitAny": false,
 		"target": "es5",
-		"moduleResolution": "node"
+		"moduleResolution": "node",
+		"baseUrl": ".",
+		"paths": {
+			"app/*": [ "src/app/*" ],
+			"carbon-panel/*": [ "../carbon-panel/dist/*" ]
+		}
 	},
 	"exclude": [
 		"jspm_packages",
