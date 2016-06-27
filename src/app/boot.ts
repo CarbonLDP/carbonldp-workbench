@@ -4,30 +4,32 @@
 import { bootstrap } from "@angular/platform-browser-dynamic";
 import { Title } from "@angular/platform-browser";
 import { provide, enableProdMode, Provider, ComponentRef } from "@angular/core";
-import { FORM_PROVIDERS, APP_BASE_HREF } from "@angular/common";
+import { APP_BASE_HREF } from "@angular/common";
 import { ROUTER_PROVIDERS } from "@angular/router-deprecated";
 import { HTTP_PROVIDERS } from "@angular/http";
+import { disableDeprecatedForms, provideForms } from "@angular/forms";
 
 import { appInjector, activeContext, CARBON_PROVIDERS } from "angular2-carbonldp/boot";
 import { CARBON_SERVICES_PROVIDERS } from "angular2-carbonldp/services";
 
-// import Carbon from "carbonldp/Carbon";
+import Carbon from "carbonldp/Carbon";
 
 import AppComponent from "app/app.component";
 
-// let carbon:Carbon = new Carbon();
-// carbon.setSetting( "domain", "dev.carbonldp.com" );
-// activeContext.initialize( carbon );
+let carbon:Carbon = new Carbon();
+carbon.setSetting( "domain", "hri-carbonldp.base22.io" );
+activeContext.initialize( carbon );
 
 let providers:Provider[] = [];
-// providers = providers
-// 	.concat( CARBON_PROVIDERS )
-// 	.concat( CARBON_SERVICES_PROVIDERS );
-//
-// if ( "true" === "false" ) enableProdMode();
+providers = providers
+	.concat( CARBON_PROVIDERS )
+	.concat( CARBON_SERVICES_PROVIDERS );
+
+if ( "true" === "false" ) enableProdMode();
 
 bootstrap( AppComponent, [
-	FORM_PROVIDERS,
+	disableDeprecatedForms(),
+	provideForms(),
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,
 	Title,

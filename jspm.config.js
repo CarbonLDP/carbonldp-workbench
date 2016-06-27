@@ -63,6 +63,7 @@ SystemJS.config({
     "npm:*.json"
   ],
   map: {
+    "@angular/forms": "npm:@angular/forms@0.1.1",
     "@angular/common": "npm:@angular/common@2.0.0-rc.3",
     "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.3",
     "@angular/core": "npm:@angular/core@2.0.0-rc.3",
@@ -84,6 +85,7 @@ SystemJS.config({
     "http": "github:jspm/nodelibs-http@0.2.0-alpha",
     "https": "github:jspm/nodelibs-https@0.2.0-alpha",
     "jodid25519": "npm:jodid25519@1.0.2",
+    "jquery": "npm:jquery@2.2.4",
     "js-cookie": "npm:js-cookie@2.1.2",
     "jsbn": "npm:jsbn@0.1.0",
     "net": "github:jspm/nodelibs-net@0.2.0-alpha",

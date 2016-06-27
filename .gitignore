@@ -4,6 +4,7 @@
 # ----- Project ignores
 
 dist/site/
+src/**/*.css
 src/**/*.js
 src/**/*.map
 

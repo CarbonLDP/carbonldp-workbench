@@ -9,6 +9,7 @@
 		"baseUrl": ".",
 		"paths": {
 			"app/*": [ "src/app/*" ],
+			"angular2-carbonldp/*": [ "angular2-carbonldp/dist/*" ],
 			"carbon-panel/*": [ "../carbon-panel/dist/*" ]
 		}
 	},
