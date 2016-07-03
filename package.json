@@ -60,14 +60,14 @@
     },
     "devDependencies": {},
     "peerDependencies": {
-      "@angular/common": "npm:@angular/common@2.0.0-rc.3",
-      "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.3",
-      "@angular/core": "npm:@angular/core@2.0.0-rc.3",
+      "@angular/common": "npm:@angular/common@2.0.0-rc.1",
+      "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.1",
+      "@angular/core": "npm:@angular/core@2.0.0-rc.1",
       "@angular/forms": "npm:@angular/forms@0.1.1",
-      "@angular/http": "npm:@angular/http@^2.0.0-rc.3",
-      "@angular/platform-browser": "npm:@angular/platform-browser@^2.0.0-rc.3",
-      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@^2.0.0-rc.3",
-      "@angular/router-deprecated": "npm:@angular/router-deprecated@^2.0.0-rc.2",
+      "@angular/http": "npm:@angular/http@^2.0.0-rc.1",
+      "@angular/platform-browser": "npm:@angular/platform-browser@^2.0.0-rc.1",
+      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@^2.0.0-rc.1",
+      "@angular/router-deprecated": "npm:@angular/router-deprecated@^2.0.0-rc.1",
       "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
       "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
       "carbonldp": "npm:carbonldp@^0.34.0",
@@ -102,7 +102,7 @@
       "zone.js": "npm:zone.js@^0.6.6"
     },
     "overrides": {
-      "npm:@angular/common@2.0.0-rc.3": {
+      "npm:@angular/common@2.0.0-rc.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -112,7 +112,7 @@
           }
         }
       },
-      "npm:@angular/compiler@2.0.0-rc.3": {
+      "npm:@angular/compiler@2.0.0-rc.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -122,7 +122,7 @@
           }
         }
       },
-      "npm:@angular/core@2.0.0-rc.3": {
+      "npm:@angular/core@2.0.0-rc.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -132,7 +132,7 @@
           }
         }
       },
-      "npm:@angular/http@2.0.0-rc.3": {
+      "npm:@angular/http@2.0.0-rc.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -142,7 +142,7 @@
           }
         }
       },
-      "npm:@angular/platform-browser-dynamic@2.0.0-rc.3": {
+      "npm:@angular/platform-browser-dynamic@2.0.0-rc.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -152,7 +152,7 @@
           }
         }
       },
-      "npm:@angular/platform-browser@2.0.0-rc.3": {
+      "npm:@angular/platform-browser@2.0.0-rc.1": {
         "meta": {
           "src/*.js": {
             "deps": [
