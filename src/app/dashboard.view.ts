@@ -1,6 +1,6 @@
 import {Component} from "@angular/core";
 
-import template from "./workbench.view.html!";
+import template from "./dashboard.view.html!";
 
 @Component( {
 	selector: "div.ng-view",
@@ -8,7 +8,9 @@ import template from "./workbench.view.html!";
 	directives: []
 } )
 export class DashboardView {
-
+	ngOnInit():void {
+		console.log( "DashboardView > ngOnInit()" );
+	}
 }
 
 export default DashboardView;

@@ -1,16 +1,19 @@
 // There are files that reference this two dependencies and therefore they get included in the bundled file
 // This causes a conflict with angular2-polyfills.js, as that file also declares them
 // To avoid this, angular2-polyfills.js is no longer included in the index.html and zone and reflect are declared here instead
-import { bootstrap } from "@angular/platform-browser-dynamic";
-import { Title } from "@angular/platform-browser";
-import { provide, enableProdMode, Provider, ComponentRef } from "@angular/core";
-import { APP_BASE_HREF } from "@angular/common";
-import { ROUTER_PROVIDERS } from "@angular/router-deprecated";
-import { HTTP_PROVIDERS } from "@angular/http";
-import { disableDeprecatedForms, provideForms } from "@angular/forms";
+import "reflect-metadata";
+import "zone.js/dist/zone";
+import "zone.js/dist/long-stack-trace-zone";
 
-import { appInjector, activeContext, CARBON_PROVIDERS } from "angular2-carbonldp/boot";
-import { CARBON_SERVICES_PROVIDERS } from "angular2-carbonldp/services";
+import {bootstrap} from "@angular/platform-browser-dynamic";
+import {Title} from "@angular/platform-browser";
+import {provide, enableProdMode, Provider, ComponentRef} from "@angular/core";
+import {APP_BASE_HREF} from "@angular/common";
+import {ROUTER_PROVIDERS} from "@angular/router-deprecated";
+import {HTTP_PROVIDERS} from "@angular/http";
+
+import {appInjector, activeContext, CARBON_PROVIDERS} from "angular2-carbonldp/boot";
+import {CARBON_SERVICES_PROVIDERS} from "angular2-carbonldp/services";
 
 import Carbon from "carbonldp/Carbon";
 
@@ -25,11 +28,9 @@ providers = providers
 	.concat( CARBON_PROVIDERS )
 	.concat( CARBON_SERVICES_PROVIDERS );
 
-if ( "true" === "false" ) enableProdMode();
+if( "true" === "false" ) enableProdMode();
 
 bootstrap( AppComponent, [
-	disableDeprecatedForms(),
-	provideForms(),
 	ROUTER_PROVIDERS,
 	HTTP_PROVIDERS,
 	Title,
@@ -39,4 +40,6 @@ bootstrap( AppComponent, [
 	providers,
 ] ).then( ( appRef:ComponentRef<AppComponent> ) => {
 	appInjector( appRef.injector );
+} ).catch( ( error ) => {
+	console.error( error );
 } );
