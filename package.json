@@ -52,6 +52,7 @@
     "name": "app",
     "main": "boot.ts",
     "dependencies": {
+      "es6-promise": "npm:es6-promise@2.0.1",
       "jquery": "npm:jquery@2.2.4",
       "js-cookie": "npm:js-cookie@^2.1.2",
       "plugin-typescript": "github:frankwallis/plugin-typescript@^4.0.16",

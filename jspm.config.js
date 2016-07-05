@@ -63,6 +63,7 @@ SystemJS.config({
     "npm:*.json"
   ],
   map: {
+    "es6-promise": "npm:es6-promise@2.0.1",
     "@angular/forms": "npm:@angular/forms@0.1.1",
     "@angular/common": "npm:@angular/common@2.0.0-rc.1",
     "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.1",
@@ -123,7 +124,7 @@ SystemJS.config({
     },
     "npm:jsonld@0.4.11": {
       "map": {
-        "es6-promise": "npm:es6-promise@2.3.0",
+        "es6-promise": "npm:es6-promise@2.0.1",
         "xmldom": "npm:xmldom@0.1.19",
         "pkginfo": "@empty",
         "request": "@empty",

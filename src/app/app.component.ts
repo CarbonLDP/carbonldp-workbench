@@ -15,8 +15,8 @@ import style from "./app.component.css!text";
 	directives: [ ROUTER_DIRECTIVES ]
 } )
 @RouteConfig( [
-	{path: "login", name: "WorkbenchLogin", component: LoginView},
-	{path: "...", name: "Workbench", component: WorkbenchView, useAsDefault: true},
+	{path: "login", as: "WorkbenchLogin", component: LoginView},
+	{path: "...", as: "Workbench", component: WorkbenchView, useAsDefault: true},
 ] )
 export class AppComponent implements OnInit {
 	ngOnInit():void {
