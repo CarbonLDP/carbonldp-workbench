@@ -52,7 +52,7 @@ export class WorkbenchView {
 					{
 						name: "Log Out",
 						icon: "sign out icon",
-						emitter: logoutEmitter
+						onClick: logoutEmitter
 					}
 				]
 			}
