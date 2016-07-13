@@ -52,7 +52,9 @@ SystemJS.config({
     }
   },
   map: {
-    "html": "github:systemjs/plugin-text@0.0.8"
+    "html": "github:systemjs/plugin-text@0.0.8",
+    "codemirror": "npm:codemirror@5.16.0",
+    "css": "github:systemjs/plugin-css@0.1.20"
   }
 });
 
@@ -89,6 +91,7 @@ SystemJS.config({
     "jquery": "npm:jquery@2.2.4",
     "js-cookie": "npm:js-cookie@2.1.2",
     "jsbn": "npm:jsbn@0.1.0",
+    "jstree": "npm:jstree@3.3.0",
     "net": "github:jspm/nodelibs-net@0.2.0-alpha",
     "os": "github:jspm/nodelibs-os@0.2.0-alpha",
     "path": "github:jspm/nodelibs-path@0.2.0-alpha",
@@ -111,6 +114,11 @@ SystemJS.config({
     "zone.js": "npm:zone.js@0.6.12"
   },
   packages: {
+    "npm:jstree@3.3.0": {
+      "map": {
+        "jquery": "npm:jquery@2.2.4"
+      }
+    },
     "github:jspm/nodelibs-os@0.2.0-alpha": {
       "map": {
         "os-browserify": "npm:os-browserify@0.2.1"
