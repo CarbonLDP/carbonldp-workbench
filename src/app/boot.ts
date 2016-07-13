@@ -17,7 +17,8 @@ import {CARBON_SERVICES_PROVIDERS} from "angular2-carbonldp/services";
 
 import Carbon from "carbonldp/Carbon";
 
-import AppComponent from "app/app.component";
+import {AppComponent} from "app/app.component";
+import {WORKBENCH_PROVIDERS} from "app/workbench";
 
 let carbon:Carbon = new Carbon();
 carbon.setSetting( "domain", "hri-carbonldp.base22.io" );
@@ -38,6 +39,7 @@ bootstrap( AppComponent, [
 	provide( APP_BASE_HREF, {useValue: "/carbon-workbench/src/"} ),
 
 	providers,
+	WORKBENCH_PROVIDERS
 ] ).then( ( appRef:ComponentRef<AppComponent> ) => {
 	appInjector( appRef.injector );
 } ).catch( ( error ) => {

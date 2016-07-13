@@ -1,15 +1,21 @@
 import {Component, provide, Inject, EventEmitter} from "@angular/core";
-import {Router, RouteConfig, ROUTER_DIRECTIVES} from "@angular/router-deprecated";
+import {Location} from "@angular/common";
+import {Router, RouterOutlet, RouteConfig} from "@angular/router-deprecated";
 
 import {Authenticated} from "angular2-carbonldp/decorators";
 import {AuthService} from "angular2-carbonldp/services";
 
+import {RouterService} from "carbon-panel/router.service";
 import {HeaderService} from "carbon-panel/header.service";
 import {HeaderComponent} from "carbon-panel/header.component";
 import {SidebarService} from "carbon-panel/sidebar.service";
 import {SidebarComponent} from "carbon-panel/sidebar.component";
+import {MenuBarComponent} from "carbon-panel/menu-bar.component";
+import {ErrorsAreaComponent} from "carbon-panel/errors-area/errors-area.component";
+import {ErrorsAreaService} from "carbon-panel/errors-area/errors-area.service";
 
 import {DashboardView} from "app/dashboard.view";
+import {MyAppsView} from "app/my-apps/my-apps.view";
 
 import template from "./workbench.view.html!";
 import style from "./workbench.view.css!text";
@@ -19,86 +25,117 @@ import style from "./workbench.view.css!text";
 	selector: "div.ng-view",
 	template: template,
 	styles: [ style ],
-	directives: [ ROUTER_DIRECTIVES, HeaderComponent, SidebarComponent ],
+	directives: [
+		RouterOutlet,
+		HeaderComponent,
+		SidebarComponent,
+		MenuBarComponent,
+		ErrorsAreaComponent,
+	],
 	providers: [
+		provide( RouterService, {
+			useFactory: ( router:Router, location:Location ):RouterService => {
+				return new RouterService( router, location );
+			},
+			deps: [ Router, Location ]
+		} ),
 		provide( HeaderService, {useClass: HeaderService} ),
-		provide( SidebarService, {useClass: SidebarService} )
+		provide( SidebarService, {useClass: SidebarService} ),
+		provide( ErrorsAreaService, {useClass: ErrorsAreaService} ),
 	]
 } )
 @RouteConfig( [
-	{path: "dashboard", as: "Dashboard", component: DashboardView, useAsDefault: true},
+	{
+		path: "/",
+		as: "Dashboard",
+		component: DashboardView,
+		useAsDefault: true,
+		data: {
+			alias: "Dashboard",
+			displayName: "Dashboard",
+		},
+	},
+	{
+		path: "/my-apps/...",
+		as: "MyApps",
+		component: MyAppsView,
+		data: {
+			alias: "MyApps",
+			displayName: "My Apps",
+		},
+	},
 ] )
 export class WorkbenchView {
-	constructor( private headerService:HeaderService,
-	             private sidebarService:SidebarService,
-	             @Inject( AuthService.Token ) private authService:AuthService.Class,
-	             private router:Router ) {}
+
+	private headerService:HeaderService;
+	private sidebarService:SidebarService;
+	private authService:AuthService.Class;
+	private router:Router;
+
+	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router ) {
+		this.headerService = headerService;
+		this.sidebarService = sidebarService;
+		this.authService = authService;
+		this.router = router;
+	}
+
 
 	ngOnInit():void {
-		let logoutEmitter:EventEmitter<any> = new EventEmitter<any>();
+		this.populateHeader();
+		this.populateSidebar();
+	}
 
+	toggleSidebar():void {
+		this.sidebarService.toggle();
+	}
+
+	private populateHeader():void {
 		this.headerService.logo = {
-			route: [ "./Dashboard" ],
-			image: "assets/images/carbon-ldp-logo-lg.png"
+			image: "assets/images/carbon-ldp-logo-lg.png",
+			route: [ "./Dashboard" ]
 		};
+
+		let onLogout:EventEmitter<any> = new EventEmitter<any>();
+		onLogout.subscribe( ( event:any ) => {
+			this.authService.logout();
+			this.router.navigate( [ "/WorkbenchLogin" ] );
+		} );
+
 		this.headerService.addItems( [
 			{
 				name: "Dashboard",
-				route: [ "./Dashboard" ]
+				route: [ "./Dashboard" ],
+				index: 0,
 			},
 			{
 				name: "User",
 				children: [
 					{
-						name: "Log Out",
 						icon: "sign out icon",
-						onClick: logoutEmitter
+						name: "Log Out",
+						onClick: onLogout,
+						index: 100,
 					}
-				]
+				],
+				index: 100,
 			}
 		] );
+	}
 
+	private populateSidebar():void {
 		this.sidebarService.addItems( [
 			{
 				type: "link",
 				name: "Dashboard",
-				route: [ "./Dashboard" ]
-			},
-			{
-				type: "group",
-				children: [
-					{
-						type: "divider",
-						name: "Opened Apps",
-					},
-					{
-						type: "divider",
-						name: "Some Apps",
-					}
-				]
-			},
-			{
-				type: "submenu",
-				name: "My App",
-				children: [
-					{
-						type: "link",
-						name: "Link 1",
-						route: [ "./Dashboard" ]
-					}
-				]
+				route: [ "./Dashboard" ],
+				index: 0,
 			},
 			{
 				type: "link",
-				name: "Dashboard",
-				route: [ "./Dashboard" ],
-			},
+				name: "Apps",
+				route: [ "./MyApps" ]
+			}
 		] );
-
-		logoutEmitter.subscribe( () => {
-			this.authService.logout();
-			this.router.navigate( [ "/WorkbenchLogin" ] );
-		} );
 	}
 }
 

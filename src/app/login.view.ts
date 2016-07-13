@@ -23,7 +23,7 @@ export class LoginView {
 	}
 
 	onLogin():void {
-		this.router.navigate( [ "/Workbench/Dashboard" ] );
+		this.router.navigate( [ "/Workbench/" ] );
 	}
 }
 

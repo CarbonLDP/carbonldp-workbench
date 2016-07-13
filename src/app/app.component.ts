@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, OnInit} from "@angular/core";
+import {Component, ViewEncapsulation} from "@angular/core";
 import {RouteConfig, ROUTER_DIRECTIVES} from "@angular/router-deprecated";
 
 import {LoginView} from "app/login.view";
@@ -16,12 +16,18 @@ import style from "./app.component.css!text";
 } )
 @RouteConfig( [
 	{path: "login", as: "WorkbenchLogin", component: LoginView},
-	{path: "...", as: "Workbench", component: WorkbenchView, useAsDefault: true},
+	{
+		path: "...",
+		as: "Workbench",
+		component: WorkbenchView,
+		useAsDefault: true,
+		data: {
+			alias: "Workbench",
+			displayName: "Workbench",
+		},
+	},
 ] )
-export class AppComponent implements OnInit {
-	ngOnInit():void {
-		console.log( "AppComponent > onInit()" );
-	}
+export class AppComponent {
 }
 
 export default AppComponent;

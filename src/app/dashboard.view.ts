@@ -8,9 +8,6 @@ import template from "./dashboard.view.html!";
 	directives: []
 } )
 export class DashboardView {
-	ngOnInit():void {
-		console.log( "DashboardView > ngOnInit()" );
-	}
 }
 
 export default DashboardView;
