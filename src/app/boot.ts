@@ -18,7 +18,7 @@ import {CARBON_SERVICES_PROVIDERS} from "angular2-carbonldp/services";
 import Carbon from "carbonldp/Carbon";
 
 import {AppComponent} from "app/app.component";
-import {WORKBENCH_PROVIDERS} from "app/workbench";
+import {WORKBENCH_PROVIDERS} from "app/workbench/workbench";
 
 let carbon:Carbon = new Carbon();
 carbon.setSetting( "domain", "hri-carbonldp.base22.io" );

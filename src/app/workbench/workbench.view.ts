@@ -14,7 +14,7 @@ import {MenuBarComponent} from "carbon-panel/menu-bar.component";
 import {ErrorsAreaComponent} from "carbon-panel/errors-area/errors-area.component";
 import {ErrorsAreaService} from "carbon-panel/errors-area/errors-area.service";
 
-import {DashboardView} from "app/dashboard.view";
+import {DashboardView} from "app/dashboard/dashboard.view";
 import {MyAppsView} from "app/my-apps/my-apps.view";
 
 import template from "./workbench.view.html!";
