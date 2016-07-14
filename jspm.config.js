@@ -76,7 +76,7 @@ SystemJS.config({
     "@angular/router-deprecated": "npm:@angular/router-deprecated@2.0.0-rc.1",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
-    "carbonldp": "npm:carbonldp@0.34.1",
+    "carbonldp": "npm:carbonldp@0.35.1",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
     "constants": "github:jspm/nodelibs-constants@0.2.0-alpha",
     "crypto": "github:jspm/nodelibs-crypto@0.2.0-alpha",
@@ -115,6 +115,12 @@ SystemJS.config({
     "zone.js": "npm:zone.js@0.6.12"
   },
   packages: {
+    "npm:carbonldp@0.35.1": {
+      "map": {
+        "file-type": "npm:file-type@3.8.0",
+        "jsonld": "npm:jsonld@0.4.11"
+      }
+    },
     "npm:jstree@3.3.0": {
       "map": {
         "jquery": "npm:jquery@2.2.4"
@@ -123,12 +129,6 @@ SystemJS.config({
     "github:jspm/nodelibs-os@0.2.0-alpha": {
       "map": {
         "os-browserify": "npm:os-browserify@0.2.1"
-      }
-    },
-    "npm:carbonldp@0.34.1": {
-      "map": {
-        "file-type": "npm:file-type@3.8.0",
-        "jsonld": "npm:jsonld@0.4.11"
       }
     },
     "npm:jsonld@0.4.11": {
