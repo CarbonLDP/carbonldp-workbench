@@ -95,6 +95,7 @@ SystemJS.config({
     "net": "github:jspm/nodelibs-net@0.2.0-alpha",
     "os": "github:jspm/nodelibs-os@0.2.0-alpha",
     "path": "github:jspm/nodelibs-path@0.2.0-alpha",
+    "plugin-css": "github:systemjs/plugin-css@0.1.20",
     "plugin-typescript": "github:frankwallis/plugin-typescript@4.0.16",
     "process": "github:jspm/nodelibs-process@0.2.0-alpha",
     "punycode": "github:jspm/nodelibs-punycode@0.2.0-alpha",
