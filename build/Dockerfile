@@ -17,6 +17,10 @@ RUN npm install -g typings@1.0.5
 COPY carbon-workbench/package.json /tmp/package.json
 COPY carbon-workbench/jspm.browser.js /tmp/jspm.browser.js
 COPY carbon-workbench/jspm.config.js /tmp/jspm.config.js
+
+COPY carbon-workbench/semantic.json /tmp/semantic.json
+COPY carbon-workbench/src/semantic /tmp/src/semantic
+
 COPY carbon-workbench/typings.json /tmp/typings.json
 RUN cd /tmp && npm install
 RUN cd /tmp && jspm install
@@ -27,6 +31,7 @@ RUN cp -a /tmp/jspm_packages /usr/share/nginx/html/carbon-workbench/
 RUN cp -a /tmp/typings /usr/share/nginx/html/carbon-workbench/
 
 COPY angular2-carbonldp/dist /usr/share/nginx/html/angular2-carbonldp/dist
+COPY carbon-panel/dist /usr/share/nginx/html/carbon-panel/dist
 COPY CarbonLDP-JS-SDK/dist /usr/share/nginx/html/CarbonLDP-JS-SDK/dist
 
 COPY carbon-workbench/config /usr/share/nginx/html/carbon-workbench/config

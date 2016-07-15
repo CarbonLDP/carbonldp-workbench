@@ -5,8 +5,8 @@ SystemJS.config({
     "angular2-carbonldp/": "src/../../angular2-carbonldp/dist/",
     "carbon-panel/": "src/../../carbon-panel/dist/",
     "semantic-ui/": "src/semantic/dist/",
-    "github:": "jspm_packages/github/",
-    "npm:": "jspm_packages/npm/",
+    "github:*": "jspm_packages/github/*",
+    "npm:*": "jspm_packages/npm/*",
     "app/": "src/app/"
   },
   transpiler: "plugin-typescript",
@@ -49,12 +49,17 @@ SystemJS.config({
     },
     "semantic-ui": {
       "defaultExtension": "js"
+    },
+    "reflect-metadata": {
+      "map": {
+        "crypto": "github:jspm/nodelibs-crypto@0.2.0-alpha"
+      }
     }
   },
   map: {
     "html": "github:systemjs/plugin-text@0.0.8",
-    "codemirror": "npm:codemirror@5.16.0",
-    "css": "github:systemjs/plugin-css@0.1.20"
+    "css": "github:systemjs/plugin-css@0.1.20",
+    "@angular/forms": "npm:@angular/forms@0.1.1"
   }
 });
 
@@ -65,8 +70,9 @@ SystemJS.config({
     "npm:*.json"
   ],
   map: {
+    "clean-css": "npm:clean-css@3.4.18",
+    "codemirror": "npm:codemirror@5.16.0",
     "es6-promise": "npm:es6-promise@2.0.1",
-    "@angular/forms": "npm:@angular/forms@0.1.1",
     "@angular/common": "npm:@angular/common@2.0.0-rc.1",
     "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.1",
     "@angular/core": "npm:@angular/core@2.0.0-rc.1",
@@ -92,6 +98,7 @@ SystemJS.config({
     "js-cookie": "npm:js-cookie@2.1.2",
     "jsbn": "npm:jsbn@0.1.0",
     "jstree": "npm:jstree@3.3.0",
+    "module": "github:jspm/nodelibs-module@0.2.0-alpha",
     "net": "github:jspm/nodelibs-net@0.2.0-alpha",
     "os": "github:jspm/nodelibs-os@0.2.0-alpha",
     "path": "github:jspm/nodelibs-path@0.2.0-alpha",
@@ -115,6 +122,29 @@ SystemJS.config({
     "zone.js": "npm:zone.js@0.6.12"
   },
   packages: {
+    "npm:buffer@4.7.1": {
+      "map": {
+        "base64-js": "npm:base64-js@1.1.2",
+        "ieee754": "npm:ieee754@1.1.6",
+        "isarray": "npm:isarray@1.0.0"
+      }
+    },
+    "npm:clean-css@3.4.18": {
+      "map": {
+        "commander": "npm:commander@2.8.1",
+        "source-map": "npm:source-map@0.4.4"
+      }
+    },
+    "npm:commander@2.8.1": {
+      "map": {
+        "graceful-readlink": "npm:graceful-readlink@1.0.1"
+      }
+    },
+    "npm:source-map@0.4.4": {
+      "map": {
+        "amdefine": "npm:amdefine@1.0.0"
+      }
+    },
     "npm:carbonldp@0.35.1": {
       "map": {
         "file-type": "npm:file-type@3.8.0",
@@ -149,7 +179,7 @@ SystemJS.config({
     },
     "github:jspm/nodelibs-buffer@0.2.0-alpha": {
       "map": {
-        "buffer-browserify": "npm:buffer@4.6.0"
+        "buffer-browserify": "npm:buffer@4.7.1"
       }
     },
     "github:jspm/nodelibs-url@0.2.0-alpha": {
@@ -164,13 +194,6 @@ SystemJS.config({
         "builtin-status-codes": "npm:builtin-status-codes@2.0.0",
         "xtend": "npm:xtend@4.0.1",
         "to-arraybuffer": "npm:to-arraybuffer@1.0.1"
-      }
-    },
-    "npm:buffer@4.6.0": {
-      "map": {
-        "ieee754": "npm:ieee754@1.1.6",
-        "base64-js": "npm:base64-js@1.1.2",
-        "isarray": "npm:isarray@1.0.0"
       }
     },
     "npm:url@0.11.0": {
@@ -233,7 +256,7 @@ SystemJS.config({
     },
     "github:jspm/nodelibs-punycode@0.2.0-alpha": {
       "map": {
-        "punycode-browserify": "npm:punycode@1.4.1"
+        "punycode-browserify": "npm:punycode@1.3.2"
       }
     },
     "npm:jodid25519@1.0.2": {
