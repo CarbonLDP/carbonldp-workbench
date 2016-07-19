@@ -78,38 +78,54 @@ const config = {
 
 gulp.task( "default", [ "build" ] );
 
-gulp.task( "ts-lint", () => {
-	return gulp.src( config.source.typescript )
-		.pipe( tslint() )
-		.pipe( tslint.report( "prose" ) )
-		;
+gulp.task( "build", [ "clean:dist" ], ( done ) => {
+	runSequence(
+		"clean:dist",
+		[ "compile:styles", "compile:boot", "compile:index", "copy:semantic", "copy:assets" ],
+		"bundle",
+		done
+	);
 } );
 
-gulp.task( "compile-styles", () => {
-	return gulp.src( config.source.sass, { base: "./" } )
-		.pipe( ejs( profileConfig ) )
-		.pipe( sourcemaps.init() )
-		.pipe( sass().on( "error", sass.logError ) )
-		.pipe( autoprefixer( {
-			browsers: [ "last 2 versions" ]
+gulp.task( "build:docker-image", ( done ) => {
+	runSequence(
+		"build:docker-image|copy:dockerfile",
+		"build:docker-image|build:image",
+		"build:docker-image|clean:dockerfile",
+		done
+	);
+} );
+
+gulp.task( "build:docker-image|copy:dockerfile", () => {
+	return gulp.src( "build/Dockerfile" )
+		.pipe( gulp.dest( "../" ) );
+} );
+
+gulp.task( "build:docker-image|build:image", ( done ) => {
+	let buildProcess = spawn( `docker`, [ `build`, `--tag`, `${argv[ "image-name" ]}:${argv[ "image-version" ]}`, `.` ], { cwd: getParentDirectory() } );
+
+	buildProcess.stdout.setEncoding( "utf8" );
+	buildProcess.stderr.setEncoding( "utf8" );
+
+	buildProcess.stdout.on( "data", logStdout );
+	buildProcess.stderr.on( "data", logStderr );
+
+	buildProcess.on( "close", ( code ) => {
+		if( code !== 0 ) done( "Docker build command failed" );
+		else done();
+	} );
+} );
+
+gulp.task( "build:docker-image|clean:dockerfile", () => {
+	return del( "../Dockerfile", { force: true } );
+} );
+
+gulp.task( "build:semantic", () => {
+	return gulp.src( "src/semantic/gulpfile.js", { read: false } )
+		.pipe( chug( {
+			tasks: [ "build" ]
 		} ) )
-		.pipe( sourcemaps.write( "." ) )
-		.pipe( gulp.dest( "." ) )
 		;
-} );
-
-gulp.task( "compile-boot", () => {
-	return gulp.src( "src/app/boot.ejs.ts" )
-		.pipe( ejs( profileConfig ) )
-		.pipe( rename( "boot.ts" ) )
-		.pipe( gulp.dest( "src/app/" ) )
-} );
-
-gulp.task( "compile-index", () => {
-	return gulp.src( "dist/index.ejs.html" )
-		.pipe( ejs( profileConfig ) )
-		.pipe( rename( "index.html" ) )
-		.pipe( gulp.dest( "dist/site/" ) );
 } );
 
 gulp.task( "bundle", () => {
@@ -119,71 +135,6 @@ gulp.task( "bundle", () => {
 		mangle: false,
 		sourceMaps: false
 	} );
-} );
-
-gulp.task( "build-semantic", () => {
-	return gulp.src( "src/semantic/gulpfile.js", { read: false } )
-		.pipe( chug( {
-			tasks: [ "build" ]
-		} ) )
-		;
-} );
-
-gulp.task( "copy-semantic", [ "build-semantic" ], () => {
-	return gulp.src( "src/semantic/dist/**/*", {
-		base: "src/semantic/dist"
-	} ).pipe( gulp.dest( "dist/site/assets/semantic" ) );
-} );
-
-// TODO: Minify files
-gulp.task( "copy-assets", [ "copy-node-dependencies" ], () => {
-	return gulp.src( "src/assets/**/*", {
-		base: "src/assets"
-	} ).pipe( gulp.dest( "dist/site/assets" ) );
-} );
-
-gulp.task( "copy-node-dependencies", () => {
-	gulp.start( 'copy-node-dependencies:files', 'copy-node-dependencies:packages' );
-} );
-
-gulp.task( "copy-node-dependencies:files", () => {
-	return gulp.src( config.nodeDependencies.files ).pipe( gulp.dest( "src/assets/node_modules" ) );
-} );
-
-gulp.task( "copy-node-dependencies:packages", () => {
-	return gulp.src( config.nodeDependencies.packages, { base: "node_modules" } ).pipe( gulp.dest( "src/assets/node_modules" ) );
-} );
-
-gulp.task( "serve", ( done ) => {
-	runSequence(
-		[ "build-semantic", "compile-styles", "compile-boot", "copy-node-dependencies" ],
-		"serve:afterCompilation",
-		done
-	);
-} );
-
-
-gulp.task( "serve:afterCompilation", () => {
-	gulp.src( "src/semantic/gulpfile.js", { read: false } )
-		.pipe( chug( {
-			tasks: [ "watch" ]
-		} ) )
-	;
-
-	watch( config.source.sass, ( file ) => {
-		util.log( "SCSS file changed: ", file.path );
-		gulp.start( "compile-styles" );
-	} ).on( "error", function( error ) {
-		util.log( util.colors.red( "Error" ), error.message );
-	} );
-
-	return gulp.src( "../" )
-		.pipe( webserver( {
-			livereload: false,
-			directoryListing: false,
-			fallback: "/carbon-workbench/src/index.html",
-			open: true,
-		} ) );
 } );
 
 gulp.task( "clean:dist", () => {
@@ -354,46 +305,95 @@ gulp.task( "clean:src", ( done ) => {
 	}
 } );
 
-gulp.task( "build", [ "clean:dist" ], ( done ) => {
+gulp.task( "compile:boot", () => {
+	return gulp.src( "src/app/boot.ejs.ts" )
+		.pipe( ejs( profileConfig ) )
+		.pipe( rename( "boot.ts" ) )
+		.pipe( gulp.dest( "src/app/" ) )
+} );
+
+gulp.task( "compile:index", () => {
+	return gulp.src( "dist/index.ejs.html" )
+		.pipe( ejs( profileConfig ) )
+		.pipe( rename( "index.html" ) )
+		.pipe( gulp.dest( "dist/site/" ) );
+} );
+
+gulp.task( "compile:styles", () => {
+	return gulp.src( config.source.sass, { base: "./" } )
+		.pipe( ejs( profileConfig ) )
+		.pipe( sourcemaps.init() )
+		.pipe( sass().on( "error", sass.logError ) )
+		.pipe( autoprefixer( {
+			browsers: [ "last 2 versions" ]
+		} ) )
+		.pipe( sourcemaps.write( "." ) )
+		.pipe( gulp.dest( "." ) )
+		;
+} );
+
+// TODO: Minify files
+gulp.task( "copy:assets", [ "copy:node-dependencies" ], () => {
+	return gulp.src( "src/assets/**/*", {
+		base: "src/assets"
+	} ).pipe( gulp.dest( "dist/site/assets" ) );
+} );
+
+gulp.task( "copy:node-dependencies", () => {
+	gulp.start( 'copy:node-dependencies:files', 'copy:node-dependencies:packages' );
+} );
+
+gulp.task( "copy:node-dependencies:files", () => {
+	return gulp.src( config.nodeDependencies.files ).pipe( gulp.dest( "src/assets/node_modules" ) );
+} );
+
+gulp.task( "copy:node-dependencies:packages", () => {
+	return gulp.src( config.nodeDependencies.packages, { base: "node_modules" } ).pipe( gulp.dest( "src/assets/node_modules" ) );
+} );
+
+gulp.task( "copy:semantic", [ "build:semantic" ], () => {
+	return gulp.src( "src/semantic/dist/**/*", {
+		base: "src/semantic/dist"
+	} ).pipe( gulp.dest( "dist/site/assets/semantic" ) );
+} );
+
+gulp.task( "lint:typescript", () => {
+	return gulp.src( config.source.typescript )
+		.pipe( tslint() )
+		.pipe( tslint.report( "prose" ) )
+		;
+} );
+
+gulp.task( "serve", ( done ) => {
 	runSequence(
-		"clean:dist",
-		[ "compile-styles", "compile-boot", "compile-index", "copy-semantic", "copy-assets" ],
-		"bundle",
+		[ "build:semantic", "compile:styles", "compile:boot", "copy:node-dependencies" ],
+		"serve|after-compilation",
 		done
 	);
 } );
 
-gulp.task( "build:docker-image", ( done ) => {
-	runSequence(
-		"build:docker-image|copy:dockerfile",
-		"build:docker-image|build:image",
-		"build:docker-image|clean:dockerfile",
-		done
-	);
-} );
+// TODO: Divide this task into sub-tasks
+gulp.task( "serve|after-compilation", () => {
+	gulp.src( "src/semantic/gulpfile.js", { read: false } )
+		.pipe( chug( {
+			tasks: [ "watch" ]
+		} ) )
+	;
 
-gulp.task( "build:docker-image|copy:dockerfile", () => {
-	return gulp.src( "build/Dockerfile" )
-		.pipe( gulp.dest( "../" ) );
-} );
-
-gulp.task( "build:docker-image|build:image", ( done ) => {
-	let buildProcess = spawn( `docker`, [ `build`, `--tag`, `${argv[ "image-name" ]}:${argv[ "image-version" ]}`, `.` ], { cwd: getParentDirectory() } );
-
-	buildProcess.stdout.setEncoding( "utf8" );
-	buildProcess.stderr.setEncoding( "utf8" );
-
-	buildProcess.stdout.on( "data", logStdout );
-	buildProcess.stderr.on( "data", logStderr );
-
-	buildProcess.on( "close", ( code ) => {
-		if( code !== 0 ) done( "Docker build command failed" );
-		else done();
+	watch( config.source.sass, ( file ) => {
+		util.log( "SCSS file changed: ", file.path );
+		gulp.start( "compile:styles" );
+	} ).on( "error", function( error ) {
+		util.log( util.colors.red( "Error" ), error.message );
 	} );
-} );
 
-gulp.task( "build:docker-image|clean:dockerfile", () => {
-	return del( "../Dockerfile", { force: true } );
+	return gulp.src( "../" )
+		.pipe( webserver( {
+			livereload: false,
+			directoryListing: false,
+			fallback: "/carbon-workbench/src/index.html",
+			open: true,
+		} ) );
 } );
 
 function validateEnv() {

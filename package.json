@@ -1,9 +1,16 @@
 {
   "name": "carbon-workbench",
   "version": "0.1.0",
-  "description": "Workbench to administer an on premise installation of Carbon's platform",
+  "description": "Workbench to administer an on premise installation of Carbon LDP",
   "contributors": [
-    "MiguelAraCo <miguel.aragon@base22.com>"
+    {
+      "name": "Miguel Aragón",
+      "email": "miguel.aragon@base22.com"
+    },
+    {
+      "name": "Alvaro Contreras",
+      "email": "alvaro.contreras@base22.com"
+    }
   ],
   "license": "UNLICENSED",
   "private": true,
