@@ -3,9 +3,9 @@
 		"debug": true
 	},
 	"url": {
-		"base": "/carbon-website/src/"
+		"base": "/carbon-workbench/src/"
 	},
 	"carbon": {
-		"domain": "dev.carbonldp.com"
+		"domain": "local.carbonldp.com"
 	}
 }

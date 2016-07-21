@@ -1,26 +1,26 @@
-import {Component, provide, Inject, EventEmitter} from "@angular/core";
-import {Location} from "@angular/common";
-import {Router, RouterOutlet, RouteConfig} from "@angular/router-deprecated";
+import { Component, provide, Inject, EventEmitter } from "@angular/core";
+import { Location } from "@angular/common";
+import { Router, RouterOutlet, RouteConfig } from "@angular/router-deprecated";
 
-import {Authenticated} from "angular2-carbonldp/decorators";
-import {AuthService} from "angular2-carbonldp/services";
+import { Authenticated } from "angular2-carbonldp/decorators";
+import { AuthService } from "angular2-carbonldp/services";
 
-import {RouterService} from "carbon-panel/router.service";
-import {HeaderService} from "carbon-panel/header.service";
-import {HeaderComponent} from "carbon-panel/header.component";
-import {SidebarService} from "carbon-panel/sidebar.service";
-import {SidebarComponent} from "carbon-panel/sidebar.component";
-import {MenuBarComponent} from "carbon-panel/menu-bar.component";
-import {ErrorsAreaComponent} from "carbon-panel/errors-area/errors-area.component";
-import {ErrorsAreaService} from "carbon-panel/errors-area/errors-area.service";
+import { RouterService } from "carbon-panel/router.service";
+import { HeaderService } from "carbon-panel/header.service";
+import { HeaderComponent } from "carbon-panel/header.component";
+import { SidebarService } from "carbon-panel/sidebar.service";
+import { SidebarComponent } from "carbon-panel/sidebar.component";
+import { MenuBarComponent } from "carbon-panel/menu-bar.component";
+import { ErrorsAreaComponent } from "carbon-panel/errors-area/errors-area.component";
+import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service";
 
-import {DashboardView} from "app/dashboard/dashboard.view";
-import {MyAppsView} from "app/my-apps/my-apps.view";
+import { DashboardView } from "app/dashboard/dashboard.view";
+import { MyAppsView } from "app/my-apps/my-apps.view";
 
 import template from "./workbench.view.html!";
 import style from "./workbench.view.css!text";
 
-@Authenticated( {redirectTo: [ "/WorkbenchLogin" ]} )
+@Authenticated( { redirectTo: [ "/WorkbenchLogin" ] } )
 @Component( {
 	selector: "div.ng-view",
 	template: template,
@@ -39,9 +39,9 @@ import style from "./workbench.view.css!text";
 			},
 			deps: [ Router, Location ]
 		} ),
-		provide( HeaderService, {useClass: HeaderService} ),
-		provide( SidebarService, {useClass: SidebarService} ),
-		provide( ErrorsAreaService, {useClass: ErrorsAreaService} ),
+		provide( HeaderService, { useClass: HeaderService } ),
+		provide( SidebarService, { useClass: SidebarService } ),
+		provide( ErrorsAreaService, { useClass: ErrorsAreaService } ),
 	]
 } )
 @RouteConfig( [
@@ -71,12 +71,19 @@ export class WorkbenchView {
 	private sidebarService:SidebarService;
 	private authService:AuthService.Class;
 	private router:Router;
+	private prevUrl:string;
 
 	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router ) {
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
 		this.authService = authService;
 		this.router = router;
+		this.router.parent.subscribe( ( url )=> {
+			if( this.prevUrl !== url ) {
+				document.querySelector( ".scrollable-content" ).scrollTop = 0;
+				this.prevUrl = url;
+			}
+		} );
 	}
 
 

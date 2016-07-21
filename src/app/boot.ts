@@ -1,7 +1,7 @@
 // There are files that reference this two dependencies and therefore they get included in the bundled file
 // This causes a conflict with angular2-polyfills.js, as that file also declares them
 // To avoid this, angular2-polyfills.js is no longer included in the index.html and zone and reflect are declared here instead
-//import "reflect-metadata";
+import "reflect-metadata";
 import "zone.js/dist/zone";
 import "zone.js/dist/long-stack-trace-zone";
 
@@ -21,7 +21,7 @@ import { AppComponent } from "app/app.component";
 import { WORKBENCH_PROVIDERS } from "app/workbench/workbench";
 
 let carbon:Carbon = new Carbon();
-carbon.setSetting( "domain", "dev.carbonldp.com" );
+carbon.setSetting( "domain", "local.carbonldp.com" );
 activeContext.initialize( carbon );
 
 let providers:Provider[] = [];
@@ -36,7 +36,7 @@ bootstrap( AppComponent, [
 	HTTP_PROVIDERS,
 	Title,
 
-	provide( APP_BASE_HREF, { useValue: "/carbon-website/src/" } ),
+	provide( APP_BASE_HREF, { useValue: "/carbon-workbench/src/" } ),
 
 	providers,
 	WORKBENCH_PROVIDERS
