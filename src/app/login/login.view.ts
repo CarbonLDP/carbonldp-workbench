@@ -1,14 +1,14 @@
-import {Component} from "@angular/core";
-import {Router} from "@angular/router-deprecated";
+import { Component } from "@angular/core";
+import { Router } from "@angular/router-deprecated";
 
-import {NotAuthenticated} from "angular2-carbonldp/decorators";
+import { NotAuthenticated } from "angular2-carbonldp/decorators";
 
-import {LoginComponent} from "carbon-panel/login.component";
+import { LoginComponent } from "carbon-panel/login.component";
 
 import template from "./login.view.html!";
 import style from "./login.view.css!text";
 
-@NotAuthenticated( {redirectTo: [ "/Workbench" ]} )
+@NotAuthenticated( { redirectTo: [ "/Workbench" ] } )
 @Component( {
 	selector: "div.ng-view",
 	template: template,

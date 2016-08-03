@@ -1,5 +1,7 @@
 "use strict";
 
+const fs = require( "mz/fs" );
+
 const spawn = require( "child_process" ).spawn;
 const gulp = require( "gulp" );
 const util = require( "gulp-util" );
