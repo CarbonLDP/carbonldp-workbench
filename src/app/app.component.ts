@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { RouteConfig, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
+import { RouteConfig, ROUTER_DIRECTIVES} from "@angular/router-deprecated";
 
 import { LoginView } from "app/login/login.view";
 import { WorkbenchView } from "app/workbench/workbench.view";
@@ -15,7 +15,15 @@ import style from "./app.component.css!text";
 	directives: [ ROUTER_DIRECTIVES ]
 } )
 @RouteConfig( [
-	{ path: "login", as: "WorkbenchLogin", component: LoginView },
+	{
+		path: "login",
+		as: "WorkbenchLogin",
+		component: LoginView,
+		data: {
+			alias: "WorkbenchLogin",
+			displayName: "Workbench Log In",
+		}
+	},
 	{
 		path: "...",
 		as: "Workbench",
@@ -28,6 +36,7 @@ import style from "./app.component.css!text";
 	},
 ] )
 export class AppComponent {
+
 }
 
 export default AppComponent;
