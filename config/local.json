@@ -3,7 +3,7 @@
 		"debug": true
 	},
 	"url": {
-		"base": "/carbon-website/src/"
+		"base": "/carbon-workbench/src/"
 	},
 	"carbon": {
 		"domain": "local.carbonldp.com"

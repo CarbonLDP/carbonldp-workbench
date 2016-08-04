@@ -36,7 +36,7 @@ bootstrap( AppComponent, [
 	HTTP_PROVIDERS,
 	Title,
 
-	provide( APP_BASE_HREF, { useValue: "/carbon-website/src/" } ),
+	provide( APP_BASE_HREF, { useValue: "/carbon-workbench/src/" } ),
 
 	providers,
 	WORKBENCH_PROVIDERS
