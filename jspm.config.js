@@ -1,7 +1,7 @@
 SystemJS.config({
   baseURL: "/carbon-workbench",
   paths: {
-    "carbonldp/": "src/../../CarbonLDP-JS-SDK/src/",
+    "carbonldp/": "src/../../CarbonLDP-JS-SDK/dist/",
     "angular2-carbonldp/": "src/../../angular2-carbonldp/dist/",
     "carbon-panel/": "src/../../carbon-panel/dist/",
     "semantic-ui/": "src/semantic/dist/",
@@ -97,6 +97,7 @@ SystemJS.config({
     "jquery": "npm:jquery@2.2.4",
     "js-cookie": "npm:js-cookie@2.1.2",
     "jsbn": "npm:jsbn@0.1.0",
+    "jsonld": "npm:jsonld@0.4.11",
     "jstree": "npm:jstree@3.3.0",
     "module": "github:jspm/nodelibs-module@0.2.0-alpha",
     "net": "github:jspm/nodelibs-net@0.2.0-alpha",
