@@ -9,9 +9,11 @@
       <excludeFolder url="file://$MODULE_DIR$/../angular2-carbonldp/node_modules" />
     </content>
     <content url="file://$MODULE_DIR$/../carbon-panel">
+      <excludeFolder url="file://$MODULE_DIR$/../carbon-panel/dist" />
       <excludeFolder url="file://$MODULE_DIR$/../carbon-panel/node_modules" />
     </content>
     <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/dist/node_modules" />
       <excludeFolder url="file://$MODULE_DIR$/jspm_packages" />
       <excludeFolder url="file://$MODULE_DIR$/node_modules" />
@@ -19,5 +21,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="ts-external-references" level="project" />
+    <orderEntry type="library" name="tsconfig$roots" level="project" />
   </component>
 </module>
