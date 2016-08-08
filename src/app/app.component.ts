@@ -53,7 +53,6 @@ export class AppComponent {
 		let rootComponent = this.router.root.currentInstruction.component.routeData.data[ "displayName" ];
 		let displayName;
 		let auxRouter = this.router.root.currentInstruction.child;
-		if( rootComponent === "Home" ) {
 			while ( auxRouter !== null ) {
 				displayName = auxRouter.component.routeData.data[ "displayName" ];
 				if( displayName === "App" ) {
@@ -72,25 +71,8 @@ export class AppComponent {
 				}
 				auxRouter = auxRouter.child;
 			}
-		}
-		else
-		{
-			while ( auxRouter !== null ) {
-				if( auxRouter.child === null ) {
-					displayName = auxRouter.component.routeData.data[ "displayName" ];
-					if( typeof displayName === 'undefined' )
-						title = "";
-					else
-						title = title + displayName + " | ";
-				}
-				auxRouter = auxRouter.child;
-			}
-
-		}
-		rootComponent = "Carbon LDP";
 		title = title + rootComponent;
-		if( title === "Home | Carbon LDP" )
-			title = "Dashboard | Carbon LDP";
+
 		this.title.setTitle( title );
 
 	}
