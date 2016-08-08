@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
-import { Router, RouteData } from "@angular/router-deprecated";
-import { Title } from "@angular/platform-browser";
+import { Router } from "@angular/router-deprecated";
 
 import { NotAuthenticated } from "angular2-carbonldp/decorators";
 
@@ -18,22 +17,13 @@ import style from "./login.view.css!text";
 } )
 export class LoginView {
 	private router:Router;
-	private routeData:RouteData;
-	private title:Title;
 
-	constructor( router:Router, routeData:RouteData, title:Title ) {
+	constructor( router:Router ) {
 		this.router = router;
-		this.routeData =routeData;
-		this.title =title;
 	}
 
 	onLogin():void {
 		this.router.navigate( [ "/Workbench/" ] );
-	}
-
-	routerOnActivate(){
-		let title:string = this.routeData.data["displayName"];
-		this.title.setTitle(title);
 	}
 }
 
