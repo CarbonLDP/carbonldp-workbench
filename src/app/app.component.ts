@@ -43,35 +43,47 @@ export class AppComponent {
 	constructor( title: Title, router: Router ) {
 		this.router = router;
 		this.title = title;
-		this.router.subscribe( ( url ) => {
-			this.defineTitle( url );
+		this.router.subscribe( ( ) => {
+			this.defineTitle( );
 		} );
 	}
 
-	defineTitle( url ) {
+	defineTitle( ) {
 		let title: string = "";
 		let rootComponent = this.router.root.currentInstruction.component.routeData.data[ "displayName" ];
+		let slug;
 		let displayName;
 		let auxRouter = this.router.root.currentInstruction.child;
 			while ( auxRouter !== null ) {
 				displayName = auxRouter.component.routeData.data[ "displayName" ];
-				if( displayName === "App" ) {
-					if( auxRouter.child === null )
-						title = title + displayName + " | ";
-					else
-						title = title + displayName + " > ";
+				slug = auxRouter.component.params[ "slug" ];
+				if( (slug !== null) && (typeof slug !== 'undefined') ) {
+					if( displayName === "App" ) {
+						title += displayName + "(" + slug + ") > ";
+					}
+					else {
+						if( auxRouter.child === null )
+							if( typeof displayName === 'undefined' )
+								title = "";
+							else
+								title += displayName + "(" + slug + ") | ";
+					}
 				}
 				else {
-					if( auxRouter.child === null )
-						if( typeof displayName === 'undefined' )
-							title = "";
-						else
-							title = title + displayName + " | ";
+					if( displayName === "App" ) {
+						title = title + displayName + " > ";
+					}
+					else {
+						if( auxRouter.child === null )
+							if( typeof displayName === 'undefined' )
+								title = "";
+							else
+								title += displayName + " | ";
+					}
 
 				}
-				auxRouter = auxRouter.child;
-			}
-		title = title + rootComponent;
+				auxRouter = auxRouter.child;}
+		title += rootComponent;
 
 		this.title.setTitle( title );
 
