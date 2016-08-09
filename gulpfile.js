@@ -48,9 +48,10 @@ if( argv[ "use-env" ] ) {
 			"debug": "DEBUG" in process.env && process.env.DEBUG
 		},
 		"url": {
-			"base": process.env.WORKBENCH_BASE
+			"base": "WORKBENCH_BASE" in process.env ? process.env.WORKBENCH_BASE : "/"
 		},
 		"carbon": {
+			"protocol": "CARBON_PROTOCOL" in process.env ? process.env.CARBON_PROTOCOL : "https",
 			"domain": process.env.CARBON_HOST
 		}
 	};
