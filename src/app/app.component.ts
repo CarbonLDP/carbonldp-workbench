@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import {ROUTER_DIRECTIVES, RouteConfig, Router} from "@angular/router-deprecated";
-import {Title} from "@angular/platform-browser";
+import { ROUTER_DIRECTIVES, RouteConfig, Router } from "@angular/router-deprecated";
+import { Title } from "@angular/platform-browser";
 
 import { LoginView } from "app/login/login.view";
 import { WorkbenchView } from "app/workbench/workbench.view";
@@ -43,46 +43,51 @@ export class AppComponent {
 	constructor( title: Title, router: Router ) {
 		this.router = router;
 		this.title = title;
-		this.router.subscribe( ( ) => {
-			this.defineTitle( );
+		this.router.subscribe( () => {
+			this.defineTitle();
 		} );
 	}
 
-	defineTitle( ) {
+	defineTitle() {
 		let title: string = "";
 		let rootComponent = this.router.root.currentInstruction.component.routeData.data[ "displayName" ];
-		let slug;
-		let displayName;
-		let auxRouter = this.router.root.currentInstruction.child;
-			while ( auxRouter !== null ) {
-				displayName = auxRouter.component.routeData.data[ "displayName" ];
-				slug = auxRouter.component.params[ "slug" ];
-				if( (slug !== null) && (typeof slug !== 'undefined') ) {
-					if( displayName === "App" ) {
-						title += displayName + "(" + slug + ") > ";
-					}
-					else {
-						if( auxRouter.child === null )
-							if( typeof displayName === 'undefined' )
-								title = "";
-							else
-								title += displayName + "(" + slug + ") | ";
-					}
-				}
-				else {
-					if( displayName === "App" ) {
-						title = title + displayName + " > ";
-					}
-					else {
-						if( auxRouter.child === null )
-							if( typeof displayName === 'undefined' )
-								title = "";
-							else
-								title += displayName + " | ";
-					}
 
+		let auxRouter = this.router.root.currentInstruction.child;
+		while( auxRouter !== null ) {
+			let displayName = auxRouter.component.routeData.data[ "displayName" ];
+			let mainComponent = auxRouter.component.routeData.data[ "main" ];
+			let parameters = auxRouter.component.params;
+
+			let parameter = null;
+			for( let parameterName in parameters ) {
+				if( ! parameters.hasOwnProperty( parameterName ) ) continue;
+				if( parameter !== null ) {
+					parameter = null;
+					break;
 				}
-				auxRouter = auxRouter.child;}
+				parameter = parameters[ parameterName ];
+			}
+
+			if( parameter !== null ) {
+				if( auxRouter.child === null ) {
+					if( typeof displayName === 'undefined' ) title = "";
+					else title += displayName + "(" + parameter + ") | ";
+				} else {
+					if( mainComponent )
+						title += displayName + "(" + parameter + ") > ";
+				}
+
+			} else {
+				if( auxRouter.child === null ) {
+					if( typeof displayName === 'undefined' ) title = "";
+					else title += displayName + " | ";
+				} else {
+					if( mainComponent ) title = title + displayName + " > ";
+				}
+
+			}
+			auxRouter = auxRouter.child;
+		}
 		title += rootComponent;
 
 		this.title.setTitle( title );
