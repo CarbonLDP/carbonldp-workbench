@@ -75,7 +75,9 @@ const config = {
 			"node_modules/systemjs/dist/system.src.js",
 			"node_modules/rxjs/bundles/Rx.js"
 		],
-		packages: []
+		packages: [
+			"node_modules/jstree/*/**/"
+		]
 	}
 };
 
