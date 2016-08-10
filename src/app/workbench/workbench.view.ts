@@ -2,6 +2,8 @@ import { Component, provide, Inject, EventEmitter } from "@angular/core";
 import { Location } from "@angular/common";
 import { Router, RouterOutlet, RouteConfig } from "@angular/router-deprecated";
 
+import Carbon from "carbonldp/Carbon";
+
 import { Authenticated } from "angular2-carbonldp/decorators";
 import { AuthService } from "angular2-carbonldp/services";
 
@@ -13,9 +15,11 @@ import { SidebarComponent } from "carbon-panel/sidebar.component";
 import { MenuBarComponent } from "carbon-panel/menu-bar.component";
 import { ErrorsAreaComponent } from "carbon-panel/errors-area/errors-area.component";
 import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service";
+import { MyAppsSidebarService } from "carbon-panel/my-apps/my-apps-sidebar.service";
+
+import { MyAppsView } from "carbon-panel/my-apps/my-apps.view";
 
 import { DashboardView } from "app/dashboard/dashboard.view";
-import { MyAppsView } from "app/my-apps/my-apps.view";
 
 import template from "./workbench.view.html!";
 import style from "./workbench.view.css!text";
@@ -42,6 +46,10 @@ import style from "./workbench.view.css!text";
 		provide( HeaderService, { useClass: HeaderService } ),
 		provide( SidebarService, { useClass: SidebarService } ),
 		provide( ErrorsAreaService, { useClass: ErrorsAreaService } ),
+
+		// If we provide MyAppsSidebarService inside of my-apps.view, Angular would create a new instance each time my-apps is revisited
+		// leading to duplicate entries in the sidebar
+		provide( MyAppsSidebarService, { useClass: MyAppsSidebarService } ),
 	]
 } )
 @RouteConfig( [
@@ -71,13 +79,15 @@ export class WorkbenchView {
 	private sidebarService:SidebarService;
 	private authService:AuthService.Class;
 	private router:Router;
+	private carbon:Carbon;
 	private prevUrl:string;
 
-	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router ) {
+	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
 		this.authService = authService;
 		this.router = router;
+		this.carbon = carbon;
 		this.router.parent.subscribe( ( url )=> {
 			if( this.prevUrl !== url ) {
 				document.querySelector( ".scrollable-content" ).scrollTop = 0;
@@ -108,6 +118,8 @@ export class WorkbenchView {
 			this.router.navigate( [ "/WorkbenchLogin" ] );
 		} );
 
+		let name:string = this.carbon.auth.authenticatedAgent[ "name" ] ? this.carbon.auth.authenticatedAgent.name : "User";
+
 		this.headerService.addItems( [
 			{
 				name: "Dashboard",
@@ -115,7 +127,7 @@ export class WorkbenchView {
 				index: 0,
 			},
 			{
-				name: "User",
+				name: name,
 				children: [
 					{
 						icon: "sign out icon",

@@ -1,5 +1,7 @@
 "use strict";
 
+const fs = require( "mz/fs" );
+
 const spawn = require( "child_process" ).spawn;
 const gulp = require( "gulp" );
 const util = require( "gulp-util" );
@@ -46,9 +48,10 @@ if( argv[ "use-env" ] ) {
 			"debug": "DEBUG" in process.env && process.env.DEBUG
 		},
 		"url": {
-			"base": process.env.WORKBENCH_BASE
+			"base": "WORKBENCH_BASE" in process.env ? process.env.WORKBENCH_BASE : "/"
 		},
 		"carbon": {
+			"protocol": "CARBON_PROTOCOL" in process.env ? process.env.CARBON_PROTOCOL : "https",
 			"domain": process.env.CARBON_HOST
 		}
 	};
@@ -398,10 +401,6 @@ gulp.task( "serve|after-compilation", () => {
 
 function validateEnv() {
 	let valid = true;
-	if( ! ( "WORKBENCH_BASE" in process.env ) ) {
-		valid = false;
-		console.error( `ERROR: ENV["WORKBENCH_BASE"] was not defined. Please define the URL base the workbench is going to have` );
-	}
 	if( ! ( "CARBON_HOST" in process.env ) ) {
 		valid = false;
 		console.error( `ERROR: ENV["CARBON_HOST"] was not defined. Please define the Carbon LDP host the workbench is going to work with` );

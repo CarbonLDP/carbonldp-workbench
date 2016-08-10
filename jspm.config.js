@@ -30,7 +30,8 @@ SystemJS.config({
         "file-type": "@empty",
         "url": "@empty",
         "http": "@empty",
-        "https": "@empty"
+        "https": "@empty",
+        "jsonld": "npm:jsonld@0.4.11"
       }
     },
     "angular2-carbonldp": {
@@ -82,7 +83,6 @@ SystemJS.config({
     "@angular/router-deprecated": "npm:@angular/router-deprecated@2.0.0-rc.1",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
-    "carbonldp": "npm:carbonldp@0.35.1",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
     "constants": "github:jspm/nodelibs-constants@0.2.0-alpha",
     "crypto": "github:jspm/nodelibs-crypto@0.2.0-alpha",
@@ -97,6 +97,7 @@ SystemJS.config({
     "jquery": "npm:jquery@2.2.4",
     "js-cookie": "npm:js-cookie@2.1.2",
     "jsbn": "npm:jsbn@0.1.0",
+    "jsonld": "npm:jsonld@0.4.11",
     "jstree": "npm:jstree@3.3.0",
     "module": "github:jspm/nodelibs-module@0.2.0-alpha",
     "net": "github:jspm/nodelibs-net@0.2.0-alpha",
@@ -143,12 +144,6 @@ SystemJS.config({
     "npm:source-map@0.4.4": {
       "map": {
         "amdefine": "npm:amdefine@1.0.0"
-      }
-    },
-    "npm:carbonldp@0.35.1": {
-      "map": {
-        "file-type": "npm:file-type@3.8.0",
-        "jsonld": "npm:jsonld@0.4.11"
       }
     },
     "npm:jstree@3.3.0": {

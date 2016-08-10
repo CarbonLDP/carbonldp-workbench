@@ -8,6 +8,8 @@ src/**/*.css
 src/**/*.js
 src/**/*.map
 
+src/app/boot.ts
+
 # Typings
 **/typings/globals/
 **/typings/index.d.ts
