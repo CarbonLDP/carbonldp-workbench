@@ -16,13 +16,13 @@ import style from "./login.view.css!text";
 	directives: [ LoginComponent ]
 } )
 export class LoginView {
-	private router: Router;
+	private router:Router;
 
-	constructor( router: Router ) {
+	constructor( router:Router ) {
 		this.router = router;
 	}
 
-	onLogin(): void {
+	onLogin():void {
 		this.router.navigate( [ "/Workbench/" ] );
 	}
 }
