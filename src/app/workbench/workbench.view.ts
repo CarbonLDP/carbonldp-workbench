@@ -80,6 +80,7 @@ export class WorkbenchView {
 	private authService:AuthService.Class;
 	private router:Router;
 	private carbon:Carbon;
+	private prevUrl:string;
 
 	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
 		this.headerService = headerService;
@@ -87,6 +88,12 @@ export class WorkbenchView {
 		this.authService = authService;
 		this.router = router;
 		this.carbon = carbon;
+		this.router.parent.subscribe( ( url )=> {
+			if( this.prevUrl !== url ) {
+				document.querySelector( ".scrollable-content" ).scrollTop = 0;
+				this.prevUrl = url;
+			}
+		} );
 	}
 
 

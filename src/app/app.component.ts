@@ -1,9 +1,9 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { ROUTER_DIRECTIVES, RouteConfig, Router } from "@angular/router-deprecated";
-import { Title } from "@angular/platform-browser";
+import { RouteConfig, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
 
 import { LoginView } from "app/login/login.view";
 import { WorkbenchView } from "app/workbench/workbench.view";
+import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
 
 import template from "./app.component.html!";
 import style from "./app.component.css!text";
@@ -35,6 +35,7 @@ import style from "./app.component.css!text";
 			displayName: "Workbench",
 		},
 	},
+	{ path: "**", as: "NotFoundError", component: NotFoundErrorView },
 ] )
 export class AppComponent {
 	router:Router;
