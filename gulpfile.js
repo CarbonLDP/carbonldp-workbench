@@ -401,10 +401,6 @@ gulp.task( "serve|after-compilation", () => {
 
 function validateEnv() {
 	let valid = true;
-	if( ! ( "WORKBENCH_BASE" in process.env ) ) {
-		valid = false;
-		console.error( `ERROR: ENV["WORKBENCH_BASE"] was not defined. Please define the URL base the workbench is going to have` );
-	}
 	if( ! ( "CARBON_HOST" in process.env ) ) {
 		valid = false;
 		console.error( `ERROR: ENV["CARBON_HOST"] was not defined. Please define the Carbon LDP host the workbench is going to work with` );
