@@ -48,6 +48,7 @@ export class AppComponent {
 		} );
 	}
 
+	// TODO: Move this code to carbon-panel so it can be reused
 	defineTitle() {
 		let title:string = "";
 		let rootComponent = this.router.root.currentInstruction.component.routeData.data[ "displayName" ];
