@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { RouteConfig, ROUTER_DIRECTIVES } from "@angular/router-deprecated";
+import { RouteConfig, ROUTER_DIRECTIVES, Router } from "@angular/router-deprecated";
+import { Title } from "@angular/platform-browser";
 
 import { LoginView } from "app/login/login.view";
 import { WorkbenchView } from "app/workbench/workbench.view";
