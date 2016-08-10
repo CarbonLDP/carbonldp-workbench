@@ -17,29 +17,29 @@ import style from "./login.view.css!text";
 	directives: [ LoginComponent, RegisterComponent ]
 } )
 export class LoginView {
-	private router:Router;
+	private router: Router;
 
-	private hasAccount:boolean = true;
-	private registrationWasSuccessful:boolean = false;
+	private hasAccount: boolean = true;
+	private registrationWasSuccessful: boolean = false;
 
-	constructor( router:Router ) {
+	constructor( router: Router ) {
 		this.router = router;
 	}
 
-	onLogin():void {
+	onLogin(): void {
 		this.router.navigate( [ "/Workbench/" ] );
 	}
 
-	onRegister():void {
+	onRegister(): void {
 		this.hasAccount = true;
 		this.registrationWasSuccessful = true;
 	}
 
-	activateRegisterForm():void {
+	activateRegisterForm(): void {
 		this.hasAccount = false;
 	}
 
-	activateLoginForm():void {
+	activateLoginForm(): void {
 		this.hasAccount = true;
 	}
 }

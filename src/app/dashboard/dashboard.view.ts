@@ -8,7 +8,7 @@ import template from "./dashboard.view.html!";
 	directives: []
 } )
 export class DashboardView {
-	constructor( ){
+	constructor() {
 
 	}
 

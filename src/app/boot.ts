@@ -20,12 +20,12 @@ import Carbon from "carbonldp/Carbon";
 import { AppComponent } from "app/app.component";
 import { WORKBENCH_PROVIDERS } from "app/workbench/workbench";
 
-let carbon:Carbon = new Carbon();
+let carbon: Carbon = new Carbon();
 if( "https" !== "https" ) carbon.setSetting( "http.ssl", false );
 carbon.setSetting( "domain", "local.carbonldp.com" );
 activeContext.initialize( carbon );
 
-let providers:Provider[] = [];
+let providers: Provider[] = [];
 providers = providers
 	.concat( CARBON_PROVIDERS )
 	.concat( CARBON_SERVICES_PROVIDERS );
@@ -41,7 +41,7 @@ bootstrap( AppComponent, [
 
 	providers,
 	WORKBENCH_PROVIDERS
-] ).then( ( appRef:ComponentRef<AppComponent> ) => {
+] ).then( ( appRef: ComponentRef<AppComponent> ) => {
 	appInjector( appRef.injector );
 } ).catch( ( error ) => {
 	console.error( error );
