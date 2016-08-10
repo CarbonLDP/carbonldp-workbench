@@ -1,14 +1,14 @@
-import {Component} from "@angular/core";
-import {Router} from "@angular/router-deprecated";
+import { Component } from "@angular/core";
+import { Router } from "@angular/router-deprecated";
 
-import {NotAuthenticated} from "angular2-carbonldp/decorators";
+import { NotAuthenticated } from "angular2-carbonldp/decorators";
 
-import {LoginComponent} from "carbon-panel/login.component";
+import { LoginComponent } from "carbon-panel/login.component";
 
 import template from "./login.view.html!";
 import style from "./login.view.css!text";
 
-@NotAuthenticated( {redirectTo: [ "/Workbench" ]} )
+@NotAuthenticated( { redirectTo: [ "/Workbench" ] } )
 @Component( {
 	selector: "div.ng-view",
 	template: template,
@@ -16,13 +16,13 @@ import style from "./login.view.css!text";
 	directives: [ LoginComponent ]
 } )
 export class LoginView {
-	private router:Router;
+	private router: Router;
 
-	constructor( router:Router ) {
+	constructor( router: Router ) {
 		this.router = router;
 	}
 
-	onLogin():void {
+	onLogin(): void {
 		this.router.navigate( [ "/Workbench/" ] );
 	}
 }
