@@ -21,8 +21,8 @@ import { AppComponent } from "app/app.component";
 import { WORKBENCH_PROVIDERS } from "app/workbench/workbench";
 
 let carbon:Carbon = new Carbon();
-if( "http" !== "https" ) carbon.setSetting( "http.ssl", false );
-carbon.setSetting( "domain", "localhost:8083" );
+if( "https" !== "https" ) carbon.setSetting( "http.ssl", false );
+carbon.setSetting( "domain", "local.carbonldp.com" );
 activeContext.initialize( carbon );
 
 let providers:Provider[] = [];
