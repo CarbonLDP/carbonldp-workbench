@@ -21,6 +21,7 @@ import { AppComponent } from "app/app.component";
 import { WORKBENCH_PROVIDERS } from "app/workbench/workbench";
 
 let carbon:Carbon = new Carbon();
+if( "<%- carbon.protocol %>" !== "https" ) carbon.setSetting( "http.ssl", false );
 carbon.setSetting( "domain", "<%- carbon.domain %>" );
 activeContext.initialize( carbon );
 
