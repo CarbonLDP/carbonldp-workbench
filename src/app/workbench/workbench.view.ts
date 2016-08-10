@@ -38,7 +38,7 @@ import style from "./workbench.view.css!text";
 	],
 	providers: [
 		provide( RouterService, {
-			useFactory: ( router: Router, location: Location ): RouterService => {
+			useFactory: ( router:Router, location:Location ):RouterService => {
 				return new RouterService( router, location );
 			},
 			deps: [ Router, Location ]
@@ -75,13 +75,13 @@ import style from "./workbench.view.css!text";
 ] )
 export class WorkbenchView {
 
-	private headerService: HeaderService;
-	private sidebarService: SidebarService;
-	private authService: AuthService.Class;
-	private router: Router;
-	private carbon: Carbon;
+	private headerService:HeaderService;
+	private sidebarService:SidebarService;
+	private authService:AuthService.Class;
+	private router:Router;
+	private carbon:Carbon;
 
-	constructor( headerService: HeaderService, sidebarService: SidebarService, @Inject( AuthService.Token ) authService: AuthService.Class, router: Router, carbon: Carbon ) {
+	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
 		this.authService = authService;
@@ -90,28 +90,28 @@ export class WorkbenchView {
 	}
 
 
-	ngOnInit(): void {
+	ngOnInit():void {
 		this.populateHeader();
 		this.populateSidebar();
 	}
 
-	toggleSidebar(): void {
+	toggleSidebar():void {
 		this.sidebarService.toggle();
 	}
 
-	private populateHeader(): void {
+	private populateHeader():void {
 		this.headerService.logo = {
 			image: "assets/images/carbon-ldp-logo-lg.png",
 			route: [ "./Dashboard" ]
 		};
 
-		let onLogout: EventEmitter<any> = new EventEmitter<any>();
-		onLogout.subscribe( ( event: any ) => {
+		let onLogout:EventEmitter<any> = new EventEmitter<any>();
+		onLogout.subscribe( ( event:any ) => {
 			this.authService.logout();
 			this.router.navigate( [ "/WorkbenchLogin" ] );
 		} );
 
-		let name: string = this.carbon.auth.authenticatedAgent[ "name" ] ? this.carbon.auth.authenticatedAgent.name : "User";
+		let name:string = this.carbon.auth.authenticatedAgent[ "name" ] ? this.carbon.auth.authenticatedAgent.name : "User";
 
 		this.headerService.addItems( [
 			{
@@ -134,7 +134,7 @@ export class WorkbenchView {
 		] );
 	}
 
-	private populateSidebar(): void {
+	private populateSidebar():void {
 		this.sidebarService.addItems( [
 			{
 				type: "link",

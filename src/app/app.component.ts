@@ -37,10 +37,10 @@ import style from "./app.component.css!text";
 	},
 ] )
 export class AppComponent {
-	router: Router;
-	title: Title;
+	router:Router;
+	title:Title;
 
-	constructor( title: Title, router: Router ) {
+	constructor( title:Title, router:Router ) {
 		this.router = router;
 		this.title = title;
 		this.router.subscribe( () => {
@@ -49,7 +49,7 @@ export class AppComponent {
 	}
 
 	defineTitle() {
-		let title: string = "";
+		let title:string = "";
 		let rootComponent = this.router.root.currentInstruction.component.routeData.data[ "displayName" ];
 
 		let auxRouter = this.router.root.currentInstruction.child;
