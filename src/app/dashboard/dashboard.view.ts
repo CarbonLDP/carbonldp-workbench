@@ -8,10 +8,6 @@ import template from "./dashboard.view.html!";
 	directives: []
 } )
 export class DashboardView {
-	constructor( ){
-
-	}
-
 }
 
 export default DashboardView;
