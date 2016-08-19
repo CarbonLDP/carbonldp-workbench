@@ -4,7 +4,6 @@ import { Router, RouterOutlet, RouteConfig } from "@angular/router-deprecated";
 
 import Carbon from "carbonldp/Carbon";
 
-import { Authenticated } from "angular2-carbonldp/decorators";
 import { AuthService } from "angular2-carbonldp/services";
 
 import { RouterService } from "carbon-panel/router.service";
@@ -24,7 +23,6 @@ import { DashboardView } from "app/dashboard/dashboard.view";
 import template from "./workbench.view.html!";
 import style from "./workbench.view.css!text";
 
-@Authenticated( { redirectTo: [ "/WorkbenchLogin" ] } )
 @Component( {
 	selector: "div.ng-view",
 	template: template,

@@ -1,7 +1,5 @@
 import { Component } from "@angular/core";
-import { Router } from "@angular/router-deprecated";
-
-import { NotAuthenticated } from "angular2-carbonldp/decorators";
+import { Router } from "@angular/router";
 
 import { LoginComponent } from "carbon-panel/login.component";
 import { RegisterComponent } from "carbon-panel/register.component";
@@ -9,7 +7,6 @@ import { RegisterComponent } from "carbon-panel/register.component";
 import template from "./login.view.html!";
 import style from "./login.view.css!text";
 
-@NotAuthenticated( { redirectTo: [ "/Workbench" ] } )
 @Component( {
 	selector: "div.ng-view",
 	template: template,

@@ -7,10 +7,8 @@ SystemJS.config({
     "angular2-carbonldp/": "angular2-carbonldp/dist/",
     "carbon-panel/": "carbon-panel/dist/",
     "semantic-ui/": "carbon-workbench/src/semantic/dist/",
-    "app/": "carbon-workbench/src/app/",
-
-    // JSPM normally looks for the tsconfig.json in the root URL
     "tsconfig.json": "carbon-workbench/tsconfig.json",
+    "app/": "carbon-workbench/src/app/"
   },
   transpiler: "plugin-typescript",
   typescriptOptions: {
@@ -33,8 +31,6 @@ SystemJS.config({
         "file-type": "@empty"
       }
     },
-	// There are times that JSPM requests files directly to the CarbonLDP-JS-SDK folder without knowing that the package is carbonldp
-	// The only solution is to duplicate the configuration with the real directory name, or rename the directory to match the name of the package
     "CarbonLDP-JS-SDK": {
       "defaultExtension": "js",
       "map": {
@@ -66,6 +62,7 @@ SystemJS.config({
     "npm:*.json"
   ],
   map: {
+    "@angular/router-deprecated": "npm:@angular/router-deprecated@2.0.0-rc.2",
     "@angular/common": "npm:@angular/common@2.0.0-rc.5",
     "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.5",
     "@angular/core": "npm:@angular/core@2.0.0-rc.5",
@@ -85,7 +82,7 @@ SystemJS.config({
     "fs": "github:jspm/nodelibs-fs@0.2.0-alpha",
     "http": "github:jspm/nodelibs-http@0.2.0-alpha",
     "https": "github:jspm/nodelibs-https@0.2.0-alpha",
-    "jquery": "npm:jquery@3.1.0",
+    "jquery": "npm:jquery@2.2.4",
     "js-cookie": "npm:js-cookie@2.1.2",
     "jstree": "npm:jstree@3.3.2",
     "os": "github:jspm/nodelibs-os@0.2.0-alpha",
@@ -330,7 +327,7 @@ SystemJS.config({
     },
     "npm:jstree@3.3.2": {
       "map": {
-        "jquery": "npm:jquery@3.1.0"
+        "jquery": "npm:jquery@2.2.4"
       }
     },
     "github:frankwallis/plugin-typescript@5.0.9": {

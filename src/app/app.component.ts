@@ -1,10 +1,6 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { RouteConfig, ROUTER_DIRECTIVES, Router } from "@angular/router-deprecated";
+import { ROUTER_DIRECTIVES, Router, Event, NavigationEnd } from "@angular/router";
 import { Title } from "@angular/platform-browser";
-
-import { LoginView } from "app/login/login.view";
-import { WorkbenchView } from "app/workbench/workbench.view";
-import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
 
 import template from "./app.component.html!";
 import style from "./app.component.css!text";
@@ -16,28 +12,6 @@ import style from "./app.component.css!text";
 	encapsulation: ViewEncapsulation.None,
 	directives: [ ROUTER_DIRECTIVES ]
 } )
-@RouteConfig( [
-	{
-		path: "login",
-		as: "WorkbenchLogin",
-		component: LoginView,
-		data: {
-			alias: "WorkbenchLogin",
-			displayName: "Workbench Log In",
-		}
-	},
-	{
-		path: "...",
-		as: "Workbench",
-		component: WorkbenchView,
-		useAsDefault: true,
-		data: {
-			alias: "Workbench",
-			displayName: "Workbench",
-		},
-	},
-	{ path: "**", as: "NotFoundError", component: NotFoundErrorView },
-] )
 export class AppComponent {
 	router:Router;
 	title:Title;
@@ -45,8 +19,11 @@ export class AppComponent {
 	constructor( title:Title, router:Router ) {
 		this.router = router;
 		this.title = title;
-		this.router.subscribe( () => {
-			this.defineTitle();
+
+		this.router.events.subscribe( ( event:Event ) => {
+			if( event instanceof NavigationEnd ) {
+				// this.defineTitle();
+			}
 		} );
 	}
 

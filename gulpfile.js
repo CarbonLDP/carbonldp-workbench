@@ -86,7 +86,7 @@ gulp.task( "default", [ "build" ] );
 gulp.task( "build", [ "clean:dist" ], ( done ) => {
 	runSequence(
 		"clean:dist",
-		[ "compile:styles", "compile:boot", "compile:index", "copy:semantic", "copy:assets" ],
+		[ "compile:styles", "compile:config", "compile:index", "copy:semantic", "copy:assets" ],
 		"bundle",
 		done
 	);
@@ -310,10 +310,10 @@ gulp.task( "clean:src", ( done ) => {
 	}
 } );
 
-gulp.task( "compile:boot", () => {
-	return gulp.src( "src/app/boot.ejs.ts" )
+gulp.task( "compile:config", () => {
+	return gulp.src( "src/app/config.ejs.ts" )
 		.pipe( ejs( profileConfig ) )
-		.pipe( rename( "boot.ts" ) )
+		.pipe( rename( "config.ts" ) )
 		.pipe( gulp.dest( "src/app/" ) )
 } );
 
@@ -371,7 +371,7 @@ gulp.task( "lint:typescript", () => {
 
 gulp.task( "serve", ( done ) => {
 	runSequence(
-		[ "build:semantic", "compile:styles", "compile:boot", "copy:node-dependencies" ],
+		[ "build:semantic", "compile:styles", "compile:config", "copy:node-dependencies" ],
 		"serve|after-compilation",
 		done
 	);
