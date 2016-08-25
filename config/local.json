@@ -6,7 +6,7 @@
 		"base": "/carbon-workbench/src/"
 	},
 	"carbon": {
-		"protocol": "https",
-		"domain": "local.carbonldp.com"
+		"protocol": "http",
+		"domain": "localhost:8083"
 	}
 }

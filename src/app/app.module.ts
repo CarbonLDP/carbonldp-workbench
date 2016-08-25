@@ -17,12 +17,15 @@ import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-err
 
 import { DashboardView } from "app/dashboard/dashboard.view";
 
+import { PanelModule } from "carbon-panel/panel.module";
+
 @NgModule( {
 	imports: [
 		BrowserModule,
 		//MyAppsModule,
 		DeprecatedFormsModule,
-		routing
+		routing,
+		PanelModule
 	],
 	declarations: [
 		AppComponent,

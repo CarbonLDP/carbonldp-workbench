@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { LoginComponent } from "carbon-panel/login.component";
-import { RegisterComponent } from "carbon-panel/register.component";
+//import { LoginComponent } from "carbon-panel/login.component";
+//import { RegisterComponent } from "carbon-panel/register.component";
 
 import template from "./login.view.html!";
 import style from "./login.view.css!text";
@@ -11,7 +11,7 @@ import style from "./login.view.css!text";
 	selector: "div.ng-view",
 	template: template,
 	styles: [ style ],
-	directives: [ LoginComponent, RegisterComponent ]
+	//directives: [ LoginComponent, RegisterComponent ]
 } )
 export class LoginView {
 	private router:Router;
@@ -24,7 +24,7 @@ export class LoginView {
 	}
 
 	onLogin():void {
-		this.router.navigate( [ "/Workbench/" ] );
+		this.router.navigate( [ "" ] );
 	}
 
 	onRegister():void {
