@@ -89,12 +89,13 @@ export class WorkbenchView {
 		this.authService = authService;
 		this.router = router;
 		this.carbon = carbon;
-		/*this.router.parent.subscribe( ( url )=> {
-			if( this.prevUrl !== url ) {
-				document.querySelector( ".scrollable-content" ).scrollTop = 0;
+		this.router.events.subscribe( ( url )=> {
+			/*if( this.prevUrl !== url ) {
+				console.log("workbench", url)
+				//document.querySelector( ".scrollable-content" ).scrollTop = 0;
 				this.prevUrl = url;
-			}
-		} );*/
+			}*/
+		} );
 	}
 
 
