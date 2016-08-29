@@ -120,6 +120,7 @@ export class WorkbenchView {
 		} );
 
 		//let name:string = this.carbon.auth.authenticatedAgent[ "name" ] ? this.carbon.auth.authenticatedAgent.name : "User";
+		//TODO: fix name
 		let name:string = "User";
 		this.headerService.addItems( [
 			{
