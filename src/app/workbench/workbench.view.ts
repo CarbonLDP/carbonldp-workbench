@@ -51,27 +51,6 @@ import style from "./workbench.view.css!text";
 		//provide( MyAppsSidebarService, { useClass: MyAppsSidebarService } ),
 	]
 } )
-/*@RouteConfig( [
-	{
-		path: "/",
-		as: "Dashboard",
-		component: DashboardView,
-		useAsDefault: true,
-		data: {
-			alias: "Dashboard",
-			displayName: "Dashboard",
-		},
-	},
-	{
-		path: "/my-apps/...",
-		as: "MyApps",
-		component: MyAppsView,
-		data: {
-			alias: "MyApps",
-			displayName: "My Apps",
-		},
-	},
-] )*/
 export class WorkbenchView {
 
 	private headerService:HeaderService;
@@ -81,8 +60,7 @@ export class WorkbenchView {
 	private carbon:Carbon;
 	private prevUrl:string;
 
-	//constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
-	constructor(  headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
+	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
 
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
@@ -154,7 +132,7 @@ export class WorkbenchView {
 			{
 				type: "link",
 				name: "Apps",
-				route: [ "/my-apps" ]
+				route: [ "", "my-apps" ]
 			}
 		] );
 	}

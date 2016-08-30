@@ -2,8 +2,6 @@ import { NgModule } from "@angular/core";
 import { APP_BASE_HREF, DeprecatedFormsModule } from "@angular/common";
 import { BrowserModule, Title } from "@angular/platform-browser";
 
-//import { MyAppsModule } from "carbon-panel/my-apps/my-apps.module";
-
 import { CARBON_PROVIDERS } from "angular2-carbonldp/boot";
 import { CARBON_SERVICES_PROVIDERS } from "angular2-carbonldp/services";
 
@@ -19,13 +17,13 @@ import { DashboardView } from "app/dashboard/dashboard.view";
 
 import { PanelModule } from "carbon-panel/panel.module";
 
+
 @NgModule( {
 	imports: [
 		BrowserModule,
-		//MyAppsModule,
 		DeprecatedFormsModule,
 		routing,
-		PanelModule
+		PanelModule.forRoot()
 	],
 	declarations: [
 		AppComponent,

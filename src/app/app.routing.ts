@@ -14,45 +14,36 @@ import { DashboardView } from "app/dashboard/dashboard.view";
 const appRoutes:Routes = [
 	{
 		path: "login",
-		// as: "WorkbenchLogin",
 		component: LoginView,
 		data: {
-			alias: "WorkbenchLogin",
+			alias: "login",
 			displayName: "Workbench Log In",
 		}
 	},
 	{
 		path: "",
-		// as: "Workbench",
 		component: WorkbenchView,
 		data: {
-			alias: "Workbench",
+			alias: "",
 			displayName: "Workbench",
-	 	},
-	 	children: [
-	 		{
+		},
+		children: [
+			{
 				path: "",
-				// as: "Dashboard",
 				component: DashboardView,
 				data: {
-					alias: "Dashboard",
+					alias: "",
 					displayName: "Dashboard",
 				},
 			},
-			{   
+			{
 				path: "my-apps",
-				// as: "MyApps",
-				data: {
-					alias: "MyApps",
-					displayName: "My Apps",
-				},
 				loadChildren: "carbon-panel/my-apps/my-apps.module#MyAppsModule",
 			},
-	 	]
-	 },
+		]
+	},
 	{
 		path: "**",
-		// as: "NotFoundError"
 		component: NotFoundErrorView
 	},
 ];
