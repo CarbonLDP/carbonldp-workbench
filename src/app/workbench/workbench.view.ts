@@ -60,7 +60,7 @@ export class WorkbenchView {
 	private carbon:Carbon;
 	private prevUrl:string;
 
-	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
+	constructor(  headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
 
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
@@ -99,6 +99,7 @@ export class WorkbenchView {
 		} );
 
 		//let name:string = this.carbon.auth.authenticatedAgent[ "name" ] ? this.carbon.auth.authenticatedAgent.name : "User";
+		//TODO: fix name
 		let name:string = "User";
 		this.headerService.addItems( [
 			{
