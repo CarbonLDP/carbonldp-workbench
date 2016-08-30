@@ -36,6 +36,7 @@ import style from "./workbench.view.css!text";
 		//ErrorsAreaComponent,
 	],
 	providers: [
+		HeaderService, SidebarService
 		/*provide( RouterService, {
 			useFactory: ( router:Router, location:Location ):RouterService => {
 				return new RouterService( router, location );
