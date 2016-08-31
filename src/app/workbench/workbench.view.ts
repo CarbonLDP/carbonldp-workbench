@@ -15,7 +15,7 @@ import { SidebarService } from "carbon-panel/sidebar.service";
 //import { MenuBarComponent } from "carbon-panel/menu-bar.component";
 //import { ErrorsAreaComponent } from "carbon-panel/errors-area/errors-area.component";
 //import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service";
-//import { MyAppsSidebarService } from "carbon-panel/my-apps/my-apps-sidebar.service";
+import { MyAppsSidebarService } from "carbon-panel/my-apps/my-apps-sidebar.service";
 
 // import { MyAppsView } from "carbon-panel/my-apps/my-apps.view";
 //
@@ -36,7 +36,7 @@ import style from "./workbench.view.css!text";
 		//ErrorsAreaComponent,
 	],
 	providers: [
-		HeaderService, SidebarService
+		// HeaderService, SidebarService, MyAppsSidebarService
 		/*provide( RouterService, {
 			useFactory: ( router:Router, location:Location ):RouterService => {
 				return new RouterService( router, location );
@@ -61,7 +61,7 @@ export class WorkbenchView {
 	private carbon:Carbon;
 	private prevUrl:string;
 
-	constructor(  headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
+	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
 
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
@@ -88,6 +88,7 @@ export class WorkbenchView {
 	}
 
 	private populateHeader():void {
+		this.headerService.clear();
 		this.headerService.logo = {
 			image: "assets/images/carbon-ldp-logo-lg.png",
 			route: [ "" ]
@@ -124,6 +125,7 @@ export class WorkbenchView {
 	}
 
 	private populateSidebar():void {
+		this.sidebarService.clear();
 		this.sidebarService.addItems( [
 			{
 				type: "link",
