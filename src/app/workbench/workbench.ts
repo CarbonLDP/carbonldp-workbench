@@ -1,4 +1,3 @@
-import { Provider } from "@angular/core";
 import { AppContextService } from "carbon-panel/my-apps/app-context.service";
 import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service";
 import { DocumentsResolverService } from "carbon-panel/my-apps/app-content/explorer/document-explorer/documents-resolver.service";
@@ -7,22 +6,22 @@ import { BackupsService } from "carbon-panel/my-apps/app-content/configuration/b
 import { SidebarService } from "carbon-panel/sidebar.service";
 
 export const WORKBENCH_PROVIDERS = [
-	new Provider( AppContextService, {
+	{ provide: AppContextService,
 		useClass: AppContextService
-	} ),
-	new Provider( ErrorsAreaService, {
+	},
+	{ provide: ErrorsAreaService,
 		useClass: ErrorsAreaService
-	} ),
-	new Provider( DocumentsResolverService, {
+	},
+	{ provide: DocumentsResolverService,
 		useClass: DocumentsResolverService
-	} ),
-	new Provider( JobsService, {
+	},
+	{ provide: JobsService,
 		useClass: JobsService
-	} ),
-	new Provider( BackupsService, {
+	},
+	{ provide: BackupsService,
 		useClass: BackupsService
-	} ),
-	new Provider( SidebarService, {
+	},
+	{ provide: SidebarService,
 		useClass: SidebarService
-	} )
+	}
 ];

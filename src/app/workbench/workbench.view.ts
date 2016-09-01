@@ -1,25 +1,11 @@
-import { Component, provide, Inject, EventEmitter } from "@angular/core";
-import { Location } from "@angular/common";
-//import { Router, RouterOutlet, RouteConfig } from "@angular/router-deprecated";
-import { Router } from "@angular/router";
+import { Component, Inject, EventEmitter } from "@angular/core";
+import { Router, Event, NavigationStart } from "@angular/router";
 
 import Carbon from "carbonldp/Carbon";
 
 import { AuthService } from "angular2-carbonldp/services";
-
-//import { RouterService } from "carbon-panel/router.service";
 import { HeaderService } from "carbon-panel/header.service";
-//import { HeaderComponent } from "carbon-panel/header.component";
 import { SidebarService } from "carbon-panel/sidebar.service";
-//import { SidebarComponent } from "carbon-panel/sidebar.component";
-//import { MenuBarComponent } from "carbon-panel/menu-bar.component";
-//import { ErrorsAreaComponent } from "carbon-panel/errors-area/errors-area.component";
-//import { ErrorsAreaService } from "carbon-panel/errors-area/errors-area.service";
-import { MyAppsSidebarService } from "carbon-panel/my-apps/my-apps-sidebar.service";
-
-// import { MyAppsView } from "carbon-panel/my-apps/my-apps.view";
-//
-// import { DashboardView } from "app/dashboard/dashboard.view";
 
 import template from "./workbench.view.html!";
 import style from "./workbench.view.css!text";
@@ -28,29 +14,6 @@ import style from "./workbench.view.css!text";
 	selector: "div.ng-view",
 	template: template,
 	styles: [ style ],
-	directives: [
-		//RouterOutlet,
-		//HeaderComponent,
-		//SidebarComponent,
-		//MenuBarComponent,
-		//ErrorsAreaComponent,
-	],
-	providers: [
-		// HeaderService, SidebarService, MyAppsSidebarService
-		/*provide( RouterService, {
-			useFactory: ( router:Router, location:Location ):RouterService => {
-				return new RouterService( router, location );
-			},
-			deps: [ Router, Location ]
-		} ),*/
-		//provide( HeaderService, { useClass: HeaderService } ),
-		//provide( SidebarService, { useClass: SidebarService } ),
-		//provide( ErrorsAreaService, { useClass: ErrorsAreaService } ),
-
-		// If we provide MyAppsSidebarService inside of my-apps.view, Angular would create a new instance each time my-apps is revisited
-		// leading to duplicate entries in the sidebar
-		//provide( MyAppsSidebarService, { useClass: MyAppsSidebarService } ),
-	]
 } )
 export class WorkbenchView {
 
@@ -68,12 +31,15 @@ export class WorkbenchView {
 		this.authService = authService;
 		this.router = router;
 		this.carbon = carbon;
-		this.router.events.subscribe( ( url )=> {
-			/*if( this.prevUrl !== url ) {
-				console.log("workbench", url)
-				//document.querySelector( ".scrollable-content" ).scrollTop = 0;
-				this.prevUrl = url;
-			}*/
+		this.router.events.subscribe( ( event:Event )=> {
+			let url:string = "";
+			if ( event instanceof NavigationStart ){
+				url = event.url;
+				if( this.prevUrl !== url ) {
+					document.querySelector( ".scrollable-content" ).scrollTop = 0;
+					this.prevUrl = url;
+				}
+			}
 		} );
 	}
 

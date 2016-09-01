@@ -1,13 +1,14 @@
 import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
+//Guards
 import { AuthenticatedGuard, NotAuthenticatedGuard } from "angular2-carbonldp/guards";
 import { ActiveContextResolver } from "angular2-carbonldp/resolvers";
 
+//Components
 import { LoginView } from "app/login/login.view";
 import { WorkbenchView } from "app/workbench/workbench.view";
 import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
-
 import { DashboardView } from "app/dashboard/dashboard.view";
 
 

@@ -10,14 +10,13 @@ import style from "./app.component.css!text";
 	template: template,
 	styles: [ style ],
 	encapsulation: ViewEncapsulation.None,
-	//directives: [ ROUTER_DIRECTIVES ]
 } )
 export class AppComponent {
 	router:Router;
 	title:Title;
 	route:ActivatedRoute
 
-	constructor( title:Title, router:Router, route:ActivatedRoute) {
+	constructor( title:Title, router:Router, route:ActivatedRoute ) {
 		this.router = router;
 		this.title = title;
 		this.route = route;
@@ -32,50 +31,61 @@ export class AppComponent {
 	// TODO: Move this code to carbon-panel so it can be reused
 	defineTitle() {
 		let title:string = "";
-		let rootComponent = this.route.children[0].data.value["displayName"];
-		let auxRouter = this.route.children[0];
-
+		let rootComponent = this.route.children[ 0 ].data.value[ "displayName" ];
+		let auxRouter = this.route.children[ 0 ];
+		let mainFlag = false;
 		while( typeof auxRouter !== 'undefined' ) {
 			let displayName = auxRouter.data.value[ "displayName" ];
-			let mainComponent = auxRouter.data[ "main" ];
-			//TODO: missing slug in title: add parameters section to obtain slug for applications.
-			//let parameters = auxRouter.params;
+			let mainComponent = auxRouter.data.value[ "main" ];
+			let parameter = auxRouter.data.value[ "param" ];
 
-			let parameter = null;
-			//for( let parameterName in parameters ) {
-			//	if( ! parameters.hasOwnProperty( parameterName ) ) continue;
-			//	if( parameter !== null ) {
-			//		parameter = null;
-			//		break;
-			//	}
-			//	parameter = parameters[ parameterName ];
-			//}
+			let appName = null;
+			appName = auxRouter.params.value[ parameter ];
 
-			if( parameter !== null ) {
-				if( typeof auxRouter.children[0] === 'undefined' ) {
-					if( typeof displayName === 'undefined' ) title = "";
-					else title += displayName + "(" + parameter + ") | ";
+			if( typeof appName !== 'undefined' && appName !== null ) {
+				if ( typeof displayName !== 'undefined' && mainFlag ){
+					title += " > ";
+					mainFlag = false;
+				}
+				if( typeof auxRouter.children[ 0 ] === 'undefined' ) {
+					if( typeof displayName !== 'undefined' );
+					title += displayName + "(" + appName + ")";
 				} else {
-					if( mainComponent )
-						title += displayName + "(" + parameter + ") > ";
+					if( mainComponent ){
+						title += displayName + "(" + appName + ")";
+						mainFlag = true;
+					}
 				}
 
 			} else {
-				if( typeof auxRouter.children[0] === 'undefined' ) {
-					if( typeof displayName === 'undefined' ) title = "";
-					else title += displayName + " | ";
+				if ( typeof displayName !== 'undefined' && mainFlag ){
+					title += " > ";
+					mainFlag = false;
+				}
+				if( typeof auxRouter.children[ 0 ] === 'undefined' ) {
+					if( typeof displayName !== 'undefined' )
+						title += displayName;
 				} else {
-					if( mainComponent ) title = title + displayName + " > ";
+					if( mainComponent ){
+						title = title + displayName;
+						mainFlag = true;
+					}
 				}
 
 			}
-			auxRouter = auxRouter.children[0];
+			auxRouter = auxRouter.children[ 0 ];
+
 		}
-		title += rootComponent;
+
+		if( title )
+		title += " | "+rootComponent;
+		else
+		title = rootComponent;
 
 		this.title.setTitle( title );
 
 	}
+
 
 
 }
