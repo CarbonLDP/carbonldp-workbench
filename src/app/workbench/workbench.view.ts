@@ -100,9 +100,7 @@ export class WorkbenchView {
 			this.router.navigate( [ "/login" ] );
 		} );
 
-		//let name:string = this.carbon.auth.authenticatedAgent[ "name" ] ? this.carbon.auth.authenticatedAgent.name : "User";
-		//TODO: fix name
-		let name:string = "User";
+		let name:string = this.carbon.auth.authenticatedAgent[ "name" ] ? this.carbon.auth.authenticatedAgent.name : "User";
 		this.headerService.addItems( [
 			{
 				name: "Dashboard",
