@@ -38,7 +38,6 @@ import { PanelModule } from "carbon-panel/panel.module";
 		appRoutingProviders,
 
 		Title,
-
 		CARBON_PROVIDERS,
 		CARBON_SERVICES_PROVIDERS
 	],

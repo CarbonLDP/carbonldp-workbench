@@ -36,7 +36,6 @@ import style from "./workbench.view.css!text";
 		//ErrorsAreaComponent,
 	],
 	providers: [
-		HeaderService, SidebarService
 		/*provide( RouterService, {
 			useFactory: ( router:Router, location:Location ):RouterService => {
 				return new RouterService( router, location );
@@ -62,7 +61,6 @@ export class WorkbenchView {
 	private prevUrl:string;
 
 	constructor(  headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
-
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
 		this.authService = authService;
