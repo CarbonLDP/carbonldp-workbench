@@ -34,13 +34,14 @@ import { PanelModule } from "carbon-panel/panel.module";
 		DashboardView,
 	],
 	providers: [
-		{ provide: APP_BASE_HREF, useValue: URL_BASE },
-
-		appRoutingProviders,
-
-		Title,
+		{
+			provide: APP_BASE_HREF,
+			useValue: URL_BASE
+		},
 		CARBON_PROVIDERS,
-		CARBON_SERVICES_PROVIDERS
+		CARBON_SERVICES_PROVIDERS,
+		appRoutingProviders,
+		Title,
 	],
 	bootstrap: [ AppComponent ],
 } )
