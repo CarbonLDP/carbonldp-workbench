@@ -40,6 +40,7 @@ const appRoutes:Routes = [
 				data: {
 					alias: "",
 					displayName: "Dashboard",
+					title: false,
 				},
 			},
 			{
