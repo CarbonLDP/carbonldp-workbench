@@ -14,7 +14,7 @@ import style from "./app.component.css!text";
 export class AppComponent {
 	router:Router;
 	title:Title;
-	route:ActivatedRoute
+	route:ActivatedRoute;
 
 	constructor( title:Title, router:Router, route:ActivatedRoute ) {
 		this.router = router;
@@ -28,7 +28,7 @@ export class AppComponent {
 		} );
 	}
 
-	defineTitle() {
+	private defineTitle() {
 		let title:string = "",
 			activatedRoutes:ActivatedRouteSnapshot[] = [],
 			currentRoute:ActivatedRoute = this.route.root;
@@ -39,13 +39,27 @@ export class AppComponent {
 			currentRoute = currentRoute.children[ 0 ];
 		} while( currentRoute );
 
+		console.log( activatedRoutes );
 		activatedRoutes.forEach( ( snapshot:ActivatedRouteSnapshot, idx:number )=> {
-			if( typeof snapshot.data[ "title" ] === "undefined" ) return;
-			title += snapshot.data[ "param" ] ? snapshot.params[ snapshot.data[ "param" ] ] : snapshot.data[ "title" ];
-			if( idx === 0 && activatedRoutes.length > 1 )  title += " | ";
-			else if( idx < activatedRoutes.length - 1 ) title += " > "
+			if( idx === 0 ) return;
+			title += this.getTitle( snapshot );
+			if( idx < activatedRoutes.length - 1 ) title += " > ";
 		} );
+		title = title + (activatedRoutes.length > 1 ? " | " : "") + this.getTitle( activatedRoutes[ 0 ] );
+		console.log( title );
 		this.title.setTitle( title );
+	}
+
+	private getTitle( snapShot:ActivatedRouteSnapshot ):string {
+		let title:string = "";
+		if( typeof snapShot.data[ "param" ] !== "undefined" ) {
+			title += snapShot.data[ "displayName" ] + " (" + snapShot.params[ snapShot.data[ "param" ] ] + " )";
+		} else if( typeof snapShot.data[ "title" ] === "string" ) {
+			title += snapShot.data[ "title" ]
+		} else if( typeof snapShot.data[ "title" ] === "boolean" && ! ! snapShot.data[ "title" ] ) {
+			title += snapShot.data[ "displayName" ]
+		}
+		return title;
 	}
 
 }

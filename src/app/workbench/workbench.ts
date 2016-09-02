@@ -6,22 +6,28 @@ import { BackupsService } from "carbon-panel/my-apps/app-content/configuration/b
 import { SidebarService } from "carbon-panel/sidebar.service";
 
 export const WORKBENCH_PROVIDERS = [
-	{ provide: AppContextService,
+	{
+		provide: AppContextService,
 		useClass: AppContextService
 	},
-	{ provide: ErrorsAreaService,
+	{
+		provide: ErrorsAreaService,
 		useClass: ErrorsAreaService
 	},
-	{ provide: DocumentsResolverService,
+	{
+		provide: DocumentsResolverService,
 		useClass: DocumentsResolverService
 	},
-	{ provide: JobsService,
+	{
+		provide: JobsService,
 		useClass: JobsService
 	},
-	{ provide: BackupsService,
+	{
+		provide: BackupsService,
 		useClass: BackupsService
 	},
-	{ provide: SidebarService,
+	{
+		provide: SidebarService,
 		useClass: SidebarService
 	}
 ];
