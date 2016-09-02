@@ -18,7 +18,7 @@ const appRoutes:Routes = [
 		component: LoginView,
 		data: {
 			alias: "login",
-			displayName: "Workbench Log In",
+			title: "Workbench | Log In",
 		}
 	},
 	{
@@ -31,6 +31,7 @@ const appRoutes:Routes = [
 			// AuthenticatedGuard cases
 			onReject: [ "/login" ],
 			onError: [ "/error" ],
+			title: "Workbench",
 		},
 		children: [
 			{
@@ -49,7 +50,10 @@ const appRoutes:Routes = [
 	},
 	{
 		path: "**",
-		component: NotFoundErrorView
+		component: NotFoundErrorView,
+		data: {
+			title: "404 | Workbench",
+		}
 	},
 ];
 

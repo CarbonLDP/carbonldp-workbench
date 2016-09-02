@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { Router, Event, NavigationEnd, ActivatedRoute } from "@angular/router";
+import { Router, Event, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
 import { Title } from "@angular/platform-browser";
 
 import template from "./app.component.html!";
@@ -28,65 +28,25 @@ export class AppComponent {
 		} );
 	}
 
-	// TODO: Move this code to carbon-panel so it can be reused
 	defineTitle() {
-		let title:string = "";
-		let rootComponent = this.route.children[ 0 ].data.value[ "displayName" ];
-		let auxRouter = this.route.children[ 0 ];
-		let mainFlag = false;
-		while( typeof auxRouter !== 'undefined' ) {
-			let displayName = auxRouter.data.value[ "displayName" ];
-			let mainComponent = auxRouter.data.value[ "main" ];
-			let parameter = auxRouter.data.value[ "param" ];
+		let title:string = "",
+			activatedRoutes:ActivatedRouteSnapshot[] = [],
+			currentRoute:ActivatedRoute = this.route.root;
 
-			let appName = null;
-			appName = auxRouter.params.value[ parameter ];
+		do {
+			if( ! ! currentRoute.snapshot && ! ! currentRoute.snapshot.data[ "title" ] )
+				activatedRoutes.push( currentRoute.snapshot );
+			currentRoute = currentRoute.children[ 0 ];
+		} while( currentRoute );
 
-			if( typeof appName !== 'undefined' && appName !== null ) {
-				if ( typeof displayName !== 'undefined' && mainFlag ){
-					title += " > ";
-					mainFlag = false;
-				}
-				if( typeof auxRouter.children[ 0 ] === 'undefined' ) {
-					if( typeof displayName !== 'undefined' );
-					title += displayName + "(" + appName + ")";
-				} else {
-					if( mainComponent ){
-						title += displayName + "(" + appName + ")";
-						mainFlag = true;
-					}
-				}
-
-			} else {
-				if ( typeof displayName !== 'undefined' && mainFlag ){
-					title += " > ";
-					mainFlag = false;
-				}
-				if( typeof auxRouter.children[ 0 ] === 'undefined' ) {
-					if( typeof displayName !== 'undefined' )
-						title += displayName;
-				} else {
-					if( mainComponent ){
-						title = title + displayName;
-						mainFlag = true;
-					}
-				}
-
-			}
-			auxRouter = auxRouter.children[ 0 ];
-
-		}
-
-		if( title )
-		title += " | "+rootComponent;
-		else
-		title = rootComponent;
-
+		activatedRoutes.forEach( ( snapshot:ActivatedRouteSnapshot, idx:number )=> {
+			if( typeof snapshot.data[ "title" ] === "undefined" ) return;
+			title += snapshot.data[ "param" ] ? snapshot.params[ snapshot.data[ "param" ] ] : snapshot.data[ "title" ];
+			if( idx === 0 && activatedRoutes.length > 1 )  title += " | ";
+			else if( idx < activatedRoutes.length - 1 ) title += " > "
+		} );
 		this.title.setTitle( title );
-
 	}
-
-
 
 }
 
