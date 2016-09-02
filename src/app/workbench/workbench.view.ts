@@ -1,5 +1,5 @@
 import { Component, Inject, EventEmitter } from "@angular/core";
-import { Router, Event, NavigationStart } from "@angular/router";
+import { Router, Event, NavigationEnd } from "@angular/router";
 
 import Carbon from "carbonldp/Carbon";
 
@@ -32,11 +32,12 @@ export class WorkbenchView {
 		this.router = router;
 		this.carbon = carbon;
 		this.router.events.subscribe( ( event:Event )=> {
-			let url:string = "";
-			if ( event instanceof NavigationStart ){
+			let url:string = "", scrollableContent:Element;
+			if( event instanceof NavigationEnd ) {
 				url = event.url;
 				if( this.prevUrl !== url ) {
-					document.querySelector( ".scrollable-content" ).scrollTop = 0;
+					scrollableContent = document.querySelector( ".scrollable-content" );
+					if( scrollableContent )scrollableContent.scrollTop = 0;
 					this.prevUrl = url;
 				}
 			}
