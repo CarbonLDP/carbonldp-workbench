@@ -1,14 +1,11 @@
 SystemJS.config({
   baseURL: "/",
   paths: {
-    "github:": "carbon-workbench/jspm_packages/github/",
-    "npm:": "carbon-workbench/jspm_packages/npm/",
-    "carbonldp/": "CarbonLDP-JS-SDK/dist/",
-    "angular2-carbonldp/": "angular2-carbonldp/dist/",
-    "carbon-panel/": "carbon-panel/dist/",
-    "semantic-ui/": "carbon-workbench/src/semantic/dist/",
-    "tsconfig.json": "carbon-workbench/tsconfig.json",
-    "app/": "carbon-workbench/src/app/"
+    "github:": "jspm_packages/github/",
+    "npm:": "jspm_packages/npm/",
+    "semantic-ui/": "src/semantic/dist/",
+    "local:": "jspm_packages/local/",
+    "app/": "src/app/"
   },
   transpiler: "plugin-typescript",
   typescriptOptions: {
@@ -31,20 +28,11 @@ SystemJS.config({
         "file-type": "@empty"
       }
     },
-    "CarbonLDP-JS-SDK": {
-      "defaultExtension": "js",
-      "map": {
-        "file-type": "@empty"
-      }
-    },
     "angular2-carbonldp": {
       "defaultExtension": "js",
       "map": {
         "js-cookie": "npm:js-cookie@2.1.2"
       }
-    },
-    "carbon-panel": {
-      "defaultExtension": "js"
     },
     "semantic-ui": {
       "defaultExtension": "js"
@@ -59,9 +47,14 @@ SystemJS.config({
   packageConfigPaths: [
     "github:*/*.json",
     "npm:@*/*.json",
-    "npm:*.json"
+    "npm:*.json",
+    "local:*.json"
   ],
   map: {
+    "carbon-panel": "npm:carbonldp-panel@0.3.0-rc.1",
+    "carbonldp-panel": "npm:carbonldp-panel@0.3.0-rc.1",
+    "angular2-carbonldp": "npm:angular2-carbonldp@0.3.1",
+    "carbonldp": "npm:carbonldp@0.37.0",
     "@angular/router-deprecated": "npm:@angular/router-deprecated@2.0.0-rc.2",
     "@angular/common": "npm:@angular/common@2.0.0-rc.5",
     "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.5",
@@ -70,7 +63,7 @@ SystemJS.config({
     "@angular/http": "npm:@angular/http@2.0.0-rc.5",
     "@angular/platform-browser": "npm:@angular/platform-browser@2.0.0-rc.5",
     "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.0-rc.5",
-    "@angular/router": "npm:@angular/router@3.0.0-rc.1",
+    "@angular/router": "npm:@angular/router@3.0.0-rc.2",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
@@ -83,7 +76,7 @@ SystemJS.config({
     "http": "github:jspm/nodelibs-http@0.2.0-alpha",
     "https": "github:jspm/nodelibs-https@0.2.0-alpha",
     "jquery": "npm:jquery@2.2.4",
-    "js-cookie": "npm:js-cookie@2.1.2",
+    "js-cookie": "npm:js-cookie@2.1.3",
     "jstree": "npm:jstree@3.3.2",
     "os": "github:jspm/nodelibs-os@0.2.0-alpha",
     "path": "github:jspm/nodelibs-path@0.2.0-alpha",
@@ -97,7 +90,7 @@ SystemJS.config({
     "url": "github:jspm/nodelibs-url@0.2.0-alpha",
     "util": "github:jspm/nodelibs-util@0.2.0-alpha",
     "vm": "github:jspm/nodelibs-vm@0.2.0-alpha",
-    "zone.js": "npm:zone.js@0.6.14"
+    "zone.js": "npm:zone.js@0.6.17"
   },
   packages: {
     "github:jspm/nodelibs-crypto@0.2.0-alpha": {
@@ -333,6 +326,16 @@ SystemJS.config({
     "github:frankwallis/plugin-typescript@5.0.9": {
       "map": {
         "typescript": "npm:typescript@2.0.0"
+      }
+    },
+    "npm:carbonldp@0.37.0": {
+      "map": {
+        "file-type": "npm:file-type@3.8.0"
+      }
+    },
+    "npm:angular2-carbonldp@0.3.1": {
+      "map": {
+        "js-cookie": "npm:js-cookie@2.1.3"
       }
     }
   }

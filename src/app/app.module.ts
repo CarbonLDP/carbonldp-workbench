@@ -24,7 +24,7 @@ import { PanelModule } from "carbon-panel/panel.module";
 		BrowserModule,
 		DeprecatedFormsModule,
 		routing,
-		PanelModule.forRoot()
+		PanelModule.forRoot(),
 	],
 	declarations: [
 		AppComponent,

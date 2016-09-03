@@ -135,11 +135,19 @@ gulp.task( "build:semantic", () => {
 
 gulp.task( "bundle", () => {
 	let builder = new Builder();
-	return builder.buildStatic( "app/boot", "dist/site/main.sfx.js", {
+	let promises = [];
+	promises.push( builder.buildStatic( "app/boot", "dist/site/main.sfx.js", {
 		minify: false,
 		mangle: false,
 		sourceMaps: false
-	} );
+	} ) );
+	promises.push( builder.buildStatic( "carbon-panel/my-apps/my-apps.module", "dist/site/my-apps.sfx.js", {
+		minify: false,
+		mangle: false,
+		sourceMaps: false
+	} ) );
+
+	return Promise.all( promises );
 } );
 
 gulp.task( "clean:dist", () => {
@@ -392,11 +400,11 @@ gulp.task( "serve|after-compilation", () => {
 		util.log( util.colors.red( "Error" ), error.message );
 	} );
 
-	return gulp.src( "../" )
+	return gulp.src( "." )
 		.pipe( webserver( {
 			livereload: false,
 			directoryListing: false,
-			fallback: "/carbon-workbench/src/index.html",
+			fallback: "/src/index.html",
 			open: true,
 		} ) );
 } );

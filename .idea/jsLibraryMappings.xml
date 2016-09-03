@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
+    <file url="file://$PROJECT_DIR$/../CarbonLDP-JS-SDK/dist" libraries="{CarbonLDP-JS-SDK/dist/node_modules}" />
     <file url="PROJECT" libraries="{ts-external-references, tsconfig$roots}" />
     <includedPredefinedLibrary name="ECMAScript 6" />
+    <includedPredefinedLibrary name="Node.js Core" />
   </component>
 </project>

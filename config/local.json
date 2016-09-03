@@ -3,10 +3,10 @@
 		"debug": true
 	},
 	"url": {
-		"base": "/carbon-workbench/src/"
+		"base": "/src/"
 	},
 	"carbon": {
-		"protocol": "http",
-		"domain": "localhost:8083"
+		"protocol": "https",
+		"domain": "local.carbonldp.com"
 	}
 }
