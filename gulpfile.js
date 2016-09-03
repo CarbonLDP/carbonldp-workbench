@@ -32,12 +32,6 @@ const argv = require( "yargs" )
 
 	.describe( "use-env", "Use environment variables instead of using profile based configuration" )
 
-	.describe( "image-name", "Docker image to build" )
-	.default( "image-name", "carbon-workbench" )
-
-	.describe( "image-version", "Docker image version" )
-	.default( "image-version", "latest" )
-
 	.argv;
 
 let profileConfig;
@@ -86,43 +80,10 @@ gulp.task( "default", [ "build" ] );
 gulp.task( "build", [ "clean:dist" ], ( done ) => {
 	runSequence(
 		"clean:dist",
-		[ "compile:styles", "compile:boot", "compile:index", "copy:semantic", "copy:assets" ],
+		[ "compile:styles", "compile:config", "compile:index", "copy:semantic", "copy:assets" ],
 		"bundle",
 		done
 	);
-} );
-
-gulp.task( "build:docker-image", ( done ) => {
-	runSequence(
-		"build:docker-image|copy:dockerfile",
-		"build:docker-image|build:image",
-		"build:docker-image|clean:dockerfile",
-		done
-	);
-} );
-
-gulp.task( "build:docker-image|copy:dockerfile", () => {
-	return gulp.src( "build/Dockerfile" )
-		.pipe( gulp.dest( "../" ) );
-} );
-
-gulp.task( "build:docker-image|build:image", ( done ) => {
-	let buildProcess = spawn( `docker`, [ `build`, `--tag`, `${argv[ "image-name" ]}:${argv[ "image-version" ]}`, `.` ], { cwd: getParentDirectory() } );
-
-	buildProcess.stdout.setEncoding( "utf8" );
-	buildProcess.stderr.setEncoding( "utf8" );
-
-	buildProcess.stdout.on( "data", logStdout );
-	buildProcess.stderr.on( "data", logStderr );
-
-	buildProcess.on( "close", ( code ) => {
-		if( code !== 0 ) done( "Docker build command failed" );
-		else done();
-	} );
-} );
-
-gulp.task( "build:docker-image|clean:dockerfile", () => {
-	return del( "../Dockerfile", { force: true } );
 } );
 
 gulp.task( "build:semantic", () => {
@@ -135,11 +96,19 @@ gulp.task( "build:semantic", () => {
 
 gulp.task( "bundle", () => {
 	let builder = new Builder();
-	return builder.buildStatic( "app/boot", "dist/site/main.sfx.js", {
+	let promises = [];
+	promises.push( builder.buildStatic( "app/boot", "dist/site/main.sfx.js", {
 		minify: false,
 		mangle: false,
 		sourceMaps: false
-	} );
+	} ) );
+	promises.push( builder.buildStatic( "carbon-panel/my-apps/my-apps.module", "dist/site/my-apps.sfx.js", {
+		minify: false,
+		mangle: false,
+		sourceMaps: false
+	} ) );
+
+	return Promise.all( promises );
 } );
 
 gulp.task( "clean:dist", () => {
@@ -310,10 +279,10 @@ gulp.task( "clean:src", ( done ) => {
 	}
 } );
 
-gulp.task( "compile:boot", () => {
-	return gulp.src( "src/app/boot.ejs.ts" )
+gulp.task( "compile:config", () => {
+	return gulp.src( "src/app/config.ejs.ts" )
 		.pipe( ejs( profileConfig ) )
-		.pipe( rename( "boot.ts" ) )
+		.pipe( rename( "config.ts" ) )
 		.pipe( gulp.dest( "src/app/" ) )
 } );
 
@@ -371,7 +340,7 @@ gulp.task( "lint:typescript", () => {
 
 gulp.task( "serve", ( done ) => {
 	runSequence(
-		[ "build:semantic", "compile:styles", "compile:boot", "copy:node-dependencies" ],
+		[ "build:semantic", "compile:styles", "compile:config", "copy:node-dependencies" ],
 		"serve|after-compilation",
 		done
 	);
@@ -392,11 +361,11 @@ gulp.task( "serve|after-compilation", () => {
 		util.log( util.colors.red( "Error" ), error.message );
 	} );
 
-	return gulp.src( "../" )
+	return gulp.src( "." )
 		.pipe( webserver( {
 			livereload: false,
 			directoryListing: false,
-			fallback: "/carbon-workbench/src/index.html",
+			fallback: "/src/index.html",
 			open: true,
 		} ) );
 } );

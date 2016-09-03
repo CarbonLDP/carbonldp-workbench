@@ -5,43 +5,24 @@ import "reflect-metadata";
 import "zone.js/dist/zone";
 import "zone.js/dist/long-stack-trace-zone";
 
-import { bootstrap } from "@angular/platform-browser-dynamic";
-import { Title } from "@angular/platform-browser";
-import { provide, enableProdMode, Provider, ComponentRef } from "@angular/core";
-import { APP_BASE_HREF } from "@angular/common";
-import { ROUTER_PROVIDERS } from "@angular/router-deprecated";
-import { HTTP_PROVIDERS } from "@angular/http";
+import { enableProdMode, NgModuleRef } from "@angular/core";
+import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 
-import { appInjector, activeContext, CARBON_PROVIDERS } from "angular2-carbonldp/boot";
-import { CARBON_SERVICES_PROVIDERS } from "angular2-carbonldp/services";
+import { appInjector, activeContext } from "angular2-carbonldp/boot";
 
 import Carbon from "carbonldp/Carbon";
 
-import { AppComponent } from "app/app.component";
-import { WORKBENCH_PROVIDERS } from "app/workbench/workbench";
+import { CARBON_PROTOCOL, CARBON_DOMAIN, DEBUG } from "app/config";
+import { AppModule } from "app/app.module";
 
 let carbon:Carbon = new Carbon();
-if( "https" !== "https" ) carbon.setSetting( "http.ssl", false );
-carbon.setSetting( "domain", "local.carbonldp.com" );
+if( CARBON_PROTOCOL !== "https" ) carbon.setSetting( "http.ssl", false );
+carbon.setSetting( "domain", CARBON_DOMAIN );
 activeContext.initialize( carbon );
 
-let providers:Provider[] = [];
-providers = providers
-	.concat( CARBON_PROVIDERS )
-	.concat( CARBON_SERVICES_PROVIDERS );
+if( ! DEBUG ) enableProdMode();
 
-if( "true" === "false" ) enableProdMode();
-
-bootstrap( AppComponent, [
-	ROUTER_PROVIDERS,
-	HTTP_PROVIDERS,
-	Title,
-
-	provide( APP_BASE_HREF, { useValue: "/carbon-workbench/src/" } ),
-
-	providers,
-	WORKBENCH_PROVIDERS
-] ).then( ( appRef:ComponentRef<AppComponent> ) => {
+platformBrowserDynamic().bootstrapModule( AppModule ).then( ( appRef:NgModuleRef<AppModule> ) => {
 	appInjector( appRef.injector );
 } ).catch( ( error ) => {
 	console.error( error );

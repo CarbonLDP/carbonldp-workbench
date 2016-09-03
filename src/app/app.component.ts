@@ -1,10 +1,6 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { RouteConfig, ROUTER_DIRECTIVES, Router } from "@angular/router-deprecated";
+import { Router, Event, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
 import { Title } from "@angular/platform-browser";
-
-import { LoginView } from "app/login/login.view";
-import { WorkbenchView } from "app/workbench/workbench.view";
-import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
 
 import template from "./app.component.html!";
 import style from "./app.component.css!text";
@@ -14,89 +10,56 @@ import style from "./app.component.css!text";
 	template: template,
 	styles: [ style ],
 	encapsulation: ViewEncapsulation.None,
-	directives: [ ROUTER_DIRECTIVES ]
 } )
-@RouteConfig( [
-	{
-		path: "login",
-		as: "WorkbenchLogin",
-		component: LoginView,
-		data: {
-			alias: "WorkbenchLogin",
-			displayName: "Workbench Log In",
-		}
-	},
-	{
-		path: "...",
-		as: "Workbench",
-		component: WorkbenchView,
-		useAsDefault: true,
-		data: {
-			alias: "Workbench",
-			displayName: "Workbench",
-		},
-	},
-	{ path: "**", as: "NotFoundError", component: NotFoundErrorView },
-] )
 export class AppComponent {
 	router:Router;
 	title:Title;
+	route:ActivatedRoute;
 
-	constructor( title:Title, router:Router ) {
+	constructor( title:Title, router:Router, route:ActivatedRoute ) {
 		this.router = router;
 		this.title = title;
-		this.router.subscribe( () => {
-			this.defineTitle();
+		this.route = route;
+
+		this.router.events.subscribe( ( event:Event ) => {
+			if( event instanceof NavigationEnd ) {
+				this.defineTitle();
+			}
 		} );
 	}
 
-	// TODO: Move this code to carbon-panel so it can be reused
-	defineTitle() {
-		let title:string = "";
-		let rootComponent = this.router.root.currentInstruction.component.routeData.data[ "displayName" ];
+	private defineTitle() {
+		let title:string = "",
+			activatedRoutes:ActivatedRouteSnapshot[] = [],
+			currentRoute:ActivatedRoute = this.route.root;
 
-		let auxRouter = this.router.root.currentInstruction.child;
-		while( auxRouter !== null ) {
-			let displayName = auxRouter.component.routeData.data[ "displayName" ];
-			let mainComponent = auxRouter.component.routeData.data[ "main" ];
-			let parameters = auxRouter.component.params;
+		do {
+			if( ! ! currentRoute.snapshot && (typeof currentRoute.snapshot.data[ "title" ] !== "undefined" || typeof currentRoute.snapshot.data[ "displayName" ] !== "undefined" ) )
+				activatedRoutes.push( currentRoute.snapshot );
+			currentRoute = currentRoute.children[ 0 ];
+		} while( currentRoute );
 
-			let parameter = null;
-			for( let parameterName in parameters ) {
-				if( ! parameters.hasOwnProperty( parameterName ) ) continue;
-				if( parameter !== null ) {
-					parameter = null;
-					break;
-				}
-				parameter = parameters[ parameterName ];
-			}
 
-			if( parameter !== null ) {
-				if( auxRouter.child === null ) {
-					if( typeof displayName === 'undefined' ) title = "";
-					else title += displayName + "(" + parameter + ") | ";
-				} else {
-					if( mainComponent )
-						title += displayName + "(" + parameter + ") > ";
-				}
-
-			} else {
-				if( auxRouter.child === null ) {
-					if( typeof displayName === 'undefined' ) title = "";
-					else title += displayName + " | ";
-				} else {
-					if( mainComponent ) title = title + displayName + " > ";
-				}
-
-			}
-			auxRouter = auxRouter.child;
-		}
-		title += rootComponent;
-
+		activatedRoutes.forEach( ( snapshot:ActivatedRouteSnapshot, idx:number )=> {
+			if( idx === 0 ) return;
+			if( activatedRoutes.length === 2 && idx === 1 && ! snapshot.data[ "title" ] ) return;
+			if( idx !== (activatedRoutes.length - 1) && typeof snapshot.data[ "title" ] === "undefined" ) return;
+			title += this.getTitle( snapshot );
+			if( idx < activatedRoutes.length - 1 ) title += " > ";
+		} );
+		title = title + (activatedRoutes.length > 2 ? " | " : "") + this.getTitle( activatedRoutes[ 0 ] );
 		this.title.setTitle( title );
-
 	}
 
+	private getTitle( snapShot:ActivatedRouteSnapshot ):string {
+		let title:string = "";
+		if( typeof snapShot.data[ "param" ] !== "undefined" ) {
+			title += snapShot.data[ "displayName" ] + " (" + snapShot.params[ snapShot.data[ "param" ] ] + " )";
+		} else if( typeof snapShot.data[ "title" ] === "string" ) {
+			title += snapShot.data[ "title" ]
+		} else title += snapShot.data[ "displayName" ];
+		return title;
+	}
 
 }
 

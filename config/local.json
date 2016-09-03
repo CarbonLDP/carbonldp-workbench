@@ -3,7 +3,7 @@
 		"debug": true
 	},
 	"url": {
-		"base": "/carbon-workbench/src/"
+		"base": "/src/"
 	},
 	"carbon": {
 		"protocol": "https",

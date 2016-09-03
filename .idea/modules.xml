@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/carbon-workbench.iml" filepath="$PROJECT_DIR$/.idea/carbon-workbench.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../carbonldp-workbench/.idea/carbonldp-workbench.iml" filepath="$PROJECT_DIR$/../carbonldp-workbench/.idea/carbonldp-workbench.iml" />
     </modules>
   </component>
 </project>

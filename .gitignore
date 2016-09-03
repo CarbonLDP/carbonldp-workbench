@@ -8,7 +8,7 @@ src/**/*.css
 src/**/*.js
 src/**/*.map
 
-src/app/boot.ts
+src/app/config.ts
 
 # Typings
 **/typings/globals/
