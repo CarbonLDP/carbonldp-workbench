@@ -23,6 +23,11 @@ COPY src/semantic /tmp/src/semantic
 COPY typings.json /tmp/typings.json
 RUN cd /tmp && npm install
 RUN cd /tmp && jspm install
+
+# Something is causing @angular/platform-browser to install incorrectly, it may be the conflicting versions of rc.5 and router@3.0.0-rc.2
+# TODO: Remove this instruction
+RUN cd /tmp && jspm install npm:@angular/platform-browser@2.0.0-rc.5
+
 RUN cd /tmp && typings install
 RUN mkdir -p /usr/share/nginx/html/carbon-workbench/
 RUN cp -a /tmp/node_modules /usr/share/nginx/html/carbon-workbench/
