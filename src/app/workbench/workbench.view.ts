@@ -4,8 +4,8 @@ import { Router, Event, NavigationEnd } from "@angular/router";
 import Carbon from "carbonldp/Carbon";
 
 import { AuthService } from "angular2-carbonldp/services";
-import { HeaderService } from "carbon-panel/header.service";
-import { SidebarService } from "carbon-panel/sidebar.service";
+import { HeaderService } from "carbonldp-panel/header.service";
+import { SidebarService } from "carbonldp-panel/sidebar.service";
 
 import template from "./workbench.view.html!";
 import style from "./workbench.view.css!text";

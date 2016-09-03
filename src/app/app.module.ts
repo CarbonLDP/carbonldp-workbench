@@ -16,7 +16,7 @@ import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-err
 import { DashboardView } from "app/dashboard/dashboard.view";
 
 // Modules
-import { PanelModule } from "carbon-panel/panel.module";
+import { PanelModule } from "carbonldp-panel/panel.module";
 
 
 @NgModule( {

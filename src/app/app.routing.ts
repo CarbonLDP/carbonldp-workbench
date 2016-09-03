@@ -11,7 +11,7 @@ import { WorkbenchView } from "app/workbench/workbench.view";
 import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
 import { DashboardView } from "app/dashboard/dashboard.view";
 
-import { MyAppsModule } from "carbon-panel/my-apps/my-apps.module";
+import { MyAppsModule } from "carbonldp-panel/my-apps/my-apps.module";
 
 const appRoutes:Routes = [
 	{

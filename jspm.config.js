@@ -40,7 +40,6 @@ SystemJS.config({
   },
   map: {
     "html": "github:systemjs/plugin-text@0.0.8",
-    "carbon-panel": "npm:carbonldp-panel@0.3.0-rc.1",
     "@angular/router-deprecated": "npm:@angular/router-deprecated@2.0.0-rc.2"
   }
 });
@@ -53,7 +52,7 @@ SystemJS.config({
     "local:*.json"
   ],
   map: {
-    "carbonldp-panel": "npm:carbonldp-panel@0.3.0",
+    "carbonldp-panel": "npm:carbonldp-panel@0.3.1",
     "angular2-carbonldp": "npm:angular2-carbonldp@0.3.2",
     "carbonldp": "npm:carbonldp@0.37.0",
     "@angular/common": "npm:@angular/common@2.0.0-rc.5",

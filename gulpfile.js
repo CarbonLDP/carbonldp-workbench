@@ -96,19 +96,11 @@ gulp.task( "build:semantic", () => {
 
 gulp.task( "bundle", () => {
 	let builder = new Builder();
-	let promises = [];
-	promises.push( builder.buildStatic( "app/boot", "dist/site/main.sfx.js", {
+	return builder.buildStatic( "app/boot", "dist/site/main.sfx.js", {
 		minify: false,
 		mangle: false,
 		sourceMaps: false
-	} ) );
-	promises.push( builder.buildStatic( "carbon-panel/my-apps/my-apps.module", "dist/site/my-apps.sfx.js", {
-		minify: false,
-		mangle: false,
-		sourceMaps: false
-	} ) );
-
-	return Promise.all( promises );
+	} );
 } );
 
 gulp.task( "clean:dist", () => {
