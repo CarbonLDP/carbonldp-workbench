@@ -1,4 +1,4 @@
-# carbon-workbench
+# carbonldp-workbench
 
 Workbench to administer an on premise installation of Carbon LDP
 
@@ -55,7 +55,7 @@ Gulp defines two tasks:
 ### File Structure
 
 - `.idea`: WebStorm shared configuration files (things like code style, and project structure)
-- `build`: Build related files (e.g. `Dockerfile` and `nginx.conf`)
+- `build`: Build related files (e.g. `nginx.conf`)
 - `config`: Configuration files that are used when compiling the application
 - `dist`: Distribution related files
     - `site`: Compiled files. Ready to be served
@@ -75,8 +75,8 @@ Gulp defines two tasks:
     - `typings.d.ts`: Main description file. Aggregates all other description files
 - `.gitignore`: Ignore file for git
 - `CHANGELOG.md`: File to track package changes
+- `Dockerfile`: File to build the docker image for deployment
 - `gulpfile.js`: Gulp configuration file
-- `jspm.browser.js`: JSPM browser specific configuration file
 - `jspm.config.js`: JSPM general configuration file
 - `package.json`: npm configuration file (it also contains JSPM dependency registry)
 - `README.md`: === this
@@ -86,13 +86,7 @@ Gulp defines two tasks:
 
 ### Building the Project
 
-The project is deployed as a docker image. A `gulp` task has been created that automates the process. To run it simply execute the following command:
-
-```
-gulp build:docker-image --image-version "VERSION"
-```
-
-Replace `VERSION` with the version you want to tag the image with
+The project is deployed as a docker image. A `Dockerfile` is located at the root of the project, which can be used to build the image. 
 
 ## TODO
 
@@ -100,3 +94,11 @@ Replace `VERSION` with the version you want to tag the image with
 - Configure code linting (tslint and sasslint)
 - Document `gulp` tasks and move them to separate files
 - Get docker image version from `package.json`
+
+## LICENSE
+
+    Copyright (c) 2015-present, Base22 Technology Group, LLC.
+    All rights reserved.
+    
+    This source code is licensed under the BSD-style license found in the
+    LICENSE file in the root directory of this source tree.

@@ -53,8 +53,8 @@ SystemJS.config({
     "local:*.json"
   ],
   map: {
-    "carbonldp-panel": "npm:carbonldp-panel@0.3.0-rc.1",
-    "angular2-carbonldp": "npm:angular2-carbonldp@0.3.1",
+    "carbonldp-panel": "npm:carbonldp-panel@0.3.0",
+    "angular2-carbonldp": "npm:angular2-carbonldp@0.3.2",
     "carbonldp": "npm:carbonldp@0.37.0",
     "@angular/common": "npm:@angular/common@2.0.0-rc.5",
     "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.5",
@@ -333,15 +333,15 @@ SystemJS.config({
         "file-type": "npm:file-type@3.8.0"
       }
     },
-    "npm:angular2-carbonldp@0.3.1": {
-      "map": {
-        "js-cookie": "npm:js-cookie@2.1.3"
-      }
-    },
     "npm:@angular/router@3.0.0-rc.2": {
       "map": {
         "npm:@angular/core": "npm:@angular/core@2.0.0-rc.5",
         "npm:@angular/common": "npm:@angular/common@2.0.0-rc.5"
+      }
+    },
+    "npm:angular2-carbonldp@0.3.2": {
+      "map": {
+        "js-cookie": "npm:js-cookie@2.1.3"
       }
     }
   }

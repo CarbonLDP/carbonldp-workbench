@@ -32,12 +32,6 @@ const argv = require( "yargs" )
 
 	.describe( "use-env", "Use environment variables instead of using profile based configuration" )
 
-	.describe( "image-name", "Docker image to build" )
-	.default( "image-name", "carbon-workbench" )
-
-	.describe( "image-version", "Docker image version" )
-	.default( "image-version", "latest" )
-
 	.argv;
 
 let profileConfig;
@@ -90,39 +84,6 @@ gulp.task( "build", [ "clean:dist" ], ( done ) => {
 		"bundle",
 		done
 	);
-} );
-
-gulp.task( "build:docker-image", ( done ) => {
-	runSequence(
-		"build:docker-image|copy:dockerfile",
-		"build:docker-image|build:image",
-		"build:docker-image|clean:dockerfile",
-		done
-	);
-} );
-
-gulp.task( "build:docker-image|copy:dockerfile", () => {
-	return gulp.src( "build/Dockerfile" )
-		.pipe( gulp.dest( "../" ) );
-} );
-
-gulp.task( "build:docker-image|build:image", ( done ) => {
-	let buildProcess = spawn( `docker`, [ `build`, `--tag`, `${argv[ "image-name" ]}:${argv[ "image-version" ]}`, `.` ], { cwd: getParentDirectory() } );
-
-	buildProcess.stdout.setEncoding( "utf8" );
-	buildProcess.stderr.setEncoding( "utf8" );
-
-	buildProcess.stdout.on( "data", logStdout );
-	buildProcess.stderr.on( "data", logStderr );
-
-	buildProcess.on( "close", ( code ) => {
-		if( code !== 0 ) done( "Docker build command failed" );
-		else done();
-	} );
-} );
-
-gulp.task( "build:docker-image|clean:dockerfile", () => {
-	return del( "../Dockerfile", { force: true } );
 } );
 
 gulp.task( "build:semantic", () => {
