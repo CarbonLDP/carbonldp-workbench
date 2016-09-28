@@ -87,14 +87,14 @@
     "devDependencies": {},
     "peerDependencies": {
       "@angular/common": "npm:@angular/common@2.0.0-rc.5",
-      "@angular/compiler": "npm:@angular/compiler@^2.0.0-rc.5",
+      "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.5",
       "@angular/core": "npm:@angular/core@2.0.0-rc.5",
       "@angular/forms": "npm:@angular/forms@^0.3.0",
       "@angular/http": "npm:@angular/http@2.0.0-rc.5",
       "@angular/platform-browser": "npm:@angular/platform-browser@2.0.0-rc.5",
       "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.0-rc.5",
       "@angular/router": "npm:@angular/router@3.0.0-rc.2",
-      "angular2-carbonldp": "npm:angular2-carbonldp@0.3.2",
+      "angular2-carbonldp": "npm:angular2-carbonldp@0.3.3",
       "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
       "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
       "carbonldp": "npm:carbonldp@^0.37.0",
@@ -112,23 +112,12 @@
       "rxjs": "npm:rxjs@5.0.0-beta.6",
       "stream": "github:jspm/nodelibs-stream@^0.2.0-alpha",
       "string_decoder": "github:jspm/nodelibs-string_decoder@^0.2.0-alpha",
-      "timers": "github:jspm/nodelibs-timers@^0.2.0-alpha",
       "url": "github:jspm/nodelibs-url@^0.2.0-alpha",
       "util": "github:jspm/nodelibs-util@^0.2.0-alpha",
       "vm": "github:jspm/nodelibs-vm@^0.2.0-alpha",
-      "zone.js": "npm:zone.js@^0.6.21"
+      "zone.js": "npm:zone.js@^0.6.17"
     },
     "overrides": {
-      "npm:@angular/platform-browser@2.0.0-rc.5": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        }
-      },
       "npm:@angular/router@3.0.0-rc.2": {
         "dependencies": {
           "npm:@angular/core": "2.0.0-rc.5",
@@ -176,6 +165,16 @@
         }
       },
       "npm:@angular/platform-browser-dynamic@2.0.0-rc.5": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        }
+      },
+      "npm:@angular/platform-browser@2.0.0-rc.5": {
         "meta": {
           "src/*.js": {
             "deps": [

@@ -53,7 +53,7 @@ SystemJS.config({
   ],
   map: {
     "carbonldp-panel": "npm:carbonldp-panel@0.3.1",
-    "angular2-carbonldp": "npm:angular2-carbonldp@0.3.2",
+    "angular2-carbonldp": "npm:angular2-carbonldp@0.3.3",
     "carbonldp": "npm:carbonldp@0.37.0",
     "@angular/common": "npm:@angular/common@2.0.0-rc.5",
     "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.5",
@@ -86,11 +86,10 @@ SystemJS.config({
     "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
     "string_decoder": "github:jspm/nodelibs-string_decoder@0.2.0-alpha",
     "text": "github:systemjs/plugin-text@0.0.8",
-    "timers": "github:jspm/nodelibs-timers@0.2.0-alpha",
     "url": "github:jspm/nodelibs-url@0.2.0-alpha",
     "util": "github:jspm/nodelibs-util@0.2.0-alpha",
     "vm": "github:jspm/nodelibs-vm@0.2.0-alpha",
-    "zone.js": "npm:zone.js@0.6.25"
+    "zone.js": "npm:zone.js@0.6.17"
   },
   packages: {
     "github:jspm/nodelibs-crypto@0.2.0-alpha": {
@@ -305,19 +304,18 @@ SystemJS.config({
         "npm:@angular/common": "npm:@angular/common@2.0.0-rc.5"
       }
     },
-    "npm:angular2-carbonldp@0.3.2": {
+    "npm:angular2-carbonldp@0.3.3": {
       "map": {
         "js-cookie": "npm:js-cookie@2.1.3"
       }
     },
-    "github:jspm/nodelibs-timers@0.2.0-alpha": {
+    "npm:stream-http@2.4.0": {
       "map": {
-        "timers-browserify": "npm:timers-browserify@1.4.2"
-      }
-    },
-    "npm:timers-browserify@1.4.2": {
-      "map": {
-        "process": "npm:process@0.11.9"
+        "readable-stream": "npm:readable-stream@2.1.5",
+        "xtend": "npm:xtend@4.0.1",
+        "to-arraybuffer": "npm:to-arraybuffer@1.0.1",
+        "builtin-status-codes": "npm:builtin-status-codes@2.0.0",
+        "inherits": "npm:inherits@2.0.3"
       }
     },
     "npm:pbkdf2@3.0.8": {
@@ -325,17 +323,17 @@ SystemJS.config({
         "create-hmac": "npm:create-hmac@1.1.4"
       }
     },
-    "npm:elliptic@6.3.2": {
-      "map": {
-        "bn.js": "npm:bn.js@4.11.6",
-        "inherits": "npm:inherits@2.0.3",
-        "hash.js": "npm:hash.js@1.0.3",
-        "brorand": "npm:brorand@1.0.6"
-      }
-    },
     "npm:cipher-base@1.0.3": {
       "map": {
         "inherits": "npm:inherits@2.0.3"
+      }
+    },
+    "npm:elliptic@6.3.2": {
+      "map": {
+        "inherits": "npm:inherits@2.0.3",
+        "bn.js": "npm:bn.js@4.11.6",
+        "hash.js": "npm:hash.js@1.0.3",
+        "brorand": "npm:brorand@1.0.6"
       }
     },
     "npm:asn1.js@4.8.1": {
@@ -343,15 +341,6 @@ SystemJS.config({
         "bn.js": "npm:bn.js@4.11.6",
         "inherits": "npm:inherits@2.0.3",
         "minimalistic-assert": "npm:minimalistic-assert@1.0.0"
-      }
-    },
-    "npm:stream-http@2.4.0": {
-      "map": {
-        "inherits": "npm:inherits@2.0.3",
-        "readable-stream": "npm:readable-stream@2.1.5",
-        "xtend": "npm:xtend@4.0.1",
-        "builtin-status-codes": "npm:builtin-status-codes@2.0.0",
-        "to-arraybuffer": "npm:to-arraybuffer@1.0.1"
       }
     }
   }
