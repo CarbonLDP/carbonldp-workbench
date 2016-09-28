@@ -94,7 +94,7 @@
       "@angular/platform-browser": "npm:@angular/platform-browser@2.0.0-rc.5",
       "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.0-rc.5",
       "@angular/router": "npm:@angular/router@3.0.0-rc.2",
-      "angular2-carbonldp": "npm:angular2-carbonldp@0.3.2",
+      "angular2-carbonldp": "npm:angular2-carbonldp@0.3.3",
       "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
       "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
       "carbonldp": "npm:carbonldp@^0.37.0",
@@ -184,7 +184,7 @@
           }
         }
       },
-      "npm:inherits@2.0.1": {
+      "npm:inherits@2.0.3": {
         "ignore": [
           "test.js"
         ]

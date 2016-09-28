@@ -1,5 +1,7 @@
 # carbonldp-workbench
 
+[![Build Status](https://travis-ci.org/CarbonLDP/carbonldp-workbench.svg?branch=develop)](https://travis-ci.org/CarbonLDP/carbonldp-workbench)
+
 Workbench to administer an on premise installation of Carbon LDP
 
 ## Development

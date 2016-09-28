@@ -1,13 +1,14 @@
 import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
-//Guards
+// Guards
 import { AuthenticatedGuard, NotAuthenticatedGuard } from "angular2-carbonldp/guards";
 import { ActiveContextResolver } from "angular2-carbonldp/resolvers";
 
-//Components
+// Components
 import { LoginView } from "app/login/login.view";
 import { WorkbenchView } from "app/workbench/workbench.view";
+import { ErrorView } from "app/error-pages/error.view";
 import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
 import { DashboardView } from "app/dashboard/dashboard.view";
 
@@ -17,9 +18,14 @@ const appRoutes:Routes = [
 	{
 		path: "login",
 		component: LoginView,
+		canActivate: [ NotAuthenticatedGuard ],
 		data: {
 			alias: "login",
 			title: "Workbench | Log In",
+
+			// NotAuthenticatedGuard cases
+			onReject: [ "/" ],
+			onError: [ "/error" ],
 		}
 	},
 	{
@@ -29,6 +35,7 @@ const appRoutes:Routes = [
 		data: {
 			alias: "",
 			displayName: "Workbench",
+
 			// AuthenticatedGuard cases
 			onReject: [ "/login" ],
 			onError: [ "/error" ],
@@ -49,6 +56,13 @@ const appRoutes:Routes = [
 				loadChildren: () => MyAppsModule,
 			},
 		]
+	},
+	{
+		path: "error",
+		component: ErrorView,
+		data: {
+			title: "Error | Workbench"
+		}
 	},
 	{
 		path: "**",
