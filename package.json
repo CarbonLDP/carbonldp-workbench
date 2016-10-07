@@ -51,7 +51,7 @@
     "mz": "^2.4.0",
     "run-sequence": "^1.2.1",
     "rxjs": "5.0.0-beta.6",
-    "semantic-ui": "^2.1.8",
+    "semantic-ui": "^2.2.4",
     "systemjs": "0.19.26",
     "systemjs-builder": "0.15.14",
     "tslint": "^3.11.0",
@@ -62,7 +62,8 @@
   },
   "dependencies": {
     "codemirror": "^5.16.0",
-    "css": "github:systemjs/plugin-css"
+    "css": "github:systemjs/plugin-css",
+    "highlight.js": "^9.7.0"
   },
   "jspm": {
     "name": "app",
@@ -75,9 +76,10 @@
       "jspm": "jspm.config.js"
     },
     "dependencies": {
-      "carbonldp-panel": "npm:carbonldp-panel@0.3.1",
+      "carbonldp-panel": "local:carbonldp-panel@0.3.1",
       "codemirror": "npm:codemirror@^5.17.0",
       "css": "github:systemjs/plugin-css@^0.1.26",
+      "highlight.js": "npm:highlight.js@9.7.0",
       "js-cookie": "npm:js-cookie@^2.1.2",
       "jstree": "npm:jstree@^3.3.2",
       "plugin-typescript": "github:frankwallis/plugin-typescript@^5.0.9",
@@ -109,31 +111,16 @@
       "os": "github:jspm/nodelibs-os@^0.2.0-alpha",
       "path": "github:jspm/nodelibs-path@^0.2.0-alpha",
       "process": "github:jspm/nodelibs-process@^0.2.0-alpha",
-      "rxjs": "npm:rxjs@5.0.0-beta.6",
+      "rxjs": "npm:rxjs@5.0.0-beta.12",
       "stream": "github:jspm/nodelibs-stream@^0.2.0-alpha",
       "string_decoder": "github:jspm/nodelibs-string_decoder@^0.2.0-alpha",
+      "timers": "github:jspm/nodelibs-timers@^0.2.0-alpha",
       "url": "github:jspm/nodelibs-url@^0.2.0-alpha",
       "util": "github:jspm/nodelibs-util@^0.2.0-alpha",
       "vm": "github:jspm/nodelibs-vm@^0.2.0-alpha",
-      "zone.js": "npm:zone.js@^0.6.17"
+      "zone.js": "npm:zone.js@^0.6.6"
     },
     "overrides": {
-      "npm:@angular/router@3.0.0-rc.2": {
-        "dependencies": {
-          "npm:@angular/core": "2.0.0-rc.5",
-          "npm:@angular/common": "2.0.0-rc.5"
-        }
-      },
-      "npm:@angular/common@2.0.0-rc.5": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        }
-      },
       "npm:@angular/compiler@2.0.0-rc.5": {
         "meta": {
           "src/*.js": {
@@ -154,6 +141,42 @@
           }
         }
       },
+      "npm:@angular/core@2.0.2": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        }
+      },
+      "npm:@angular/platform-browser@2.0.0-rc.5": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        }
+      },
+      "npm:@angular/router@3.0.0-rc.2": {
+        "dependencies": {
+          "npm:@angular/core": "2.0.0-rc.5",
+          "npm:@angular/common": "2.0.0-rc.5"
+        }
+      },
+      "npm:@angular/common@2.0.0-rc.5": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        }
+      },
       "npm:@angular/http@2.0.0-rc.5": {
         "meta": {
           "src/*.js": {
@@ -165,16 +188,6 @@
         }
       },
       "npm:@angular/platform-browser-dynamic@2.0.0-rc.5": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        }
-      },
-      "npm:@angular/platform-browser@2.0.0-rc.5": {
         "meta": {
           "src/*.js": {
             "deps": [
