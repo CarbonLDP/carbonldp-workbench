@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$/../CarbonLDP-JS-SDK">
-      <excludeFolder url="file://$MODULE_DIR$/../CarbonLDP-JS-SDK/node_modules" />
-      <excludeFolder url="file://$MODULE_DIR$/../CarbonLDP-JS-SDK/test/jspm_packages" />
-    </content>
     <content url="file://$MODULE_DIR$/../angular2-carbonldp">
       <excludeFolder url="file://$MODULE_DIR$/../angular2-carbonldp/node_modules" />
+    </content>
+    <content url="file://$MODULE_DIR$/../carbonldp-js-sdk">
+      <excludeFolder url="file://$MODULE_DIR$/../carbonldp-js-sdk/node_modules" />
+      <excludeFolder url="file://$MODULE_DIR$/../carbonldp-js-sdk/test/jspm_packages" />
     </content>
     <content url="file://$MODULE_DIR$/../carbonldp-panel">
       <excludeFolder url="file://$MODULE_DIR$/../carbonldp-panel/dist" />
