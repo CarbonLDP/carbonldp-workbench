@@ -76,7 +76,7 @@
       "jspm": "jspm.config.js"
     },
     "dependencies": {
-      "carbonldp-panel": "local:carbonldp-panel@0.3.1",
+      "carbonldp-panel": "npm:carbonldp-panel@^0.3.1",
       "codemirror": "npm:codemirror@^5.17.0",
       "css": "github:systemjs/plugin-css@^0.1.26",
       "highlight.js": "npm:highlight.js@9.7.0",
@@ -88,9 +88,9 @@
     },
     "devDependencies": {},
     "peerDependencies": {
-      "@angular/common": "npm:@angular/common@2.0.0-rc.5",
+      "@angular/common": "npm:@angular/common@^2.0.0-rc.5",
       "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.5",
-      "@angular/core": "npm:@angular/core@2.0.0-rc.5",
+      "@angular/core": "npm:@angular/core@^2.0.0-rc.5",
       "@angular/forms": "npm:@angular/forms@^0.3.0",
       "@angular/http": "npm:@angular/http@2.0.0-rc.5",
       "@angular/platform-browser": "npm:@angular/platform-browser@2.0.0-rc.5",
@@ -111,7 +111,7 @@
       "os": "github:jspm/nodelibs-os@^0.2.0-alpha",
       "path": "github:jspm/nodelibs-path@^0.2.0-alpha",
       "process": "github:jspm/nodelibs-process@^0.2.0-alpha",
-      "rxjs": "npm:rxjs@5.0.0-beta.12",
+      "rxjs": "npm:rxjs@5.0.0-beta.6",
       "stream": "github:jspm/nodelibs-stream@^0.2.0-alpha",
       "string_decoder": "github:jspm/nodelibs-string_decoder@^0.2.0-alpha",
       "timers": "github:jspm/nodelibs-timers@^0.2.0-alpha",
@@ -132,16 +132,6 @@
         }
       },
       "npm:@angular/core@2.0.0-rc.5": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        }
-      },
-      "npm:@angular/core@2.0.2": {
         "meta": {
           "src/*.js": {
             "deps": [
