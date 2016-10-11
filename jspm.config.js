@@ -52,9 +52,9 @@ SystemJS.config({
     "local:*.json"
   ],
   map: {
-    "carbonldp-panel": "npm:carbonldp-panel@0.3.1",
+    "carbonldp-panel": "local:carbonldp-panel@0.3.1",
     "angular2-carbonldp": "npm:angular2-carbonldp@0.3.3",
-    "carbonldp": "npm:carbonldp@0.37.0",
+    "carbonldp": "npm:carbonldp@0.38.0",
     "@angular/common": "npm:@angular/common@2.0.0-rc.5",
     "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.5",
     "@angular/core": "npm:@angular/core@2.0.0-rc.5",
@@ -295,11 +295,6 @@ SystemJS.config({
         "typescript": "npm:typescript@2.0.0"
       }
     },
-    "npm:carbonldp@0.37.0": {
-      "map": {
-        "file-type": "npm:file-type@3.8.0"
-      }
-    },
     "npm:@angular/router@3.0.0-rc.2": {
       "map": {
         "npm:@angular/core": "npm:@angular/core@2.0.0-rc.5",
@@ -353,6 +348,11 @@ SystemJS.config({
     "npm:pbkdf2@3.0.9": {
       "map": {
         "create-hmac": "npm:create-hmac@1.1.4"
+      }
+    },
+    "npm:carbonldp@0.38.0": {
+      "map": {
+        "file-type": "npm:file-type@3.8.0"
       }
     }
   }

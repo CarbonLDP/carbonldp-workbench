@@ -33,7 +33,7 @@
     "@angular/platform-browser-dynamic": "2.0.0-rc.5",
     "@angular/router": "3.0.0-rc.2",
     "angular2-carbonldp": "^0.3.0",
-    "carbonldp": "^0.36.0",
+    "carbonldp": "^0.38.0",
     "carbonldp-panel": "^0.3.1",
     "del": "^2.2.0",
     "es6-shim": "^0.35.1",
@@ -76,7 +76,7 @@
       "jspm": "jspm.config.js"
     },
     "dependencies": {
-      "carbonldp-panel": "npm:carbonldp-panel@^0.3.1",
+      "carbonldp-panel": "local:carbonldp-panel@0.3.1",
       "codemirror": "npm:codemirror@^5.17.0",
       "css": "github:systemjs/plugin-css@^0.1.26",
       "highlight.js": "npm:highlight.js@9.7.0",
@@ -89,7 +89,7 @@
     "devDependencies": {},
     "peerDependencies": {
       "@angular/common": "npm:@angular/common@^2.0.0-rc.5",
-      "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.5",
+      "@angular/compiler": "npm:@angular/compiler@^2.0.0-rc.5",
       "@angular/core": "npm:@angular/core@^2.0.0-rc.5",
       "@angular/forms": "npm:@angular/forms@^0.3.0",
       "@angular/http": "npm:@angular/http@2.0.0-rc.5",
@@ -99,7 +99,7 @@
       "angular2-carbonldp": "npm:angular2-carbonldp@0.3.3",
       "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
       "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
-      "carbonldp": "npm:carbonldp@^0.37.0",
+      "carbonldp": "npm:carbonldp@0.38.0",
       "child_process": "github:jspm/nodelibs-child_process@^0.2.0-alpha",
       "constants": "github:jspm/nodelibs-constants@^0.2.0-alpha",
       "crypto": "github:jspm/nodelibs-crypto@^0.2.0-alpha",
