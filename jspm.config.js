@@ -55,13 +55,13 @@ SystemJS.config({
     "carbonldp-panel": "local:carbonldp-panel@0.3.1",
     "angular2-carbonldp": "npm:angular2-carbonldp@0.3.3",
     "carbonldp": "npm:carbonldp@0.37.0",
-    "@angular/common": "npm:@angular/common@2.0.0-rc.6",
-    "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.6",
-    "@angular/core": "npm:@angular/core@2.0.0-rc.6",
+    "@angular/common": "npm:@angular/common@2.0.0-rc.7",
+    "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.7",
+    "@angular/core": "npm:@angular/core@2.0.0-rc.7",
     "@angular/forms": "npm:@angular/forms@0.3.0",
-    "@angular/http": "npm:@angular/http@2.0.0-rc.6",
-    "@angular/platform-browser": "npm:@angular/platform-browser@2.0.0-rc.6",
-    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.0-rc.6",
+    "@angular/http": "npm:@angular/http@2.0.0-rc.7",
+    "@angular/platform-browser": "npm:@angular/platform-browser@2.0.0-rc.7",
+    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.0-rc.7",
     "@angular/router": "npm:@angular/router@3.0.0-rc.2",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
@@ -302,8 +302,8 @@ SystemJS.config({
     },
     "npm:@angular/router@3.0.0-rc.2": {
       "map": {
-        "npm:@angular/core": "npm:@angular/core@2.0.0-rc.6",
-        "npm:@angular/common": "npm:@angular/common@2.0.0-rc.6"
+        "npm:@angular/core": "npm:@angular/core@2.0.0-rc.7",
+        "npm:@angular/common": "npm:@angular/common@2.0.0-rc.7"
       }
     },
     "npm:angular2-carbonldp@0.3.3": {
