@@ -55,13 +55,13 @@ SystemJS.config({
     "carbonldp-panel": "local:carbonldp-panel@0.3.1",
     "angular2-carbonldp": "npm:angular2-carbonldp@0.3.3",
     "carbonldp": "npm:carbonldp@0.37.0",
-    "@angular/common": "npm:@angular/common@2.0.0-rc.7",
-    "@angular/compiler": "npm:@angular/compiler@2.0.0-rc.7",
-    "@angular/core": "npm:@angular/core@2.0.0-rc.7",
-    "@angular/forms": "npm:@angular/forms@0.3.0",
-    "@angular/http": "npm:@angular/http@2.0.0-rc.7",
-    "@angular/platform-browser": "npm:@angular/platform-browser@2.0.0-rc.7",
-    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.0-rc.7",
+    "@angular/common": "npm:@angular/common@2.0.2",
+    "@angular/compiler": "npm:@angular/compiler@2.0.2",
+    "@angular/core": "npm:@angular/core@2.0.2",
+    "@angular/forms": "npm:@angular/forms@2.0.2",
+    "@angular/http": "npm:@angular/http@2.0.2",
+    "@angular/platform-browser": "npm:@angular/platform-browser@2.0.2",
+    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.2",
     "@angular/router": "npm:@angular/router@3.0.0-rc.2",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
@@ -83,7 +83,7 @@ SystemJS.config({
     "plugin-typescript": "github:frankwallis/plugin-typescript@5.0.9",
     "process": "github:jspm/nodelibs-process@0.2.0-alpha",
     "reflect-metadata": "npm:reflect-metadata@0.1.8",
-    "rxjs": "npm:rxjs@5.0.0-beta.11",
+    "rxjs": "npm:rxjs@5.0.0-beta.6",
     "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
     "string_decoder": "github:jspm/nodelibs-string_decoder@0.2.0-alpha",
     "text": "github:systemjs/plugin-text@0.0.8",
@@ -302,8 +302,8 @@ SystemJS.config({
     },
     "npm:@angular/router@3.0.0-rc.2": {
       "map": {
-        "npm:@angular/core": "npm:@angular/core@2.0.0-rc.7",
-        "npm:@angular/common": "npm:@angular/common@2.0.0-rc.7"
+        "npm:@angular/core": "npm:@angular/core@2.0.2",
+        "npm:@angular/common": "npm:@angular/common@2.0.2"
       }
     },
     "npm:angular2-carbonldp@0.3.3": {
@@ -353,11 +353,6 @@ SystemJS.config({
     "npm:pbkdf2@3.0.9": {
       "map": {
         "create-hmac": "npm:create-hmac@1.1.4"
-      }
-    },
-    "npm:rxjs@5.0.0-beta.11": {
-      "map": {
-        "symbol-observable": "npm:symbol-observable@1.0.3"
       }
     }
   }
