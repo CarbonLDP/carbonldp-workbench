@@ -76,7 +76,7 @@
       "jspm": "jspm.config.js"
     },
     "dependencies": {
-      "carbonldp-panel": "local:carbonldp-panel@0.3.1",
+      "carbonldp-panel": "npm:carbonldp-panel@^0.3.1",
       "codemirror": "npm:codemirror@^5.17.0",
       "css": "github:systemjs/plugin-css@^0.1.26",
       "highlight.js": "npm:highlight.js@9.7.0",
@@ -90,7 +90,7 @@
     "peerDependencies": {
       "@angular/common": "npm:@angular/common@^2.0.2",
       "@angular/compiler": "npm:@angular/compiler@2.0.2",
-      "@angular/core": "npm:@angular/core@^2.0.2",
+      "@angular/core": "npm:@angular/core@2.0.2",
       "@angular/forms": "npm:@angular/forms@^2.0.2",
       "@angular/http": "npm:@angular/http@2.0.2",
       "@angular/platform-browser": "npm:@angular/platform-browser@^2.0.2",
@@ -111,14 +111,14 @@
       "os": "github:jspm/nodelibs-os@^0.2.0-alpha",
       "path": "github:jspm/nodelibs-path@^0.2.0-alpha",
       "process": "github:jspm/nodelibs-process@^0.2.0-alpha",
-      "rxjs": "npm:rxjs@5.0.0-beta.6",
+      "rxjs": "npm:rxjs@5.0.0-beta.12",
       "stream": "github:jspm/nodelibs-stream@^0.2.0-alpha",
       "string_decoder": "github:jspm/nodelibs-string_decoder@^0.2.0-alpha",
       "timers": "github:jspm/nodelibs-timers@^0.2.0-alpha",
       "url": "github:jspm/nodelibs-url@^0.2.0-alpha",
       "util": "github:jspm/nodelibs-util@^0.2.0-alpha",
       "vm": "github:jspm/nodelibs-vm@^0.2.0-alpha",
-      "zone.js": "npm:zone.js@^0.6.17"
+      "zone.js": "npm:zone.js@^0.6.21"
     },
     "overrides": {
       "npm:@angular/common@2.0.2": {

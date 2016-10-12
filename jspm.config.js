@@ -52,7 +52,7 @@ SystemJS.config({
     "local:*.json"
   ],
   map: {
-    "carbonldp-panel": "local:carbonldp-panel@0.3.1",
+    "carbonldp-panel": "npm:carbonldp-panel@0.3.1",
     "angular2-carbonldp": "npm:angular2-carbonldp@0.3.3",
     "carbonldp": "npm:carbonldp@0.37.0",
     "@angular/common": "npm:@angular/common@2.0.2",
@@ -83,7 +83,7 @@ SystemJS.config({
     "plugin-typescript": "github:frankwallis/plugin-typescript@5.0.9",
     "process": "github:jspm/nodelibs-process@0.2.0-alpha",
     "reflect-metadata": "npm:reflect-metadata@0.1.8",
-    "rxjs": "npm:rxjs@5.0.0-beta.6",
+    "rxjs": "npm:rxjs@5.0.0-beta.12",
     "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
     "string_decoder": "github:jspm/nodelibs-string_decoder@0.2.0-alpha",
     "text": "github:systemjs/plugin-text@0.0.8",
@@ -353,6 +353,11 @@ SystemJS.config({
     "npm:pbkdf2@3.0.9": {
       "map": {
         "create-hmac": "npm:create-hmac@1.1.4"
+      }
+    },
+    "npm:rxjs@5.0.0-beta.12": {
+      "map": {
+        "symbol-observable": "npm:symbol-observable@1.0.3"
       }
     }
   }
