@@ -8,38 +8,20 @@ RUN apt-get update && apt-get install -y \
 
 RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 RUN apt-get update && apt-get install -y \
-	nodejs \
-	git
+	nodejs
 RUN npm install -g gulp@3.9.1
-RUN npm install -g jspm@0.17.0-beta.28
-RUN npm install -g typings@1.0.5
-
-COPY package.json /tmp/package.json
-COPY jspm.config.js /tmp/jspm.config.js
-
-COPY semantic.json /tmp/semantic.json
-COPY src/semantic /tmp/src/semantic
-
-COPY typings.json /tmp/typings.json
-RUN cd /tmp && npm install
-RUN cd /tmp && jspm install
-
-# Something is causing @angular/platform-browser to install incorrectly, it may be the conflicting versions of rc.5 and router@3.0.0-rc.2
-# TODO: Remove this instruction
-RUN cd /tmp && jspm install npm:@angular/platform-browser@2.0.0-rc.5
-
-RUN cd /tmp && typings install
-RUN mkdir -p /usr/share/nginx/html/carbon-workbench/
-RUN cp -a /tmp/node_modules /usr/share/nginx/html/carbon-workbench/
-RUN cp -a /tmp/jspm_packages /usr/share/nginx/html/carbon-workbench/
-RUN cp -a /tmp/typings /usr/share/nginx/html/carbon-workbench/
 
 COPY config /usr/share/nginx/html/carbon-workbench/config
 COPY dist /usr/share/nginx/html/carbon-workbench/dist
+COPY jspm_packages /usr/share/nginx/html/carbon-workbench/jspm_packages
+COPY node_modules /usr/share/nginx/html/carbon-workbench/node_modules
 COPY src /usr/share/nginx/html/carbon-workbench/src
 COPY typings/typings.d.ts /usr/share/nginx/html/carbon-workbench/typings/typings.d.ts
 COPY gulpfile.js /usr/share/nginx/html/carbon-workbench/gulpfile.js
 COPY jspm.config.js /usr/share/nginx/html/carbon-workbench/jspm.config.js
+COPY LICENSE /usr/share/nginx/html/carbon-workbench/LICENSE
+COPY package.json /usr/share/nginx/html/carbon-workbench/package.json
+COPY semantic.json /usr/share/nginx/html/carbon-workbench/semantic.json
 COPY tsconfig.json /usr/share/nginx/html/carbon-workbench/tsconfig.json
 COPY typings.json /usr/share/nginx/html/carbon-workbench/typings.json
 
