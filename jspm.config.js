@@ -52,9 +52,9 @@ SystemJS.config({
     "local:*.json"
   ],
   map: {
-    "carbonldp-panel": "npm:carbonldp-panel@0.3.1",
-    "angular2-carbonldp": "npm:angular2-carbonldp@0.3.3",
-    "carbonldp": "npm:carbonldp@0.37.0",
+    "carbonldp-panel": "npm:carbonldp-panel@0.4.0",
+    "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
+    "carbonldp": "npm:carbonldp@0.39.0",
     "@angular/common": "npm:@angular/common@2.0.2",
     "@angular/compiler": "npm:@angular/compiler@2.0.2",
     "@angular/core": "npm:@angular/core@2.0.2",
@@ -83,7 +83,7 @@ SystemJS.config({
     "plugin-typescript": "github:frankwallis/plugin-typescript@5.0.9",
     "process": "github:jspm/nodelibs-process@0.2.0-alpha",
     "reflect-metadata": "npm:reflect-metadata@0.1.8",
-    "rxjs": "npm:rxjs@5.0.0-beta.12",
+    "rxjs": "npm:rxjs@5.0.0-beta.11",
     "stream": "github:jspm/nodelibs-stream@0.2.0-alpha",
     "string_decoder": "github:jspm/nodelibs-string_decoder@0.2.0-alpha",
     "text": "github:systemjs/plugin-text@0.0.8",
@@ -295,20 +295,10 @@ SystemJS.config({
         "typescript": "npm:typescript@2.0.0"
       }
     },
-    "npm:carbonldp@0.37.0": {
-      "map": {
-        "file-type": "npm:file-type@3.8.0"
-      }
-    },
     "npm:@angular/router@3.0.0-rc.2": {
       "map": {
         "npm:@angular/core": "npm:@angular/core@2.0.2",
         "npm:@angular/common": "npm:@angular/common@2.0.2"
-      }
-    },
-    "npm:angular2-carbonldp@0.3.3": {
-      "map": {
-        "js-cookie": "npm:js-cookie@2.1.3"
       }
     },
     "npm:stream-http@2.4.0": {
@@ -355,9 +345,19 @@ SystemJS.config({
         "create-hmac": "npm:create-hmac@1.1.4"
       }
     },
-    "npm:rxjs@5.0.0-beta.12": {
+    "npm:rxjs@5.0.0-beta.11": {
       "map": {
         "symbol-observable": "npm:symbol-observable@1.0.3"
+      }
+    },
+    "npm:angular2-carbonldp@0.4.1": {
+      "map": {
+        "js-cookie": "npm:js-cookie@2.1.3"
+      }
+    },
+    "npm:carbonldp@0.39.0": {
+      "map": {
+        "file-type": "npm:file-type@3.8.0"
       }
     }
   }
