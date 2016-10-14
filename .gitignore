@@ -19,6 +19,8 @@ src/app/config.ts
 
 # Semantic UI
 **/semantic/dist/
+**/semantic/tasks/
+**/semantic/gulpfile.js
 
 reports/
 

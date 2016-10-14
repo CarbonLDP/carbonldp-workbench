@@ -7,6 +7,6 @@
 	},
 	"carbon": {
 		"protocol": "https",
-		"domain": "local.carbonldp.com"
+		"domain": "carbonldp.base22.io"
 	}
 }

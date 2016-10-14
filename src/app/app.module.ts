@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { APP_BASE_HREF, DeprecatedFormsModule } from "@angular/common";
+import { APP_BASE_HREF } from "@angular/common";
 import { BrowserModule, Title } from "@angular/platform-browser";
 
 // Providers
@@ -15,6 +15,7 @@ import { WorkbenchView } from "app/workbench/workbench.view";
 import { ErrorView } from "app/error-pages/error.view";
 import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
 import { DashboardView } from "app/dashboard/dashboard.view";
+import { BackgroundVideoComponent } from "app/error-pages/background-video.component";
 
 // Modules
 import { PanelModule } from "carbonldp-panel/panel.module";
@@ -23,7 +24,6 @@ import { PanelModule } from "carbonldp-panel/panel.module";
 @NgModule( {
 	imports: [
 		BrowserModule,
-		DeprecatedFormsModule,
 		routing,
 		PanelModule.forRoot(),
 	],
@@ -34,6 +34,7 @@ import { PanelModule } from "carbonldp-panel/panel.module";
 		ErrorView,
 		NotFoundErrorView,
 		DashboardView,
+		BackgroundVideoComponent
 	],
 	providers: [
 		{
