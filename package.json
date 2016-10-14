@@ -21,6 +21,7 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
+    "postinstall": "node scripts/force-semantic-ui-to-install-correctly.js && npm explore semantic-ui -- npm run-script install",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
