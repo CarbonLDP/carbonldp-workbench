@@ -305,8 +305,11 @@ gulp.task( "copy:assets", [ "copy:node-dependencies" ], () => {
 	} ).pipe( gulp.dest( "dist/site/assets" ) );
 } );
 
-gulp.task( "copy:node-dependencies", () => {
-	gulp.start( 'copy:node-dependencies:files', 'copy:node-dependencies:packages' );
+gulp.task( "copy:node-dependencies", ( done ) => {
+	runSequence(
+		[ "copy:node-dependencies:files", "copy:node-dependencies:packages" ],
+		done
+	);
 } );
 
 gulp.task( "copy:node-dependencies:files", () => {

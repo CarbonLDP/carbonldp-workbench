@@ -1,3 +1,7 @@
+# 0.4.2 (2016/10/17)
+
+- Fixed gulp `copy:node-dependencies` task
+
 # 0.4.1 (2016/10/17)
 
 - Fixed `node-sass` installation bug
