@@ -5,7 +5,6 @@ import Carbon from "carbonldp/Carbon";
 
 import { activeContext } from "angular2-carbonldp/boot";
 
-import { BackgroundVideoComponent } from "app/error-pages/background-video.component";
 
 import template from "./error.view.html!text";
 import style from "./error.view.css!text";
@@ -14,7 +13,6 @@ import style from "./error.view.css!text";
 	selector: "div.cw-error-view",
 	template: template,
 	styles: [ style ],
-	directives: [ BackgroundVideoComponent ],
 } )
 export class ErrorView implements OnInit, AfterViewInit {
 	private error:any;

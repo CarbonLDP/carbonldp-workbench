@@ -28,7 +28,6 @@ interface window {
 	selector: "background-video",
 	template: template,
 	styles: [ style ],
-	directives: [],
 } )
 export class BackgroundVideoComponent implements AfterViewInit {
 	@Input( "videoID" ) videoID:string;
