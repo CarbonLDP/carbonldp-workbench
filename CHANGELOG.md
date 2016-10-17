@@ -1,3 +1,7 @@
+# 0.4.1 (2016/10/17)
+
+- Fixed `node-sass` installation bug
+
 # 0.4.0 (2016/10/17)
 
 - Updated carbonldp-panel to v0.4.0
