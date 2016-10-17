@@ -1,4 +1,10 @@
+# 0.4.0 (2016/10/17)
+
+- Updated carbonldp-panel to v0.4.0
+- Updated angular2 to 2.0.2
+
 # 0.3.0 (2016/09/02)
+
 - Update JSPM to beta.25 and install angular-RC5
 - Migrate code to @angular RC5.
     - Modularized AppComponent into AppModule.
