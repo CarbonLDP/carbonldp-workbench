@@ -54,15 +54,15 @@ SystemJS.config({
   map: {
     "carbonldp-panel": "npm:carbonldp-panel@0.4.0",
     "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
-    "carbonldp": "npm:carbonldp@0.37.0",
-    "@angular/common": "npm:@angular/common@2.1.0",
-    "@angular/compiler": "npm:@angular/compiler@2.0.2",
-    "@angular/core": "npm:@angular/core@2.1.0",
-    "@angular/forms": "npm:@angular/forms@2.0.2",
-    "@angular/http": "npm:@angular/http@2.0.2",
-    "@angular/platform-browser": "npm:@angular/platform-browser@2.1.0",
-    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.0.2",
-    "@angular/router": "npm:@angular/router@3.1.0",
+    "carbonldp": "npm:carbonldp@0.39.0",
+    "@angular/common": "npm:@angular/common@2.1.1",
+    "@angular/compiler": "npm:@angular/compiler@2.1.1",
+    "@angular/core": "npm:@angular/core@2.1.1",
+    "@angular/forms": "npm:@angular/forms@2.1.1",
+    "@angular/http": "npm:@angular/http@2.1.1",
+    "@angular/platform-browser": "npm:@angular/platform-browser@2.1.1",
+    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.1.1",
+    "@angular/router": "npm:@angular/router@3.1.1",
     "assert": "github:jspm/nodelibs-assert@0.2.0-alpha",
     "buffer": "github:jspm/nodelibs-buffer@0.2.0-alpha",
     "child_process": "github:jspm/nodelibs-child_process@0.2.0-alpha",
@@ -346,18 +346,18 @@ SystemJS.config({
     },
     "npm:rxjs@5.0.0-beta.12": {
       "map": {
-        "symbol-observable": "npm:symbol-observable@1.0.3"
+        "symbol-observable": "npm:symbol-observable@1.0.4"
       }
     },
-    "npm:@angular/router@3.1.0": {
+    "npm:@angular/router@3.1.1": {
       "map": {
         "npm:@angular/core": "npm:@angular/core@2.0.2",
         "npm:@angular/common": "npm:@angular/common@2.0.2"
       }
     },
-    "npm:carbonldp@0.37.0": {
+    "npm:carbonldp@0.39.0": {
       "map": {
-        "file-type": "npm:file-type@3.8.0"
+        "file-type": "npm:file-type@3.9.0"
       }
     }
   }
