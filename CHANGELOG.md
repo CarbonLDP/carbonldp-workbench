@@ -1,3 +1,11 @@
+# 0.5.0 (2016/11/09)
+
+- Updated `carbonldp-panel` to v0.5.0
+- Updated `@angular` packages to v2.1.0
+- Updated `carbonldp` to v0.40.0
+- Added minifying step to build task
+- Enabled gzip compression in nginx server
+
 # 0.4.2 (2016/10/17)
 
 - Fixed gulp `copy:node-dependencies` task
