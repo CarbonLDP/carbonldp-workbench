@@ -52,9 +52,9 @@ SystemJS.config({
     "local:*.json"
   ],
   map: {
-    "carbonldp-panel": "npm:carbonldp-panel@0.4.0",
+    "carbonldp-panel": "npm:carbonldp-panel@0.5.0",
     "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
-    "carbonldp": "npm:carbonldp@0.37.0",
+    "carbonldp": "npm:carbonldp@0.39.0",
     "@angular/common": "npm:@angular/common@2.1.0",
     "@angular/compiler": "npm:@angular/compiler@2.0.2",
     "@angular/core": "npm:@angular/core@2.1.0",
@@ -178,7 +178,7 @@ SystemJS.config({
         "create-hash": "npm:create-hash@1.1.2",
         "evp_bytestokey": "npm:evp_bytestokey@1.0.0",
         "pbkdf2": "npm:pbkdf2@3.0.9",
-        "asn1.js": "npm:asn1.js@4.8.1"
+        "asn1.js": "npm:asn1.js@4.9.0"
       }
     },
     "npm:evp_bytestokey@1.0.0": {
@@ -271,7 +271,7 @@ SystemJS.config({
     },
     "github:jspm/nodelibs-http@0.2.0-alpha": {
       "map": {
-        "http-browserify": "npm:stream-http@2.4.0"
+        "http-browserify": "npm:stream-http@2.5.0"
       }
     },
     "github:jspm/nodelibs-url@0.2.0-alpha": {
@@ -295,15 +295,6 @@ SystemJS.config({
         "typescript": "npm:typescript@2.0.0"
       }
     },
-    "npm:stream-http@2.4.0": {
-      "map": {
-        "readable-stream": "npm:readable-stream@2.1.5",
-        "xtend": "npm:xtend@4.0.1",
-        "to-arraybuffer": "npm:to-arraybuffer@1.0.1",
-        "builtin-status-codes": "npm:builtin-status-codes@2.0.0",
-        "inherits": "npm:inherits@2.0.3"
-      }
-    },
     "npm:cipher-base@1.0.3": {
       "map": {
         "inherits": "npm:inherits@2.0.3"
@@ -315,13 +306,6 @@ SystemJS.config({
         "bn.js": "npm:bn.js@4.11.6",
         "hash.js": "npm:hash.js@1.0.3",
         "brorand": "npm:brorand@1.0.6"
-      }
-    },
-    "npm:asn1.js@4.8.1": {
-      "map": {
-        "bn.js": "npm:bn.js@4.11.6",
-        "inherits": "npm:inherits@2.0.3",
-        "minimalistic-assert": "npm:minimalistic-assert@1.0.0"
       }
     },
     "github:jspm/nodelibs-timers@0.2.0-alpha": {
@@ -346,7 +330,7 @@ SystemJS.config({
     },
     "npm:rxjs@5.0.0-beta.12": {
       "map": {
-        "symbol-observable": "npm:symbol-observable@1.0.3"
+        "symbol-observable": "npm:symbol-observable@1.0.4"
       }
     },
     "npm:@angular/router@3.1.0": {
@@ -355,9 +339,25 @@ SystemJS.config({
         "npm:@angular/common": "npm:@angular/common@2.0.2"
       }
     },
-    "npm:carbonldp@0.37.0": {
+    "npm:asn1.js@4.9.0": {
       "map": {
-        "file-type": "npm:file-type@3.8.0"
+        "bn.js": "npm:bn.js@4.11.6",
+        "inherits": "npm:inherits@2.0.3",
+        "minimalistic-assert": "npm:minimalistic-assert@1.0.0"
+      }
+    },
+    "npm:carbonldp@0.39.0": {
+      "map": {
+        "file-type": "npm:file-type@3.9.0"
+      }
+    },
+    "npm:stream-http@2.5.0": {
+      "map": {
+        "inherits": "npm:inherits@2.0.3",
+        "readable-stream": "npm:readable-stream@2.1.5",
+        "xtend": "npm:xtend@4.0.1",
+        "builtin-status-codes": "npm:builtin-status-codes@2.0.0",
+        "to-arraybuffer": "npm:to-arraybuffer@1.0.1"
       }
     }
   }
