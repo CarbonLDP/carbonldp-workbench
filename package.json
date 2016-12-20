@@ -1,6 +1,6 @@
 {
   "name": "carbonldp-workbench",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Workbench to administer an on premise installation of Carbon LDP",
   "contributors": [
     {
@@ -25,17 +25,17 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@angular/common": "2.0.2",
-    "@angular/compiler": "2.0.2",
-    "@angular/core": "2.0.2",
+    "@angular/common": "2.3.1",
+    "@angular/compiler": "2.3.1",
+    "@angular/core": "2.3.1",
     "@angular/forms": "^2.0.2",
-    "@angular/http": "2.0.2",
-    "@angular/platform-browser": "2.0.2",
-    "@angular/platform-browser-dynamic": "2.0.2",
+    "@angular/http": "2.3.1",
+    "@angular/platform-browser": "2.3.1",
+    "@angular/platform-browser-dynamic": "2.3.1",
     "@angular/router": "3.0.0-rc.2",
     "angular2-carbonldp": "^0.4.1",
     "carbonldp": "^0.36.0",
-    "carbonldp-panel": "0.5.0",
+    "carbonldp-panel": "0.6.0",
     "del": "^2.2.0",
     "es6-shim": "^0.35.1",
     "gulp": "^3.9.1",
@@ -57,7 +57,7 @@
     "systemjs": "0.19.26",
     "systemjs-builder": "0.15.14",
     "tslint": "^3.11.0",
-    "typescript": "^2.0.0",
+    "typescript": "2.0.8",
     "typings": "^1.0.5",
     "yargs": "^4.7.1",
     "zone.js": "^0.6.6"
@@ -78,7 +78,7 @@
       "jspm": "jspm.config.js"
     },
     "dependencies": {
-      "carbonldp-panel": "npm:carbonldp-panel@0.5.0",
+      "carbonldp-panel": "npm:carbonldp-panel@^0.6.0",
       "codemirror": "npm:codemirror@^5.17.0",
       "css": "github:systemjs/plugin-css@^0.1.26",
       "highlight.js": "npm:highlight.js@9.7.0",
@@ -90,40 +90,40 @@
     },
     "devDependencies": {},
     "peerDependencies": {
-      "@angular/common": "npm:@angular/common@2.1.0",
-      "@angular/compiler": "npm:@angular/compiler@2.1.0",
-      "@angular/core": "npm:@angular/core@2.1.0",
-      "@angular/forms": "npm:@angular/forms@2.1.0",
-      "@angular/http": "npm:@angular/http@2.1.0",
-      "@angular/platform-browser": "npm:@angular/platform-browser@2.1.0",
-      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.1.0",
-      "@angular/router": "npm:@angular/router@3.1.0",
+      "@angular/common": "npm:@angular/common@2.3.1",
+      "@angular/compiler": "npm:@angular/compiler@2.3.1",
+      "@angular/core": "npm:@angular/core@2.3.1",
+      "@angular/forms": "npm:@angular/forms@2.3.1",
+      "@angular/http": "npm:@angular/http@2.3.1",
+      "@angular/platform-browser": "npm:@angular/platform-browser@2.3.1",
+      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.3.1",
+      "@angular/router": "npm:@angular/router@^3.3.1",
       "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
-      "assert": "github:jspm/nodelibs-assert@^0.2.0-alpha",
-      "buffer": "github:jspm/nodelibs-buffer@^0.2.0-alpha",
-      "carbonldp": "npm:carbonldp@0.40.0",
-      "child_process": "github:jspm/nodelibs-child_process@^0.2.0-alpha",
-      "constants": "github:jspm/nodelibs-constants@^0.2.0-alpha",
-      "crypto": "github:jspm/nodelibs-crypto@^0.2.0-alpha",
-      "events": "github:jspm/nodelibs-events@^0.2.0-alpha",
-      "fs": "github:jspm/nodelibs-fs@^0.2.0-alpha",
-      "http": "github:jspm/nodelibs-http@^0.2.0-alpha",
-      "https": "github:jspm/nodelibs-https@^0.2.0-alpha",
+      "assert": "npm:jspm-nodelibs-assert@^0.2.0",
+      "buffer": "npm:jspm-nodelibs-buffer@^0.2.0",
+      "carbonldp": "npm:carbonldp@^0.39.0",
+      "child_process": "npm:jspm-nodelibs-child_process@^0.2.0",
+      "constants": "npm:jspm-nodelibs-constants@^0.2.0",
+      "crypto": "npm:jspm-nodelibs-crypto@^0.2.0",
+      "events": "npm:jspm-nodelibs-events@^0.2.0",
+      "fs": "npm:jspm-nodelibs-fs@^0.2.0",
+      "http": "npm:jspm-nodelibs-http@^0.2.0",
+      "https": "npm:jspm-nodelibs-https@^0.2.0",
       "jquery": "npm:jquery@2.2.4",
-      "os": "github:jspm/nodelibs-os@^0.2.0-alpha",
-      "path": "github:jspm/nodelibs-path@^0.2.0-alpha",
-      "process": "github:jspm/nodelibs-process@^0.2.0-alpha",
-      "rxjs": "npm:rxjs@^5.0.0-beta.12",
-      "stream": "github:jspm/nodelibs-stream@^0.2.0-alpha",
-      "string_decoder": "github:jspm/nodelibs-string_decoder@^0.2.0-alpha",
-      "timers": "github:jspm/nodelibs-timers@^0.2.0-alpha",
-      "url": "github:jspm/nodelibs-url@^0.2.0-alpha",
-      "util": "github:jspm/nodelibs-util@^0.2.0-alpha",
-      "vm": "github:jspm/nodelibs-vm@^0.2.0-alpha",
-      "zone.js": "npm:zone.js@^0.6.21"
+      "os": "npm:jspm-nodelibs-os@^0.2.0",
+      "path": "npm:jspm-nodelibs-path@^0.2.0",
+      "process": "npm:jspm-nodelibs-process@^0.2.0",
+      "rxjs": "npm:rxjs@5.0.0-rc.4",
+      "stream": "npm:jspm-nodelibs-stream@^0.2.0",
+      "string_decoder": "npm:jspm-nodelibs-string_decoder@^0.2.0",
+      "timers": "npm:jspm-nodelibs-timers@^0.2.0",
+      "url": "npm:jspm-nodelibs-url@^0.2.0",
+      "util": "npm:jspm-nodelibs-util@^0.2.0",
+      "vm": "npm:jspm-nodelibs-vm@^0.2.0",
+      "zone.js": "npm:zone.js@^0.7.2"
     },
     "overrides": {
-      "npm:@angular/common@2.0.2": {
+      "npm:@angular/common@2.3.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -133,7 +133,7 @@
           }
         }
       },
-      "npm:@angular/common@2.1.0": {
+      "npm:@angular/compiler@2.3.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -143,7 +143,7 @@
           }
         }
       },
-      "npm:@angular/compiler@2.0.2": {
+      "npm:@angular/core@2.3.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -153,7 +153,7 @@
           }
         }
       },
-      "npm:@angular/core@2.0.2": {
+      "npm:@angular/http@2.3.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -163,7 +163,7 @@
           }
         }
       },
-      "npm:@angular/core@2.1.0": {
+      "npm:@angular/platform-browser-dynamic@2.3.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -173,7 +173,7 @@
           }
         }
       },
-      "npm:@angular/http@2.0.2": {
+      "npm:@angular/platform-browser@2.3.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -183,27 +183,7 @@
           }
         }
       },
-      "npm:@angular/platform-browser-dynamic@2.0.2": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        }
-      },
-      "npm:@angular/platform-browser@2.1.0": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        }
-      },
-      "npm:@angular/router@3.1.0": {
+      "npm:@angular/router@3.3.1": {
         "dependencies": {
           "npm:@angular/core": "2.0.2",
           "npm:@angular/common": "2.0.2"
