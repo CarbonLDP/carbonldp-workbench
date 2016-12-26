@@ -25,13 +25,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@angular/common": "2.3.1",
-    "@angular/compiler": "2.3.1",
-    "@angular/core": "2.3.1",
-    "@angular/forms": "2.3.1",
-    "@angular/http": "2.3.1",
-    "@angular/platform-browser": "2.3.1",
-    "@angular/platform-browser-dynamic": "2.3.1",
+    "@angular/common": "2.4.1",
+    "@angular/compiler": "2.4.1",
+    "@angular/core": "2.4.1",
+    "@angular/forms": "2.4.1",
+    "@angular/http": "2.4.1",
+    "@angular/platform-browser": "2.4.1",
+    "@angular/platform-browser-dynamic": "2.4.1",
     "@angular/router": "3.4.1",
     "angular2-carbonldp": "0.4.1",
     "carbonldp": "0.39.0",
@@ -90,13 +90,13 @@
     },
     "devDependencies": {},
     "peerDependencies": {
-      "@angular/common": "npm:@angular/common@2.3.1",
-      "@angular/compiler": "npm:@angular/compiler@2.3.1",
-      "@angular/core": "npm:@angular/core@2.3.1",
-      "@angular/forms": "npm:@angular/forms@2.3.1",
-      "@angular/http": "npm:@angular/http@2.3.1",
-      "@angular/platform-browser": "npm:@angular/platform-browser@2.3.1",
-      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.3.1",
+      "@angular/common": "npm:@angular/common@2.4.1",
+      "@angular/compiler": "npm:@angular/compiler@2.4.1",
+      "@angular/core": "npm:@angular/core@2.4.1",
+      "@angular/forms": "npm:@angular/forms@2.4.1",
+      "@angular/http": "npm:@angular/http@2.4.1",
+      "@angular/platform-browser": "npm:@angular/platform-browser@2.4.1",
+      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.4.1",
       "@angular/router": "npm:@angular/router@3.4.1",
       "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
       "assert": "npm:jspm-nodelibs-assert@0.2.0",
@@ -112,18 +112,18 @@
       "jquery": "npm:jquery@2.2.4",
       "os": "npm:jspm-nodelibs-os@0.2.0",
       "path": "npm:jspm-nodelibs-path@0.2.0",
-      "process": "npm:jspm-nodelibs-process@0.2.0",
-      "rxjs": "npm:rxjs@5.0.0-beta.12",
+      "process": "npm:jspm-nodelibs-process@^0.2.0",
+      "rxjs": "npm:rxjs@^5.0.1",
       "stream": "npm:jspm-nodelibs-stream@0.2.0",
       "string_decoder": "npm:jspm-nodelibs-string_decoder@0.2.0",
       "timers": "npm:jspm-nodelibs-timers@0.2.0",
       "url": "npm:jspm-nodelibs-url@0.2.0",
       "util": "npm:jspm-nodelibs-util@0.2.0",
       "vm": "npm:jspm-nodelibs-vm@0.2.0",
-      "zone.js": "npm:zone.js@0.7.2"
+      "zone.js": "npm:zone.js@^0.7.2"
     },
     "overrides": {
-      "npm:@angular/common@2.3.1": {
+      "npm:@angular/common@2.4.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -133,7 +133,7 @@
           }
         }
       },
-      "npm:@angular/compiler@2.3.1": {
+      "npm:@angular/compiler@2.4.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -143,7 +143,7 @@
           }
         }
       },
-      "npm:@angular/core@2.3.1": {
+      "npm:@angular/core@2.4.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -153,7 +153,7 @@
           }
         }
       },
-      "npm:@angular/http@2.3.1": {
+      "npm:@angular/http@2.4.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -163,7 +163,7 @@
           }
         }
       },
-      "npm:@angular/platform-browser-dynamic@2.3.1": {
+      "npm:@angular/platform-browser-dynamic@2.4.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -173,7 +173,7 @@
           }
         }
       },
-      "npm:@angular/platform-browser@2.3.1": {
+      "npm:@angular/platform-browser@2.4.1": {
         "meta": {
           "src/*.js": {
             "deps": [
@@ -183,10 +183,18 @@
           }
         }
       },
-      "npm:@angular/router@3.3.1": {
-        "dependencies": {
-          "npm:@angular/core": "2.0.2",
-          "npm:@angular/common": "2.0.2"
+      "npm:@angular/router@3.4.1": {
+        "meta": {
+          "src/*.js": {
+            "deps": [
+              "reflect-metadata",
+              "zone.js"
+            ]
+          }
+        },
+        "map": {
+          "@angular/router": ".",
+          "./testing": "./bundles/router-testing.umd.js"
         }
       },
       "npm:inherits@2.0.3": {

@@ -54,15 +54,15 @@ SystemJS.config({
   map: {
     "carbonldp-panel": "npm:carbonldp-panel@0.6.0",
     "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
-    "carbonldp": "npm:carbonldp@0.37.0",
-    "@angular/common": "npm:@angular/common@2.3.1",
-    "@angular/compiler": "npm:@angular/compiler@2.3.1",
-    "@angular/core": "npm:@angular/core@2.3.1",
-    "@angular/forms": "npm:@angular/forms@2.3.1",
-    "@angular/http": "npm:@angular/http@2.3.1",
-    "@angular/platform-browser": "npm:@angular/platform-browser@2.3.1",
-    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.3.1",
-    "@angular/router": "npm:@angular/router@3.3.1",
+    "carbonldp": "npm:carbonldp@0.39.0",
+    "@angular/common": "npm:@angular/common@2.4.1",
+    "@angular/compiler": "npm:@angular/compiler@2.4.1",
+    "@angular/core": "npm:@angular/core@2.4.1",
+    "@angular/forms": "npm:@angular/forms@2.4.1",
+    "@angular/http": "npm:@angular/http@2.4.1",
+    "@angular/platform-browser": "npm:@angular/platform-browser@2.4.1",
+    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.4.1",
+    "@angular/router": "npm:@angular/router@3.4.1",
     "assert": "npm:jspm-nodelibs-assert@0.2.0",
     "buffer": "npm:jspm-nodelibs-buffer@0.2.1",
     "child_process": "npm:jspm-nodelibs-child_process@0.2.0",
@@ -83,7 +83,7 @@ SystemJS.config({
     "plugin-typescript": "github:frankwallis/plugin-typescript@5.0.9",
     "process": "npm:jspm-nodelibs-process@0.2.0",
     "reflect-metadata": "npm:reflect-metadata@0.1.8",
-    "rxjs": "npm:rxjs@5.0.0-rc.4",
+    "rxjs": "npm:rxjs@5.0.2",
     "stream": "npm:jspm-nodelibs-stream@0.2.0",
     "string_decoder": "npm:jspm-nodelibs-string_decoder@0.2.0",
     "text": "github:systemjs/plugin-text@0.0.8",
@@ -323,12 +323,6 @@ SystemJS.config({
         "url-browserify": "npm:url@0.11.0"
       }
     },
-    "npm:@angular/router@3.3.1": {
-      "map": {
-        "npm:@angular/core": "npm:@angular/core@2.3.1",
-        "npm:@angular/common": "npm:@angular/common@2.3.1"
-      }
-    },
     "npm:jspm-nodelibs-buffer@0.2.1": {
       "map": {
         "buffer": "npm:buffer@4.9.1"
@@ -350,12 +344,18 @@ SystemJS.config({
         "inherits": "npm:inherits@2.0.3"
       }
     },
-    "npm:rxjs@5.0.0-rc.4": {
+    "npm:rxjs@5.0.2": {
       "map": {
         "symbol-observable": "npm:symbol-observable@1.0.4"
       }
     },
-    "npm:carbonldp@0.37.0": {
+    "npm:@angular/router@3.4.1": {
+      "map": {
+        "npm:@angular/core": "npm:@angular/core@2.4.1",
+        "npm:@angular/common": "npm:@angular/common@2.4.1"
+      }
+    },
+    "npm:carbonldp@0.39.0": {
       "map": {
         "file-type": "npm:file-type@3.9.0"
       }
