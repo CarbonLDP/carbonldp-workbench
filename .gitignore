@@ -26,6 +26,7 @@ reports/
 
 # IntelliJ
 .idea/workspace.xml
+.idea/terminal.xml
 .idea/dictionaries/
 # *.iml
 # *.iws
