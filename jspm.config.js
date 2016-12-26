@@ -54,7 +54,7 @@ SystemJS.config({
   map: {
     "carbonldp-panel": "npm:carbonldp-panel@0.6.0",
     "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
-    "carbonldp": "npm:carbonldp@0.39.0",
+    "carbonldp": "npm:carbonldp@0.37.0",
     "@angular/common": "npm:@angular/common@2.3.1",
     "@angular/compiler": "npm:@angular/compiler@2.3.1",
     "@angular/core": "npm:@angular/core@2.3.1",
@@ -91,7 +91,7 @@ SystemJS.config({
     "url": "npm:jspm-nodelibs-url@0.2.0",
     "util": "npm:jspm-nodelibs-util@0.2.0",
     "vm": "npm:jspm-nodelibs-vm@0.2.0",
-    "zone.js": "npm:zone.js@0.7.3"
+    "zone.js": "npm:zone.js@0.7.4"
   },
   packages: {
     "npm:crypto-browserify@3.11.0": {
@@ -350,14 +350,14 @@ SystemJS.config({
         "inherits": "npm:inherits@2.0.3"
       }
     },
-    "npm:carbonldp@0.39.0": {
-      "map": {
-        "file-type": "npm:file-type@3.9.0"
-      }
-    },
     "npm:rxjs@5.0.0-rc.4": {
       "map": {
         "symbol-observable": "npm:symbol-observable@1.0.4"
+      }
+    },
+    "npm:carbonldp@0.37.0": {
+      "map": {
+        "file-type": "npm:file-type@3.9.0"
       }
     }
   }
