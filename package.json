@@ -60,7 +60,7 @@
     "typescript": "2.0.8",
     "typings": "^1.0.5",
     "yargs": "^4.7.1",
-    "zone.js": "0.7.2"
+    "zone.js": "0.7.4"
   },
   "dependencies": {
     "codemirror": "^5.16.0",
@@ -112,15 +112,15 @@
       "jquery": "npm:jquery@2.2.4",
       "os": "npm:jspm-nodelibs-os@0.2.0",
       "path": "npm:jspm-nodelibs-path@0.2.0",
-      "process": "npm:jspm-nodelibs-process@^0.2.0",
-      "rxjs": "npm:rxjs@^5.0.1",
+      "process": "npm:jspm-nodelibs-process@0.2.0",
+      "rxjs": "npm:rxjs@5.0.2",
       "stream": "npm:jspm-nodelibs-stream@0.2.0",
       "string_decoder": "npm:jspm-nodelibs-string_decoder@0.2.0",
       "timers": "npm:jspm-nodelibs-timers@0.2.0",
       "url": "npm:jspm-nodelibs-url@0.2.0",
       "util": "npm:jspm-nodelibs-util@0.2.0",
       "vm": "npm:jspm-nodelibs-vm@0.2.0",
-      "zone.js": "npm:zone.js@^0.7.2"
+      "zone.js": "npm:zone.js@0.7.4"
     },
     "overrides": {
       "npm:@angular/common@2.4.1": {

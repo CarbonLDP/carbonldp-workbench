@@ -1,6 +1,6 @@
 # 0.6.0 (2016/12/19)
 
-- Updated `@angular` packages to v2.3.1
+- Updated `@angular` packages to v2.4.1
 - Updated `carbonldp-panel` to v0.6.0
 - Fixed compilation
 
