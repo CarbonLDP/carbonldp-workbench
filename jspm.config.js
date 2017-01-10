@@ -54,15 +54,15 @@ SystemJS.config({
   map: {
     "carbonldp-panel": "npm:carbonldp-panel@0.6.0",
     "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
-    "carbonldp": "npm:carbonldp@0.39.0",
-    "@angular/common": "npm:@angular/common@2.4.1",
-    "@angular/compiler": "npm:@angular/compiler@2.4.1",
-    "@angular/core": "npm:@angular/core@2.4.1",
-    "@angular/forms": "npm:@angular/forms@2.4.1",
-    "@angular/http": "npm:@angular/http@2.4.1",
-    "@angular/platform-browser": "npm:@angular/platform-browser@2.4.1",
-    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.4.1",
-    "@angular/router": "npm:@angular/router@3.4.1",
+    "carbonldp": "npm:carbonldp@0.40.0",
+    "@angular/common": "npm:@angular/common@2.4.2",
+    "@angular/compiler": "npm:@angular/compiler@2.4.2",
+    "@angular/core": "npm:@angular/core@2.4.2",
+    "@angular/forms": "npm:@angular/forms@2.4.2",
+    "@angular/http": "npm:@angular/http@2.4.2",
+    "@angular/platform-browser": "npm:@angular/platform-browser@2.4.2",
+    "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.4.2",
+    "@angular/router": "npm:@angular/router@3.4.2",
     "assert": "npm:jspm-nodelibs-assert@0.2.0",
     "buffer": "npm:jspm-nodelibs-buffer@0.2.1",
     "child_process": "npm:jspm-nodelibs-child_process@0.2.0",
@@ -81,7 +81,7 @@ SystemJS.config({
     "os": "npm:jspm-nodelibs-os@0.2.0",
     "path": "npm:jspm-nodelibs-path@0.2.0",
     "plugin-typescript": "github:frankwallis/plugin-typescript@5.0.9",
-    "process": "npm:jspm-nodelibs-process@0.2.0",
+    "process": "github:jspm/nodelibs-process@0.2.0-alpha",
     "reflect-metadata": "npm:reflect-metadata@0.1.8",
     "rxjs": "npm:rxjs@5.0.2",
     "stream": "npm:jspm-nodelibs-stream@0.2.0",
@@ -349,13 +349,7 @@ SystemJS.config({
         "symbol-observable": "npm:symbol-observable@1.0.4"
       }
     },
-    "npm:@angular/router@3.4.1": {
-      "map": {
-        "npm:@angular/core": "npm:@angular/core@2.4.1",
-        "npm:@angular/common": "npm:@angular/common@2.4.1"
-      }
-    },
-    "npm:carbonldp@0.39.0": {
+    "npm:carbonldp@0.40.0": {
       "map": {
         "file-type": "npm:file-type@3.9.0"
       }
