@@ -52,7 +52,7 @@ SystemJS.config({
     "local:*.json"
   ],
   map: {
-    "carbonldp-panel": "npm:carbonldp-panel@0.6.0",
+    "carbonldp-panel": "local:carbonldp-panel@0.6.0",
     "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
     "carbonldp": "npm:carbonldp@0.40.0",
     "@angular/common": "npm:@angular/common@2.4.2",
@@ -81,9 +81,9 @@ SystemJS.config({
     "os": "npm:jspm-nodelibs-os@0.2.0",
     "path": "npm:jspm-nodelibs-path@0.2.0",
     "plugin-typescript": "github:frankwallis/plugin-typescript@5.0.9",
-    "process": "github:jspm/nodelibs-process@0.2.0-alpha",
+    "process": "npm:jspm-nodelibs-process@0.2.0",
     "reflect-metadata": "npm:reflect-metadata@0.1.8",
-    "rxjs": "npm:rxjs@5.0.2",
+    "rxjs": "npm:rxjs@5.0.3",
     "stream": "npm:jspm-nodelibs-stream@0.2.0",
     "string_decoder": "npm:jspm-nodelibs-string_decoder@0.2.0",
     "text": "github:systemjs/plugin-text@0.0.8",
@@ -168,7 +168,7 @@ SystemJS.config({
         "create-hash": "npm:create-hash@1.1.2",
         "evp_bytestokey": "npm:evp_bytestokey@1.0.0",
         "pbkdf2": "npm:pbkdf2@3.0.9",
-        "asn1.js": "npm:asn1.js@4.9.0"
+        "asn1.js": "npm:asn1.js@4.9.1"
       }
     },
     "npm:evp_bytestokey@1.0.0": {
@@ -272,22 +272,6 @@ SystemJS.config({
         "js-cookie": "npm:js-cookie@2.1.3"
       }
     },
-    "npm:asn1.js@4.9.0": {
-      "map": {
-        "bn.js": "npm:bn.js@4.11.6",
-        "inherits": "npm:inherits@2.0.3",
-        "minimalistic-assert": "npm:minimalistic-assert@1.0.0"
-      }
-    },
-    "npm:stream-http@2.5.0": {
-      "map": {
-        "inherits": "npm:inherits@2.0.3",
-        "readable-stream": "npm:readable-stream@2.2.2",
-        "xtend": "npm:xtend@4.0.1",
-        "builtin-status-codes": "npm:builtin-status-codes@2.0.0",
-        "to-arraybuffer": "npm:to-arraybuffer@1.0.1"
-      }
-    },
     "npm:jspm-nodelibs-os@0.2.0": {
       "map": {
         "os-browserify": "npm:os-browserify@0.2.1"
@@ -300,7 +284,7 @@ SystemJS.config({
     },
     "npm:jspm-nodelibs-http@0.2.0": {
       "map": {
-        "http-browserify": "npm:stream-http@2.5.0"
+        "http-browserify": "npm:stream-http@2.6.0"
       }
     },
     "npm:jspm-nodelibs-stream@0.2.0": {
@@ -344,9 +328,25 @@ SystemJS.config({
         "inherits": "npm:inherits@2.0.3"
       }
     },
-    "npm:rxjs@5.0.2": {
+    "npm:rxjs@5.0.3": {
       "map": {
         "symbol-observable": "npm:symbol-observable@1.0.4"
+      }
+    },
+    "npm:asn1.js@4.9.1": {
+      "map": {
+        "bn.js": "npm:bn.js@4.11.6",
+        "inherits": "npm:inherits@2.0.3",
+        "minimalistic-assert": "npm:minimalistic-assert@1.0.0"
+      }
+    },
+    "npm:stream-http@2.6.0": {
+      "map": {
+        "inherits": "npm:inherits@2.0.3",
+        "readable-stream": "npm:readable-stream@2.2.2",
+        "builtin-status-codes": "npm:builtin-status-codes@3.0.0",
+        "xtend": "npm:xtend@4.0.1",
+        "to-arraybuffer": "npm:to-arraybuffer@1.0.1"
       }
     },
     "npm:carbonldp@0.40.0": {
