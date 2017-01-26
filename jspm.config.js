@@ -284,7 +284,7 @@ SystemJS.config({
     },
     "npm:jspm-nodelibs-http@0.2.0": {
       "map": {
-        "http-browserify": "npm:stream-http@2.6.0"
+        "http-browserify": "npm:stream-http@2.6.1"
       }
     },
     "npm:jspm-nodelibs-stream@0.2.0": {
@@ -340,18 +340,18 @@ SystemJS.config({
         "minimalistic-assert": "npm:minimalistic-assert@1.0.0"
       }
     },
-    "npm:stream-http@2.6.0": {
-      "map": {
-        "inherits": "npm:inherits@2.0.3",
-        "readable-stream": "npm:readable-stream@2.2.2",
-        "builtin-status-codes": "npm:builtin-status-codes@3.0.0",
-        "xtend": "npm:xtend@4.0.1",
-        "to-arraybuffer": "npm:to-arraybuffer@1.0.1"
-      }
-    },
     "npm:carbonldp@0.40.0": {
       "map": {
         "file-type": "npm:file-type@3.9.0"
+      }
+    },
+    "npm:stream-http@2.6.1": {
+      "map": {
+        "readable-stream": "npm:readable-stream@2.2.2",
+        "inherits": "npm:inherits@2.0.3",
+        "to-arraybuffer": "npm:to-arraybuffer@1.0.1",
+        "builtin-status-codes": "npm:builtin-status-codes@3.0.0",
+        "xtend": "npm:xtend@4.0.1"
       }
     }
   }
