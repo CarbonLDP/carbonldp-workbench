@@ -72,6 +72,7 @@ const config = {
 			"node_modules/rxjs/bundles/Rx.js"
 		],
 		packages: [
+			"node_modules/codemirror/*/**/",
 			"node_modules/jstree/*/**/"
 		]
 	}
