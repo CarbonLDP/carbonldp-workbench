@@ -1,24 +1,28 @@
 {
 	"compilerOptions": {
-		"module": "system",
+		"target": "es5",
+		"module": "commonjs",
+		"noImplicitAny": false,
+		"allowSyntheticDefaultImports": true,
+		"suppressImplicitAnyIndexErrors": true,
+		"sourceMap": true,
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
-		"noImplicitAny": false,
-		"target": "es5",
 		"moduleResolution": "node",
+		"lib": [ "es2015", "dom" ],
 		"baseUrl": ".",
 		"paths": {
 			"app/*": [ "src/app/*" ],
-			"angular2-carbonldp/*": [ "angular2-carbonldp/dist/*" ],
-			"carbon-panel/*": [ "../carbon-panel/dist/*" ]
+			"carbonldp-panel/*": [ "../carbonldp-panel/dist/*" ]
 		}
 	},
+	"compileOnSave": false,
 	"exclude": [
-		"jspm_packages",
-		"node_modules",
 		"dist",
-		"typings/globals",
-		"typings/custom",
-		"typings/index.d.ts"
-	]
+		"node_modules/*",
+		"node_modules/typescript"
+	],
+	"awesomeTypescriptLoaderOptions": {
+		"useWebpackText": true // Allows other loaders to be chained to awesome-typescript-loader.
+	}
 }
