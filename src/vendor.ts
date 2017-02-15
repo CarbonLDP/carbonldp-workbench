@@ -14,3 +14,4 @@ import "jstree";
 import "codemirror";
 import "highlight.js";
 import "semantic-ui/semantic";
+import "carbonldp";
