@@ -7,13 +7,11 @@ import { AuthService } from "angular2-carbonldp/services";
 import { HeaderService } from "carbonldp-panel/header.service";
 import { SidebarService } from "carbonldp-panel/sidebar.service";
 
-import template from "./workbench.view.html!";
-import style from "./workbench.view.css!text";
 
 @Component( {
 	selector: "div.ng-view",
-	template: template,
-	styles: [ style ],
+	templateUrl: "./workbench.view.html",
+	styleUrls: [ "./workbench.view.scss" ],
 } )
 export class WorkbenchView {
 
@@ -31,13 +29,13 @@ export class WorkbenchView {
 		this.authService = authService;
 		this.router = router;
 		this.carbon = carbon;
-		this.router.events.subscribe( ( event:Event )=> {
+		this.router.events.subscribe( ( event:Event ) => {
 			let url:string = "", scrollableContent:Element;
 			if( event instanceof NavigationEnd ) {
 				url = event.url;
 				if( this.prevUrl !== url ) {
 					scrollableContent = document.querySelector( ".scrollable-content" );
-					if( scrollableContent )scrollableContent.scrollTop = 0;
+					if( scrollableContent ) scrollableContent.scrollTop = 0;
 					this.prevUrl = url;
 				}
 			}
@@ -68,7 +66,8 @@ export class WorkbenchView {
 		} );
 
 		let name:string = this.carbon.auth.authenticatedAgent[ "name" ] ? this.carbon.auth.authenticatedAgent.name : "User";
-		this.headerService.addItems( [
+		// TODO: Remove any to use HeaderItem instead
+		this.headerService.addItems( <any>[
 			{
 				name: "Dashboard",
 				route: [ "" ],

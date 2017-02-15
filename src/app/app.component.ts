@@ -2,13 +2,11 @@ import { Component, ViewEncapsulation } from "@angular/core";
 import { Router, Event, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
 import { Title } from "@angular/platform-browser";
 
-import template from "./app.component.html!";
-import style from "./app.component.css!text";
 
 @Component( {
 	selector: "app",
-	template: template,
-	styles: [ style ],
+	templateUrl: "./app.component.html",
+	styleUrls: [ "./app.component.scss" ],
 	encapsulation: ViewEncapsulation.None,
 } )
 export class AppComponent {
@@ -40,7 +38,7 @@ export class AppComponent {
 		} while( currentRoute );
 
 
-		activatedRoutes.forEach( ( snapshot:ActivatedRouteSnapshot, idx:number )=> {
+		activatedRoutes.forEach( ( snapshot:ActivatedRouteSnapshot, idx:number ) => {
 			if( idx === 0 ) return;
 			if( activatedRoutes.length === 2 && idx === 1 && ! snapshot.data[ "title" ] ) return;
 			if( idx !== (activatedRoutes.length - 1) && typeof snapshot.data[ "title" ] === "undefined" ) return;

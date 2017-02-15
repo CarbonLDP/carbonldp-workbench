@@ -1,12 +1,9 @@
 import { Component } from "@angular/core";
 
-import template from "./not-found-error.view.html!";
-import style from "./not-found-error.view.css!text";
-
 @Component( {
 	selector: "dashboard",
-	template: template,
-	styles: [ style ],
+	templateUrl: "./not-found-error.view.html",
+	styleUrls: [ "./not-found-error.view.scss" ],
 } )
 export class NotFoundErrorView {
 

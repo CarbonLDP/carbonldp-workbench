@@ -1,14 +1,11 @@
 import { Component, AfterViewInit, HostListener, Input } from "@angular/core";
 
-import template from "./background-video.component.html!text";
-import style from "./background-video.component.css!text";
-
 interface YoutubePlayerOptions {
 	videoId:string;
 	events?:{
-		onReady?:( event:any )=>void,
-		onStateChange?:( event:any )=>void,
-		onError?:( event:any )=>void,
+		onReady?:( event:any ) => void,
+		onStateChange?:( event:any ) => void,
+		onError?:( event:any ) => void,
 	};
 }
 
@@ -26,8 +23,8 @@ interface window {
 
 @Component( {
 	selector: "background-video",
-	template: template,
-	styles: [ style ],
+	templateUrl: "./background-video.component.html",
+	styleUrls: [ "./background-video.component.scss" ],
 } )
 export class BackgroundVideoComponent implements AfterViewInit {
 	@Input( "videoID" ) videoID:string;

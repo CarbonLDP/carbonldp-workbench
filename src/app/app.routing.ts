@@ -1,5 +1,5 @@
 import { ModuleWithProviders } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
+import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
 
 // Guards
 import { AuthenticatedGuard, NotAuthenticatedGuard } from "angular2-carbonldp/guards";
@@ -11,8 +11,6 @@ import { WorkbenchView } from "app/workbench/workbench.view";
 import { ErrorView } from "app/error-pages/error.view";
 import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
 import { DashboardView } from "app/dashboard/dashboard.view";
-
-import { MyAppsModule } from "carbonldp-panel/my-apps/my-apps.module";
 
 const appRoutes:Routes = [
 	{
@@ -53,7 +51,7 @@ const appRoutes:Routes = [
 			},
 			{
 				path: "my-apps",
-				loadChildren: () => MyAppsModule,
+				loadChildren: "carbonldp-panel/my-apps/my-apps.module#MyAppsModule",
 			},
 		]
 	},
@@ -80,4 +78,4 @@ export const appRoutingProviders:any[] = [
 	NotAuthenticatedGuard,
 ];
 
-export const routing:ModuleWithProviders = RouterModule.forRoot( appRoutes );
+export const routing:ModuleWithProviders = RouterModule.forRoot( appRoutes, { preloadingStrategy: PreloadAllModules } );
