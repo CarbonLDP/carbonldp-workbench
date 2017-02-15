@@ -1,4 +1,4 @@
-module.exports = {
+{
 	"dev": {
 		"protocol": "http",
 		"domain": "localhost:8083"
@@ -7,4 +7,4 @@ module.exports = {
 		"protocol": "https",
 		"domain": "local.carbonldp.com"
 	}
-};
+}
