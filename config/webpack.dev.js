@@ -1,14 +1,11 @@
 const commonConfig = require( "./webpack.common.js" );
 const helpers = require( "./webpack.helpers" );
-const carbonConfig = require( "./carbon.config" );
+const carbonConfig = require( "./carbon.config.json" );
 const webpackMerge = require( "webpack-merge" );
-// const webpackMergeDll = webpackMerge.strategy({ plugins: "replace" });
 
 
 // Plugins
-const ExtractTextPlugin = require( "extract-text-webpack-plugin" );
 const DefinePlugin = require( "webpack/lib/DefinePlugin" );
-const LoaderOptionsPlugin = require( "webpack/lib/LoaderOptionsPlugin" );
 
 
 // Webpack Constants
@@ -28,14 +25,12 @@ const METADATA = webpackMerge( commonConfig( { env: ENV } ).metadata, {
 
 module.exports = function( options ) {
 	return webpackMerge( commonConfig( { env: ENV } ), {
-		devtool: "cheap-module-source-map",
+		devtool: "source-map",
 
 		resolve: {
-			modules: [ helpers.root( "../carbonldp-panel/dist" ), helpers.root( "node_modules" ) ]
-		},
-
-		resolveLoader: {
-			modules: [ helpers.root( "../carbonldp-panel/dist" ), helpers.root( "node_modules" ) ]
+			alias: {
+				"carbonldp-panel": helpers.root( "../carbonldp-panel", "dist" )
+			},
 		},
 
 		output: {
@@ -59,8 +54,7 @@ module.exports = function( options ) {
 						"domain": JSON.stringify( carbonConfig.dev.domain ),
 					}
 				}
-			} ),
-			new ExtractTextPlugin( "[name].css" ),
+			} )
 		],
 
 		devServer: {

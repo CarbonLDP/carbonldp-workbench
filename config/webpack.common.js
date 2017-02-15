@@ -1,7 +1,6 @@
 const webpack = require( "webpack" );
 const CommonsChunkPlugin = require( "webpack/lib/optimize/CommonsChunkPlugin" );
 const HtmlWebpackPlugin = require( "html-webpack-plugin" );
-const ExtractTextPlugin = require( "extract-text-webpack-plugin" );
 const helpers = require( "./webpack.helpers" );
 const CopyWebpackPlugin = require( "copy-webpack-plugin" );
 const ContextReplacementPlugin = require( "webpack/lib/ContextReplacementPlugin" );
@@ -31,6 +30,7 @@ module.exports = function( options ) {
 				"jquery": "jquery/src/jquery",
 				"semantic-ui": helpers.root( "src/semantic/dist" ),
 			},
+			modules: [ helpers.root( "node_modules" ) ]
 		},
 
 		module: {
@@ -105,14 +105,5 @@ module.exports = function( options ) {
 				metadata: METADATA
 			} ),
 		],
-
-		// node: {
-		// 	global: true,
-		// 	crypto: "empty",
-		// 	process: true,
-		// 	module: false,
-		// 	clearImmediate: false,
-		// 	setImmediate: false
-		// }
 	};
 };
