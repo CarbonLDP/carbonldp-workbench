@@ -1,6 +1,7 @@
 const commonConfig = require( "./webpack.common.js" );
 const helpers = require( "./webpack.helpers" );
-const carbonConfig = require( "./carbon.config.json" );
+const config = require( "./dev.config.json" );
+const carbonConfig = config.carbon;
 const webpackMerge = require( "webpack-merge" );
 
 
@@ -20,7 +21,7 @@ const METADATA = webpackMerge( commonConfig( { env: ENV } ).metadata, {
 	port: PORT,
 	ENV: ENV,
 	HMR: HMR,
-	CARBON: carbonConfig.dev
+	CARBON: carbonConfig
 } );
 
 module.exports = function( options ) {
@@ -50,8 +51,8 @@ module.exports = function( options ) {
 					"NODE_ENV": JSON.stringify( METADATA.ENV ),
 					"HMR": METADATA.HMR,
 					"CARBON": {
-						"protocol": JSON.stringify( carbonConfig.dev.protocol ),
-						"domain": JSON.stringify( carbonConfig.dev.domain ),
+						"protocol": JSON.stringify( carbonConfig.protocol ),
+						"domain": JSON.stringify( carbonConfig.domain ),
 					}
 				}
 			} )
