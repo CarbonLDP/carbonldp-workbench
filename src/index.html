@@ -9,7 +9,7 @@
 	<%= webpackConfig.htmlElements.headTags %>
 	<% } %>
 
-	<base href="/src/">
+	<base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
 </head>
 <body>
 	<app>

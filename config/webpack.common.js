@@ -10,6 +10,7 @@ const headImports = require( "./head.config" );
 const HMR = helpers.hasProcessFlag( "hot" );
 const AOT = helpers.hasNpmFlag( "aot" );
 const METADATA = {
+	baseUrl: "/",
 	isDevServer: helpers.isWebpackDevServer()
 };
 
@@ -90,11 +91,13 @@ module.exports = function( options ) {
 			// Copy assets into assets
 			new CopyWebpackPlugin( [
 				{ from: "src/assets", to: "assets" },
+				{ from: "src/semantic", to: "semantic" },
 			] ),
 
 			// Inject styles headers when creating index file
 			new HtmlElementsWebpackPlugin( {
-				headTags: headImports
+				baseUrl: METADATA.baseUrl,
+				headTags: headImports,
 			} ),
 
 			// Webpack inject scripts and links for us with the HtmlWebpackPlugin
