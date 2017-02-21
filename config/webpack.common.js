@@ -1,17 +1,19 @@
 const webpack = require( "webpack" );
+const headImports = require( "./head.config" );
+
+// Plugins
 const CommonsChunkPlugin = require( "webpack/lib/optimize/CommonsChunkPlugin" );
 const HtmlWebpackPlugin = require( "html-webpack-plugin" );
 const helpers = require( "./webpack.helpers" );
 const CopyWebpackPlugin = require( "copy-webpack-plugin" );
 const ContextReplacementPlugin = require( "webpack/lib/ContextReplacementPlugin" );
 const HtmlElementsWebpackPlugin = require( "html-elements-webpack-plugin" );
-const headImports = require( "./head.config" );
+const ExtractTextPlugin = require( "extract-text-webpack-plugin" );
 
 const HMR = helpers.hasProcessFlag( "hot" );
 const AOT = helpers.hasNpmFlag( "aot" );
 const METADATA = {
 	baseUrl: "/",
-	isDevServer: helpers.isWebpackDevServer()
 };
 
 
@@ -61,7 +63,8 @@ module.exports = function( options ) {
 				// },
 				{
 					test: /\.s?css$/,
-					use: [ "raw-loader", "sass-loader" ]
+					use: [ "css-to-string-loader", "css-loader", "sass-loader" ],
+					// 	use: [ "raw-loader", "sass-loader" ]
 				},
 			]
 		},
