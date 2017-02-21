@@ -13,8 +13,13 @@
 		"baseUrl": ".",
 		"paths": {
 			"app/*": [ "src/app/*" ],
-			"carbonldp-panel/*": [ "../carbonldp-panel/dist/*" ]
-		}
+			"carbonldp-panel/*": [ "../carbonldp-panel/src/*" ]
+		},
+		"typeRoots": [
+			"../carbonldp-panel/typings/custom",
+			"../carbonldp-panel/node_modules/@types",
+			"./node_modules/@types"
+		]
 	},
 	"compileOnSave": false,
 	"exclude": [
