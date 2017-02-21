@@ -30,7 +30,7 @@ module.exports = function( options ) {
 
 		resolve: {
 			alias: {
-				"carbonldp-panel": helpers.root( "../carbonldp-panel", "dist" )
+				"carbonldp-panel": helpers.root( "../carbonldp-panel/src" )
 			},
 		},
 
