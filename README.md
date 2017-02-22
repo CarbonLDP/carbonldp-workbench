@@ -25,66 +25,73 @@ Workbench to administer an on premise installation of Carbon LDP
     - `CarbonLDP-JS-SDK`
     - `angular2-carbonldp`
 3. cd into `carbon-workbench`
-4. run `npm install && typings install`
-5. To start the application server run `npm start` or `gulp serve`
+4. run `npm install`
+5. To start the application server run `npm start`
+
+### NPM Scripts
+
+`package.json` defines six tasks:
+
+
+- `build`: Runs `build:prod` 
+- `build:prod`: Runs Webpack bundler to generate the final `dist` files
+- `clean:dist`: Cleans `dist` directory
+- `postinstall`: Install a compiled version of Semantic UI inside the `src` folder _- Triggered after `npm install`_
+- `start`: Runs `server:dev` 
+- `server:dev`: Runs Webpack bundler in dev mode and starts the app on the host and the port specified in `config/dev.config.json`
 
 ### Gulp Tasks
 
 Gulp defines two tasks:
 
-- `default`: 
-- `build`: Builds the dist version of the project
-- `build:docker-image`: Builds a docker image of the project
-- `build:docker-image|copy:dockerfile`: Copies the Dockerfile to outside of the project so that the docker build step can copy files of other projects
-- `build:docker-image|build:image`: Builds the docker image using the Dockerfile
-- `build:docker-image|clean:dockerfile`: Removes the Dockerfile
-- `build:semantic`: Builds semantic-ui
-- `bundle`: Bundles the application into a self executing file `dist/site/main.sfx.js`
 - `clean:dist`: Cleans `dist` directory
 - `clean:src`: Cleans `src` directory, removing any unused compiled file (useful when changing branches)
-- `compile:boot`: Compiles `src/app/boot.ejs.ts` with the specified configuration
-- `compile:index`: Compiles `dist/index.ejs.html` with the specified configuration
-- `compile:styles`: Compiles `sass/scss` files inside of the `src` directory
 - `copy:assets`: Copies all the assets to `dist/site/assets`
 - `copy:node-dependencies`: Copies node dependencies to `src/assets/node_modules` so they can be treated like any normal asset
 - `copy:node-dependencies:files`: Copies single files
 - `copy:node-dependencies:packages`: Copies complete packages
 - `copy:semantic`: Copies the compiled version of semantic to the dist version of the project
-- `lint:typescript`: Lints TypeScript files
-- `serve`: Builds the project and creates a server to serve it
-- `serve|after-compilation`: Internal step for `serve` task
 
 ### File Structure
 
 - `.idea`: WebStorm shared configuration files (things like code style, and project structure)
 - `build`: Build related files (e.g. `nginx.conf`)
-- `config`: Configuration files that are used when compiling the application
-- `dist`: Distribution related files
-    - `site`: Compiled files. Ready to be served
-    - `Dockerfile`: Docker file used to create the docker image
-    - `index.ejs.html`: Template to create the compiled `site/index.html` file
     - `nginx.conf`: Configuration file for the nginx server inside the docker image
-- `jspm_packages`: jspm dependencies (don't touch them)
+- `config`: Configuration files that are used when compiling and bundling the application
+    - `dev.config.json`: Settings used during the bundling and execution processes of `development` mode of the application
+    - `head.config.js`: Links and meta's  injected into the `<head/>` tag of the application
+    - `prod.config.json`: Settings used during the bundling and execution processes of `production` mode of the application 
+    - `webpack.common.js`: Webpack bundling settings used by the `development` and `production` modes
+    - `webpack.dev.js`: Webpack bundling settings for `development` mode
+    - `webpack.helpers.js`: Helpers used by webpack's `webpack.common/dev/prod.js` files
+    - `webpack.prod.js`: Webpack bundling settings for `production` mode
+- `dist`: Distribution related files
+- `hooks`: Scripts launched before building images
+    - `pre_build`: `BASH` script that runs the docker image 
 - `node_modules`: npm dependencies (don't touch them)
+- `scripts`: Scripts that help to install dependencies
+    - `force-semantic-ui-to-install-correctly.js`: Force Semantic UI to install correctly using `semantic.json` file
+    - `install-dependencies.sh`: `SHELL` script that installs the project's dependencies
+    - `update-angular.sh`: `SHELL` script that updates the angular dependencies
 - `src`: All source files
     - `app`: Source files for the Angular2 application
     - `assets`: Any asset (image, json, etc.). Before adding stylesheets think if they belong to a component, or can be added to the semantic-ui theme
         - `images`: General images
     - `semantic`: Source code for the semantic-ui theme
     - `index.html`: Entry point for the website
-- `typings`: TypeScript description files (partly managed by [typings](https://github.com/typings/typings))
-    - `custom`: Directory to store custom description files
-    - `typings.d.ts`: Main description file. Aggregates all other description files
+    - `main.ts`: Entry file of angular, it bootstrap the main angular module
+    - `polyfills.ts`: File that imports all the required polyfills
+    - `vendor.ts`: File that imports all the vendor/third party libraries
 - `.gitignore`: Ignore file for git
+- `.travis.yml`: 
 - `CHANGELOG.md`: File to track package changes
 - `Dockerfile`: File to build the docker image for deployment
 - `gulpfile.js`: Gulp configuration file
-- `jspm.config.js`: JSPM general configuration file
 - `package.json`: npm configuration file (it also contains JSPM dependency registry)
 - `README.md`: === this
 - `semantic.json`: semantic-ui configuration file
 - `tsconfig.json`: TypeScript compiler configuration file
-- `typings.json`: [typings](https://github.com/typings/typings) configuration file
+- `webpack.config.js`: Webpack config entry point, it can bundle the app by recognizing if it's in a dev or prod environment
 
 ### Building the Project
 
@@ -94,7 +101,6 @@ The project is deployed as a docker image. A `Dockerfile` is located at the root
 
 - Configure a test framework
 - Configure code linting (tslint and sasslint)
-- Document `gulp` tasks and move them to separate files
 - Get docker image version from `package.json`
 
 ## LICENSE
