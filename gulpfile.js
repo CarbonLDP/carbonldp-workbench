@@ -5,6 +5,22 @@ const gulp = require( "gulp" );
 const del = require( "del" );
 const runSequence = require( "run-sequence" );
 
+const config = {
+	source: {},
+	nodeDependencies: {
+		files: [
+			"node_modules/es6-shim/es6-shim.js",
+			"node_modules/systemjs/dist/system-polyfills.src.js",
+			"node_modules/systemjs/dist/system.src.js",
+			"node_modules/rxjs/bundles/Rx.js"
+		],
+		packages: [
+			"node_modules/jstree/*/**/",
+			"node_modules/codemirror/*/**/"
+		]
+	}
+};
+
 gulp.task( "clean:dist", () => {
 	return del( [ "dist/**" ] );
 } );
@@ -171,4 +187,25 @@ gulp.task( "clean:src", ( done ) => {
 
 		return fileParts[ fileParts.length - 1 ];
 	}
+} );
+
+gulp.task( "copy:assets", [ "copy:node-dependencies" ], () => {
+	return gulp.src( "src/assets/**/*", {
+		base: "src/assets"
+	} ).pipe( gulp.dest( "dist/site/assets" ) );
+} );
+
+gulp.task( "copy:node-dependencies", ( done ) => {
+	runSequence(
+		[ "copy:node-dependencies:files", "copy:node-dependencies:packages" ],
+		done
+	);
+} );
+
+gulp.task( "copy:node-dependencies:files", () => {
+	return gulp.src( config.nodeDependencies.files ).pipe( gulp.dest( "src/assets/node_modules" ) );
+} );
+
+gulp.task( "copy:node-dependencies:packages", () => {
+	return gulp.src( config.nodeDependencies.packages, { base: "node_modules" } ).pipe( gulp.dest( "src/assets/node_modules" ) );
 } );

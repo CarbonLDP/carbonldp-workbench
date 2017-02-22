@@ -27,7 +27,7 @@
     "postinstall": "node scripts/force-semantic-ui-to-install-correctly.js && npm explore semantic-ui -- npm run-script install",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run server:dev",
-    "server:dev": "webpack-dev-server --config webpack.config.js --inline --progress --profile --watch "
+    "server:dev": "webpack-dev-server --config config/webpack.dev.js --inline --progress --profile --watch "
   },
   "devDependencies": {
     "@types/codemirror": "0.0.38",
