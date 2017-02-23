@@ -1,6 +1,6 @@
 {
   "name": "carbonldp-workbench",
-  "version": "0.6.0",
+  "version": "0.7.1",
   "description": "Workbench to administer an on premise installation of Carbon LDP",
   "contributors": [
     {
@@ -90,14 +90,14 @@
     },
     "devDependencies": {},
     "peerDependencies": {
-      "@angular/common": "npm:@angular/common@^2.0.2",
+      "@angular/common": "npm:@angular/common@2.4.2",
       "@angular/compiler": "npm:@angular/compiler@2.4.2",
-      "@angular/core": "npm:@angular/core@^2.0.2",
+      "@angular/core": "npm:@angular/core@2.4.2",
       "@angular/forms": "npm:@angular/forms@2.4.2",
       "@angular/http": "npm:@angular/http@2.4.2",
       "@angular/platform-browser": "npm:@angular/platform-browser@2.4.2",
       "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.4.2",
-      "@angular/router": "npm:@angular/router@^3.0.2",
+      "@angular/router": "npm:@angular/router@3.4.2",
       "angular2-carbonldp": "npm:angular2-carbonldp@0.4.2",
       "assert": "npm:jspm-nodelibs-assert@^0.2.0",
       "buffer": "npm:jspm-nodelibs-buffer@^0.2.0",

@@ -1,3 +1,16 @@
+# 0.7.1 (2017/02/23)
+
+- Completed #19 - Upgrade carbonldp SDK to `0.40.0`
+- Updated the following angular libraries:
+    - @angular/common `2.4.2`
+    - @angular/compiler `2.4.2`
+    - @angular/core `2.4.2`
+    - @angular/forms `2.4.2`
+    - @angular/http `2.4.2`
+    - @angular/platform-browser `2.4.2`
+    - @angular/platform-browser-dynamic `2.4.2`
+    - @angular/router `3.4.2`
+
 # 0.6.0 (2016/12/19)
 
 - Updated `@angular` packages to v2.4.1
