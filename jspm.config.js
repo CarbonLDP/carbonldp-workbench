@@ -52,8 +52,8 @@ SystemJS.config({
     "local:*.json"
   ],
   map: {
-    "carbonldp-panel": "npm:carbonldp-panel@0.7.0",
-    "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
+    "carbonldp-panel": "npm:carbonldp-panel@0.7.1",
+    "angular2-carbonldp": "npm:angular2-carbonldp@0.4.2",
     "carbonldp": "npm:carbonldp@0.40.0",
     "@angular/common": "npm:@angular/common@2.4.2",
     "@angular/compiler": "npm:@angular/compiler@2.4.2",
@@ -259,7 +259,7 @@ SystemJS.config({
         "create-hmac": "npm:create-hmac@1.1.4"
       }
     },
-    "npm:angular2-carbonldp@0.4.1": {
+    "npm:angular2-carbonldp@0.4.2": {
       "map": {
         "js-cookie": "npm:js-cookie@2.1.3"
       }
