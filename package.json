@@ -78,7 +78,7 @@
       "jspm": "jspm.config.js"
     },
     "dependencies": {
-      "carbonldp-panel": "local:carbonldp-panel@0.6.0",
+      "carbonldp-panel": "npm:carbonldp-panel@0.7.0",
       "codemirror": "npm:codemirror@5.17.0",
       "css": "github:systemjs/plugin-css@0.1.26",
       "highlight.js": "npm:highlight.js@9.7.0",

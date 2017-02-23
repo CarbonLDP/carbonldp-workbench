@@ -52,7 +52,7 @@ SystemJS.config({
     "local:*.json"
   ],
   map: {
-    "carbonldp-panel": "local:carbonldp-panel@0.6.0",
+    "carbonldp-panel": "npm:carbonldp-panel@0.7.0",
     "angular2-carbonldp": "npm:angular2-carbonldp@0.4.1",
     "carbonldp": "npm:carbonldp@0.40.0",
     "@angular/common": "npm:@angular/common@2.4.2",
