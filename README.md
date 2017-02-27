@@ -35,6 +35,7 @@ Workbench to administer an on premise installation of Carbon LDP
 
 - `build`: Runs `build:prod` 
 - `build:prod`: Runs Webpack bundler to generate the final `dist` files
+- `build:semantic`: Builds Semantic UI
 - `clean:dist`: Cleans `dist` directory
 - `postinstall`: Install a compiled version of Semantic UI inside the `src` folder _- Triggered after `npm install`_
 - `start`: Runs `server:dev` 
