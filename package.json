@@ -25,7 +25,9 @@
     "build:prod": "npm run clean:dist && webpack --config config/webpack.prod.js  --progress --profile --bail",
     "build:semantic": "gulp --gulpfile src/semantic/gulpfile.js build",
     "clean:dist": "rimraf -- dist",
+    "copy:assets": "gulp copy:assets",
     "postinstall": "node scripts/force-semantic-ui-to-install-correctly.js && npm explore semantic-ui -- npm run-script install",
+    "firsttime": "npm run build:semantic && npm run copy:assets",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "npm run server:dev",
     "server:dev": "webpack-dev-server --config config/webpack.dev.js --inline --progress --profile --watch "
