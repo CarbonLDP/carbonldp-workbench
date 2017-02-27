@@ -26,7 +26,8 @@ Workbench to administer an on premise installation of Carbon LDP
     - `angular2-carbonldp`
 3. cd into `carbon-workbench`
 4. run `npm install`
-5. To start the application server run `npm start`
+5. run `npm run firsttime`
+6. To start the application server run `npm start`
 
 ### NPM Scripts
 
@@ -35,9 +36,11 @@ Workbench to administer an on premise installation of Carbon LDP
 
 - `build`: Runs `build:prod` 
 - `build:prod`: Runs Webpack bundler to generate the final `dist` files
-- `build:semantic`: Builds Semantic UI
+- `build:semantic`: Builds Semantic UI's `dist` files
 - `clean:dist`: Cleans `dist` directory
+- `copy:assets`: Copies third party libraries to the assets folder
 - `postinstall`: Install a compiled version of Semantic UI inside the `src` folder _- Triggered after `npm install`_
+- `firsttime`: Runs `build:semantic` and `copy:assets` 
 - `start`: Runs `server:dev` 
 - `server:dev`: Runs Webpack bundler in dev mode and starts the app on the host and the port specified in `config/dev.config.json`
 
