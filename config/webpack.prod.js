@@ -35,11 +35,10 @@ module.exports = function( env ) {
 	} ), {
 		devtool: "source-map",
 
-		// TODO: Remove this resolve when carbonldp-panel is released using commonjs modules
 		resolve: {
-			alias: {
-				"carbonldp-panel": helpers.root( "../carbonldp-panel/src" )
-			},
+			// alias: {
+			// 	"carbonldp-panel": helpers.root( "../carbonldp-panel/src" )
+			// },
 		},
 
 		output: {

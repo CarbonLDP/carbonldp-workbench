@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker run -i --rm -v $(pwd):/usr/src/project carbonldp/jspm-typescript /usr/src/project/scripts/install-dependencies.sh
+docker run -i --rm -v $(pwd):/opt/project cusspvz/node:latest /opt/project/scripts/pre_build.sh

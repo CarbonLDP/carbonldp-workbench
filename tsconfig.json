@@ -12,13 +12,10 @@
 		"lib": [ "es2015", "dom" ],
 		"baseUrl": ".",
 		"paths": {
-			"*": [ "../carbonldp-panel/node_modules/@types/*", "./node_modules/@types/*", "*" ],
-			"app/*": [ "src/app/*" ],
-			"carbonldp-panel/*": [ "../carbonldp-panel/src/*" ]
+			"*": [ "./node_modules/@types/*", "*" ],
+			"app/*": [ "src/app/*" ]
 		},
 		"typeRoots": [
-			"../carbonldp-panel/typings/custom",
-			"../carbonldp-panel/node_modules/@types",
 			"./node_modules/@types"
 		]
 	},

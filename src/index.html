@@ -9,7 +9,16 @@
 	<%= webpackConfig.htmlElements.headTags %>
 	<% } %>
 
-	<base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
+	<!--<base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">-->
+	<base href="--BASE_URL--">
+	<script>
+		var __CONFIG = {
+			CARBON_PROTOCOL: "--CARBON_PROTOCOL--",
+			CARBON_HOST: "--CARBON_HOST--",
+			BASE_URL: "--BASE_URL--",
+			ENV: "--ENV--"
+		};
+	</script>
 </head>
 <body>
 	<app>

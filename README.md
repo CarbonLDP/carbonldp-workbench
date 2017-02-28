@@ -33,13 +33,12 @@ Workbench to administer an on premise installation of Carbon LDP
 
 `package.json` defines six tasks:
 
-
 - `build`: Runs `build:prod` 
 - `build:prod`: Runs Webpack bundler to generate the final `dist` files
 - `build:semantic`: Builds Semantic UI's `dist` files
 - `clean:dist`: Cleans `dist` directory
 - `copy:assets`: Copies third party libraries to the assets folder
-- `postinstall`: Install a compiled version of Semantic UI inside the `src` folder _- Triggered after `npm install`_
+- `postinstall`: Install a compiled version of Semantic UI inside the `src` folder - _Triggered after `npm install`_
 - `firsttime`: Runs `build:semantic` and `copy:assets` 
 - `start`: Runs `server:dev` 
 - `server:dev`: Runs Webpack bundler in dev mode and starts the app on the host and the port specified in `config/dev.config.json`
