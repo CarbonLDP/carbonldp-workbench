@@ -11,36 +11,32 @@ Workbench to administer an on premise installation of Carbon LDP
 1. Install dependencies
     - [node.js](https://nodejs.org/en/)
     - gulp: `npm install gulp -g`
-    - jspm: `npm install jspm -g`
-    - typings: `npm install -g typings`
     - [docker](https://www.docker.com/)
 2. Clone dependency projects alongside the project's directory:
-    - CarbonLDP-JS-SDK: `gulp clone https://github.com/CarbonLDP/CarbonLDP-JS-SDK.git`
-    - carbon-panel: `gulp clone https://github.com/CarbonLDP/carbon-panel.git`
+    - carbonldp-js-sdk: `gulp clone https://github.com/CarbonLDP/carbonldp-js-sdk.git`
+    - carbonldp-panel: `gulp clone https://github.com/CarbonLDP/carbonldp-panel.git`
     - angular2-carbonldp: `gulp clone https://github.com/CarbonLDP/angular2-carbonldp.git`
     
     You should end up with the following directories in the same directory:
-    - `carbon-workbench`
-    - `carbon-panel`
-    - `CarbonLDP-JS-SDK`
+    - `carbonldp-workbench`
+    - `carbonldp-panel`
+    - `carbonldp-js-sdk`
     - `angular2-carbonldp`
-3. cd into `carbon-workbench`
+3. cd into `carbonldp-workbench`
 4. run `npm install`
-5. run `npm run firsttime`
-6. To start the application server run `npm start`
+5. To start the application server run `npm start`
 
 ### NPM Scripts
 
 `package.json` defines six tasks:
 
-- `build`: Runs `build:prod` 
+- `build`: Runs `build:prod`
 - `build:prod`: Runs Webpack bundler to generate the final `dist` files
 - `build:semantic`: Builds Semantic UI's `dist` files
 - `clean:dist`: Cleans `dist` directory
 - `copy:assets`: Copies third party libraries to the assets folder
 - `postinstall`: Install a compiled version of Semantic UI inside the `src` folder - _Triggered after `npm install`_
-- `firsttime`: Runs `build:semantic` and `copy:assets` 
-- `start`: Runs `server:dev` 
+- `start`: Runs `server:dev`
 - `server:dev`: Runs Webpack bundler in dev mode and starts the app on the host and the port specified in `config/dev.config.json`
 
 ### Gulp Tasks
