@@ -7,4 +7,3 @@ import { Component } from "@angular/core";
 export class DashboardView {
 }
 
-export default DashboardView;

@@ -1,7 +1,7 @@
 import { Component, Inject, EventEmitter } from "@angular/core";
 import { Router, Event, NavigationEnd } from "@angular/router";
 
-import Carbon from "carbonldp/Carbon";
+import { Carbon } from "carbonldp/Carbon";
 
 import { AuthService } from "angular2-carbonldp/services";
 import { HeaderService } from "carbonldp-panel/header.service";
@@ -59,7 +59,7 @@ export class WorkbenchView {
 			route: [ "" ]
 		};
 
-		let onLogout:EventEmitter<any> = new EventEmitter<any>();
+		let onLogout:EventEmitter<boolean> = new EventEmitter<boolean>();
 		onLogout.subscribe( ( event:any ) => {
 			this.authService.logout();
 			this.router.navigate( [ "/login" ] );
@@ -105,5 +105,3 @@ export class WorkbenchView {
 		] );
 	}
 }
-
-export default WorkbenchView;

@@ -10,4 +10,3 @@ export class NotFoundErrorView {
 	constructor() { }
 }
 
-export default NotFoundErrorView;

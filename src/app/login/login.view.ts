@@ -7,10 +7,10 @@ import { Router } from "@angular/router";
 	styleUrls: [ "./login.view.scss" ],
 } )
 export class LoginView {
-	private router:Router;
+	router:Router;
 
-	private hasAccount:boolean = true;
-	private registrationWasSuccessful:boolean = false;
+	hasAccount:boolean = true;
+	registrationWasSuccessful:boolean = false;
 
 	constructor( router:Router ) {
 		this.router = router;
@@ -34,4 +34,3 @@ export class LoginView {
 	}
 }
 
-export default LoginView;

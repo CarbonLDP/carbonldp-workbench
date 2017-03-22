@@ -34,9 +34,9 @@ export class BackgroundVideoComponent implements AfterViewInit {
 	screenElement:HTMLElement;
 
 	// TODO: Define youtube player settings
-	private player:any;
-	private id:string = "player-" + BackgroundVideoComponent.generateUUID();
-	private youtube:Youtube;
+	player:any;
+	id:string = "player-" + BackgroundVideoComponent.generateUUID();
+	youtube:Youtube;
 
 	constructor() {}
 
@@ -182,5 +182,3 @@ export class BackgroundVideoComponent implements AfterViewInit {
 		} );
 	}
 }
-
-export default BackgroundVideoComponent;
