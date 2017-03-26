@@ -12,8 +12,9 @@
 		"lib": [ "es2015", "dom" ],
 		"baseUrl": ".",
 		"paths": {
-			"*": [ "./node_modules/@types/*", "*" ],
-			"app/*": [ "src/app/*" ]
+			"app/*": [ "src/app/*" ],
+			"carbonldp-panel/*": [ "../carbonldp-panel/src/*" ],
+			"jquery": [ "./node_modules/@types/jquery/index" ]
 		},
 		"typeRoots": [
 			"./node_modules/@types"
