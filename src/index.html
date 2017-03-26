@@ -9,10 +9,14 @@
 	<%= webpackConfig.htmlElements.headTags %>
 	<% } %>
 
-	<!--<base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">-->
+	<% if (htmlWebpackPlugin.options.metadata.isDevServer) { %>
+	<base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
+	<% } else {%>
 	<base href="--BASE_URL--">
+	<% }%>
+
 	<script>
-		var __CONFIG = {
+		__CONFIG = {
 			CARBON_PROTOCOL: "--CARBON_PROTOCOL--",
 			CARBON_HOST: "--CARBON_HOST--",
 			BASE_URL: "--BASE_URL--",
