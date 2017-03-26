@@ -7,26 +7,34 @@ const carbonConfig = config.carbon;
 
 // Plugins
 const DefinePlugin = require( "webpack/lib/DefinePlugin" );
-const ExtractTextPlugin = require( "extract-text-webpack-plugin" );
 const LoaderOptionsPlugin = require( "webpack/lib/LoaderOptionsPlugin" );
 const NoEmitOnErrorsPlugin = require( "webpack/lib/NoEmitOnErrorsPlugin" );
 const UglifyJsPlugin = require( "webpack/lib/optimize/UglifyJsPlugin" );
+const AotPlugin = require( "@ngtools/webpack" ).AotPlugin;
+const OccurenceOrderPlugin = require( "webpack/lib/optimize/OccurrenceOrderPlugin" );
+const CommonsChunkPlugin = require( "webpack/lib/optimize/CommonsChunkPlugin" );
+const BundleAnalyzerPlugin = require( "webpack-bundle-analyzer" ).BundleAnalyzerPlugin;
+const IgnorePlugin = require( "webpack/lib/IgnorePlugin" );
+const HtmlWebpackPlugin = require( "html-webpack-plugin" );
 
-const ENV = process.env.NODE_ENV = process.env.ENV = "production";
+
 // Webpack Constants
+const ENV = process.env.NODE_ENV = process.env.ENV = "production";
 const PROTOCOL = process.env.PROTOCOL || "http";
 const HOST = process.env.HOST || "127.0.0.1";
 const PORT = process.env.PORT || 8080;
-const HMR = helpers.hasProcessFlag( "hot" );
 const METADATA = webpackMerge( commonConfig( { env: ENV } ).metadata, {
+	baseUrl: config.url.base,
 	protocol: PROTOCOL,
 	host: HOST,
 	port: PORT,
 	ENV: ENV,
-	HMR: HMR,
-	CARBON: carbonConfig
+	isDevServer: helpers.isWebpackDevServer(),
+	CARBON: {
+		protocol: carbonConfig.protocol,
+		domain: carbonConfig.domain,
+	}
 } );
-console.log();
 
 
 module.exports = function( env ) {
@@ -34,12 +42,6 @@ module.exports = function( env ) {
 		env: ENV
 	} ), {
 		devtool: "source-map",
-
-		resolve: {
-			// alias: {
-			// 	"carbonldp-panel": helpers.root( "../carbonldp-panel/src" )
-			// },
-		},
 
 		output: {
 			path: helpers.root( "dist" ),
@@ -49,22 +51,37 @@ module.exports = function( env ) {
 			chunkFilename: "[id].[chunkhash].chunk.js"
 		},
 
+		module: {
+			rules: [
+				{
+					test: /\.ts$/,
+					use: [ "@ngtools/webpack" ]
+				}
+			]
+		},
+
 		plugins: [
-			new NoEmitOnErrorsPlugin(), // Stops the build if there is any error.
-			new ExtractTextPlugin( "[name].[hash].css" ), // Extracts embedded css as external files, adding cache-busting hash to the filename.
+
+			// Webpack gives IDs to identify your modules. With this plugin, Webpack will analyze and prioritize often used modules assigning them the smallest ids.
+			new OccurenceOrderPlugin(),
+
+			// Stops the build if there is any error.
+			new NoEmitOnErrorsPlugin(),
+
+			// Allows you to create global constants which can be configured at compile time.
 			new DefinePlugin( {
 				"ENV": JSON.stringify( METADATA.ENV ),
-				"HMR": METADATA.HMR,
 				"process.env": {
+					"baseUrl": JSON.stringify( METADATA.baseUrl ),
 					"ENV": JSON.stringify( METADATA.ENV ),
 					"NODE_ENV": JSON.stringify( METADATA.ENV ),
-					"HMR": METADATA.HMR,
 					"CARBON": {
 						"protocol": JSON.stringify( carbonConfig.protocol ),
 						"domain": JSON.stringify( carbonConfig.domain ),
 					}
 				}
 			} ),
+
 			// Minifies the bundles. https://github.com/angular/angular/issues/10618
 			new UglifyJsPlugin( {
 				beautify: false, //prod
@@ -88,7 +105,10 @@ module.exports = function( env ) {
 					join_vars: true,
 					negate_iife: false // we need this for lazy v8
 				},
+				sourceMap: false
 			} ),
+
+			// Set options for loaders
 			new LoaderOptionsPlugin( {
 				minimize: true,
 				debug: false,
@@ -106,6 +126,25 @@ module.exports = function( env ) {
 						customAttrAssign: [ /\)?\]?=/ ]
 					},
 				}
+			} ),
+
+			// Ignore node imports
+			new IgnorePlugin( /^(http|https|url|file-type)$/, /carbonldp/ ),
+
+			// new BundleAnalyzerPlugin(),
+			new AotPlugin( {
+				tsConfigPath: helpers.root( "tsconfig-aot.json" ),
+				entryModule: helpers.root( "src/app/app.module#AppModule" ),
+				mainPath: helpers.root( "src/main.ts" ),
+				skipCodeGeneration: false,
+			} ),
+
+			// Webpack inject scripts and links for us with the HtmlWebpackPlugin
+			new HtmlWebpackPlugin( {
+				filename: "index.html",
+				template: "src/index.html",
+				chunksSortMode: "dependency",
+				metadata: METADATA
 			} )
 		],
 	} );
