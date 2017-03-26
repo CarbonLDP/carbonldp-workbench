@@ -6,11 +6,18 @@ import { AuthenticatedGuard, NotAuthenticatedGuard } from "angular2-carbonldp/gu
 import { ActiveContextResolver } from "angular2-carbonldp/resolvers";
 
 // Components
-import { LoginView } from "app/login/login.view";
-import { WorkbenchView } from "app/workbench/workbench.view";
-import { ErrorView } from "app/error-pages/error.view";
-import { NotFoundErrorView } from "app/error-pages/not-found-error/not-found-error.view";
-import { DashboardView } from "app/dashboard/dashboard.view";
+import { LoginView } from "./login/login.view";
+import { WorkbenchView } from "./workbench/workbench.view";
+import { ErrorView } from "./error-pages/error.view";
+import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
+import { DashboardView } from "./dashboard/dashboard.view";
+
+// TODO: When AOT works correctly, remove this import
+import { MyAppsModule } from "carbonldp-panel/my-apps/my-apps.module";
+// TODO: When AOT works correctly, remove this export. It's being exported because otherwise rollup will remove the imported module
+export function exportMyAppsModule() {
+	return MyAppsModule;
+}
 
 const appRoutes:Routes = [
 	{
