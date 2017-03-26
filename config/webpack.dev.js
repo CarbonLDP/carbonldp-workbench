@@ -1,37 +1,46 @@
+const webpack = require( "webpack" );
 const commonConfig = require( "./webpack.common.js" );
 const helpers = require( "./webpack.helpers" );
 const config = require( "./dev.config.json" );
 const carbonConfig = config.carbon;
 const webpackMerge = require( "webpack-merge" );
+const HtmlWebpackPlugin = require( "html-webpack-plugin" );
 
 
 // Plugins
 const DefinePlugin = require( "webpack/lib/DefinePlugin" );
+const CommonsChunkPlugin = require( "webpack/lib/optimize/CommonsChunkPlugin" );
 
 
 // Webpack Constants
-const ENV = process.env.ENV;
+const ENV = process.env.ENV = process.env.NODE_ENV = "development";
 const PROTOCOL = process.env.PROTOCOL || "http";
 const HOST = process.env.HOST || "localhost";
 const PORT = process.env.PORT || 8080;
-const HMR = helpers.hasProcessFlag( "hot" );
 const METADATA = webpackMerge( commonConfig( { env: ENV } ).metadata, {
+	baseUrl: config.url.base,
 	protocol: PROTOCOL,
 	host: HOST,
 	port: PORT,
 	ENV: ENV,
-	HMR: HMR,
-	CARBON: carbonConfig
+	isDevServer: helpers.isWebpackDevServer(),
+	CARBON: {
+		protocol: carbonConfig.protocol,
+		domain: carbonConfig.domain,
+	}
 } );
 
 module.exports = function( options ) {
 	return webpackMerge( commonConfig( { env: ENV } ), {
 		devtool: "source-map",
 
-		resolve: {
-			alias: {
-				"carbonldp-panel": helpers.root( "../carbonldp-panel/src" )
-			},
+		module: {
+			rules: [
+				{
+					test: /\.ts$/,
+					use: [ "awesome-typescript-loader", "angular2-template-loader", "angular-router-loader" ]
+				}
+			]
 		},
 
 		output: {
@@ -43,18 +52,34 @@ module.exports = function( options ) {
 		},
 
 		plugins: [
+
+			// Workaround for angular/angular#11580
+			new webpack.ContextReplacementPlugin(
+				// The (\\|\/) piece accounts for path separators in *nix and Windows
+				/angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
+				helpers.root( "./src" ), // location of your src
+				{} // a map of your routes
+			),
+
 			new DefinePlugin( {
 				"ENV": JSON.stringify( METADATA.ENV ),
-				"HMR": METADATA.HMR,
 				"process.env": {
+					"baseUrl": JSON.stringify( METADATA.baseUrl ),
 					"ENV": JSON.stringify( METADATA.ENV ),
 					"NODE_ENV": JSON.stringify( METADATA.ENV ),
-					"HMR": METADATA.HMR,
 					"CARBON": {
 						"protocol": JSON.stringify( carbonConfig.protocol ),
 						"domain": JSON.stringify( carbonConfig.domain ),
 					}
 				}
+			} ),
+
+			// Webpack inject scripts and links for us with the HtmlWebpackPlugin
+			new HtmlWebpackPlugin( {
+				filename: "index.html",
+				template: "src/index.html",
+				chunksSortMode: "dependency",
+				metadata: METADATA
 			} )
 		],
 

@@ -1,20 +1,12 @@
 const webpack = require( "webpack" );
+const helpers = require( "./webpack.helpers" );
 const headImports = require( "./head.config" );
 
 // Plugins
 const CommonsChunkPlugin = require( "webpack/lib/optimize/CommonsChunkPlugin" );
-const HtmlWebpackPlugin = require( "html-webpack-plugin" );
-const helpers = require( "./webpack.helpers" );
+const ProvidePlugin = require( "webpack/lib/ProvidePlugin" );
 const CopyWebpackPlugin = require( "copy-webpack-plugin" );
-const ContextReplacementPlugin = require( "webpack/lib/ContextReplacementPlugin" );
 const HtmlElementsWebpackPlugin = require( "html-elements-webpack-plugin" );
-const ExtractTextPlugin = require( "extract-text-webpack-plugin" );
-
-const HMR = helpers.hasProcessFlag( "hot" );
-const AOT = helpers.hasNpmFlag( "aot" );
-const METADATA = {
-	baseUrl: "/",
-};
 
 
 module.exports = function( options ) {
@@ -22,7 +14,6 @@ module.exports = function( options ) {
 	return {
 		entry: {
 			"polyfills": "./src/polyfills.ts",
-			"vendor": "./src/vendor.ts",
 			"app": "./src/main.ts"
 		},
 
@@ -39,10 +30,6 @@ module.exports = function( options ) {
 		module: {
 			rules: [
 				{
-					test: /\.ts$/,
-					use: [ "awesome-typescript-loader", "angular2-template-loader", "angular-router-loader" ]
-				},
-				{
 					test: /\.html$/,
 					use: "html-loader",
 					exclude: [ helpers.root( "src/index.html" ) ]
@@ -51,41 +38,22 @@ module.exports = function( options ) {
 					test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
 					use: "file-loader?name=assets/[name].[hash].[ext]"
 				},
-				// {
-				// 	test: /\.css$/,
-				// 	include: helpers.root( 'src', 'app' ),
-				// 	use: ExtractTextPlugin.extract( { fallback: "raw-loader", use: [ "style-loader", "css-loader" ] } )
-				// },
-				// {
-				// 	test: /\.css$/,
-				// 	exclude: helpers.root( 'src', 'app' ),
-				// 	use: "raw-loader?sourceMap"
-				// },
 				{
 					test: /\.s?css$/,
-					use: [ "css-to-string-loader", "css-loader", "sass-loader" ],
-					// 	use: [ "raw-loader", "sass-loader" ]
+					use: [ "raw-loader", "sass-loader" ]
 				},
 			]
 		},
 
 		plugins: [
 
-			// Workaround for angular/angular#11580
-			new webpack.ContextReplacementPlugin(
-				// The (\\|\/) piece accounts for path separators in *nix and Windows
-				/angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
-				helpers.root( "./src" ), // location of your src
-				{} // a map of your routes
-			),
-
 			// It identifies the hierarchy among three chunks: app -> vendor -> polyfills
 			new CommonsChunkPlugin( {
-				name: [ "app", "vendor", "polyfills" ]
+				name: [ "app", "polyfills" ]
 			} ),
 
 			// Provide global variables
-			new webpack.ProvidePlugin( {
+			new ProvidePlugin( {
 				$: "jquery",
 				jQuery: "jquery",
 				jquery: "jquery"
@@ -99,17 +67,9 @@ module.exports = function( options ) {
 
 			// Inject styles headers when creating index file
 			new HtmlElementsWebpackPlugin( {
-				baseUrl: METADATA.baseUrl,
 				headTags: headImports,
 			} ),
 
-			// Webpack inject scripts and links for us with the HtmlWebpackPlugin
-			new HtmlWebpackPlugin( {
-				filename: "index.html",
-				template: "src/index.html",
-				chunksSortMode: "dependency",
-				metadata: METADATA
-			} ),
 		],
 	};
 };
