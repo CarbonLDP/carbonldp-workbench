@@ -1,7 +1,7 @@
 import { Component, Inject, EventEmitter } from "@angular/core";
 import { Router, Event, NavigationEnd } from "@angular/router";
 
-import { Carbon } from "carbonldp/Carbon";
+import { Class as Carbon } from "carbonldp/Carbon";
 
 import { AuthService } from "angular2-carbonldp/services";
 import { HeaderService } from "carbonldp-panel/header.service";
