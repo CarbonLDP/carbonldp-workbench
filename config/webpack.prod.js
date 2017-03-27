@@ -85,8 +85,6 @@ module.exports = function( env ) {
 						"domain": JSON.stringify( carbonConfig.domain ),
 					},
 					"PACKAGES": {
-						"carbonldp": JSON.stringify( sdk.version ),
-						"carbonldp-panel": JSON.stringify( panel.version ),
 						"carbonldp-workbench": JSON.stringify( workbench.version ),
 					}
 				}
