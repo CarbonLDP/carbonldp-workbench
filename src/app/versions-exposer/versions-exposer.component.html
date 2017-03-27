@@ -1,3 +1,11 @@
-<p>
-	Workbench: {{carbonldpWorkbench}}&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;SDK: {{carbonldpSDK}}&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;Panel: {{carbonldpPanel}}&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;Platform: {{carbonldpPlatform}}
-</p>
+<div class="content">
+	Workbench: {{carbonldpWorkbench}}&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;SDK: {{carbonldpSDK}}&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;Panel: {{carbonldpPanel}}&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;Platform: <span class="platform">{{carbonldpPlatform}}</span>
+	<div class="ui flowing popup top right transition hidden">
+		<div class="ui one column divided center aligned grid">
+			<div class="column">
+				<h4 class="ui header">No running platform</h4>
+				<p>Make sure your platform <br> is live and running on <br> <a href="carbonldpURL">{{carbonldpURL}}</a></p>
+			</div>
+		</div>
+	</div>
+</div>

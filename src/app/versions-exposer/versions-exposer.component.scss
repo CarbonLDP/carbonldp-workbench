@@ -1,12 +1,9 @@
 :host {
 	display: block;
 	font-size: .7em;
-	line-height: initial;
-	text-align: right;
-	padding-right: 5px;
 	position: relative;
 
-	p {
+	> div.content {
 		position: absolute;
 		bottom: 0;
 		right: 10px;
