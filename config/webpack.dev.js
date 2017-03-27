@@ -7,8 +7,6 @@ const webpackMerge = require( "webpack-merge" );
 const HtmlWebpackPlugin = require( "html-webpack-plugin" );
 
 // carbonldp's projects versions
-const panel = require( "carbonldp-panel/package.json" );
-const sdk = require( "carbonldp/package.json" );
 const workbench = require( "../package.json" );
 
 

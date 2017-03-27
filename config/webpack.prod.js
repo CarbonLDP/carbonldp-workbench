@@ -6,8 +6,6 @@ const commonConfig = require( "./webpack.common.js" );
 const carbonConfig = config.carbon;
 
 // carbonldp's projects versions
-const panel = require( "carbonldp-panel/package.json" );
-const sdk = require( "carbonldp/package.json" );
 const workbench = require( "../package.json" );
 
 // Plugins
