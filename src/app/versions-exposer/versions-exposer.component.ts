@@ -14,7 +14,6 @@ export class VersionsExposerComponent {
 	private carbon:Carbon;
 
 	carbonldpSDK:string = "???";
-	carbonldpPanel:string = "???";
 	carbonldpWorkbench:string = "???";
 	carbonldpPlatform:string = "???";
 	carbonldpURL:string = "";
@@ -26,8 +25,7 @@ export class VersionsExposerComponent {
 
 	ngOnInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.carbonldpSDK = process.env.PACKAGES[ "carbonldp" ];
-		this.carbonldpPanel = process.env.PACKAGES[ "carbonldp-panel" ];
+		this.carbonldpSDK = this.carbon.version;
 		this.carbonldpWorkbench = process.env.PACKAGES[ "carbonldp-workbench" ];
 		this.carbonldpURL = this.carbon.getSetting( "http.ssl" ) ? "https" : "http" + "://" + this.carbon.getSetting( "domain" );
 		this.getApiVersion();
