@@ -30,7 +30,7 @@ Workbench to administer an on premise installation of Carbon LDP
 
 `package.json` defines six tasks:
 
-- `build`: Runs `build:prod`
+- `build`: Runs `build:semantic`, `copy:assets` and `build:prod` tasks
 - `build:prod`: Runs Webpack bundler to generate the final `dist` files
 - `build:semantic`: Builds Semantic UI's `dist` files
 - `clean:dist`: Cleans `dist` directory
@@ -41,58 +41,98 @@ Workbench to administer an on premise installation of Carbon LDP
 
 ### Gulp Tasks
 
-Gulp defines two tasks:
+Gulp defines six tasks:
 
 - `clean:dist`: Cleans `dist` directory
 - `clean:src`: Cleans `src` directory, removing any unused compiled file (useful when changing branches)
-- `copy:assets`: Copies all the assets to `dist/site/assets`
+- `copy:assets`: Copies all the assets to `dist/assets`
 - `copy:node-dependencies`: Copies node dependencies to `src/assets/node_modules` so they can be treated like any normal asset
 - `copy:node-dependencies:files`: Copies single files
 - `copy:node-dependencies:packages`: Copies complete packages
-- `copy:semantic`: Copies the compiled version of semantic to the dist version of the project
 
 ### File Structure
 
-- `.idea`: WebStorm shared configuration files (things like code style, and project structure)
-- `build`: Build related files (e.g. `nginx.conf`)
-    - `nginx.conf`: Configuration file for the nginx server inside the docker image
-- `config`: Configuration files that are used when compiling and bundling the application
-    - `dev.config.json`: Settings used during the bundling and execution processes of `development` mode of the application
-    - `head.config.js`: Links and meta's  injected into the `<head/>` tag of the application
-    - `prod.config.json`: Settings used during the bundling and execution processes of `production` mode of the application 
-    - `webpack.common.js`: Webpack bundling settings used by the `development` and `production` modes
-    - `webpack.dev.js`: Webpack bundling settings for `development` mode
-    - `webpack.helpers.js`: Helpers used by webpack's `webpack.common/dev/prod.js` files
-    - `webpack.prod.js`: Webpack bundling settings for `production` mode
-- `dist`: Distribution related files
-- `hooks`: Scripts launched before building images
-    - `pre_build`: `BASH` script that runs the docker image 
-- `node_modules`: npm dependencies (don't touch them)
-- `scripts`: Scripts that help to install dependencies
-    - `force-semantic-ui-to-install-correctly.js`: Force Semantic UI to install correctly using `semantic.json` file
-    - `install-dependencies.sh`: `SHELL` script that installs the project's dependencies
-    - `update-angular.sh`: `SHELL` script that updates the angular dependencies
-- `src`: All source files
-    - `app`: Source files for the Angular2 application
-    - `assets`: Any asset (image, json, etc.). Before adding stylesheets think if they belong to a component, or can be added to the semantic-ui theme
-        - `images`: General images
-    - `semantic`: Source code for the semantic-ui theme
-    - `index.html`: Entry point for the website
-    - `main.ts`: Entry file of angular, it bootstrap the main angular module
-    - `polyfills.ts`: File that imports all the required polyfills
-    - `vendor.ts`: File that imports all the vendor/third party libraries
-- `.gitignore`: Ignore file for git
-- `.travis.yml`: 
-- `CHANGELOG.md`: File to track package changes
-- `Dockerfile`: File to build the docker image for deployment
-- `gulpfile.js`: Gulp configuration file
-- `package.json`: npm configuration file (it also contains JSPM dependency registry)
-- `README.md`: === this
-- `semantic.json`: semantic-ui configuration file
-- `tsconfig.json`: TypeScript compiler configuration file
-- `webpack.config.js`: Webpack config entry point, it can bundle the app by recognizing if it's in a dev or prod environment
+    .
+    ├── .idea                               # WebStorm shared configuration files (like code style)
+    ├── build                               # Build related files (e.g. `nginx.conf`)
+    │   └── nginx.conf                      # Configuration file for nginx server inside the docker image
+    ├── config                              # Configuration files used while bundling the application
+    │   ├── dev.config.json                 # Settings used during DEVELOPMENT mode of the application
+    │   ├── head.config.js                  # HTML head elements injected into the application index.html
+    │   ├── prod.config.json                # Settings used during PRODUCTION mode of the application
+    │   ├── webpack.common.js               # Webpack's settings used by DEV and PROD modes
+    │   ├── webpack.dev.js                  # Webpack bundling settings for DEVELOPMENT mode
+    │   ├── webpack.helpers.js              # Helpers used by webpack's webpack.common/dev/prod.js files
+    │   └── webpack.prod.js                 # Webpack bundling settings for PRODUCTION mode
+    ├── dist                                # Distribution related files
+    ├── hooks                               # Scripts launched before building images
+    │   └── pre_build                       # BASH script that runs the docker image
+    ├── node_modules                        # npm dependencies (don't touch them)
+    ├── scripts                             # Scripts that help to install dependencies
+    │   ├── force-semantic-ui-to-install-correctly.js   
+    │   │                                   # Force correct install of Semantic UI using `semantic.json` 
+    │   ├── pre_build.sh                    # SHELL script that runs the docker image
+    │   └── write-global-variables.sh       # SHELL script that replaces Carbon settings in index.html 
+    ├── src                                 # All source files
+    │   ├── app                             # Source files for the Angular application
+    │   ├── assets                          # Any asset (image, json, etc.)
+    │   │   └── images                      # General images
+    │   ├── semantic                        # Source code for the Semantic UI theme
+    │   ├── index.html                      # Entry point for the app
+    │   ├── main.ts                         # Entry file of angular, it bootstrap the main angular module
+    │   └── polyfills.ts                    # File that imports all the required polyfills
+    ├── typings                             # Typescript description files
+    │   ├── customs                         # Directory to store custom description files
+    │   │   ├── codemirror
+    │   │   │   └── index.d.ts              # Codemirror's description file
+    │   │   ├── highlightjs
+    │   │   │   └── index.d.ts              # HighlightJS's description file
+    │   │   ├── jstree
+    │   │   │   └── index.d.ts              # JSTree's description file
+    │   │   └── semantic-ui
+    │   │       └── index.d.ts              # Semantic-UI's description file
+    │   └── typings.d.ts                    # Main typings file referencing all index.d.ts custom files
+    ├── .gitignore                          # Ignore file for git
+    ├── .travis.yml                         # Travis configuration file
+    ├── CHANGELOG                           # File to track package changes
+    ├── Dockerfile                          # File to build the docker image for deployment
+    ├── gulpfile.js                         # Gulp's configuration file
+    ├── LICENSE
+    ├── package.json                        # npm configuration file
+    ├── README.md                           # this
+    ├── semantic.json                       # Semantic UI configuration file
+    ├── tsconfig.json                       # Typescript compiler configuration file
+    ├── tsconfig-aot.json                       # AOT compiler configuration file
+    └── webpack.config.js                   # It bundles app depending on process.env.NODE_ENV (Dev/Prod)
 
-### Building the Project
+### Developing the Project
+
+In order to develop this project you need to do the following:
+ 
+1. cd into `carbonldp-workbench`
+2. run `npm start`
+3. Modify the code inside this `carbonldp-workbench`
+
+### Developing other carbonldp's projects
+
+As mentioned earlier, during the Setup section, this project uses the following sibling directories:
+ 
+- `carbonldp-panel`
+- `carbonldp-js-sdk`
+- `angular2-carbonldp`
+
+If you want to develop functionality of any of those projects you can do that follow these steps:
+
+1. cd into desired project. E.g:`cd carbonldp-panel`
+2. Run `gulp watch` to wait for changes (If the desired project is `carbonldp-js-sdk` you need to manually run `gulp` instead whenever a change occurs)
+3. Cd into `../carbonldp-workbench`
+4. Run `sudo npm link DESIRED_PROJECT_PATH` E.g: `sudo npm link ../carbonldp-panel/dist`
+5. Enter your super user credentials
+5. Run `npm start`
+
+After this you will be able to see the changes whenever you modify something from the source projects.
+
+### Deploying the Project
 
 The project is deployed as a docker image. A `Dockerfile` is located at the root of the project, which can be used to build the image. 
 
