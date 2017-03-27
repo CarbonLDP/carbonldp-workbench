@@ -1,0 +1,14 @@
+:host {
+	display: block;
+	font-size: .8em;
+	line-height: initial;
+	text-align: right;
+	padding-right: 5px;
+	position: relative;
+
+	p {
+		position: absolute;
+		bottom: 0;
+		right: 10px;
+	}
+}

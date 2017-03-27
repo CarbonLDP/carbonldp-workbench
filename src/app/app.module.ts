@@ -16,6 +16,7 @@ import { ErrorView } from "./error-pages/error.view";
 import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
 import { DashboardView } from "./dashboard/dashboard.view";
 import { BackgroundVideoComponent } from "./error-pages/background-video.component";
+import { VersionsExposerComponent } from "./versions-exposer/versions-exposer.component";
 
 // Modules
 import { PanelModule } from "carbonldp-panel/panel.module";
@@ -34,7 +35,8 @@ import { PanelModule } from "carbonldp-panel/panel.module";
 		ErrorView,
 		NotFoundErrorView,
 		DashboardView,
-		BackgroundVideoComponent
+		BackgroundVideoComponent,
+		VersionsExposerComponent
 	],
 	providers: [
 		{
