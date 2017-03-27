@@ -8,12 +8,7 @@ const runSequence = require( "run-sequence" );
 const config = {
 	source: {},
 	nodeDependencies: {
-		files: [
-			"node_modules/es6-shim/es6-shim.js",
-			"node_modules/systemjs/dist/system-polyfills.src.js",
-			"node_modules/systemjs/dist/system.src.js",
-			"node_modules/rxjs/bundles/Rx.js"
-		],
+		files: [],
 		packages: [
 			"node_modules/jstree/*/**/",
 			"node_modules/codemirror/*/**/"
@@ -192,7 +187,7 @@ gulp.task( "clean:src", ( done ) => {
 gulp.task( "copy:assets", [ "copy:node-dependencies" ], () => {
 	return gulp.src( "src/assets/**/*", {
 		base: "src/assets"
-	} ).pipe( gulp.dest( "dist/site/assets" ) );
+	} ).pipe( gulp.dest( "dist/assets" ) );
 } );
 
 gulp.task( "copy:node-dependencies", ( done ) => {
