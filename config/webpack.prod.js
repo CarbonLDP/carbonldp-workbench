@@ -5,6 +5,11 @@ const config = require( "./prod.config.json" );
 const commonConfig = require( "./webpack.common.js" );
 const carbonConfig = config.carbon;
 
+// carbonldp's projects versions
+const panel = require( "carbonldp-panel/package.json" );
+const sdk = require( "carbonldp/package.json" );
+const workbench = require( "../package.json" );
+
 // Plugins
 const DefinePlugin = require( "webpack/lib/DefinePlugin" );
 const LoaderOptionsPlugin = require( "webpack/lib/LoaderOptionsPlugin" );
@@ -78,6 +83,11 @@ module.exports = function( env ) {
 					"CARBON": {
 						"protocol": JSON.stringify( carbonConfig.protocol ),
 						"domain": JSON.stringify( carbonConfig.domain ),
+					},
+					"PACKAGES": {
+						"carbonldp": JSON.stringify( sdk.version ),
+						"carbonldp-panel": JSON.stringify( panel.version ),
+						"carbonldp-workbench": JSON.stringify( workbench.version ),
 					}
 				}
 			} ),

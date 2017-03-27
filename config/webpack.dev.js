@@ -6,6 +6,11 @@ const carbonConfig = config.carbon;
 const webpackMerge = require( "webpack-merge" );
 const HtmlWebpackPlugin = require( "html-webpack-plugin" );
 
+// carbonldp's projects versions
+const panel = require( "carbonldp-panel/package.json" );
+const sdk = require( "carbonldp/package.json" );
+const workbench = require( "../package.json" );
+
 
 // Plugins
 const DefinePlugin = require( "webpack/lib/DefinePlugin" );
@@ -70,6 +75,11 @@ module.exports = function( options ) {
 					"CARBON": {
 						"protocol": JSON.stringify( carbonConfig.protocol ),
 						"domain": JSON.stringify( carbonConfig.domain ),
+					},
+					"PACKAGES": {
+						"carbonldp": JSON.stringify( sdk.version ),
+						"carbonldp-panel": JSON.stringify( panel.version ),
+						"carbonldp-workbench": JSON.stringify( workbench.version ),
 					}
 				}
 			} ),
