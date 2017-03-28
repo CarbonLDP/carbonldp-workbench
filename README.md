@@ -121,11 +121,12 @@ As mentioned earlier, during the Setup section, this project uses the following 
 - `carbonldp-js-sdk`
 - `angular2-carbonldp`
 
-If you want to develop functionality of any of those projects you can do that follow these steps:
+If you want to develop any of those projects, you can do that by following these steps:
 
 1. cd into desired project. E.g:`cd carbonldp-panel`
-2. Run `gulp watch` to wait for changes (If the desired project is `carbonldp-js-sdk` you need to manually run `gulp` instead whenever a change occurs)
+2. Run `gulp watch` to wait for changes (If the desired project is `carbonldp-js-sdk` you need to manually run `gulp` whenever you want to test a change)
 3. Cd into `../carbonldp-workbench`
+4. Add `"carbonldp-panel/*": [ "../carbonldp-panel/src/*" ]` to the `paths` property of `compilerOptions` in _`tsconfig.json`_ file 
 4. Run `sudo npm link DESIRED_PROJECT_PATH` E.g: `sudo npm link ../carbonldp-panel/dist`
 5. Enter your super user credentials
 5. Run `npm start`
