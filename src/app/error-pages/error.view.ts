@@ -1,24 +1,23 @@
 import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { Router } from "@angular/router";
 
-import Carbon from "carbonldp/Carbon";
-
+import { Class as Carbon } from "carbonldp/Carbon";
 import { activeContext } from "angular2-carbonldp/boot";
 
 
-import template from "./error.view.html!text";
-import style from "./error.view.css!text";
-
 @Component( {
 	selector: "div.cw-error-view",
-	template: template,
-	styles: [ style ],
+	templateUrl: "./error.view.html",
+	styleUrls: [ "./error.view.scss" ],
 } )
 export class ErrorView implements OnInit, AfterViewInit {
-	private error:any;
-	private errorType:string;
+	error:any;
+	errorType:string;
+	carbon:Carbon;
 
-	constructor( private router:Router, private carbon:Carbon ) {}
+	constructor( private router:Router, carbon:Carbon ) {
+		this.carbon = carbon;
+	}
 
 	ngOnInit():void {
 		activeContext.promise.then( () => {
@@ -37,5 +36,3 @@ export class ErrorView implements OnInit, AfterViewInit {
 		} );
 	}
 }
-
-export default ErrorView;

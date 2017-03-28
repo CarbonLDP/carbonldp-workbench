@@ -1,14 +1,4 @@
-/// <reference no-default-lib="true"/>
-/// <reference path="./../node_modules/typescript/lib/lib.es6.d.ts" />
-
-/// <reference path="./index.d.ts" />
-
-declare module "*.html!" {
-	let value:string;
-	export default value;
-}
-
-declare module "*!text" {
-	let value:string;
-	export default value;
-}
+/// <reference path="./custom/codemirror/index.d.ts" />
+/// <reference path="./custom/highlightjs/index.d.ts" />
+/// <reference path="./custom/jstree/index.d.ts" />
+/// <reference path="./custom/semantic-ui/index.d.ts" />

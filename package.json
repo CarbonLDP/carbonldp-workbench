@@ -21,234 +21,64 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
+    "build": "npm run build:semantic && npm run copy:assets && npm run build:prod",
+    "build:prod": "npm run clean:dist && node_modules/.bin/webpack --config config/webpack.prod.js --progress --profile --bail",
+    "build:semantic": "node_modules/.bin/gulp --gulpfile src/semantic/gulpfile.js build",
+    "clean:dist": "node_modules/.bin/gulp clean:dist",
+    "copy:assets": "node_modules/.bin/gulp copy:assets",
     "postinstall": "node scripts/force-semantic-ui-to-install-correctly.js && npm explore semantic-ui -- npm run-script install",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run server:dev",
+    "server:dev": "node_modules/.bin/webpack-dev-server --config config/webpack.dev.js --inline --progress --profile --watch "
   },
   "devDependencies": {
-    "@angular/common": "2.4.2",
-    "@angular/compiler": "2.4.2",
-    "@angular/core": "2.4.2",
-    "@angular/forms": "2.4.2",
-    "@angular/http": "2.4.2",
-    "@angular/platform-browser": "2.4.2",
-    "@angular/platform-browser-dynamic": "2.4.2",
-    "@angular/router": "3.4.2",
-    "angular2-carbonldp": "0.4.2",
-    "carbonldp": "0.40.0",
-    "carbonldp-panel": "0.7.1",
-    "del": "^2.2.0",
-    "es6-shim": "^0.35.1",
+    "@angular/compiler-cli": "^2.4.9",
+    "@ngtools/webpack": "^1.2.12",
+    "@types/codemirror": "0.0.38",
+    "@types/jquery": "^2.0.41",
+    "@types/jstree": "^3.3.34",
+    "@types/node": "^7.0.4",
+    "angular-router-loader": "^0.5.0",
+    "angular2-template-loader": "^0.6.2",
+    "awesome-typescript-loader": "^3.1.2",
+    "copy-webpack-plugin": "^4.0.1",
+    "del": "^2.2.2",
+    "file-loader": "^0.10.0",
     "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^3.1.0",
-    "gulp-chug": "^0.5.1",
-    "gulp-ejs": "^2.1.2",
-    "gulp-sass": "^2.3.1",
-    "gulp-sourcemaps": "1.7.1",
-    "gulp-tslint": "^5.0.0",
-    "gulp-uglify": "^2.0.0",
-    "gulp-util": "^3.0.7",
-    "gulp-webserver": "^0.9.1",
-    "jspm": "0.17.0-beta.32",
-    "jstree": "^3.3.1",
+    "html-elements-webpack-plugin": "^1.0.1",
+    "html-loader": "^0.4.4",
+    "html-webpack-plugin": "^2.28.0",
     "mz": "^2.4.0",
-    "run-sequence": "^1.2.1",
-    "rxjs": "5.0.2",
-    "semantic-ui": "^2.2.4",
-    "systemjs": "0.19.41",
-    "systemjs-builder": "0.15.35",
-    "tslint": "^3.11.0",
-    "typescript": "2.0.8",
-    "typings": "^1.0.5",
-    "yargs": "^4.7.1",
-    "zone.js": "0.7.4"
+    "node-sass": "^4.5.0",
+    "raw-loader": "^0.5.1",
+    "run-sequence": "^1.2.2",
+    "sass-loader": "^6.0.1",
+    "typescript": "^2.2.1",
+    "webpack": "^2.2.1",
+    "webpack-bundle-analyzer": "^2.3.1",
+    "webpack-dev-server": "^2.4.1",
+    "webpack-merge": "^3.0.0"
   },
   "dependencies": {
-    "codemirror": "^5.16.0",
-    "css": "github:systemjs/plugin-css",
-    "highlight.js": "^9.7.0"
-  },
-  "jspm": {
-    "name": "app",
-    "main": "boot",
-    "directories": {
-      "baseURL": ".",
-      "lib": "src"
-    },
-    "configFiles": {
-      "jspm": "jspm.config.js"
-    },
-    "dependencies": {
-      "carbonldp-panel": "npm:carbonldp-panel@0.7.1",
-      "codemirror": "npm:codemirror@5.17.0",
-      "css": "github:systemjs/plugin-css@0.1.26",
-      "highlight.js": "npm:highlight.js@9.7.0",
-      "js-cookie": "npm:js-cookie@2.1.2",
-      "jstree": "npm:jstree@3.3.2",
-      "plugin-typescript": "github:frankwallis/plugin-typescript@5.0.9",
-      "reflect-metadata": "npm:reflect-metadata@0.1.8",
-      "text": "github:systemjs/plugin-text@0.0.8"
-    },
-    "devDependencies": {},
-    "peerDependencies": {
-      "@angular/common": "npm:@angular/common@2.4.2",
-      "@angular/compiler": "npm:@angular/compiler@2.4.2",
-      "@angular/core": "npm:@angular/core@2.4.2",
-      "@angular/forms": "npm:@angular/forms@2.4.2",
-      "@angular/http": "npm:@angular/http@2.4.2",
-      "@angular/platform-browser": "npm:@angular/platform-browser@2.4.2",
-      "@angular/platform-browser-dynamic": "npm:@angular/platform-browser-dynamic@2.4.2",
-      "@angular/router": "npm:@angular/router@3.4.2",
-      "angular2-carbonldp": "npm:angular2-carbonldp@0.4.2",
-      "assert": "npm:jspm-nodelibs-assert@^0.2.0",
-      "buffer": "npm:jspm-nodelibs-buffer@^0.2.0",
-      "carbonldp": "npm:carbonldp@^0.40.0",
-      "child_process": "npm:jspm-nodelibs-child_process@0.2.0",
-      "constants": "npm:jspm-nodelibs-constants@0.2.0",
-      "crypto": "npm:jspm-nodelibs-crypto@^0.2.0",
-      "events": "npm:jspm-nodelibs-events@^0.2.0",
-      "fs": "npm:jspm-nodelibs-fs@^0.2.0",
-      "http": "npm:jspm-nodelibs-http@0.2.0",
-      "https": "npm:jspm-nodelibs-https@0.2.0",
-      "jquery": "npm:jquery@2.2.4",
-      "os": "npm:jspm-nodelibs-os@0.2.0",
-      "path": "npm:jspm-nodelibs-path@0.2.0",
-      "process": "github:jspm/nodelibs-process@^0.2.0-alpha",
-      "rxjs": "npm:rxjs@^5.0.0-beta.12",
-      "stream": "npm:jspm-nodelibs-stream@0.2.0",
-      "string_decoder": "npm:jspm-nodelibs-string_decoder@0.2.0",
-      "timers": "npm:jspm-nodelibs-timers@^0.2.0",
-      "url": "npm:jspm-nodelibs-url@0.2.0",
-      "util": "npm:jspm-nodelibs-util@0.2.0",
-      "vm": "npm:jspm-nodelibs-vm@0.2.0",
-      "zone.js": "npm:zone.js@^0.7.2"
-    },
-    "overrides": {
-      "npm:@angular/common@2.4.2": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/common": ".",
-          "./testing": "./bundles/common-testing.umd.js"
-        }
-      },
-      "npm:@angular/compiler@2.4.2": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/compiler": ".",
-          "./testing": "./bundles/compiler-testing.umd.js"
-        }
-      },
-      "npm:@angular/core@2.4.2": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/core": ".",
-          "./testing": "./bundles/core-testing.umd.js"
-        }
-      },
-      "npm:@angular/http@2.4.2": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/http": ".",
-          "./testing": "./bundles/http-testing.umd.js"
-        }
-      },
-      "npm:@angular/platform-browser-dynamic@2.4.2": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/platform-browser-dynamic": ".",
-          "./testing": "./bundles/platform-browser-dynamic-testing.umd.js"
-        }
-      },
-      "npm:@angular/platform-browser@2.4.2": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/platform-browser": ".",
-          "./testing": "./bundles/platform-browser-testing.umd.js"
-        }
-      },
-      "npm:@angular/router@3.4.2": {
-        "meta": {
-          "src/*.js": {
-            "deps": [
-              "reflect-metadata",
-              "zone.js"
-            ]
-          }
-        },
-        "map": {
-          "@angular/router": ".",
-          "./testing": "./bundles/router-testing.umd.js"
-        }
-      },
-      "npm:inherits@2.0.3": {
-        "ignore": [
-          "test.js"
-        ]
-      },
-      "npm:jquery@2.2.4": {
-        "format": "amd"
-      },
-      "npm:reflect-metadata@0.1.8": {
-        "jspmNodeConversion": false,
-        "map": {
-          "crypto": {
-            "node": "@node/crypto",
-            "default": "@empty"
-          }
-        }
-      },
-      "npm:typescript@2.0.0": {
-        "browser": {},
-        "map": {
-          "buffer": "@empty",
-          "child_process": "@empty",
-          "fs": "@empty",
-          "path": "@empty",
-          "process": "@empty",
-          "readline": "@empty"
-        }
-      }
-    }
+    "@angular/common": "2.4.9",
+    "@angular/compiler": "2.4.9",
+    "@angular/core": "2.4.9",
+    "@angular/forms": "2.4.9",
+    "@angular/http": "2.4.9",
+    "@angular/platform-browser": "2.4.9",
+    "@angular/platform-browser-dynamic": "2.4.9",
+    "@angular/router": "3.4.9",
+    "angular2-carbonldp": "^0.5.0",
+    "carbonldp": "^0.42.0",
+    "carbonldp-panel": "0.8.0",
+    "codemirror": "^5.23.0",
+    "core-js": "^2.4.1",
+    "highlight.js": "^9.7.0",
+    "jquery": "^2.2.4",
+    "js-cookie": "^2.1.2",
+    "jstree": "3.3.3",
+    "rxjs": "^5.1.0",
+    "semantic-ui": "^2.2.4",
+    "zone.js": "^0.7.6"
   }
 }

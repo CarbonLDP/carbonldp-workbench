@@ -1,19 +1,16 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 
-import template from "./login.view.html!";
-import style from "./login.view.css!text";
-
 @Component( {
 	selector: "div.ng-view",
-	template: template,
-	styles: [ style ],
+	templateUrl: "./login.view.html",
+	styleUrls: [ "./login.view.scss" ],
 } )
 export class LoginView {
-	private router:Router;
+	router:Router;
 
-	private hasAccount:boolean = true;
-	private registrationWasSuccessful:boolean = false;
+	hasAccount:boolean = true;
+	registrationWasSuccessful:boolean = false;
 
 	constructor( router:Router ) {
 		this.router = router;
@@ -37,4 +34,3 @@ export class LoginView {
 	}
 }
 
-export default LoginView;

@@ -1,0 +1,9 @@
+{
+	"url": {
+		"base": "/src/"
+	},
+	"carbon": {
+		"protocol": "http",
+		"domain": "localhost:8083"
+	}
+}

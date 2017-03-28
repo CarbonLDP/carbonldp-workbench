@@ -2,11 +2,27 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<base href="/src/">
 
 	<title>Carbon LDP</title>
+	<% if (webpackConfig.htmlElements.headTags) { %>
+	<!-- Configured Head Tags  -->
+	<%= webpackConfig.htmlElements.headTags %>
+	<% } %>
 
-	<link rel="stylesheet" href="semantic/dist/semantic.min.css">
+	<% if (htmlWebpackPlugin.options.metadata.isDevServer) { %>
+	<base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
+	<% } else {%>
+	<base href="--BASE_URL--">
+	<% }%>
+
+	<script>
+		__CONFIG = {
+			CARBON_PROTOCOL: "--CARBON_PROTOCOL--",
+			CARBON_HOST: "--CARBON_HOST--",
+			BASE_URL: "--BASE_URL--",
+			ENV: "--ENV--"
+		};
+	</script>
 </head>
 <body>
 	<app>
@@ -42,25 +58,5 @@
 		<div>Loading...</div>
 		<div class="loading-error">x_x</div>
 	</app>
-
-	<script src="../jspm_packages/system-polyfills.src.js"></script>
-	<script src="assets/node_modules/es6-shim.js"></script>
-	<script src="../jspm_packages/system.src.js"></script>
-	<script src="assets/node_modules/Rx.js"></script>
-	<script src="../jspm.config.js"></script>
-	<script>
-		System.import( "app/boot" ).catch( function( error ) {
-			console.error( error );
-			displayError();
-		} );
-
-		function displayError() {
-			var nodesToHide = document.querySelectorAll( "app *:not( style )" );
-			for( var i = 0; i < nodesToHide.length; i ++ ) {
-				nodesToHide[ i ].style.display = "none";
-			}
-			document.querySelector( "app .loading-error" ).style.display = "block";
-		}
-	</script>
 </body>
 </html>

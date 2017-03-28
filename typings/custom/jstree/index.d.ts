@@ -1,0 +1,3 @@
+interface JSTree {
+	settings:any;
+}

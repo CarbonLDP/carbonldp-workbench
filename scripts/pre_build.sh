@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /usr/src/project
+cd /opt/project
 
 echo "Installing Node dependencies..."
 npm install
@@ -10,10 +10,6 @@ npm run-script postinstall
 npm rebuild node-sass
 echo "Node dependencies installed"
 
-echo "Installing jspm dependencies..."
-jspm install --yes
-echo "jspm dependencies installed"
-
-echo "Installing definition files..."
-typings install
-echo "Definition files installed"
+echo "Compiling source code..."
+npm run build
+echo "Source code compiled!"

@@ -1,113 +1,23 @@
 "use strict";
 
 const fs = require( "mz/fs" );
-
-const spawn = require( "child_process" ).spawn;
 const gulp = require( "gulp" );
-const util = require( "gulp-util" );
-const runSequence = require( "run-sequence" );
 const del = require( "del" );
-const rename = require( "gulp-rename" );
-const chug = require( "gulp-chug" );
-const watch = require( "gulp-watch" );
-
-const Builder = require( "jspm" ).Builder;
-
-const tslint = require( "gulp-tslint" );
-
-const ejs = require( "gulp-ejs" );
-
-const sass = require( "gulp-sass" );
-const autoprefixer = require( "gulp-autoprefixer" );
-const sourcemaps = require( "gulp-sourcemaps" );
-
-const uglify = require( "gulp-uglify" );
-
-const webserver = require( "gulp-webserver" );
-
-const argv = require( "yargs" )
-	.usage( "Usage: $0 [-p profile] [--use-env]" )
-
-	.describe( "p", "Active profile to load configuration from" )
-	.alias( "p", "profile" )
-	.default( "p", "local" )
-
-	.describe( "use-env", "Use environment variables instead of using profile based configuration" )
-
-	.argv;
-
-let profileConfig;
-if( argv[ "use-env" ] ) {
-	validateEnv();
-	profileConfig = {
-		"angular": {
-			"debug": "DEBUG" in process.env && process.env.DEBUG
-		},
-		"url": {
-			"base": "WORKBENCH_BASE" in process.env ? process.env.WORKBENCH_BASE : "/"
-		},
-		"carbon": {
-			"protocol": "CARBON_PROTOCOL" in process.env ? process.env.CARBON_PROTOCOL : "https",
-			"domain": process.env.CARBON_HOST
-		}
-	};
-} else {
-	profileConfig = require( "./config/" + argv.p );
-}
+const runSequence = require( "run-sequence" );
 
 const config = {
-	source: {
-		typescript: "src/app/**/*.ts",
-		semantic: "src/semantic/dist/**/*",
-		sass: [
-			"src/app/**/*.scss",
-			"src/assets/**/*.scss"
-		]
-	},
+	source: {},
 	nodeDependencies: {
-		files: [
-			"node_modules/es6-shim/es6-shim.js",
-			"node_modules/systemjs/dist/system-polyfills.src.js",
-			"node_modules/systemjs/dist/system.src.js",
-			"node_modules/rxjs/bundles/Rx.js"
-		],
+		files: [],
 		packages: [
-			"node_modules/jstree/*/**/"
+			"node_modules/jstree/*/**/",
+			"node_modules/codemirror/*/**/"
 		]
 	}
 };
 
-gulp.task( "default", [ "build" ] );
-
-gulp.task( "build", [ "clean:dist" ], ( done ) => {
-	runSequence(
-		"clean:dist",
-		[ "compile:styles", "compile:config", "compile:index", "copy:semantic", "copy:assets" ],
-		"bundle",
-		"minify:bundle",
-		done
-	);
-} );
-
-gulp.task( "build:semantic", () => {
-	return gulp.src( "src/semantic/gulpfile.js", { read: false } )
-		.pipe( chug( {
-			tasks: [ "build" ]
-		} ) )
-		;
-} );
-
-gulp.task( "bundle", () => {
-	let builder = new Builder();
-	return builder.buildStatic( "app/boot", "dist/site/main.sfx.js", {
-		minify: false,
-		mangle: false,
-		sourceMaps: false
-	} );
-} );
-
 gulp.task( "clean:dist", () => {
-	return del( [ "dist/site/**" ] );
+	return del( [ "dist/**" ] );
 } );
 
 gulp.task( "clean:src", ( done ) => {
@@ -274,38 +184,10 @@ gulp.task( "clean:src", ( done ) => {
 	}
 } );
 
-gulp.task( "compile:config", () => {
-	return gulp.src( "src/app/config.ejs.ts" )
-		.pipe( ejs( profileConfig ) )
-		.pipe( rename( "config.ts" ) )
-		.pipe( gulp.dest( "src/app/" ) )
-} );
-
-gulp.task( "compile:index", () => {
-	return gulp.src( "dist/index.ejs.html" )
-		.pipe( ejs( profileConfig ) )
-		.pipe( rename( "index.html" ) )
-		.pipe( gulp.dest( "dist/site/" ) );
-} );
-
-gulp.task( "compile:styles", () => {
-	return gulp.src( config.source.sass, { base: "./" } )
-		.pipe( ejs( profileConfig ) )
-		.pipe( sourcemaps.init() )
-		.pipe( sass().on( "error", sass.logError ) )
-		.pipe( autoprefixer( {
-			browsers: [ "last 2 versions" ]
-		} ) )
-		.pipe( sourcemaps.write( "." ) )
-		.pipe( gulp.dest( "." ) )
-		;
-} );
-
-// TODO: Minify files
 gulp.task( "copy:assets", [ "copy:node-dependencies" ], () => {
 	return gulp.src( "src/assets/**/*", {
 		base: "src/assets"
-	} ).pipe( gulp.dest( "dist/site/assets" ) );
+	} ).pipe( gulp.dest( "dist/assets" ) );
 } );
 
 gulp.task( "copy:node-dependencies", ( done ) => {
@@ -322,88 +204,3 @@ gulp.task( "copy:node-dependencies:files", () => {
 gulp.task( "copy:node-dependencies:packages", () => {
 	return gulp.src( config.nodeDependencies.packages, { base: "node_modules" } ).pipe( gulp.dest( "src/assets/node_modules" ) );
 } );
-
-gulp.task( "copy:semantic", [ "build:semantic" ], () => {
-	return gulp.src( "src/semantic/dist/**/*", {
-		base: "src/semantic/dist"
-	} ).pipe( gulp.dest( "dist/site/assets/semantic" ) );
-} );
-
-gulp.task( "lint:typescript", () => {
-	return gulp.src( config.source.typescript )
-		.pipe( tslint() )
-		.pipe( tslint.report( "prose" ) )
-		;
-} );
-
-gulp.task( "minify:bundle", () => {
-	return gulp.src( "dist/site/main.sfx.js" )
-		.pipe( uglify( {
-			mangle: false
-		} ) )
-		.pipe( gulp.dest( "dist/site" ) );
-} );
-
-gulp.task( "serve", ( done ) => {
-	runSequence(
-		[ "build:semantic", "compile:styles", "compile:config", "copy:node-dependencies" ],
-		"serve|after-compilation",
-		done
-	);
-} );
-
-// TODO: Divide this task into sub-tasks
-gulp.task( "serve|after-compilation", () => {
-	gulp.src( "src/semantic/gulpfile.js", { read: false } )
-		.pipe( chug( {
-			tasks: [ "watch" ]
-		} ) )
-	;
-
-	watch( config.source.sass, ( file ) => {
-		util.log( "SCSS file changed: ", file.path );
-		gulp.start( "compile:styles" );
-	} ).on( "error", function( error ) {
-		util.log( util.colors.red( "Error" ), error.message );
-	} );
-
-	return gulp.src( "." )
-		.pipe( webserver( {
-			livereload: false,
-			directoryListing: false,
-			fallback: "/src/index.html",
-			open: true,
-		} ) );
-} );
-
-function validateEnv() {
-	let valid = true;
-	if( ! ( "CARBON_HOST" in process.env ) ) {
-		valid = false;
-		console.error( `ERROR: ENV["CARBON_HOST"] was not defined. Please define the Carbon LDP host the workbench is going to work with` );
-	}
-
-	if( ! valid ) process.exit( 1 );
-}
-
-function getParentDirectory( levels ) {
-	levels = levels ? levels : 1;
-
-	let directories = __dirname.split( "/" );
-
-	while( levels != 0 && directories.length > 1 ) {
-		directories.splice( - 1, 1 );
-		levels --;
-	}
-
-	if( directories.length == 1 ) return "/";
-	else return directories.join( "/" );
-}
-
-function logStdout( buffer ) {
-	console.log( buffer.toString() );
-}
-
-function logStderr( buffer ) {
-	console.error( buffer.toString() );
-}
