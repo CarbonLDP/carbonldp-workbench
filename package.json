@@ -1,6 +1,6 @@
 {
   "name": "carbonldp-workbench",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "description": "Workbench to administer an on premise installation of Carbon LDP",
   "contributors": [
     {

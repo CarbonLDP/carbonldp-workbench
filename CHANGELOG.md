@@ -1,3 +1,13 @@
+# 0.8.0 (2017/03/28)
+
+- Completed #21 - Migrated to Webpack so it now bundles and serves the project
+- Completed #10 - Added a way to display version numbers for Platform, Workbench and SDK 
+- Completed #23 - Changed code to make it AOT compliant
+- Updated `carbonldp` to `v.0.42.0`
+- Updated `carbonldp-panel` to `v.0.8.0`
+- Updated `angular2-carbonldp` to `v.0.5.0`
+- Updated `@angular` packages to `v.2.4.9`
+
 # 0.7.1 (2017/02/23)
 
 - Completed #19 - Upgrade carbonldp SDK to `0.40.0`

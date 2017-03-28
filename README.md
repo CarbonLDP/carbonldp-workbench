@@ -25,6 +25,8 @@ Workbench to administer an on premise installation of Carbon LDP
 3. cd into `carbonldp-workbench`
 4. run `npm install`
 5. To start the application server run `npm start`
+	
+	**Note**: You may need to change the Carbon host configuration inside `config/dev.config.json`
 
 ### NPM Scripts
 

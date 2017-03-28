@@ -27,7 +27,8 @@ export class VersionsExposerComponent {
 		this.$element = $( this.element.nativeElement );
 		this.carbonldpSDK = "v." + this.carbon.version;
 		this.carbonldpWorkbench = "v." + process.env.PACKAGES[ "carbonldp-workbench" ];
-		this.carbonldpURL = this.carbon.getSetting( "http.ssl" ) ? "https" : "http" + "://" + this.carbon.getSetting( "domain" );
+		this.carbonldpURL = this.carbon.getSetting( "http.ssl" ) ? "https" : "http";
+		this.carbonldpURL += "://" + this.carbon.getSetting( "domain" );
 		this.getApiVersion();
 	}
 
