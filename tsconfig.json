@@ -13,7 +13,6 @@
 		"baseUrl": ".",
 		"paths": {
 			"app/*": [ "src/app/*" ],
-			"carbonldp-panel/*": [ "../carbonldp-panel/src/*" ],
 			"jquery": [ "./node_modules/@types/jquery/index" ]
 		},
 		"typeRoots": [
