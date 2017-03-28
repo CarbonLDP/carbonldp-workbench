@@ -1,6 +1,7 @@
 import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { Class as Carbon } from "carbonldp/Carbon";
 import { activeContext } from "angular2-carbonldp/boot";
 
 
@@ -12,8 +13,11 @@ import { activeContext } from "angular2-carbonldp/boot";
 export class ErrorView implements OnInit, AfterViewInit {
 	error:any;
 	errorType:string;
+	carbon:Carbon;
 
-	constructor( private router:Router ) {}
+	constructor( private router:Router, carbon:Carbon ) {
+		this.carbon = carbon;
+	}
 
 	ngOnInit():void {
 		activeContext.promise.then( () => {
