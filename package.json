@@ -70,7 +70,7 @@
     "@angular/router": "3.4.9",
     "angular2-carbonldp": "^0.5.0",
     "carbonldp": "^0.42.0",
-    "carbonldp-panel": "0.7.1",
+    "carbonldp-panel": "0.8.0",
     "codemirror": "^5.23.0",
     "core-js": "^2.4.1",
     "highlight.js": "^9.7.0",
