@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$/../angular2-carbonldp">
-      <excludeFolder url="file://$MODULE_DIR$/../angular2-carbonldp/node_modules" />
+    <content url="file://$MODULE_DIR$/../angular-carbonldp">
+      <excludeFolder url="file://$MODULE_DIR$/../angular-carbonldp/node_modules" />
     </content>
     <content url="file://$MODULE_DIR$/../carbonldp-js-sdk">
       <excludeFolder url="file://$MODULE_DIR$/../carbonldp-js-sdk/node_modules" />
@@ -13,10 +13,7 @@
       <excludeFolder url="file://$MODULE_DIR$/../carbonldp-panel/node_modules" />
     </content>
     <content url="file://$MODULE_DIR$">
-      <excludeFolder url="file://$MODULE_DIR$/../carbon-workbench/dist/node_modules" />
-      <excludeFolder url="file://$MODULE_DIR$/../carbon-workbench/jspm_packages" />
       <excludeFolder url="file://$MODULE_DIR$/dist" />
-      <excludeFolder url="file://$MODULE_DIR$/jspm_packages" />
       <excludeFolder url="file://$MODULE_DIR$/node_modules" />
     </content>
     <orderEntry type="inheritedJdk" />
