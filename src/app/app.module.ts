@@ -26,6 +26,8 @@ import { MessagesAreaComponent } from "./messages-area/messages-area.component";
 import { ErrorLabelComponent } from "./messages-area/error/error-label.component";
 import { HeaderItemComponent } from "./header/header-item.component";
 import { HeaderComponent } from "./header/header.component";
+import { SidebarComponent } from "./sidebar/sidebar.component";
+import { SidebarItemsComponent } from "./sidebar/sidebar-items.component";
 
 
 // Modules
@@ -36,6 +38,7 @@ import { SemanticModule } from "./semantic/semantic.module";
 import { MessagesAreaService } from "./messages-area/messages-area.service";
 import { RouterService } from "./router.service";
 import { HeaderService } from "./header/header.service";
+import { SidebarService } from "./sidebar/sidebar.service";
 
 
 @NgModule( {
@@ -61,6 +64,8 @@ import { HeaderService } from "./header/header.service";
 		ErrorLabelComponent,
 		HeaderItemComponent,
 		HeaderComponent,
+		SidebarComponent,
+		SidebarItemsComponent,
 
 		BackgroundVideoComponent,
 		VersionsPresenterComponent
@@ -75,7 +80,7 @@ import { HeaderService } from "./header/header.service";
 		appRoutingProviders,
 		Title,
 
-		RouterService, MessagesAreaService, HeaderService,
+		RouterService, MessagesAreaService, HeaderService, SidebarService,
 	],
 	bootstrap: [ AppComponent ],
 } )
