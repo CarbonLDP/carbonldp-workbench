@@ -28,6 +28,7 @@ import { HeaderItemComponent } from "./header/header-item.component";
 import { HeaderComponent } from "./header/header.component";
 import { SidebarComponent } from "./sidebar/sidebar.component";
 import { SidebarItemsComponent } from "./sidebar/sidebar-items.component";
+import { BreadcrumbsComponent } from "./breadcrumbs/breadcrumbs.component";
 
 
 // Modules
@@ -66,6 +67,7 @@ import { SidebarService } from "./sidebar/sidebar.service";
 		HeaderComponent,
 		SidebarComponent,
 		SidebarItemsComponent,
+		BreadcrumbsComponent,
 
 		BackgroundVideoComponent,
 		VersionsPresenterComponent
