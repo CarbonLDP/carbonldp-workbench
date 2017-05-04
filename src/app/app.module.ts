@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 import { APP_BASE_HREF } from "@angular/common";
 import { BrowserModule, Title } from "@angular/platform-browser";
+import { FormsModule } from "@angular/forms";
 
 // Providers
 import { BASE_URL } from "./config";
@@ -18,15 +19,19 @@ import { DashboardView } from "./dashboard/dashboard.view";
 import { BackgroundVideoComponent } from "./error-pages/background-video.component";
 import { VersionsExposerComponent } from "./versions-exposer/versions-exposer.component";
 
+
 // Modules
-import { PanelModule } from "carbonldp-panel/panel.module";
+import { DirectivesModule } from "./directives/directives.module";
+
+// Services
 
 
 @NgModule( {
 	imports: [
 		BrowserModule,
+		FormsModule,
 		routing,
-		PanelModule.forRoot(),
+		DirectivesModule,
 	],
 	declarations: [
 		AppComponent,
