@@ -31,6 +31,7 @@ import { DirectivesModule } from "./directives/directives.module";
 
 // Services
 import { MessagesAreaService } from "./messages-area/messages-area.service";
+import { RouterService } from "./router.service";
 
 
 @NgModule( {
@@ -67,7 +68,7 @@ import { MessagesAreaService } from "./messages-area/messages-area.service";
 		appRoutingProviders,
 		Title,
 
-		MessagesAreaService,
+		RouterService, MessagesAreaService,
 	],
 	bootstrap: [ AppComponent ],
 } )
