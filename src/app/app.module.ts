@@ -32,8 +32,7 @@ import { BreadcrumbsComponent } from "./breadcrumbs/breadcrumbs.component";
 
 
 // Modules
-import { DirectivesModule } from "./directives/directives.module";
-import { SemanticModule } from "./semantic/semantic.module";
+import { SharedModule } from "./shared/shared.module";
 
 // Services
 import { MessagesAreaService } from "./messages-area/messages-area.service";
@@ -47,8 +46,7 @@ import { SidebarService } from "./sidebar/sidebar.service";
 		BrowserModule,
 		FormsModule,
 		routing,
-		DirectivesModule,
-		SemanticModule,
+		SharedModule,
 	],
 	declarations: [
 		AppComponent,
