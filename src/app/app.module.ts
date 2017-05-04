@@ -21,9 +21,6 @@ import { VersionsPresenterComponent } from "./versions-presenter/versions-presen
 
 import { RegisterComponent } from "./register/register.component";
 import { LoginComponent } from "./login/login.component";
-import { MessageComponent } from "./messages-area/message.component";
-import { MessagesAreaComponent } from "./messages-area/messages-area.component";
-import { ErrorLabelComponent } from "./messages-area/error/error-label.component";
 import { HeaderItemComponent } from "./header/header-item.component";
 import { HeaderComponent } from "./header/header.component";
 import { SidebarComponent } from "./sidebar/sidebar.component";
@@ -35,10 +32,10 @@ import { BreadcrumbsComponent } from "./breadcrumbs/breadcrumbs.component";
 import { SharedModule } from "./shared/shared.module";
 
 // Services
-import { MessagesAreaService } from "./messages-area/messages-area.service";
 import { RouterService } from "./router.service";
 import { HeaderService } from "./header/header.service";
 import { SidebarService } from "./sidebar/sidebar.service";
+import { MyAppsSidebarService } from "./my-apps/my-apps-sidebar.service";
 
 
 @NgModule( {
@@ -46,7 +43,7 @@ import { SidebarService } from "./sidebar/sidebar.service";
 		BrowserModule,
 		FormsModule,
 		routing,
-		SharedModule,
+		SharedModule.forRoot(),
 	],
 	declarations: [
 		AppComponent,
@@ -58,9 +55,6 @@ import { SidebarService } from "./sidebar/sidebar.service";
 
 		RegisterComponent,
 		LoginComponent,
-		MessageComponent,
-		MessagesAreaComponent,
-		ErrorLabelComponent,
 		HeaderItemComponent,
 		HeaderComponent,
 		SidebarComponent,
@@ -80,7 +74,7 @@ import { SidebarService } from "./sidebar/sidebar.service";
 		appRoutingProviders,
 		Title,
 
-		RouterService, MessagesAreaService, HeaderService, SidebarService,
+		RouterService, HeaderService, SidebarService, MyAppsSidebarService,
 	],
 	bootstrap: [ AppComponent ],
 } )

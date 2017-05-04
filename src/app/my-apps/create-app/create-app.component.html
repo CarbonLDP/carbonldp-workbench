@@ -1,0 +1,66 @@
+<form #createAppForm="ngForm"
+      [ngClass]="{ loading: submitting }"
+      class="ui large form segment createAppForm"
+      (submit)="onSubmit(createAppForm, $event)">
+	<div class="field" [ngClass]="{ error: (!name.valid) }">
+		<label>Name:</label>
+		<input placeholder="e.g. My First App"
+		       type="text"
+		       name="name"
+		       #name="cwValidation" cwValidation required
+		       [(ngModel)]="createAppFormModel.name"
+		       (input)="createAppFormModel.slug = getSanitizedSlug($event.target.value)">
+		<cw-error-label *ngIf="!name.valid">
+			<span *ngIf="name.control.hasError('required')">The name is required.</span>
+		</cw-error-label>
+	</div>
+	<div class="field" [ngClass]="{ error: (!slug.valid) }">
+		<label>Slug: <span cw-grayed-out>(Optional)</span></label>
+		<input class="slug"
+		       placeholder="e.g. my-first-app"
+		       type="text"
+		       name="slug"
+		       #slug="cwValidation" cwValidation cw-slug
+		       [ngModel]="createAppFormModel.slug"
+		       (ngModelChange)="createAppFormModel.slug = getSanitizedSlug($event)"
+		       (blur)="slugLostControl($event)">
+		<cw-error-label *ngIf="!slug.valid">
+			<span *ngIf="slug.control.hasError('invalidSlug')">Invalid slug. Please use only alphanumeric characters and/or dashes (-).</span>
+		</cw-error-label>
+	</div>
+	<div class="field" [ngClass]="{ error: (!description.valid) }">
+		<label>Description:</label>
+		<textarea rows="2"
+		          placeholder="Description"
+		          name="description"
+		          #description="cwValidation" cwValidation required
+		          [(ngModel)]="createAppFormModel.description"></textarea>
+		<cw-error-label *ngIf="!description.valid">
+			<span *ngIf="description.control.hasError('required')">The description is required.</span>
+		</cw-error-label>
+	</div>
+	<button class="ui basic button" type="submit"
+	        [ngClass]="{ 'disabled': !createAppForm.valid, 'green': createAppForm.valid  }"
+	        [disabled]="!createAppForm.valid"
+	        (click)="onSubmit(createAppForm, $event)">
+		Submit
+	</button>
+</form>
+
+
+<cw-message *ngIf="!!errorMessage"
+            [message]="errorMessage"
+            [type]="'error'"
+            [closable]="true"
+            (onClose)="clearMessages($event)"></cw-message>
+<div class="ui bottom attached warning icon message" *ngIf="!!displayWarningMessage">
+	<i class="warning sign icon"></i>
+	<i class="close icon" (click)="clearMessages($event)"></i>
+	<p>The app "<a [routerLink]="['../', persistedSlug]">{{persistedName}}</a>" was created, but no one, except the 'app-admin' role, will be able to access the application.
+		You can change this setting through the <a href="https://carbonldp.com/site/documentation/rest-api/getting-started" target="_blank">REST API</a> by granting access to the 'anonymous' role of
+		the platform.</p>
+</div>
+<div class="ui bottom attached success message" *ngIf="!!displaySuccessMessage">
+	<i class="close icon" (click)="clearMessages($event)"></i>
+	The app "<a [routerLink]="['../', persistedSlug]">{{persistedName}}</a>" was created successfully.
+</div>

@@ -12,13 +12,6 @@ import { ErrorView } from "./error-pages/error.view";
 import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
 import { DashboardView } from "./dashboard/dashboard.view";
 
-// TODO: When AOT works correctly, remove this import
-import { MyAppsModule } from "carbonldp-panel/my-apps/my-apps.module";
-// TODO: When AOT works correctly, remove this export. It's being exported because otherwise rollup will remove the imported module
-export function exportMyAppsModule() {
-	return MyAppsModule;
-}
-
 const appRoutes:Routes = [
 	{
 		path: "login",
@@ -58,7 +51,7 @@ const appRoutes:Routes = [
 			},
 			{
 				path: "my-apps",
-				loadChildren: "carbonldp-panel/my-apps/my-apps.module#MyAppsModule",
+				loadChildren: "./my-apps/my-apps.module#MyAppsModule",
 			},
 		]
 	},
