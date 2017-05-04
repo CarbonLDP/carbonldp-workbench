@@ -7,14 +7,14 @@
 	background-color: #90959A;
 	color: #ffffff;
 
-	cp-header.ui.navigation.inverted.menu {
+	cw-header.ui.navigation.inverted.menu {
 		background-color: #534052;
 		border-radius: 0;
 		padding: 0;
 		margin: 0;
 	}
 
-	cp-sidebar.ui.vertical.menu {
+	cw-sidebar.ui.vertical.menu {
 		flex: 0 0 auto;
 
 		margin: 0;
@@ -25,7 +25,7 @@
 		background-color: #534052;
 	}
 
-	cp-messages-area {
+	cw-messages-area {
 		z-index: 2;
 		max-height: 0;
 	}
