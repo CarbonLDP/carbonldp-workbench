@@ -19,6 +19,8 @@ import { DashboardView } from "./dashboard/dashboard.view";
 import { BackgroundVideoComponent } from "./error-pages/background-video.component";
 import { VersionsPresenterComponent } from "./versions-presenter/versions-presenter.component";
 
+import { RegisterComponent } from "./register/register.component";
+
 
 // Modules
 import { DirectivesModule } from "./directives/directives.module";
@@ -40,6 +42,9 @@ import { DirectivesModule } from "./directives/directives.module";
 		ErrorView,
 		NotFoundErrorView,
 		DashboardView,
+
+		RegisterComponent,
+
 		BackgroundVideoComponent,
 		VersionsPresenterComponent
 	],
