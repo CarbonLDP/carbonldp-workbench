@@ -4,11 +4,11 @@ import * as APIDescription from "carbonldp/APIDescription";
 import * as $ from "jquery";
 
 @Component( {
-	selector: "versions-exposer",
-	templateUrl: "./versions-exposer.component.html",
-	styleUrls: [ "./versions-exposer.component.scss" ],
+	selector: "cw-versions-presenter",
+	templateUrl: "./versions-presenter.component.html",
+	styleUrls: [ "./versions-presenter.component.scss" ],
 } )
-export class VersionsExposerComponent {
+export class VersionsPresenterComponent {
 	private element:ElementRef;
 	private $element:JQuery;
 	private carbon:Carbon;

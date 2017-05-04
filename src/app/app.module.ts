@@ -17,7 +17,7 @@ import { ErrorView } from "./error-pages/error.view";
 import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
 import { DashboardView } from "./dashboard/dashboard.view";
 import { BackgroundVideoComponent } from "./error-pages/background-video.component";
-import { VersionsExposerComponent } from "./versions-exposer/versions-exposer.component";
+import { VersionsPresenterComponent } from "./versions-presenter/versions-presenter.component";
 
 
 // Modules
@@ -41,7 +41,7 @@ import { DirectivesModule } from "./directives/directives.module";
 		NotFoundErrorView,
 		DashboardView,
 		BackgroundVideoComponent,
-		VersionsExposerComponent
+		VersionsPresenterComponent
 	],
 	providers: [
 		{
