@@ -1,0 +1,30 @@
+<div class="ui message transition {{type}}" #messageElement>
+	<i class="close icon" *ngIf="closable" (click)="close($event, messageElement)"></i>
+	<div class="header">
+		{{title}}
+	</div>
+	<p>
+		<span *ngIf="!!content">{{content}}<br></span>
+		<span *ngIf="!!statusCode">Status: {{statusCode}}</span>
+		<span *ngIf="!!statusCode && !!statusMessage"> - </span>
+		<span *ngIf="!!statusMessage">{{statusMessage}}<br></span>
+		<span *ngIf="!!endpoint">URI: {{endpoint}}</span>
+	</p>
+	<ol class="ui list" *ngIf="!!errors">
+		<li value="*" *ngFor="let error of errors; let i = index;">
+			<span *ngIf="!!error['https://carbonldp.com/ns/v1/platform#carbonCode']">Carbon code: {{error["https://carbonldp.com/ns/v1/platform#carbonCode"][0]["@value"]}} -</span>
+			<span *ngIf="!!error['https://carbonldp.com/ns/v1/platform#message']">{{error["https://carbonldp.com/ns/v1/platform#message"][0]["@value"]}}</span>
+		</li>
+	</ol>
+	<div class="ui stack accordion" [hidden]="!showStack || !stack">
+		<div class="title">
+			<i class="dropdown icon"></i>
+			Stack
+		</div>
+		<div class="content">
+			<div class="ui stack segment">
+				<code [innerHTML]="stack"></code>
+			</div>
+		</div>
+	</div>
+</div>

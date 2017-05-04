@@ -21,12 +21,16 @@ import { VersionsPresenterComponent } from "./versions-presenter/versions-presen
 
 import { RegisterComponent } from "./register/register.component";
 import { LoginComponent } from "./login/login.component";
+import { MessageComponent } from "./messages-area/message.component";
+import { MessagesAreaComponent } from "./messages-area/messages-area.component";
+import { ErrorLabelComponent } from "./messages-area/error/error-label.component";
 
 
 // Modules
 import { DirectivesModule } from "./directives/directives.module";
 
 // Services
+import { MessagesAreaService } from "./messages-area/messages-area.service";
 
 
 @NgModule( {
@@ -46,6 +50,9 @@ import { DirectivesModule } from "./directives/directives.module";
 
 		RegisterComponent,
 		LoginComponent,
+		MessageComponent,
+		MessagesAreaComponent,
+		ErrorLabelComponent,
 
 		BackgroundVideoComponent,
 		VersionsPresenterComponent
@@ -59,6 +66,8 @@ import { DirectivesModule } from "./directives/directives.module";
 		CARBON_SERVICES_PROVIDERS,
 		appRoutingProviders,
 		Title,
+
+		MessagesAreaService,
 	],
 	bootstrap: [ AppComponent ],
 } )
