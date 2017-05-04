@@ -20,6 +20,7 @@ import { BackgroundVideoComponent } from "./error-pages/background-video.compone
 import { VersionsPresenterComponent } from "./versions-presenter/versions-presenter.component";
 
 import { RegisterComponent } from "./register/register.component";
+import { LoginComponent } from "./login/login.component";
 
 
 // Modules
@@ -44,6 +45,7 @@ import { DirectivesModule } from "./directives/directives.module";
 		DashboardView,
 
 		RegisterComponent,
+		LoginComponent,
 
 		BackgroundVideoComponent,
 		VersionsPresenterComponent
