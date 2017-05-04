@@ -4,8 +4,8 @@ import { BrowserModule, Title } from "@angular/platform-browser";
 
 // Providers
 import { BASE_URL } from "./config";
-import { CARBON_PROVIDERS } from "angular2-carbonldp/boot";
-import { CARBON_SERVICES_PROVIDERS } from "angular2-carbonldp/services";
+import { CARBON_PROVIDERS } from "angular-carbonldp/boot";
+import { CARBON_SERVICES_PROVIDERS } from "angular-carbonldp/services";
 import { routing, appRoutingProviders } from "./app.routing";
 
 // Components

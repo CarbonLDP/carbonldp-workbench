@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { Class as Carbon } from "carbonldp/Carbon";
-import { activeContext } from "angular2-carbonldp/boot";
+import { activeContext } from "angular-carbonldp/boot";
 
 
 @Component( {

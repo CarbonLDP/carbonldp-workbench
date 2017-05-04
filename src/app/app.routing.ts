@@ -2,8 +2,8 @@ import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
 
 // Guards
-import { AuthenticatedGuard, NotAuthenticatedGuard } from "angular2-carbonldp/guards";
-import { ActiveContextResolver } from "angular2-carbonldp/resolvers";
+import { AuthenticatedGuard, NotAuthenticatedGuard } from "angular-carbonldp/guards";
+import { ActiveContextResolver } from "angular-carbonldp/resolvers";
 
 // Components
 import { LoginView } from "./login/login.view";
