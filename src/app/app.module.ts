@@ -24,6 +24,8 @@ import { LoginComponent } from "./login/login.component";
 import { MessageComponent } from "./messages-area/message.component";
 import { MessagesAreaComponent } from "./messages-area/messages-area.component";
 import { ErrorLabelComponent } from "./messages-area/error/error-label.component";
+import { HeaderItemComponent } from "./header/header-item.component";
+import { HeaderComponent } from "./header/header.component";
 
 
 // Modules
@@ -32,6 +34,7 @@ import { DirectivesModule } from "./directives/directives.module";
 // Services
 import { MessagesAreaService } from "./messages-area/messages-area.service";
 import { RouterService } from "./router.service";
+import { HeaderService } from "./header/header.service";
 
 
 @NgModule( {
@@ -54,6 +57,8 @@ import { RouterService } from "./router.service";
 		MessageComponent,
 		MessagesAreaComponent,
 		ErrorLabelComponent,
+		HeaderItemComponent,
+		HeaderComponent,
 
 		BackgroundVideoComponent,
 		VersionsPresenterComponent
@@ -68,7 +73,7 @@ import { RouterService } from "./router.service";
 		appRoutingProviders,
 		Title,
 
-		RouterService, MessagesAreaService,
+		RouterService, MessagesAreaService, HeaderService,
 	],
 	bootstrap: [ AppComponent ],
 } )
