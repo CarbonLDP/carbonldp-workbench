@@ -30,6 +30,7 @@ import { HeaderComponent } from "./header/header.component";
 
 // Modules
 import { DirectivesModule } from "./directives/directives.module";
+import { SemanticModule } from "./semantic/semantic.module";
 
 // Services
 import { MessagesAreaService } from "./messages-area/messages-area.service";
@@ -43,6 +44,7 @@ import { HeaderService } from "./header/header.service";
 		FormsModule,
 		routing,
 		DirectivesModule,
+		SemanticModule,
 	],
 	declarations: [
 		AppComponent,
