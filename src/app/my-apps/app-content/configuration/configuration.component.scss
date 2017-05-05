@@ -1,0 +1,17 @@
+:host {
+
+	display: block;
+
+	> .segment {
+		color: #000000;
+	}
+
+	> .config.options.menu {
+		.item {
+			color: #ffffff;
+		}
+		.item.active {
+			color: #000000;
+		}
+	}
+}

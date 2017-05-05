@@ -1,0 +1,33 @@
+<div class="ui grid">
+	<div class="row">
+		<div class="sixteen wide mobile eight wide computer column">
+			<h3 class="ui header">
+				<i class="icons">
+					<i class=" wait icon"></i>
+					<i class="corner blue sign out icon"></i>
+				</i>
+				Schedule a Backup:
+			</h3>
+			<div class="ui divider"></div>
+			<cw-backup-exporter [appContext]="appContext" [backupJob]="backupJob" (onExportSuccess)="invokeRefreshBackupsList()"></cw-backup-exporter>
+		</div>
+		<div class="sixteen wide mobile eight wide computer column">
+			<h3 class="ui header">
+				<i class="unordered list icon"></i>
+				List of Backups:
+			</h3>
+			<div class="ui divider"></div>
+			<cw-backups-list [appContext]="appContext" [backupJob]="backupJob"></cw-backups-list>
+		</div>
+	</div>
+	<div class="row">
+		<div class="column">
+			<h3 class="ui header">
+				<i class="upload icon"></i>
+				Import a Backup:
+			</h3>
+			<div class="ui divider"></div>
+			<cw-backup-importer [appContext]="appContext"></cw-backup-importer>
+		</div>
+	</div>
+</div>

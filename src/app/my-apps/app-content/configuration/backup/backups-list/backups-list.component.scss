@@ -1,0 +1,19 @@
+:host {
+	display: block;
+	> div {
+		min-height: 240px;
+	}
+	div.divided.list {
+		min-height: 200px;
+		max-height: 200px;
+		overflow-y: scroll;
+
+		.item {
+			padding-right: .7em;
+		}
+	}
+
+	.delete.backup.modal .emphasize {
+		font-weight: bold;
+	}
+}
