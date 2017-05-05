@@ -40,10 +40,10 @@ export const MyAppsRoutes:Routes = [
 					displayName: "No App"
 				}
 			},
-			// {
-			// 	path: ":slug",
-			// 	loadChildren: "./app-content/app-content.module#AppContentModule",
-			// }
+			{
+				path: ":slug",
+				loadChildren: "./app-content/app-content.module#AppContentModule",
+			}
 		]
 	},
 ];
