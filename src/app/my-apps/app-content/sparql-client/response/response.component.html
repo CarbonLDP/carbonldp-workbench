@@ -1,0 +1,62 @@
+<div class="ui sixteen wide column accordion">
+	<div class="ui top attached menu title" [ngClass]="[ response.result ]">
+		<div class="header item">
+			<span *ngIf="response.query.operation === 'ASK'"> <i [ngClass]="{ checkmark: response.resultset.boolean, remove: !response.resultset.boolean }" class="icon"></i> </span>
+			<span>{{response.query.operation}}</span>
+			<span> <i>({{response.duration}} ms)</i></span>
+		</div>
+		<div class="right menu">
+			<div class="ui small basic icon buttons" style="border:none;">
+				<button (click)="toggleAccordion()" class="ui button" title="Collapse Response">
+					<i class="caret icon" [ngClass]="{ down: accordionOpen, right: ! accordionOpen }"></i>
+				</button>
+				<button (click)="onConfigureResponse($event)" class="ui button btn-edit" title="Edit Query">
+					<i class="write icon"></i>
+				</button>
+				<button (click)="onReExecuteResponse($event)" class="ui button btn-refresh" title="Re-Execute Query">
+					<i class="refresh icon"></i>
+				</button>
+				<button (click)="onRemoveResponse($event)" class="ui button btn-close" title="Remove Response">
+					<i class="remove icon"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+	<div class="ui bottom attached segment content {{response.result}}" [ngClass]="{loading:response.isReExecuting}">
+		<div class="ui pointing secondary tabular menu">
+			<a class="item active" data-tab="first">Results</a>
+			<a *ngIf="response.result == responseType.success" class="item" data-tab="second">Raw Data</a>
+			<a class="item" data-tab="third">SPARQL Request</a>
+		</div>
+		<div class="tabs">
+			<div *ngIf="response.result == responseType.success" class="ui active tab" data-tab="first">
+				<cw-code-mirror *ngIf="!!outputformat && outputformat != sparqlFormats.table"
+				                [mode]="outputformat"
+				                [readOnly]="'nocursor'"
+				                [(value)]="response.data"></cw-code-mirror>
+				<cw-resultset-table *ngIf="outputformat === sparqlFormats.table"
+				                    [(resultset)]="response.resultset"
+				                    [query]="response.query"
+				                    [prefixes]="prefixes"></cw-resultset-table>
+			</div>
+			<div *ngIf="response.result == responseType.error" class="ui active tab" data-tab="first">
+				<div class="ui error message transition">
+					<div class="header">
+						{{response.resultset?.title}}
+					</div>
+					<p>
+						<span *ngIf="response.resultset?.content" [innerHTML]="response.resultset?.content"><br></span>
+						<span *ngIf="response.resultset?.statusCode">Status: {{response.resultset?.statusCode}} - {{response.resultset?.statusMessage}}<br></span>
+						<span *ngIf="response.resultset?.endpoint">URI: {{response.resultset?.endpoint}}</span>
+					</p>
+				</div>
+			</div>
+			<pre *ngIf="response.result == responseType.success" class="ui tab secondary segment" data-tab="second">{{response.data}}</pre>
+			<div class="ui tab" data-tab="third">
+				<cw-code-mirror [mode]="codeMirrorMode.SPARQL"
+				                [readOnly]="'nocursor'"
+				                [(value)]="response.query.content"></cw-code-mirror>
+			</div>
+		</div>
+	</div>
+</div>

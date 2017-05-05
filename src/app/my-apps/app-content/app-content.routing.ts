@@ -5,7 +5,7 @@ import { AppContentResolver } from "./app-content.resolver";
 
 import { AppContentView } from "./app-content.view";
 import { DashboardView } from "./dashboard/dashboard.view";
-// import { SPARQLClientView } from "./sparql-client/sparql-client.view";
+import { SPARQLClientView } from "./sparql-client/sparql-client.view";
 import { EditAppView } from "./edit-app/edit-app.view";
 // import { ExplorerView } from "./explorer/explorer.view";
 import { ConfigurationView } from "./configuration/configuration.view";
@@ -35,14 +35,14 @@ export const AppContentRoutes:Routes = [
 					displayName: "Edit",
 				},
 			},
-			// {
-			// 	path: "sparql-client",
-			// 	component: SPARQLClientView,
-			// 	data: {
-			// 		alias: "sparql-client",
-			// 		displayName: "SPARQL Client",
-			// 	},
-			// },
+			{
+				path: "sparql-client",
+				component: SPARQLClientView,
+				data: {
+					alias: "sparql-client",
+					displayName: "SPARQL Client",
+				},
+			},
 			// {
 			// 	path: "explore",
 			// 	component: ExplorerView,

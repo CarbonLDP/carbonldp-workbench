@@ -1,0 +1,29 @@
+:host {
+	display: block;
+	width: 100%;
+	.accordion {
+		padding: 0 !important;
+
+		> .title,
+		> .content {
+			border: 1px solid !important;
+		}
+
+		> .title {
+			border-top-width: 3px !important;
+		}
+
+		> .success {
+			border-color: green !important;
+		}
+
+		> .error {
+			border-color: red !important;
+		}
+	}
+	.tabs {
+		[data-tab="second"] {
+			max-height: 400px;
+		}
+	}
+}

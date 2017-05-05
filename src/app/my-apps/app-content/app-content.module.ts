@@ -11,7 +11,7 @@ import { AppContentView } from "./app-content.view";
 import { DashboardView } from "./dashboard/dashboard.view";
 import { EditAppComponent } from "./edit-app/edit-app.component";
 import { EditAppView } from "./edit-app/edit-app.view";
-// import { SPARQLClientView } from "./sparql-client/sparql-client.view";
+import { SPARQLClientView } from "./sparql-client/sparql-client.view";
 // import { ExplorerView } from "./explorer/explorer.view";
 // Components -> Configuration
 import { BackupExporterComponent } from "./configuration/backup/backup-exporter/backup-exporter.component";
@@ -26,7 +26,7 @@ import { BackupFileValidator, AtLeastOneValidValidator } from "./configuration/b
 
 // Modules
 import { SharedModule } from "app/shared/shared.module";
-// import { SPARQLClientModule } from "./../../sparql-client/sparql-client.module";
+import { SPARQLClientModule } from "./sparql-client/sparql-client.module";
 import { DocumentExplorerModule } from "./document-explorer/document-explorer.module";
 
 // Services
@@ -41,14 +41,14 @@ import { BackupsService } from "./configuration/backup/backups.service";
 		FormsModule,
 		routing,
 		SharedModule,
-		// SPARQLClientModule,
+		SPARQLClientModule,
 		DocumentExplorerModule,
 		// DirectivesModule,
 	],
 	declarations: [
 		AppContentView,
 		DashboardView,
-		// SPARQLClientView,
+		SPARQLClientView,
 		EditAppView,
 		EditAppComponent,
 		// ExplorerView,

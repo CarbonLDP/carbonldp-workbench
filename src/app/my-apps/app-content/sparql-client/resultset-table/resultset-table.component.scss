@@ -1,0 +1,17 @@
+:host {
+	display: block;
+	.warning {
+		background-color: #fafad2;
+	}
+
+	.success {
+		background-color: #90ee90;
+	}
+
+	> .table-container {
+		overflow-x: scroll;
+		max-height: 600px;
+		border: 1px solid #D3D3D3;
+		border-radius: .4em;
+	}
+}
