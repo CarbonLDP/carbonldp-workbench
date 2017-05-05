@@ -6,7 +6,7 @@ import { CommonModule } from "@angular/common";
 import { MessageComponent } from "./messages-area/message.component";
 import { MessagesAreaComponent } from "./messages-area/messages-area.component";
 import { ErrorLabelComponent } from "./messages-area/error/error-label.component";
-
+import * as CodeMirrorComponent from "./code-mirror/code-mirror.component";
 
 // Modules
 import { DirectivesModule } from "./directives/directives.module";
@@ -22,6 +22,7 @@ import { MessagesAreaService } from "./messages-area/messages-area.service";
 	declarations: [
 		MessageComponent,
 		MessagesAreaComponent,
+		CodeMirrorComponent.Class,
 		ErrorLabelComponent
 	],
 	providers: [],
@@ -29,6 +30,7 @@ import { MessagesAreaService } from "./messages-area/messages-area.service";
 		MessageComponent,
 		MessagesAreaComponent,
 		ErrorLabelComponent,
+		CodeMirrorComponent.Class,
 
 		DirectivesModule,
 		SemanticModule
