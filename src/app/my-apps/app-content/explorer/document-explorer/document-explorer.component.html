@@ -1,0 +1,45 @@
+<div class="ui divided grid segment" [ngClass]="{loading:loadingDocument || savingDocument}">
+
+	<div class="stretched row">
+		<div class="error messages" *ngIf="messages.length > 0">
+			<ng-template ngFor let-message="$implicit" [ngForOf]="messages" let-i="index">
+				<cw-message [message]="message" [type]="'error'" [closable]="true"></cw-message>
+			</ng-template>
+		</div>
+		<cw-document-treeview class="five wide column treeview-container"
+		                      [documentContext]="documentContext"
+		                      [refreshNode]="onRefreshNode"
+		                      [openNode]="onOpenNode"
+
+		                      (onSelectDocument)="changeSelection($event)"
+		                      (onShowCreateChildForm)="documentCreator.show()"
+		                      (onShowDeleteChildForm)="documentDeleter.show()"
+		                      (onShowCreateAccessPointForm)="accessPointCreator.show()"
+		                      (onError)="handleExternalError($event)"
+		                      (onLoadingDocument)="onLoadingDocument($event)"
+		                      (onResolveUri)="resolveDocument($event)"></cw-document-treeview>
+		<cw-document-viewer class="eleven wide column"
+		                    [document]="inspectingDocument"
+		                    [documentContext]="documentContext"
+		                    [displaySuccessMessage]="onDisplaySuccessMessage"
+
+		                    (onError)="handleExternalError($event)"
+		                    (onRefreshNode)="refreshNode($event)"
+		                    (onOpenNode)="openNode($event)"
+		                    (onSavingDocument)="showLoading($event)"
+		                    (onLoadingDocument)="onLoadingDocument($event)"
+		                    (onRefreshDocument)="refreshDocument($event)"></cw-document-viewer>
+		<cw-document-creator #documentCreator
+		                     [context]="documentContext"
+		                     [parentURI]="selectedDocumentURI"
+		                     (onSuccess)="onSuccessAccessPoint($event)"></cw-document-creator>
+		<cw-access-point-creator #accessPointCreator
+		                         [context]="documentContext"
+		                         [parentURI]="selectedDocumentURI"
+		                         (onSuccess)="onSuccessCreateDocument($event)"></cw-access-point-creator>
+		<cw-document-deleter #documentDeleter
+		                     [context]="documentContext"
+		                     [documentURI]="selectedDocumentURI"
+		                     (onSuccess)="onSuccessDeleteDocument($event)"></cw-document-deleter>
+	</div>
+</div>

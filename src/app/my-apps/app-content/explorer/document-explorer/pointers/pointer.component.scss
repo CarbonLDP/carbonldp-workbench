@@ -1,0 +1,39 @@
+:host {
+
+	.dropdown.fragments {
+		.item {
+			&[data-value='bNodes-category'], &[data-value='named-fragments-category'] {
+				text-align: center;
+			}
+		}
+		.text .description {
+			display: none;
+		}
+		.item {
+			.title {
+				line-height: 1em;
+				font-size: 1.2em;
+				display: block;
+			}
+			.description {
+				color: gray;
+				font-size: .8em;
+			}
+		}
+	}
+
+	.hidden {
+		display: none;
+	}
+
+	.updown.buttons {
+		max-height: 28px;
+		margin-top: 1px;
+		float: right;
+		.button {
+			max-height: 13px;
+			height: 13px;
+			padding: 1px;
+		}
+	}
+}

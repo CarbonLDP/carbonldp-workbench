@@ -7,7 +7,7 @@ import { AppContentView } from "./app-content.view";
 import { DashboardView } from "./dashboard/dashboard.view";
 import { SPARQLClientView } from "./sparql-client/sparql-client.view";
 import { EditAppView } from "./edit-app/edit-app.view";
-// import { ExplorerView } from "./explorer/explorer.view";
+import { ExplorerView } from "./explorer/explorer.view";
 import { ConfigurationView } from "./configuration/configuration.view";
 
 export const AppContentRoutes:Routes = [
@@ -43,14 +43,14 @@ export const AppContentRoutes:Routes = [
 					displayName: "SPARQL Client",
 				},
 			},
-			// {
-			// 	path: "explore",
-			// 	component: ExplorerView,
-			// 	data: {
-			// 		alias: "explore",
-			// 		displayName: "Explorer",
-			// 	},
-			// },
+			{
+				path: "explore",
+				component: ExplorerView,
+				data: {
+					alias: "explore",
+					displayName: "Explorer",
+				},
+			},
 			{
 				path: "configure",
 				component: ConfigurationView,

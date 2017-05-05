@@ -12,7 +12,7 @@ import { DashboardView } from "./dashboard/dashboard.view";
 import { EditAppComponent } from "./edit-app/edit-app.component";
 import { EditAppView } from "./edit-app/edit-app.view";
 import { SPARQLClientView } from "./sparql-client/sparql-client.view";
-// import { ExplorerView } from "./explorer/explorer.view";
+import { ExplorerView } from "./explorer/explorer.view";
 // Components -> Configuration
 import { BackupExporterComponent } from "./configuration/backup/backup-exporter/backup-exporter.component";
 import { BackupImporterComponent } from "./configuration/backup/backup-importer/backup-importer.component";
@@ -27,10 +27,10 @@ import { BackupFileValidator, AtLeastOneValidValidator } from "./configuration/b
 // Modules
 import { SharedModule } from "app/shared/shared.module";
 import { SPARQLClientModule } from "./sparql-client/sparql-client.module";
-import { DocumentExplorerModule } from "./document-explorer/document-explorer.module";
+import { DocumentExplorerModule } from "./explorer/document-explorer/document-explorer.module";
 
 // Services
-import { DocumentsResolverService } from "./document-explorer/documents-resolver.service";
+import { DocumentsResolverService } from "./explorer/document-explorer/documents-resolver.service";
 import { JobsService } from "./configuration/job/jobs.service";
 import { BackupsService } from "./configuration/backup/backups.service";
 
@@ -43,7 +43,6 @@ import { BackupsService } from "./configuration/backup/backups.service";
 		SharedModule,
 		SPARQLClientModule,
 		DocumentExplorerModule,
-		// DirectivesModule,
 	],
 	declarations: [
 		AppContentView,
@@ -51,7 +50,7 @@ import { BackupsService } from "./configuration/backup/backups.service";
 		SPARQLClientView,
 		EditAppView,
 		EditAppComponent,
-		// ExplorerView,
+		ExplorerView,
 		BackupExporterComponent,
 		BackupImporterComponent,
 		BackupsListComponent,

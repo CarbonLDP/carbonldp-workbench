@@ -1,0 +1,49 @@
+:host {
+	display: block;
+}
+
+.segment[data-tab="all"] {
+	table {
+		tr.added {
+			background-color: #D9EEFF;
+		}
+		tr.modified {
+			background-color: #FFFBB4;
+		}
+		tr, td {
+			cursor: pointer;
+		}
+	}
+}
+
+.confirm-deletion {
+	.description {
+		color: #000000;
+	}
+}
+
+.tabular.blank-nodes.menu {
+
+	.circular.icon.mini.button {
+		padding: 6px;
+		margin-left: 10px;
+	}
+}
+
+.ui.tabular.menu {
+	.item {
+		border: 1px solid #d3d3d3;
+		border-top-left-radius: .5em;
+		border-top-right-radius: .5em;
+		border-bottom: none;
+	}
+
+	.item.added,
+	.item.added.active {
+		background-color: #D9EEFF;
+	}
+	.item.modified,
+	.item.modified.active {
+		background-color: #FFFBB4;
+	}
+}
