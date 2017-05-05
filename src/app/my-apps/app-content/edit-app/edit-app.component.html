@@ -1,0 +1,94 @@
+<form #editAppForm="ngForm"
+      [ngClass]="{ loading: submitting, error: (!editAppForm.pristine && !editAppForm.valid) }"
+      class="ui large form segment editAppForm"
+      (submit)="onSubmit(editAppForm, $event)">
+	<div class="field" [ngClass]="{ error: (!name.pristine && !name.valid) }">
+		<label>Name:</label>
+		<input placeholder="e.g. My First App" type="text" name="name" #name="cwValidation" cwValidation [(ngModel)]="editAppFormModel.name" required>
+		<cw-error-label *ngIf="!name.valid">
+			<span *ngIf="!name.pristine && name.control.hasError('required')">The name is required.</span>
+		</cw-error-label>
+	</div>
+
+	<div class="field" [ngClass]="{ error: (!description.pristine && !description.valid) }">
+		<label>Description:</label>
+		<textarea rows="2" placeholder="Description" name="description" #description="cwValidation" cwValidation [(ngModel)]="editAppFormModel.description" required></textarea>
+		<cw-error-label *ngIf="!description.valid">
+			<span *ngIf="!description.pristine && description.control.hasError('required')">The description is required.</span>
+		</cw-error-label>
+	</div>
+	<div class="field">
+		<label>Allowed domains:</label>
+		<div class="ui segment">
+			<div class="field">
+				<div class="ui toggle checkbox">
+					<input type="checkbox"
+					       name="allowAllOrigins"
+					       [(ngModel)]="editAppFormModel.allDomains"
+					       #allDomains="ngModel">
+					<label>Allow all origins.</label>
+				</div>
+			</div>
+			<div class="ui horizontal divider">
+				Or
+			</div>
+
+			<div class="field" [ngClass]="{disabled: allDomains.value }">
+				<div class="ui action input">
+					<input type="text"
+					       [disabled]="allDomains.value"
+					       name="domain"
+					       #domainStr="cwValidation" cwValidation
+					       [(ngModel)]="editAppFormModel.domain"
+					       cw-domain
+					       placeholder="Enter an address e.g.: http://192.168.1.1 or http://www.domain.com">
+					<button class="ui button" type="button"
+					        (click)="addDomain(domainStr.ngModel)"
+					        [disabled]="(!domainStr || domainStr.control.hasError('invalidURLAddress'))">
+						<i class="plus icon"></i>
+					</button>
+				</div>
+				<cw-error-label *ngIf="!allDomains.value && !domainStr.valid">
+					<span *ngIf="domainStr.control.hasError('invalidURLAddress')">Enter a valid address. E.g: http://192.168.1.1 or http://www.domain.com</span>
+				</cw-error-label>
+			</div>
+			<div class="field ui segment" [ngClass]="{disabled: allDomains.value}">
+				<div class="ui middle aligned divided list allowedDomains">
+					<div class="item" *ngFor="let opt of allowedDomains; let i = index;">
+						<div class="right floated content">
+							<button class="ui mini circular icon basic black button"
+							        (click)="removeDomain(opt);">
+								<i class="remove icon"></i>
+							</button>
+						</div>
+						<div class="bottom aligned content">
+							{{opt}}
+						</div>
+					</div>
+				</div>
+				<div *ngIf="allowedDomains.length===0">
+					<p class="noAllowedOrigins">No allowed origins to show.</p>
+				</div>
+			</div>
+			<div class="ui message" *ngIf="!allDomains.value && allowedDomains.length===0">
+				<i class="warning icon"></i>
+				You have not entered an address, please add at least one or allow all origins.
+			</div>
+		</div>
+	</div>
+	<button class="ui basic button" type="submit"
+	        [ngClass]="{ 'disabled': !editAppForm.valid, 'green': editAppForm.valid  }"
+	        (click)="onSubmit(editAppForm, $event)"
+	        [disabled]="(!editAppForm.valid || (editAppForm.valid && (!allDomains.value && allowedDomains.length===0)))">
+		Submit
+	</button>
+</form>
+<cw-message *ngIf="!!errorMessage"
+            [message]="errorMessage"
+            [type]="'error'"
+            [closable]="true"
+            (onClose)="clearMessages($event)"></cw-message>
+<div class="ui bottom attached success message" *ngIf="!!displaySuccessMessage">
+	<i class="close icon" (click)="clearMessages($event)"></i>
+	The app "{{app.name}}" was edited successfully.
+</div>
