@@ -6,9 +6,9 @@ import * as SPARQL from "carbonldp/SPARQL";
 import * as HTTP from "carbonldp/HTTP";
 
 import { SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from "./response/response.component";
-import * as CodeMirrorComponent from "carbonldp-panel/code-mirror/code-mirror.component";
-import { Message } from "carbonldp-panel/messages-area/message.component";
-import { ErrorMessageGenerator } from "carbonldp-panel/messages-area/error/error-message-generator";
+import * as CodeMirrorComponent from "app/shared/code-mirror/code-mirror.component";
+import { Message } from "app/shared/messages-area/message.component";
+import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
