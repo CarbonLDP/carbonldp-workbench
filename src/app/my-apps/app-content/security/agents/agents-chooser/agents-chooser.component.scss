@@ -1,0 +1,27 @@
+:host {
+	display: block;
+	width: 100%;
+
+	> div.basic.segment.agents {
+		padding: 0;
+	}
+	> div.basic.segment.agents.loading {
+		border: 1px solid #d3d3d3;
+	}
+	table.agents {
+		tr.agent {
+			line-height: 1.5em;
+			cursor: pointer;
+		}
+	}
+	table.agents.borderless {
+		border: none;
+	}
+	cw-paginator {
+		display: inline;
+	}
+	select.ui.dropdown {
+		width: auto;
+		display: inline;
+	}
+}

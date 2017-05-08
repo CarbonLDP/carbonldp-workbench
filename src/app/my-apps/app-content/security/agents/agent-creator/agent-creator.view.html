@@ -1,0 +1,6 @@
+<cw-agent-details [agent]="agent" *ngIf="canDisplay"
+                  [mode]="Modes.CREATE"
+                  [appContext]="app.context"
+                  (onSuccess)="goToAgents()"
+                  (onClose)="goToAgents()">
+</cw-agent-details>

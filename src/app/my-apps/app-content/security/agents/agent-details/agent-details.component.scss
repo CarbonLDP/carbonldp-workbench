@@ -1,0 +1,26 @@
+:host {
+	display: block;
+
+	.hidden {
+		display: none;
+	}
+
+	table.roles {
+		margin-top: 0;
+		tr.role {
+			line-height: 1.5em;
+		}
+	}
+
+	.title.segment {
+		.ui.header {
+			margin-top: 0;
+		}
+	}
+
+	.ui.roles.input {
+		max-height: 200px;
+		overflow-y: scroll;
+		border: 1px solid lightgray;
+	}
+}

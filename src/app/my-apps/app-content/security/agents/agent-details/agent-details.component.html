@@ -1,0 +1,186 @@
+<form class="ui error form" #agentForm="ngForm" (submit)="onSubmit(agentForm.value, $event)">
+	<div class="ui top attached title segment">
+		<button class="ui icon right floated circular basic mini button" title="Close" type="button"
+		        *ngIf="canClose"
+		        (click)="close()">
+			<i class="icon remove"></i>
+		</button>
+		<h3 class="ui header">
+			{{agent?.name}}
+			<span class="sub header">{{agent?.id}}</span>
+		</h3>
+	</div>
+	<div class="ui attached segment" *ngIf="mode !== Modes.CREATE">
+		<button *ngIf="mode === Modes.READ"
+		        class="ui mini basic icon button"
+		        (click)="changeMode(Modes.EDIT)">
+			<i class="edit icon"></i>
+			Edit
+		</button>
+		<div class="ui basic label" *ngIf="mode === Modes.EDIT">
+			Editing...
+		</div>
+	</div>
+	<div class="ui attached segment">
+		<div class="ui two column divided grid">
+			<div class="stretched row">
+				<div class="column">
+					<div class="field"
+					     [ngClass]="{error: !name.valid}">
+						<label>Name:</label>
+						<div class="ui fluid input">
+							<input type="text" name="name"
+							       placeholder="E.g: Agent Name"
+							       #name="cwValidation" cwValidation required
+							       [(ngModel)]="agentFormModel.name"
+							       [disabled]="mode === Modes.READ"
+							       (input)="agentFormModel.slug = (mode === Modes.CREATE)? getSanitizedSlug($event.srcElement.value) : agentFormModel.slug"
+							       (blur)="agentFormModel.slug = getSanitizedSlug($event.srcElement.value)">
+						</div>
+						<cw-error-label *ngIf="!name.valid">
+							<span *ngIf="name.control.hasError('required')">Please enter a name</span>
+						</cw-error-label>
+					</div>
+					<div class="field"
+					     [ngClass]="{error: !slug.valid}"
+					     *ngIf="mode === Modes.CREATE">
+						<label>Slug: <span cw-grayed-out>(Optional)</span></label>
+						<div class="ui fluid input">
+							<input type="text" name="slug"
+							       placeholder="E.g: my-agent-slug/"
+							       #slug="cwValidation" cwValidation cw-slug
+							       [ngModel]="agentFormModel.slug"
+							       [disabled]="mode === Modes.READ"
+							       (ngModelChange)="agentFormModel.slug = getSanitizedSlug($event)"
+							       (blur)="slugLostFocus($event)">
+						</div>
+						<cw-error-label *ngIf="!slug.valid">
+							<span *ngIf="slug.control.hasError('invalidSlug')">Please, provide a valid slug/id for the agent. (Only numbers and letters with dashes)</span>
+						</cw-error-label>
+					</div>
+					<div class="field"
+					     [ngClass]="{error: !email.valid}">
+						<label>Email:</label>
+						<div class="ui left icon fluid input">
+							<i class="mail icon"></i>
+							<input type="text" name="email"
+							       placeholder="E.g: agent@example.com"
+							       #email="cwValidation" cwValidation required cw-email
+							       [(ngModel)]="agentFormModel.email"
+							       [disabled]="mode === Modes.READ">
+						</div>
+						<cw-error-label *ngIf="!email.valid">
+							<span *ngIf="email.control.hasError('required')">Please enter an email</span>
+							<span *ngIf="email.control.hasError('invalidEmailAddress')">Please enter a valid email address</span>
+						</cw-error-label>
+					</div>
+					<div class="ui divider" *ngIf="mode !== Modes.READ"></div>
+					<div class="field"
+					     [ngClass]="{ error: !password.valid }">
+						<label>Password:</label>
+						<div class="ui left icon input">
+							<i class="lock icon"></i>
+							<input type="password" name="password"
+							       class="field password"
+							       placeholder="Password"
+							       #password="cwValidation" cwValidation
+							       cw-required-if [condition]="mode===Modes.CREATE"
+							       [(ngModel)]="agentFormModel.password"
+							       [disabled]="mode === Modes.READ">
+						</div>
+						<cw-error-label *ngIf="!password.valid">
+							<span *ngIf="password.control.hasError('requiredIf')">Please enter a password</span>
+						</cw-error-label>
+					</div>
+					<div class="field"
+					     [ngClass]="{ error: !repeatPassword.valid }">
+						<label>Password Confirmation:</label>
+						<div class="ui left icon input">
+							<i class="lock icon"></i>
+							<input type="password" name="repeatPassword"
+							       class="field repeatPassword"
+							       placeholder="Repeat password"
+							       #repeatPassword="cwValidation" cwValidation
+							       cw-required-if [condition]="mode===Modes.CREATE"
+							       cw-match [matchTo]="agentFormModel.password"
+							       [(ngModel)]="agentFormModel.repeatPassword"
+							       [control]="repeatPasswordControl"
+							       #repeatPasswordControl="ngModel"
+							       [disabled]="mode === Modes.READ">
+						</div>
+						<cw-error-label *ngIf="!repeatPassword.valid">
+							<span *ngIf="repeatPassword.control.hasError('requiredIf')">Please enter the password confirmation</span>
+							<span *ngIf="repeatPassword.control.hasError('matchError')">The password confirmation doesn't match the password</span>
+						</cw-error-label>
+					</div>
+				</div>
+				<div class="column">
+					<div class="field">
+						<label>Roles: <span cw-grayed-out>(Optional)</span></label>
+						<div class="ui fluid roles input">
+							<select multiple name="roles"
+							        class="roles hidden"
+							        [(ngModel)]="agentFormModel.roles">
+								<option value="">Please Select</option>
+								<option *ngFor="let role of agentFormModel.roles" [ngValue]="country">{{role}}</option>
+							</select>
+							<table class="ui very compact very basic small celled striped roles table" *ngIf="mode === Modes.READ">
+								<tbody>
+									<tr class="bottom aligned role" *ngFor="let role of agentRoles; let i = index;">
+										<td>
+											{{role.name}}<br>
+											{{role.id}}
+										</td>
+									</tr>
+									<tr class="warning" *ngIf="agentRoles.length===0">
+										<td>
+											<i class="attention icon"></i>Agent without Roles.
+										</td>
+									</tr>
+								</tbody>
+							</table>
+							<cw-roles-chooser *ngIf="mode !== Modes.READ"
+							                  [appContext]="appContext"
+							                  [selectedRoles]="agentRoles"
+							                  [bordered]="false"
+							                  (onChangeSelection)="changeRoles($event)"></cw-roles-chooser>
+						</div>
+					</div>
+					<div class="ui divider" *ngIf="mode !== Modes.READ"></div>
+					<div class="field">
+						<div class="ui enabled checkbox">
+							<input type="checkbox" name="enabled"
+							       #enabled="cwValidation" cwValidation required
+							       [(ngModel)]="agentFormModel.enabled"
+							       [disabled]="mode === Modes.READ">
+							<label>Active User</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<cw-message class="ui attached segment" [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="closeError($event)" *ngIf="!!errorMessage"></cw-message>
+	<div class="ui bottom attached segment" *ngIf="mode !== Modes.READ">
+		<button class="ui mini basic right floated button" type="submit"
+		        [ngClass]="{ 'disabled': !agentForm.valid, 'green': agentForm.valid  }"
+		        (click)="onSubmit(agentForm.value, $event)"
+		        [disabled]="!agentForm.valid"
+		        [ngSwitch]="mode">
+			<span *ngSwitchCase="Modes.CREATE">Create</span>
+			<span *ngSwitchCase="Modes.EDIT">Save</span>
+			<span *ngSwitchDefault>Save</span>
+		</button>
+		<button class="ui mini basic button" type="button" title="Cancel" (click)="cancelForm($event)">Cancel</button>
+	</div>
+</form>
+<div class="ui success message transition" #message *ngIf="!!displaySuccessMessage">
+	<i class="close icon" (click)="closeSuccessMessage($event, message)"></i>
+	<div class="header" [ngSwitch]="mode">
+		Agent <span *ngSwitchCase="Modes.CREATE">Created</span><span *ngSwitchDefault>Saved</span>
+	</div>
+	<p [ngSwitch]="mode">
+		The agent was <span *ngSwitchCase="Modes.CREATE">created</span><span *ngSwitchDefault>modified</span> successfully
+	</p>
+	<p *ngIf="timer>0">You will be redirected to your agents list in <strong class="timer">{{timer}}</strong> seconds.</p>
+</div>

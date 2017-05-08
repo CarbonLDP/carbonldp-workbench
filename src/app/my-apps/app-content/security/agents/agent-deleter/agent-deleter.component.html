@@ -1,0 +1,32 @@
+<form class="ui delete agent modal error form" #deleteAgentForm="ngForm" (submit)="onSubmitDeleteAgent()">
+	<div class="header">
+		<h2 class="ui header"><i class="trash outline red icon"></i> Are you sure?</h2>
+	</div>
+	<div class="content">
+		<div class="ui description">
+			<p>You are about to delete the following Agent:</p>
+			<br>
+			<p>
+				Name: <span *ngIf="!!agent">'{{agent.name}}'</span><br>
+				Email: <span *ngIf="!!agent">'{{agent.email}}'</span><br>
+				ID: <span *ngIf="!!agent">'{{agent.id}}'</span>
+			</p>
+			<br>
+			<p>
+				<span>If you delete it, every reference made to this agent will also be deleted.</span><br>
+				<span>Do you really want to proceed?</span>
+			</p>
+			<cw-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage()" *ngIf="!!errorMessage"></cw-message>
+		</div>
+	</div>
+	<div class="actions">
+		<button class="ui black deny button" title="Cancel deletion" type="button"
+		        [disabled]="deletingAgent"
+		        (click)="hideDeleteAgentForm()">No
+		</button>
+		<button class="ui red button" title="Confirm deletion" type="submit"
+		        [ngClass]="{loading:deletingAgent, disabled:deletingAgent}"
+		        [disabled]="deletingAgent">Yes
+		</button>
+	</div>
+</form>

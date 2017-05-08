@@ -59,10 +59,10 @@ export const AppContentRoutes:Routes = [
 					displayName: "Configuration",
 				},
 			},
-			// {
-			// 	path: "security",
-			// 	loadChildren: "./security/security.module#SecurityModule",
-			// },
+			{
+				path: "security",
+				loadChildren: "./security/security.module#SecurityModule",
+			},
 		]
 	}
 ];

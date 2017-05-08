@@ -1,0 +1,27 @@
+:host {
+	display: block;
+	padding: 0;
+	color: black;
+
+	.grid {
+		min-height: 400px;
+
+		.error.messages {
+			position: absolute;
+			z-index: 101;
+			width: 100%;
+		}
+		.stretched.row {
+			border: 1px solid #d3d3d3;
+			margin: 8px;
+			padding: 0;
+		}
+		cw-roles-tree-view.tree.column {
+			padding: 0;
+			border-right: 1px solid #d3d3d3;
+		}
+		cw-role-details.role.details.column {
+			padding: 0;
+		}
+	}
+}
