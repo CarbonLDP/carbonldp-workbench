@@ -7,8 +7,8 @@ import { routing } from "./root-content.routing";
 // Components
 import { RootContentView } from "./root-content.view";
 import { DashboardView } from "./dashboard/dashboard.view";
-// import { EditAppComponent } from "./edit-app/edit-app.component";
-// import { EditAppView } from "./edit-app/edit-app.view";
+import { EditInstanceComponent } from "./edit-instance/edit-instance.component";
+import { EditInstanceView } from "./edit-instance/edit-instance.view";
 // import { SPARQLClientView } from "./sparql-client/sparql-client.view";
 // import { ExplorerView } from "./explorer/explorer.view";
 // Components -> Configuration
@@ -46,8 +46,8 @@ import { SharedModule } from "app/shared/shared.module";
 		RootContentView,
 		DashboardView,
 		// SPARQLClientView,
-		// EditAppView,
-		// EditAppComponent,
+		EditInstanceComponent,
+		EditInstanceView,
 		// ExplorerView,
 		// BackupExporterComponent,
 		// BackupImporterComponent,
