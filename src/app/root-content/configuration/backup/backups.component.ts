@@ -1,6 +1,6 @@
-import { Component, Input, ViewChild, OnInit } from "@angular/core";
+import { Component, ViewChild, OnInit } from "@angular/core";
 
-import * as App from "carbonldp/App";
+import { Class as Carbon } from "carbonldp/Carbon";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 import { JobsService } from "../job/jobs.service";
@@ -13,25 +13,25 @@ import "semantic-ui/semantic";
 @Component( {
 	selector: "cw-backup",
 	templateUrl: "./backups.component.html",
-	styleUrls: [  "./backups.component.scss"  ],
+	styleUrls: [ "./backups.component.scss" ],
 } )
 
 export class BackupsComponent implements OnInit {
-
-	backupJob:PersistedDocument.Class;
+	carbon:Carbon;
 	jobsService:JobsService;
+	backupJob:PersistedDocument.Class;
 
 	@ViewChild( BackupsListComponent ) backupsListComponent:BackupsListComponent;
-	@Input() appContext:App.Context;
 
-	constructor( jobsService:JobsService ) {
+	constructor( jobsService:JobsService, carbon:Carbon ) {
 		this.jobsService = jobsService;
+		this.carbon = carbon;
 	}
 
 	ngOnInit():void {
-		this.jobsService.getJobOfType( Job.Type.EXPORT_BACKUP, this.appContext ).then( ( job:PersistedDocument.Class ) => {
+		this.jobsService.getJobOfType( Job.Type.EXPORT_BACKUP ).then( ( job:PersistedDocument.Class ) => {
 			if( ! ! job ) this.backupJob = job;
-			else this.jobsService.createExportBackup( this.appContext ).then( ( exportBackupJob:PersistedDocument.Class ) => {
+			else this.jobsService.createExportBackup().then( ( exportBackupJob:PersistedDocument.Class ) => {
 				this.backupJob = exportBackupJob;
 			} );
 		} );

@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, EventEmitter, SimpleChange, AfterViewInit, OnChanges, OnDestroy } from "@angular/core";
 
-import * as App from "carbonldp/App";
+import { Class as Carbon } from "carbonldp/Carbon";
 import * as Response from "carbonldp/HTTP/Response";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import { StatusCode as HTTPStatusCode } from "carbonldp/HTTP";
@@ -20,6 +20,7 @@ import "semantic-ui/semantic";
 
 export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy {
 
+	carbon:Carbon;
 	element:ElementRef;
 	$element:JQuery;
 	$deleteBackupConfirmationModal:JQuery;
@@ -36,11 +37,11 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 	failedDownloadMessage:Message;
 
 	@Input() backupJob:PersistedDocument.Class;
-	@Input() appContext:App.Context;
 	fetchBackupsList:EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	constructor( element:ElementRef, backupsService:BackupsService ) {
+	constructor( element:ElementRef, carbon:Carbon, backupsService:BackupsService ) {
 		this.element = element;
+		this.carbon = carbon;
 		this.backupsService = backupsService;
 		this.fetchBackupsList.subscribe( ( doFetch ) => {
 			if( ! doFetch ) return;
@@ -86,7 +87,7 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 
 	getBackups():Promise<PersistedDocument.Class[]> {
 		this.errorMessages = [];
-		return this.backupsService.getAll( this.appContext ).then(
+		return this.backupsService.getAll().then(
 			( [ backups, response ]:[ PersistedDocument.Class[], Response.Class ] ) => {
 				backups = backups.sort( ( a:any, b:any ) => b.modified < a.modified ? - 1 : b.modified > a.modified ? 1 : 0 );
 				this.backups = backups;
@@ -136,12 +137,12 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 
 	deleteBackup( backup:PersistedDocument.Class ):Promise<Response.Class> {
 		this.deletingBackup = true;
-		return this.backupsService.delete( backup.id, this.appContext ).then( ( response:Response.Class ):Response.Class => {
+		return this.backupsService.delete( backup.id ).then( ( response:Response.Class ):Response.Class => {
 			if( response.status !== HTTPStatusCode.OK ) return <any>Promise.reject( response );
 			this.getBackups();
 			this.closeDeleteModal();
 			return response;
-		} ).catch( ( errorOrResponse:HTTPError|Response.Class ) => {
+		} ).catch( ( errorOrResponse:HTTPError | Response.Class ) => {
 			let deleteMessage:Message;
 			if( errorOrResponse.hasOwnProperty( "response" ) ) {
 				deleteMessage = <Message>{

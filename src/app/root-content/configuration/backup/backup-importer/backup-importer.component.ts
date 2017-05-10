@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, OnDestroy } from "@angular/core";
 
-import * as App from "carbonldp/App";
+import { Class as Carbon } from "carbonldp/Carbon";
 import * as Response from "carbonldp/HTTP/Response";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as Pointer from "carbonldp/Pointer";
@@ -16,11 +16,11 @@ import "semantic-ui/semantic";
 @Component( {
 	selector: "cw-backup-importer",
 	templateUrl: "./backup-importer.component.html",
-	styleUrls: [  "./backup-importer.component.scss"  ],
+	styleUrls: [ "./backup-importer.component.scss" ],
 } )
 
 export class BackupImporterComponent implements OnInit, OnDestroy {
-	@Input() appContext:App.Context;
+	carbon:Carbon;
 
 	element:ElementRef;
 	monitorExecutionInterval:number;
@@ -44,8 +44,9 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 	errorMessages:Message[] = [];
 	errorMessage:Message;
 
-	constructor( element:ElementRef, backupsService:BackupsService, jobsService:JobsService ) {
+	constructor( element:ElementRef, carbon:Carbon, backupsService:BackupsService, jobsService:JobsService ) {
 		this.element = element;
+		this.carbon = carbon;
 		this.backupsService = backupsService;
 		this.jobsService = jobsService;
 	}
@@ -56,7 +57,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 
 
 	getBackups():void {
-		this.backupsService.getAll( this.appContext ).then( ( [ backups, response ]:[ PersistedDocument.Class[], Response.Class ] ) => {
+		this.backupsService.getAll().then( ( [ backups, response ]:[ PersistedDocument.Class[], Response.Class ] ) => {
 			this.backups = backups.sort( ( a:any, b:any ) => b.modified < a.modified ? - 1 : b.modified > a.modified ? 1 : 0 );
 		} )
 	}
@@ -76,7 +77,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 	}
 
 	monitorExecution( importJobExecution:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
-		return new Promise<PersistedDocument.Class>( ( resolve:( result:any ) => void, reject:( error:HTTPError|PersistedDocument.Class ) => void ) => {
+		return new Promise<PersistedDocument.Class>( ( resolve:( result:any ) => void, reject:( error:HTTPError | PersistedDocument.Class ) => void ) => {
 			// Node typings are overriding setInterval, that's why we need to cast it to any before assigning it to a number variable
 			this.monitorExecutionInterval = <any>setInterval( () => {
 				this.checkImportJobExecution( importJobExecution ).then( () => {
@@ -124,7 +125,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 	}
 
 	onFileChange( event ):void {
-		var files:FileList = event.srcElement.files;
+		let files:FileList = event.srcElement.files;
 		this.backupFileBlob = files[ 0 ];
 	}
 
@@ -162,7 +163,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 
 	uploadBackup( file:Blob ):void {
 		this.uploading.start();
-		this.backupsService.upload( file, this.appContext ).then(
+		this.backupsService.upload( file ).then(
 			( [ pointer, response ]:[ Pointer.Class, Response.Class ] ) => {
 				this.uploading.success();
 				this.createBackupImport( pointer.id );
@@ -185,7 +186,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 
 	createBackupImport( backupURI:string ):Promise<any> {
 		this.creating.start();
-		return this.jobsService.createImportBackup( backupURI, this.appContext ).then( ( importJob:PersistedDocument.Class ) => {
+		return this.jobsService.createImportBackup( backupURI ).then( ( importJob:PersistedDocument.Class ) => {
 			this.creating.success();
 			this.executing.start();
 			return this.executeImport( importJob ).then( ( importJobExecution:PersistedDocument.Class ) => {this.monitorExecution( importJobExecution );}

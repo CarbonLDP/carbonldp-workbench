@@ -1,9 +1,7 @@
 import { Injectable } from "@angular/core";
 
 import { Class as Carbon } from "carbonldp/Carbon";
-import * as App from "carbonldp/App";
 import * as HTTP from "carbonldp/HTTP";
-import * as SDKContext from "carbonldp/SDKContext";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as Pointer from "carbonldp/Pointer";
 import * as NS from "carbonldp/NS";
@@ -12,24 +10,24 @@ import * as NS from "carbonldp/NS";
 export class BackupsService {
 
 	carbon:Carbon;
+	BACKUPS_URI:string = "";
 
 	constructor( carbon:Carbon ) {
 		this.carbon = carbon;
+		this.BACKUPS_URI = this.carbon.getBaseURI() + ".system/backups/";
 		this.extendSchemasForBackups();
 	}
 
-	upload( file:Blob, appContext:SDKContext.Class ):Promise<[ Pointer.Class, HTTP.Response.Class ]> {
-		let uri:string = (<App.Context>appContext).app.id + "backups/";
-		return this.carbon.documents.upload( uri, file ).then( ( [ uploadedBackupPointer, uploadResponse ]:[ Pointer.Class, HTTP.Response.Class ] ) => {
+	upload( file:Blob ):Promise<[ Pointer.Class, HTTP.Response.Class ]> {
+		return this.carbon.documents.upload( this.BACKUPS_URI, file ).then( ( [ uploadedBackupPointer, uploadResponse ]:[ Pointer.Class, HTTP.Response.Class ] ) => {
 			return this.convertToNonRDFSource( uploadedBackupPointer ).then( ( []:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
 				return [ uploadedBackupPointer, uploadResponse ];
 			} );
 		} );
 	}
 
-	getAll( appContext:SDKContext.Class ):Promise<[ PersistedDocument.Class[], HTTP.Response.Class ]> {
-		let uri:string = (<App.Context>appContext).app.id + "backups/";
-		return this.carbon.documents.getChildren( uri ).then( ( [ backups, response ]:[ PersistedDocument.Class[], HTTP.Response.Class ] ) => {
+	getAll():Promise<[ PersistedDocument.Class[], HTTP.Response.Class ]> {
+		return this.carbon.documents.getChildren( this.BACKUPS_URI ).then( ( [ backups, response ]:[ PersistedDocument.Class[], HTTP.Response.Class ] ) => {
 			return [ backups, response ];
 		} );
 	}
@@ -40,8 +38,8 @@ export class BackupsService {
 		} );
 	}
 
-	delete( uri:string, appContext:SDKContext.Class ):Promise<HTTP.Response.Class> {
-		return appContext.documents.delete( uri );
+	delete( uri:string ):Promise<HTTP.Response.Class> {
+		return this.carbon.documents.delete( uri );
 	}
 
 	private convertToNonRDFSource( backupPointer:Pointer.Class ):Promise<[ PersistedDocument.Class, HTTP.Response.Class ]> {

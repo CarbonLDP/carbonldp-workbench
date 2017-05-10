@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnDestroy } from "@angular/core";
 
-import * as App from "carbonldp/App";
+import { Class as Carbon } from "carbonldp/Carbon";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
@@ -13,7 +13,7 @@ import "semantic-ui/semantic";
 @Component( {
 	selector: "cw-backup-exporter",
 	templateUrl: "./backup-exporter.component.html",
-	styleUrls: [  "./backup-exporter.component.scss"  ],
+	styleUrls: [ "./backup-exporter.component.scss" ],
 } )
 
 export class BackupExporterComponent implements OnDestroy {
@@ -23,12 +23,13 @@ export class BackupExporterComponent implements OnDestroy {
 	jobsService:JobsService;
 	exportSuccess:boolean;
 	monitorExecutionInterval:number;
+	carbon:Carbon;
 
-	@Input() appContext:App.Context;
 	@Input() backupJob:PersistedDocument.Class;
 	@Output() onExportSuccess:EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	constructor( jobsService:JobsService ) {
+	constructor( carbon:Carbon, jobsService:JobsService ) {
+		this.carbon = carbon;
 		this.jobsService = jobsService;
 	}
 
@@ -37,7 +38,7 @@ export class BackupExporterComponent implements OnDestroy {
 		this.exportSuccess = false;
 
 		this.jobsService.runJob( this.backupJob ).then( ( execution:PersistedDocument.Class ) => {
-			return this.monitorExecution( execution ).catch( ( executionOrError:HTTPError|PersistedDocument.Class ) => {
+			return this.monitorExecution( execution ).catch( ( executionOrError:HTTPError | PersistedDocument.Class ) => {
 				if( executionOrError.hasOwnProperty( "response" ) ) return Promise.reject( executionOrError );
 				let errorMessage:Message = <Message>{
 					title: "Couldn't execute backup.",
@@ -65,7 +66,7 @@ export class BackupExporterComponent implements OnDestroy {
 	}
 
 	monitorExecution( execution:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
-		return new Promise<PersistedDocument.Class>( ( resolve:( result:any ) => void, reject:( error:HTTPError|PersistedDocument.Class ) => void ) => {
+		return new Promise<PersistedDocument.Class>( ( resolve:( result:any ) => void, reject:( error:HTTPError | PersistedDocument.Class ) => void ) => {
 			// Node typings are overriding setInterval, that's why we need to cast it to any before assigning it to a number variable
 			this.monitorExecutionInterval = <any>setInterval( () => {
 				execution.refresh().then( () => {
