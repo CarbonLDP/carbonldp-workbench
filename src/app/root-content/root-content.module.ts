@@ -9,7 +9,7 @@ import { RootContentView } from "./root-content.view";
 import { DashboardView } from "./dashboard/dashboard.view";
 import { EditInstanceComponent } from "./edit-instance/edit-instance.component";
 import { EditInstanceView } from "./edit-instance/edit-instance.view";
-// import { SPARQLClientView } from "./sparql-client/sparql-client.view";
+import { SPARQLClientView } from "./sparql-client/sparql-client.view";
 // import { ExplorerView } from "./explorer/explorer.view";
 // Components -> Configuration
 // import { BackupExporterComponent } from "./configuration/backup/backup-exporter/backup-exporter.component";
@@ -24,7 +24,7 @@ import { EditInstanceView } from "./edit-instance/edit-instance.view";
 
 // Modules
 import { SharedModule } from "app/shared/shared.module";
-// import { SPARQLClientModule } from "./sparql-client/sparql-client.module";
+import { SPARQLClientModule } from "./sparql-client/sparql-client.module";
 // import { DocumentExplorerModule } from "./explorer/document-explorer/document-explorer.module";
 
 // Services
@@ -39,13 +39,13 @@ import { SharedModule } from "app/shared/shared.module";
 		FormsModule,
 		routing,
 		SharedModule,
-		// SPARQLClientModule,
+		SPARQLClientModule,
 		// DocumentExplorerModule,
 	],
 	declarations: [
 		RootContentView,
 		DashboardView,
-		// SPARQLClientView,
+		SPARQLClientView,
 		EditInstanceComponent,
 		EditInstanceView,
 		// ExplorerView,

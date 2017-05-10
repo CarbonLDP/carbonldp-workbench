@@ -1,7 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, OnInit, AfterViewInit } from "@angular/core";
 
 import { Class as Carbon } from "carbonldp/Carbon";
-import { Class as Context } from "carbonldp/Context";
 import * as SPARQL from "carbonldp/SPARQL";
 import * as HTTP from "carbonldp/HTTP";
 
@@ -157,7 +156,6 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	regExpLoad:RegExp = new RegExp( "((.|\n)+)?LOAD((.|\n)+)?", "i" );
 
 	// Inputs and Outputs
-	@Input() context:Context;
 	@Input() emitErrors:boolean = false;
 	@Output() errorOccurs:EventEmitter<any> = new EventEmitter();
 
@@ -235,12 +233,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit():void {
-		if( ! this.context ) {
-			this.context = this.carbon;
-			this.isCarbonContext = true;
-		} else {
-			this.endpoint = this.context.getBaseURI();
-		}
+		this.isCarbonContext = true;
 	}
 
 	ngAfterViewInit():void {
@@ -293,7 +286,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		if( this.regExpURL.test( this.endpoint ) ) {
 			this.currentQuery.endpoint = this.endpoint;
 		} else {
-			this.currentQuery.endpoint = this.context.getBaseURI() + this.endpoint;
+			this.currentQuery.endpoint = this.carbon.getBaseURI() + this.endpoint;
 		}
 	}
 
@@ -425,7 +418,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 
 	executeSELECT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		return this.context.documents.executeRawSELECTQuery( query.endpoint, query.content ).then(
+		return this.carbon.documents.executeRawSELECTQuery( query.endpoint, query.content ).then(
 			( [ result, response ]:[ SPARQL.RawResults.Class, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
@@ -438,7 +431,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	executeDESCRIBE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
 		let requestOptions:HTTP.Request.Options = { headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) ) };
-		return this.context.documents.executeRawDESCRIBEQuery( query.endpoint, query.content, requestOptions ).then(
+		return this.carbon.documents.executeRawDESCRIBEQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
@@ -451,7 +444,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	executeCONSTRUCT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
 		let requestOptions:HTTP.Request.Options = { headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) ) };
-		return this.context.documents.executeRawCONSTRUCTQuery( query.endpoint, query.content, requestOptions ).then(
+		return this.carbon.documents.executeRawCONSTRUCTQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
@@ -463,7 +456,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 
 	executeASK( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		return this.context.documents.executeRawASKQuery( query.endpoint, query.content ).then(
+		return this.carbon.documents.executeRawASKQuery( query.endpoint, query.content ).then(
 			( [ result, response ]:[ SPARQL.RawResults.Class, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
@@ -476,7 +469,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	executeUPDATE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		this.isSending = true;
 		let beforeTimestamp:number = ( new Date() ).valueOf();
-		return this.context.documents.executeUPDATE( query.endpoint, query.content ).then(
+		return this.carbon.documents.executeUPDATE( query.endpoint, query.content ).then(
 			( result:HTTP.Response.Class ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, (<XMLHttpRequest>result.request).status + " - " + (<XMLHttpRequest>result.request).statusText, <string> SPARQLResponseType.success, query );
@@ -692,7 +685,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	buildResponse( duration:number, resultset:SPARQL.RawResults.Class|string|Message, responseType:string, query:SPARQLQuery ):SPARQLClientResponse {
+	buildResponse( duration:number, resultset:SPARQL.RawResults.Class | string | Message, responseType:string, query:SPARQLQuery ):SPARQLClientResponse {
 		let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
 		clientResponse.duration = duration;
 		clientResponse.resultset = resultset;

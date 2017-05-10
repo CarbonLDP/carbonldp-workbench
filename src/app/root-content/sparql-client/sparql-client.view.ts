@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 
 import * as App from "carbonldp/App";
 
-import { AppContentService } from "./../../app-content/app-content.service";
+import { AppContentService } from "../../../root-content/app-content.service";
 import { MessagesAreaService } from "app/shared/messages-area/messages-area.service";
 
 @Component( {
@@ -11,12 +11,11 @@ import { MessagesAreaService } from "app/shared/messages-area/messages-area.serv
 	styles: [ ":host { display: block; }" ],
 } )
 export class SPARQLClientView {
-	$element:JQuery;
 	appContext:App.Context;
 	canDisplay:boolean = true;
 	private messagesAreaService:MessagesAreaService;
 
-	constructor( messagesAreaService:MessagesAreaService, appContentService:AppContentService ) {
+	constructor( messagesAreaService:MessagesAreaService ) {
 		this.appContext = appContentService.activeApp.context;
 		this.messagesAreaService = messagesAreaService;
 		appContentService.onAppHasChanged.subscribe( ( app:App.Class ) => {
