@@ -1,8 +1,5 @@
 import { Component } from "@angular/core";
 
-import * as App from "carbonldp/App";
-
-import { AppContentService } from "../../../root-content/app-content.service";
 import { MessagesAreaService } from "app/shared/messages-area/messages-area.service";
 
 @Component( {
@@ -11,18 +8,10 @@ import { MessagesAreaService } from "app/shared/messages-area/messages-area.serv
 	styles: [ ":host { display: block; }" ],
 } )
 export class SPARQLClientView {
-	appContext:App.Context;
-	canDisplay:boolean = true;
 	private messagesAreaService:MessagesAreaService;
 
 	constructor( messagesAreaService:MessagesAreaService ) {
-		this.appContext = appContentService.activeApp.context;
 		this.messagesAreaService = messagesAreaService;
-		appContentService.onAppHasChanged.subscribe( ( app:App.Class ) => {
-			this.appContext = appContentService.activeApp.context;
-			this.canDisplay = false;
-			setTimeout( () => { this.canDisplay = true;}, 0 );
-		} );
 	}
 
 	notifyErrorAreaService( error:any ):void {
