@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 
-import { Modes } from "./../property/property.component";
+import { Modes } from "../property/property.component";
 import { Literal, LiteralRow } from "./literal.component";
 
 import "semantic-ui/semantic";

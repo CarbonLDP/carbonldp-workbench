@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, OnCha
 import * as URI from "carbonldp/RDF/URI";
 
 import { NamedFragmentRow } from "./named-fragment.component";
-import { BlankNodeRow } from "./../blank-nodes/blank-node.component";
+import { BlankNodeRow } from "../blank-nodes/blank-node.component";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";

@@ -4,7 +4,7 @@ import * as NS from "carbonldp/NS";
 import * as Utils from "carbonldp/Utils";
 import * as URI from "carbonldp/RDF/URI";
 
-import { Modes } from "./../property/property.component"
+import { Modes } from "../property/property.component"
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";

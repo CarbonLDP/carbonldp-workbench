@@ -2,66 +2,55 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } fro
 
 import * as RDFNode from "carbonldp/RDF/Node";
 
-import { Property, PropertyRow, Modes } from "./../property/property.component";
+import { Property, PropertyRow, Modes } from "../property/property.component";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
 
 @Component( {
-	selector: "cw-blank-node",
-	templateUrl: "./blank-node.component.html",
+	selector: "cw-document-resource",
+	templateUrl: "./document-resource.component.html",
 	styles: [ ":host { display:block; }" ],
 } )
 
-export class BlankNodeComponent implements AfterViewInit {
+export class DocumentResourceComponent implements AfterViewInit {
 
 	element:ElementRef;
 	$element:JQuery;
 	modes:Modes = Modes;
-	records:BlankNodeRecords;
-	nonEditableProperties:string[] = [ "@id", "https://carbonldp.com/ns/v1/platform#bNodeIdentifier" ];
-	copyOrAdded:string = "";
-	tempPropertiesNames:string[] = [];
-
-	rootNode:RDFNode.Class;
-	properties:PropertyRow[];
+	properties:PropertyRow[] = [];
 	existingPropertiesNames:string[] = [];
-
-	private _bNodeHasChanged:boolean;
-	set bNodeHasChanged( hasChanged:boolean ) {
-		this._bNodeHasChanged = hasChanged;
-		delete this.blankNode.modified;
-		delete this.blankNode.records;
-		if( hasChanged ) {
-			this.blankNode.records = this.records;
-			if( typeof this.blankNode.added !== "undefined" ) this.blankNode.added = this.getRawVersion();
-			else this.blankNode.modified = this.getRawVersion();
-		}
-		this.onChanges.emit( this.blankNode );
+	records:RootRecords;
+	private _rootHasChanged:boolean;
+	set rootHasChanged( hasChanged:boolean ) {
+		this._rootHasChanged = hasChanged;
+		this.onChanges.emit( this.records );
 	}
 
-	get bNodeHasChanged() {
-		return this._bNodeHasChanged;
+	get rootHasChanged() {
+		return this._rootHasChanged;
 	}
 
-	@Input() blankNodes:BlankNodeRow[] = [];
+	@Input() displayOnly:string[] = [];
+	@Input() hiddenProperties:string[] = [];
+	@Input() blankNodes:RDFNode.Class[] = [];
 	@Input() namedFragments:RDFNode.Class[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
-
-	private _blankNode:BlankNodeRow;
-	@Input() set blankNode( blankNode:BlankNodeRow ) {
-		this._blankNode = blankNode;
-		this.rootNode = blankNode.copy;
-		if( ! ! blankNode.records ) this.records = blankNode.records;
+	private _rootNode:RDFNode.Class;
+	@Input() set rootNode( value:RDFNode.Class ) {
+		this._rootNode = value;
+		this.records = new RootRecords();
 		this.getProperties();
 	}
 
-	get blankNode():BlankNodeRow { return this._blankNode; }
+	get rootNode() {
+		return this._rootNode;
+	}
 
 	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onChanges:EventEmitter<BlankNodeRow> = new EventEmitter<BlankNodeRow>();
+	@Output() onChanges:EventEmitter<RootRecords> = new EventEmitter<RootRecords>();
 
 
 	constructor( element:ElementRef ) {
@@ -80,8 +69,15 @@ export class BlankNodeComponent implements AfterViewInit {
 		this.onOpenNamedFragment.emit( id );
 	}
 
+	canDisplay( propertyName:any ):boolean {
+		if( typeof propertyName === "undefined" ) return false;
+		if( this.displayOnly.length === 0 && this.hiddenProperties.length === 0 ) return true;
+		if( this.displayOnly.length > 0 ) return this.displayOnly.indexOf( propertyName ) !== - 1 ? true : false;
+		return this.hiddenProperties.indexOf( propertyName ) !== - 1 ? false : true;
+	}
+
 	changeProperty( property:PropertyRow, index:number ):void {
-		if( typeof this.records === "undefined" ) this.records = new BlankNodeRecords();
+		if( typeof this.records === "undefined" ) this.records = new RootRecords();
 		if( typeof property.modified !== "undefined" ) {
 			this.records.changes.set( property.modified.id, property );
 		} else if( typeof property.added === "undefined" ) {
@@ -96,7 +92,7 @@ export class BlankNodeComponent implements AfterViewInit {
 	}
 
 	deleteProperty( property:PropertyRow, index:number ):void {
-		if( typeof this.records === "undefined" ) this.records = new BlankNodeRecords();
+		if( typeof this.records === "undefined" ) this.records = new RootRecords();
 		if( typeof property.added !== "undefined" ) {
 			this.records.additions.delete( property.added.id );
 			this.properties.splice( index, 1 );
@@ -107,7 +103,7 @@ export class BlankNodeComponent implements AfterViewInit {
 	}
 
 	addProperty( property:PropertyRow, index:number ):void {
-		if( typeof this.records === "undefined" ) this.records = new BlankNodeRecords();
+		if( typeof this.records === "undefined" ) this.records = new RootRecords();
 		if( typeof property.added !== "undefined" ) {
 			if( property.added.id === property.added.name ) {
 				this.records.additions.set( property.added.id, property );
@@ -122,7 +118,7 @@ export class BlankNodeComponent implements AfterViewInit {
 
 	createProperty( property:Property, propertyRow:PropertyRow ):void {
 		let numberOfProperty:number = ! ! this.records ? (this.records.additions.size + 1) : 1;
-		let newProperty:PropertyRow = {
+		let newProperty:PropertyRow = <PropertyRow>{
 			added: <Property>{
 				id: "",
 				name: "http://www.example.com#New Property " + numberOfProperty,
@@ -141,11 +137,6 @@ export class BlankNodeComponent implements AfterViewInit {
 		} );
 	}
 
-	canEditProperty( property:PropertyRow ):boolean {
-		let copyOrAdded:string = ! ! property.added ? "added" : "copy";
-		return ( this.nonEditableProperties.indexOf( property[ copyOrAdded ].name ) === - 1 ) && this.canEdit;
-	}
-
 	getProperties():void {
 		this.updateExistingProperties();
 	}
@@ -153,7 +144,6 @@ export class BlankNodeComponent implements AfterViewInit {
 	updateExistingProperties():void {
 		this.properties = [];
 		this.existingPropertiesNames = Object.keys( this.rootNode );
-		this.sortFirstProperties( this.existingPropertiesNames, this.nonEditableProperties );
 		this.existingPropertiesNames.forEach( ( propName:string ) => {
 			this.properties.push( {
 				copy: {
@@ -184,53 +174,13 @@ export class BlankNodeComponent implements AfterViewInit {
 			idx = this.properties.findIndex( ( property:PropertyRow ) => { return ! ! property.copy && property.copy.id === key} );
 			if( idx !== - 1 ) this.properties.splice( idx, 1 );
 		} );
-		this.bNodeHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
-	}
-
-	getRawVersion():RDFNode.Class {
-		let rawNode:RDFNode.Class = Object.assign( {}, this.blankNode.added ? this.blankNode.added : this.blankNode.copy );
-		this.records.deletions.forEach( ( property, key ) => {
-			delete rawNode[ key ];
-		} );
-		this.records.changes.forEach( ( property, key ) => {
-			if( property.modified.id !== property.modified.name ) {
-				delete rawNode[ key ];
-				rawNode[ property.modified.name ] = property.modified.value;
-			} else {
-				rawNode[ key ] = property.modified.value;
-			}
-		} );
-		this.records.additions.forEach( ( property, key ) => {
-			rawNode[ key ] = property.added.value;
-		} );
-		return rawNode;
-	}
-
-	sortFirstProperties( propertiesNames:string[], firstPropertiesToShow:string[] ):void {
-		let tempIdx:number = - 1;
-		firstPropertiesToShow.forEach( ( propToShow:string, index:number ) => {
-			tempIdx = propertiesNames.findIndex( ( propName:string ) => { return propName === propToShow} );
-			if( tempIdx !== - 1 ) {
-				let name:string = propertiesNames[ tempIdx ];
-				propertiesNames.splice( tempIdx, 1 );
-				propertiesNames.splice( index, 0, name );
-			}
-		} );
+		this.rootHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 }
-export interface BlankNodeRow {
-	id?:string;
-	bNodeIdentifier?:string;
 
-	copy?:RDFNode.Class;
-	added?:RDFNode.Class;
-	modified?:RDFNode.Class;
-	deleted?:RDFNode.Class;
-
-	records?:BlankNodeRecords;
-}
-export class BlankNodeRecords {
+export class RootRecords {
 	changes:Map<string,PropertyRow> = new Map<string, PropertyRow>();
 	deletions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
 	additions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
 }
+

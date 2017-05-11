@@ -6,8 +6,8 @@ import * as SDKLiteral from "carbonldp/RDF/Literal";
 import * as RDFNode from "carbonldp/RDF/Node";
 import * as Utils from "carbonldp/Utils";
 
-import { Literal, LiteralRow } from "./../literals/literal.component";
-import { Pointer, PointerRow } from "./../pointers/pointer.component";
+import { Literal, LiteralRow } from "../literals/literal.component";
+import { Pointer, PointerRow } from "../pointers/pointer.component";
 
 
 @Component( {

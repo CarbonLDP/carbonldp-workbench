@@ -6,7 +6,7 @@ import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "../documents-resolver.service"
 import { Message } from "app/shared/messages-area/message.component";
-import { DocumentExplorerLibrary } from "app/my-apps/app-content/explorer/document-explorer/document-explorer-library";
+import { DocumentExplorerLibrary } from "src/app/root-content/explorer/document-explorer/document-explorer-library";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
 
 import "semantic-ui/semantic";

@@ -6,10 +6,10 @@ import * as URI from "carbonldp/RDF/URI";
 import * as RDFNode from "carbonldp/RDF/Node";
 import * as Utils from "carbonldp/Utils";
 
-import { Literal, LiteralRow } from "./../literals/literal.component";
-import { Pointer, PointerRow } from "./../pointers/pointer.component";
-import { List, ListRow } from "./../lists/list.component";
-import { NamedFragmentRow } from "./../named-fragments/named-fragment.component";
+import { Literal, LiteralRow } from "../literals/literal.component";
+import { Pointer, PointerRow } from "../pointers/pointer.component";
+import { List, ListRow } from "../lists/list.component";
+import { NamedFragmentRow } from "../named-fragments/named-fragment.component";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";

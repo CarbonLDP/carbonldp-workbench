@@ -6,12 +6,12 @@ import * as RDFDocument from "carbonldp/RDF/Document";
 import * as JSONLDParser from "carbonldp/JSONLD/Parser";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
-import { DocumentsResolverService } from "./../documents-resolver.service";
-import { RootRecords } from "./../document-resource/document-resource.component";
-import { BlankNodesComponent, BlankNodesRecords } from "./../blank-nodes/blank-nodes.component";
-import { NamedFragmentsComponent, NamedFragmentsRecords }from "./../named-fragments/named-fragments.component";
-import { BlankNodeRow } from "./../blank-nodes/blank-node.component";
-import { NamedFragmentRow } from "./../named-fragments/named-fragment.component";
+import { DocumentsResolverService } from "../documents-resolver.service";
+import { RootRecords } from "../document-resource/document-resource.component";
+import { BlankNodesComponent, BlankNodesRecords } from "../blank-nodes/blank-nodes.component";
+import { NamedFragmentsComponent, NamedFragmentsRecords }from "../named-fragments/named-fragments.component";
+import { BlankNodeRow } from "../blank-nodes/blank-node.component";
+import { NamedFragmentRow } from "../named-fragments/named-fragment.component";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
