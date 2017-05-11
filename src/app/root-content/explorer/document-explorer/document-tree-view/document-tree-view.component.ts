@@ -1,10 +1,10 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit, OnInit } from "@angular/core";
 
+import { Class as Carbon } from "carbonldp/Carbon";
 import * as Pointer from "carbonldp/Pointer";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as HTTP from "carbonldp/HTTP";
 import * as URI from "carbonldp/RDF/URI";
-import * as SDKContext from "carbonldp/SDKContext";
 import * as SPARQL from "carbonldp/SPARQL";
 
 import * as $ from "jquery";
@@ -14,13 +14,14 @@ import "jstree/dist/jstree.min";
 
 @Component( {
 	selector: "cw-document-treeview",
-	templateUrl:"./document-tree-view.component.html",
-	styleUrls: [ "./document-tree-view.component.scss"  ],
+	templateUrl: "./document-tree-view.component.html",
+	styleUrls: [ "./document-tree-view.component.scss" ],
 } )
 
 export class DocumentTreeViewComponent implements AfterViewInit, OnInit {
 	element:ElementRef;
 	$element:JQuery;
+	carbon:Carbon;
 
 	jsTree:JSTree;
 	$tree:JQuery;
@@ -36,7 +37,6 @@ export class DocumentTreeViewComponent implements AfterViewInit, OnInit {
 		return this._selectedURI;
 	}
 
-	@Input() documentContext:SDKContext.Class;
 	@Input() refreshNode:EventEmitter<string> = new EventEmitter<string>();
 	@Input() openNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onResolveUri:EventEmitter<string> = new EventEmitter<string>();
@@ -47,8 +47,9 @@ export class DocumentTreeViewComponent implements AfterViewInit, OnInit {
 	@Output() onShowCreateAccessPointForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSelectDocument:EventEmitter<string> = new EventEmitter<string>();
 
-	constructor( element:ElementRef ) {
+	constructor( element:ElementRef, carbon:Carbon ) {
 		this.element = element;
+		this.carbon = carbon;
 	}
 
 	ngOnInit():void {
@@ -79,10 +80,10 @@ export class DocumentTreeViewComponent implements AfterViewInit, OnInit {
 	}
 
 	getDocumentTree():Promise<PersistedDocument.Class> {
-		return this.documentContext.documents.get( "" ).then( ( [ resolvedRoot, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+		return this.carbon.documents.get( "" ).then( ( [ resolvedRoot, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
 			return resolvedRoot.refresh();
 		} ).then( ( [ updatedRoot, updatedResponse ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
-			this.nodeChildren.push( this.buildNode( this.documentContext.getBaseURI(), "default", true ) );
+			this.nodeChildren.push( this.buildNode( this.carbon.getBaseURI(), "default", true ) );
 			this.renderTree();
 
 			return updatedRoot;
@@ -217,7 +218,7 @@ export class DocumentTreeViewComponent implements AfterViewInit, OnInit {
 			}`;
 		query = query.replace( "__URI__", uri );
 
-		return this.documentContext.documents.executeSELECTQuery( uri, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
+		return this.carbon.documents.executeSELECTQuery( uri, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
 			let accessPoints:Map<string, boolean> = new Map<string, boolean>(),
 				children:Map<string, boolean> = new Map<string, boolean>(),
 				nodes:JSTreeNode[] = [];
@@ -234,10 +235,10 @@ export class DocumentTreeViewComponent implements AfterViewInit, OnInit {
 				} );
 
 
-			children.forEach( ( hasChildren:boolean, id:string, children:Map<string,boolean> ) => {
+			children.forEach( ( hasChildren:boolean, id:string, children:Map<string, boolean> ) => {
 				nodes.push( this.buildNode( id, "default", hasChildren ) );
 			} );
-			accessPoints.forEach( ( hasChildren:boolean, id:string, children:Map<string,boolean> ) => {
+			accessPoints.forEach( ( hasChildren:boolean, id:string, children:Map<string, boolean> ) => {
 				nodes.push( this.buildNode( id, "accesspoint", hasChildren ) );
 			} );
 

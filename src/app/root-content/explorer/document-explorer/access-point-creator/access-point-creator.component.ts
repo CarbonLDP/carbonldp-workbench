@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 import { NgForm } from "@angular/forms";
 
-import * as SDKContext from "carbonldp/SDKContext";
+import { Class as Carbon } from "carbonldp/Carbon";
 import * as HTTP from "carbonldp/HTTP";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as AccessPoint from "carbonldp/AccessPoint";
@@ -21,6 +21,7 @@ import "semantic-ui/semantic";
 
 export class AccessPointCreatorComponent implements AfterViewInit {
 
+	private carbon:Carbon;
 	private element:ElementRef;
 	private $element:JQuery;
 	private $createAccessPointModal:JQuery;
@@ -34,14 +35,13 @@ export class AccessPointCreatorComponent implements AfterViewInit {
 	};
 
 	public visible:boolean = true;
-	
-	@Input() context:SDKContext.Class;
+
 	@Input() parentURI:string = "";
 	@Output() onSuccess:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
 
 
-	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService ) {
+	constructor( element:ElementRef, carbon:Carbon, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
 		this.documentsResolverService = documentsResolverService;
 	}
@@ -59,7 +59,7 @@ export class AccessPointCreatorComponent implements AfterViewInit {
 		};
 		if( ! ! data.isMemberOfRelation ) accessPoint.isMemberOfRelation = data.isMemberOfRelation;
 
-		this.context.documents.get( this.parentURI ).then( ( [ document, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+		this.carbon.documents.get( this.parentURI ).then( ( [ document, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
 			return this.documentsResolverService.createAccessPoint( document, accessPoint, slug );
 		} ).then( ( document:PersistedDocument.Class ) => {
 			this.onSuccess.emit( document );

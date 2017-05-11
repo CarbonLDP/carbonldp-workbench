@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
-import * as SDKContext from "carbonldp/SDKContext";
+import { Class as Carbon } from "carbonldp/Carbon";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "../documents-resolver.service"
@@ -18,6 +18,7 @@ import "semantic-ui/semantic";
 
 export class DocumentDeleterComponent implements AfterViewInit {
 
+	private carbon:Carbon;
 	private element:ElementRef;
 	private $element:JQuery;
 
@@ -27,14 +28,14 @@ export class DocumentDeleterComponent implements AfterViewInit {
 	public errorMessage:Message;
 
 	public deleteDocumentFormModel:{ value?:any } = {};
-	@Input() context:SDKContext.Class;
 	@Input() documentURI:string = "";
 	@Output() onSuccess:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
 
 
-	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService ) {
+	constructor( element:ElementRef, carbon:Carbon, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
+		this.carbon = carbon;
 		this.documentsResolverService = documentsResolverService;
 	}
 
@@ -44,7 +45,7 @@ export class DocumentDeleterComponent implements AfterViewInit {
 	}
 
 	public onSubmitDeleteDocument( data:{}, $event:any ):void {
-		this.documentsResolverService.delete( this.context, this.documentURI ).then( ( result ) => {
+		this.documentsResolverService.delete(  this.documentURI ).then( ( result ) => {
 			this.onSuccess.emit( DocumentExplorerLibrary.getParentURI( this.documentURI ) );
 			this.hide();
 		} ).catch( ( error:HTTPError ) => {

@@ -7,7 +7,6 @@
 			</ng-template>
 		</div>
 		<cw-document-treeview class="five wide column treeview-container"
-		                      [documentContext]="documentContext"
 		                      [refreshNode]="onRefreshNode"
 		                      [openNode]="onOpenNode"
 
@@ -20,7 +19,6 @@
 		                      (onResolveUri)="resolveDocument($event)"></cw-document-treeview>
 		<cw-document-viewer class="eleven wide column"
 		                    [document]="inspectingDocument"
-		                    [documentContext]="documentContext"
 		                    [displaySuccessMessage]="onDisplaySuccessMessage"
 
 		                    (onError)="handleExternalError($event)"
@@ -30,15 +28,12 @@
 		                    (onLoadingDocument)="onLoadingDocument($event)"
 		                    (onRefreshDocument)="refreshDocument($event)"></cw-document-viewer>
 		<cw-document-creator #documentCreator
-		                     [context]="documentContext"
 		                     [parentURI]="selectedDocumentURI"
 		                     (onSuccess)="onSuccessAccessPoint($event)"></cw-document-creator>
 		<cw-access-point-creator #accessPointCreator
-		                         [context]="documentContext"
 		                         [parentURI]="selectedDocumentURI"
 		                         (onSuccess)="onSuccessCreateDocument($event)"></cw-access-point-creator>
 		<cw-document-deleter #documentDeleter
-		                     [context]="documentContext"
 		                     [documentURI]="selectedDocumentURI"
 		                     (onSuccess)="onSuccessDeleteDocument($event)"></cw-document-deleter>
 	</div>

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, NgZone } from "@angular/core";
 
-import * as SDKContext from "carbonldp/SDKContext";
+import { Class as Carbon } from "carbonldp/Carbon";
 import * as RDFDocument from "carbonldp/RDF/Document";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
@@ -27,16 +27,17 @@ export class DocumentExplorerComponent {
 	messages:Message[] = [];
 
 
-	@Input() documentContext:SDKContext.Class;
+	@Input() carbon:Carbon;
 	@Output() onRefreshNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onDisplaySuccessMessage:EventEmitter<string> = new EventEmitter<string>();
 
 	private zone:NgZone;
 
-	constructor( documentsResolverService:DocumentsResolverService, zone:NgZone ) {
+	constructor( documentsResolverService:DocumentsResolverService, zone:NgZone, carbon:Carbon ) {
 		this.documentsResolverService = documentsResolverService;
 		this.zone = zone;
+		this.carbon = carbon;
 	}
 
 	onLoadingDocument( loadingDocument:boolean ):void {
@@ -49,7 +50,7 @@ export class DocumentExplorerComponent {
 
 	resolveDocument( uri:string ):void {
 		this.loadingDocument = true;
-		this.documentsResolverService.get( uri, this.documentContext ).then( ( document:RDFDocument.Class ) => {
+		this.documentsResolverService.get( uri ).then( ( document:RDFDocument.Class ) => {
 			this.zone.run( () => {
 				this.inspectingDocument = document;
 				this.loadingDocument = false;
