@@ -10,16 +10,16 @@ import { DashboardView } from "./dashboard/dashboard.view";
 import { EditInstanceComponent } from "./edit-instance/edit-instance.component";
 import { EditInstanceView } from "./edit-instance/edit-instance.view";
 import { SPARQLClientView } from "./sparql-client/sparql-client.view";
-// import { ExplorerView } from "./explorer/explorer.view";
+import { ExplorerView } from "./explorer/explorer.view";
 
 // Modules
 import { SharedModule } from "app/shared/shared.module";
 import { SPARQLClientModule } from "./sparql-client/sparql-client.module";
 import { ConfigurationModule } from "./configuration/configuration.module";
-// import { DocumentExplorerModule } from "./explorer/document-explorer/document-explorer.module";
+import { DocumentExplorerModule } from "./explorer/document-explorer/document-explorer.module";
 
 // Services
-// import { DocumentsResolverService } from "./explorer/document-explorer/documents-resolver.service";
+import { DocumentsResolverService } from "./explorer/document-explorer/documents-resolver.service";
 
 
 @NgModule( {
@@ -30,7 +30,7 @@ import { ConfigurationModule } from "./configuration/configuration.module";
 		SharedModule,
 		SPARQLClientModule,
 		ConfigurationModule,
-		// DocumentExplorerModule,
+		DocumentExplorerModule,
 	],
 	declarations: [
 		RootContentView,
@@ -38,11 +38,11 @@ import { ConfigurationModule } from "./configuration/configuration.module";
 		SPARQLClientView,
 		EditInstanceComponent,
 		EditInstanceView,
-		// ExplorerView,
+		ExplorerView,
 	],
 	exports: [],
 	providers: [
-		// DocumentsResolverService,
+		DocumentsResolverService,
 	],
 } )
 export class AppContentModule {
