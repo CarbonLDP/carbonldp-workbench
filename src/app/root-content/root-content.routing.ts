@@ -7,7 +7,7 @@ import { DashboardView } from "./dashboard/dashboard.view";
 import { EditInstanceView } from "./edit-instance/edit-instance.view";
 import { SPARQLClientView } from "./sparql-client/sparql-client.view";
 // import { ExplorerView } from "./explorer/explorer.view";
-// import { ConfigurationView } from "./configuration/configuration.view";
+import { ConfigurationView } from "./configuration/configuration.view";
 
 export const RootContentRoutes:Routes = [
 	{
@@ -47,14 +47,14 @@ export const RootContentRoutes:Routes = [
 			// 		displayName: "Explorer",
 			// 	},
 			// },
-			// {
-			// 	path: "configure",
-			// 	component: ConfigurationView,
-			// 	data: {
-			// 		alias: "configure",
-			// 		displayName: "Configuration",
-			// 	},
-			// },
+			{
+				path: "configure",
+				component: ConfigurationView,
+				data: {
+					alias: "configure",
+					displayName: "Configuration",
+				},
+			},
 			// {
 			// 	path: "security",
 			// 	loadChildren: "./security/security.module#SecurityModule",
