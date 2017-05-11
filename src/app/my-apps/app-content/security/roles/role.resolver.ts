@@ -7,7 +7,7 @@ import * as NS from "carbonldp/NS";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 
 import { RolesService } from "./roles.service";
-import { AppContentService } from "app/my-apps/app-content/app-content.service";
+import { AppContentService } from "app/root-content/app-content.service";
 
 @Injectable()
 export class RoleResolver implements Resolve<PersistedRole.Class> {

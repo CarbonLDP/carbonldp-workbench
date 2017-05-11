@@ -11,7 +11,7 @@ import * as URI from "carbonldp/RDF/URI";
 import * as NS from "carbonldp/NS";
 import * as SPARQL from "carbonldp/SPARQL";
 import { Class as RetrievalPreferences, OrderByProperty } from "carbonldp/RetrievalPreferences";
-import { AppContentService } from "app/my-apps/app-content/app-content.service";
+import { AppContentService } from "app/root-content/app-content.service";
 
 @Injectable()
 export class AgentsService {

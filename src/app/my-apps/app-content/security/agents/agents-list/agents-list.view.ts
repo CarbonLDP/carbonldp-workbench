@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
-import { AppContentService } from "app/my-apps/app-content/app-content.service";
-import * as App from "app/my-apps/app-content/app";
+import { AppContentService } from "app/root-content/app-content.service";
+import * as App from "app/root-content/app";
 
 @Component( {
 	selector: "cw-agents-list-view",

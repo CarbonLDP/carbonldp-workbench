@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 
-import * as App from "app/my-apps/app-content/app";
+import * as App from "app/root-content/app";
 
-import { AppContentService } from "app/my-apps/app-content/app-content.service";
+import { AppContentService } from "app/root-content/app-content.service";
 
 @Component( {
 	selector: "cw-roles-browser-view",

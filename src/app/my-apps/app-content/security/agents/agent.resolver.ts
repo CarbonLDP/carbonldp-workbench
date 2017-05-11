@@ -5,7 +5,7 @@ import { Router, Resolve, ActivatedRoute, ActivatedRouteSnapshot } from '@angula
 import * as PersistedAgent from "carbonldp/Auth/PersistedAgent";
 
 import { AgentsService } from "./agents.service";
-import { AppContentService } from "app/my-apps/app-content/app-content.service";
+import { AppContentService } from "app/root-content/app-content.service";
 
 @Injectable()
 export class AgentResolver implements Resolve<PersistedAgent.Class> {

@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 
 import { PersistedAgent } from "carbonldp/Auth";
 
-import { AppContentService } from "app/my-apps/app-content/app-content.service";
+import { AppContentService } from "app/root-content/app-content.service";
 import { Modes } from "./agent-details.component";
 
 @Component( {
