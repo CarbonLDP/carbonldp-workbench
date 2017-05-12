@@ -1,8 +1,7 @@
 import { Component, Input, Output, EventEmitter, NgZone } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
-import * as App from "carbonldp/App";
-import * as PersistedRole from "carbonldp/App/PersistedRole";
+import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 
 import { Modes } from "../role-details/role-details.component";
 import { RolesService } from "../roles.service";
@@ -30,7 +29,6 @@ export class RolesBrowserComponent {
 	public Modes:typeof Modes = Modes;
 	public mode:string = Modes.READ;
 
-	@Input() appContext:App.Context;
 	@Output() onRefresh:EventEmitter<string> = new EventEmitter();
 	@Output() onDelete:EventEmitter<string> = new EventEmitter();
 
@@ -55,7 +53,7 @@ export class RolesBrowserComponent {
 				this.hasRoleOnRoute = false;
 				resolve( this.activeRole );
 			}
-			resolve( this.rolesService.get( roleID, this.appContext ) );
+			resolve( this.rolesService.get( roleID ) );
 		} ).then( ( role:PersistedRole.Class ) => {
 			this.zone.run( () => {
 				this.activeRole = role;

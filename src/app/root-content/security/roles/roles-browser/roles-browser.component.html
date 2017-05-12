@@ -9,7 +9,6 @@
 			</ng-template>
 		</div>
 		<cw-roles-tree-view class="six wide column tree"
-		                    [appContext]="appContext"
 		                    [refreshNode]="onRefresh"
 		                    [deletedNode]="onDelete"
 		                    (onDoubleClickRole)="resolveRole($event); mode = Modes.READ;"
@@ -32,20 +31,17 @@
 		<cw-role-details *ngIf="!!activeRole && !loading && mode!==Modes.CREATE"
 		                 class="ten wide column role details"
 		                 [role]="activeRole"
-		                 [appContext]="appContext"
 		                 (onSuccess)="onSuccessEdit($event)">
 		</cw-role-details>
 		<cw-role-details *ngIf="!!activeRole && !loading && mode===Modes.CREATE"
 		                 class="ten wide column role details"
 		                 [mode]="'CREATE'"
-		                 [appContext]="appContext"
 		                 [embedded]="false"
 		                 [selectedRole]="selectedRole"
 		                 (onClose)="mode=Modes.READ;"
 		                 (onSuccess)="onSuccessCreate($event)"></cw-role-details>
 		<cw-role-deleter #roleDeleter
 		                 [role]="selectedRole"
-		                 [appContext]="appContext"
 		                 (onSuccess)="onSuccessDelete($event)"></cw-role-deleter>
 	</div>
 </div>

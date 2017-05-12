@@ -2,27 +2,27 @@ import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, Resolve, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 
-import * as Role from "carbonldp/App/Role";
+import { Class as Carbon } from "carbonldp/Carbon";
+import * as Role from "carbonldp/Auth/Role";
 import * as NS from "carbonldp/NS";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 
 import { RolesService } from "./roles.service";
-import { AppContentService } from "app/root-content/app-content.service";
 
 @Injectable()
 export class RoleResolver implements Resolve<PersistedRole.Class> {
 
 	private router:Router;
+	private carbon:Carbon;
 	private activatedRoute:ActivatedRoute;
 	private rolesService:RolesService;
-	private appContentService:AppContentService;
 
 
-	constructor( router:Router, route:ActivatedRoute, rolesService:RolesService, appContentService:AppContentService, private location:Location ) {
+	constructor( router:Router, carbon:Carbon, route:ActivatedRoute, rolesService:RolesService, private location:Location ) {
 		this.router = router;
+		this.carbon = carbon;
 		this.activatedRoute = route;
 		this.rolesService = rolesService;
-		this.appContentService = appContentService;
 	}
 
 
@@ -30,7 +30,7 @@ export class RoleResolver implements Resolve<PersistedRole.Class> {
 	resolve( route:ActivatedRouteSnapshot ):Promise<PersistedRole.Class> | PersistedRole.Class {
 		let slug:string = route.params[ "role-slug" ];
 		// TODO: Remove extendObjectSchema when SDK implements description and childRole
-		this.appContentService.activeApp.context.extendObjectSchema( Role.RDF_CLASS, {
+		this.carbon.extendObjectSchema( Role.RDF_CLASS, {
 			"description": {
 				"@id": NS.CS.Predicate.description,
 				"@type": "string"
@@ -40,7 +40,7 @@ export class RoleResolver implements Resolve<PersistedRole.Class> {
 				"@container": "@set"
 			}
 		} );
-		return this.rolesService.get( slug, this.appContentService.activeApp.context ).then( ( role:PersistedRole.Class ) => {
+		return this.rolesService.get( slug ).then( ( role:PersistedRole.Class ) => {
 			return role;
 		} ).catch( ( error:any ):boolean => {
 			let url:string = this.location.path(),

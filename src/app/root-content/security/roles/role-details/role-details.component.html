@@ -24,7 +24,7 @@
 	</div>
 	<div class="ui attached pointing secondary menu tabs" [ngClass]="{embedded: embedded}">
 		<a class="item" data-tab="details" (click)="activeTab='details'" [ngClass]="{active: activeTab==='details'}">Description</a>
-		<a class="item" data-tab="agents" (click)="activeTab='agents'" [ngClass]="{active: activeTab==='agents'}">Agents</a>
+		<a class="item" data-tab="users" (click)="activeTab='users'" [ngClass]="{active: activeTab==='users'}">Users</a>
 	</div>
 	<div class="ui attached tab segment form details"
 	     data-tab="details" [ngClass]="{active: activeTab==='details'}">
@@ -88,7 +88,6 @@
 								       [(ngModel)]="roleFormModel.parentRole"/>
 								<cw-roles-chooser [single]="true"
 								                  [bordered]="false"
-								                  [appContext]="appContext"
 								                  [excluded]="[role.id]"
 								                  (onChangeSelection)="changeParentRole($event)"></cw-roles-chooser>
 							</div>
@@ -98,36 +97,35 @@
 			</div>
 		</div>
 	</div>
-	<div class="ui attached tab segment agents"
-	     data-tab="agents" [ngClass]="{active: activeTab==='agents'}">
+	<div class="ui attached tab segment users"
+	     data-tab="users" [ngClass]="{active: activeTab==='users'}">
 		<div class="ui one column divided grid">
 			<div class="column field">
-				<label>List of agents currently subscribed to this role:</label>
-				<select multiple name="agents"
-				        class="agents hidden"
-				        [(ngModel)]="roleFormModel.agents">
+				<label>List of users currently subscribed to this role:</label>
+				<select multiple name="users"
+				        class="users hidden"
+				        [(ngModel)]="roleFormModel.users">
 					<option value="">Please Select</option>
-					<option *ngFor="let agent of roleFormModel.agents" [ngValue]="agent">{{agent}}</option>
+					<option *ngFor="let user of roleFormModel.users" [ngValue]="user">{{user}}</option>
 				</select>
-				<table class="ui very compact very basic small celled striped agents table" *ngIf="mode === Modes.READ">
+				<table class="ui very compact very basic small celled striped users table" *ngIf="mode === Modes.READ">
 					<tbody>
-						<tr class="bottom aligned agent" *ngFor="let agent of roleAgents; let i = index;">
+						<tr class="bottom aligned user" *ngFor="let user of roleUsers; let i = index;">
 							<td>
-								{{agent.name}}<br>
-								{{agent.id}}
+								{{user.name}}<br>
+								{{user.id}}
 							</td>
 						</tr>
-						<tr class="warning" *ngIf="roleAgents.length===0">
+						<tr class="warning" *ngIf="roleUsers.length===0">
 							<td>
-								<i class="attention icon"></i>No agents subscribed to this role yet.
+								<i class="attention icon"></i>No users subscribed to this role yet.
 							</td>
 						</tr>
 					</tbody>
 				</table>
-				<cw-agents-chooser *ngIf="mode !== Modes.READ"
-				                   [appContext]="appContext"
-				                   [selectedAgents]="roleFormModel.agents"
-				                   (onChangeSelection)="changeAgents($event)"></cw-agents-chooser>
+				<cw-users-chooser *ngIf="mode !== Modes.READ"
+				                   [selectedUsers]="roleFormModel.users"
+				                   (onChangeSelection)="changeUsers($event)"></cw-users-chooser>
 			</div>
 		</div>
 	</div>
@@ -137,7 +135,7 @@
 			<div class="header">
 				The role was saved correctly.
 			</div>
-			<p>The role was saved correctly with the agents subscriptions.</p>
+			<p>The role was saved correctly with the users subscriptions.</p>
 		</div>
 	</div>
 	<cw-message class="ui attached segment" [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="closeError($event)" *ngIf="!!errorMessage"></cw-message>

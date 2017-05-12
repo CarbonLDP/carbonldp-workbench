@@ -1,6 +1,5 @@
 import { ElementRef, Component, Input, Output, AfterViewInit, EventEmitter } from "@angular/core";
 
-import * as App from "carbonldp/App";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 
 import { RolesService } from "../roles.service";
@@ -32,7 +31,6 @@ export class RolesChooserComponent implements AfterViewInit {
 		return this._selectedRoles;
 	}
 
-	@Input() appContext:App.Context;
 	@Input() bordered:boolean = true;
 	@Input() single:boolean = false;
 	@Input() excluded:string[] = [];
@@ -46,7 +44,7 @@ export class RolesChooserComponent implements AfterViewInit {
 	}
 
 	ngAfterViewInit():void {
-		this.rolesService.getAll( this.appContext ).then( ( roles:PersistedRole.Class[] ) => {
+		this.rolesService.getAll().then( ( roles:PersistedRole.Class[] ) => {
 			roles = roles.filter( ( role:PersistedRole.Class ) => {
 				return ! this.excluded.some( ( excludedID:string ) => role.id === excludedID );
 			} );

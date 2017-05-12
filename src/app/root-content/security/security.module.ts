@@ -8,16 +8,16 @@ import { routing } from "./security.routing";
 // Components
 import { SecurityView } from "./security.view";
 
-import { AgentsView } from "./agents/agents.view";
-import { AgentsComponent } from "./agents/agents.component";
-import { AgentsListView } from "./agents/agents-list/agents-list.view";
-import { AgentsListComponent } from "./agents/agents-list/agents-list.component";
-import { AgentDetailsView } from "./agents/agent-details/agent-details.view";
-import { AgentDetailsComponent } from "./agents/agent-details/agent-details.component";
-import { AgentsChooserComponent } from "./agents/agents-chooser/agents-chooser.component";
-import { AgentDeleterComponent } from "./agents/agent-deleter/agent-deleter.component";
-import { AgentCreatorView } from "./agents/agent-creator/agent-creator.view";
-import { AgentNotFoundView } from "./agents/agent-not-found/agent-not-found.view";
+import { UsersView } from "./users/users.view";
+import { UsersComponent } from "./users/users.component";
+import { UsersListView } from "./users/users-list/users-list.view";
+import { UsersListComponent } from "./users/users-list/users-list.component";
+import { UserDetailsView } from "./users/user-details/user-details.view";
+import { UserDetailsComponent } from "./users/user-details/user-details.component";
+import { UsersChooserComponent } from "./users/users-chooser/users-chooser.component";
+import { UserDeleterComponent } from "./users/user-deleter/user-deleter.component";
+import { UserCreatorView } from "./users/user-creator/user-creator.view";
+import { UserNotFoundView } from "./users/user-not-found/user-not-found.view";
 
 import { RolesView } from "./roles/roles.view";
 import { RolesBrowserView } from "./roles/roles-browser/roles-browser.view";
@@ -32,9 +32,9 @@ import { RolesChooserComponent } from "./roles/roles-chooser/roles-chooser.compo
 import { SharedModule } from "app/shared/shared.module";
 
 // Services
-import { AgentsService } from "./agents/agents.service";
+import { UsersService } from "./users/users.service";
 import { RolesService } from "./roles/roles.service";
-import { AgentResolver } from "./agents/agent.resolver";
+import { UserResolver } from "./users/user.resolver";
 import { RoleResolver } from "./roles/role.resolver";
 
 
@@ -48,16 +48,16 @@ import { RoleResolver } from "./roles/role.resolver";
 	declarations: [
 		SecurityView,
 
-		AgentsView,
-		AgentsComponent,
-		AgentsListView,
-		AgentsListComponent,
-		AgentDetailsView,
-		AgentDetailsComponent,
-		AgentsChooserComponent,
-		AgentDeleterComponent,
-		AgentCreatorView,
-		AgentNotFoundView,
+		UsersView,
+		UsersComponent,
+		UsersListView,
+		UsersListComponent,
+		UserDetailsView,
+		UserDetailsComponent,
+		UsersChooserComponent,
+		UserDeleterComponent,
+		UserCreatorView,
+		UserNotFoundView,
 
 		RolesView,
 		RolesBrowserView,
@@ -68,9 +68,9 @@ import { RoleResolver } from "./roles/role.resolver";
 		RolesChooserComponent,
 	],
 	providers: [
-		AgentsService,
+		UsersService,
 		RolesService,
-		AgentResolver,
+		UserResolver,
 		RoleResolver,
 	],
 } )

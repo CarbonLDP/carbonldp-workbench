@@ -1,7 +1,7 @@
 import { Component, Input, Output, ElementRef, AfterViewInit, OnInit, EventEmitter } from "@angular/core";
 
-import * as App from "carbonldp/App";
-import * as PersistedRole from "carbonldp/App/PersistedRole";
+import { Class as Carbon } from "carbonldp/Carbon";
+import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 import * as HTTP from "carbonldp/HTTP";
 import * as URI from "carbonldp/RDF/URI";
 
@@ -17,6 +17,7 @@ import "jstree/dist/jstree.min";
 } )
 export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 
+	private carbon:Carbon;
 	private element:ElementRef;
 	private $element:JQuery;
 	private jsTree:JSTree;
@@ -34,7 +35,6 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 	}
 
 
-	@Input() appContext:App.Context;
 	@Input() refreshNode:EventEmitter<string> = new EventEmitter<string>();
 	@Input() openNode:EventEmitter<string> = new EventEmitter<string>();
 	@Input() deletedNode:EventEmitter<string> = new EventEmitter<string>();
@@ -46,8 +46,9 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 	@Output() onShowCreateRoleForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onShowDeleteRoleForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	constructor( element:ElementRef, rolesService:RolesService ) {
+	constructor( element:ElementRef, carbon:Carbon, rolesService:RolesService ) {
 		this.element = element;
+		this.carbon = carbon;
 		this.rolesService = rolesService;
 	}
 
@@ -71,7 +72,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 		} );
 		this.refreshNode.subscribe( ( nodeId:string ) => {
 			let node:JSTreeNode = this.jsTree.get_node( nodeId );
-			if( node[ "parent" ] === "#" ) this.jsTree.move_node( node, this.appContext.getBaseURI() + "roles/app-admin/" );
+			if( node[ "parent" ] === "#" ) this.jsTree.move_node( node, this.carbon.getBaseURI() + ".system/roles/admin/" );
 			this.jsTree.close_node( node[ "parent" ] );
 			this.jsTree.open_node( node[ "parent" ] );
 			this.loadNode( node );
@@ -101,7 +102,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 	private getChildren( roleID?:string ):Promise<JSTreeNode[]> {
 		let nodes:JSTreeNode[] = [];
 		! ! roleID && URI.Util.isAbsolute( roleID ) ? roleID = roleID : roleID = null;
-		return this.rolesService.getChildren( this.appContext, roleID ).then( ( roles:PersistedRole.Class[] ) => {
+		return this.rolesService.getChildren( roleID ).then( ( roles:PersistedRole.Class[] ) => {
 			roles.forEach( ( role:PersistedRole.Class ) => {
 				let node:JSTreeNode = this.buildNode( role.id, role.name, null, role[ "hasChildren" ] );
 				nodes.push( node );

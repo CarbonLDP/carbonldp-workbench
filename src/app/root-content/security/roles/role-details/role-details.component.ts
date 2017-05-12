@@ -1,9 +1,8 @@
 import { Component, Input, Output, ElementRef, SimpleChange, EventEmitter } from "@angular/core"
 
-import * as App from "carbonldp/App";
-import * as Role from "carbonldp/App/Role";
-import * as PersistedRole from "carbonldp/App/PersistedRole";
-import * as PersistedAgent from "carbonldp/App/PersistedAgent";
+import * as Role from "carbonldp/Auth/Role";
+import * as PersistedRole from "carbonldp/Auth/PersistedRole";
+import * as PersistedUser from "carbonldp/Auth/PersistedUser";
 import * as HTTP from "carbonldp/HTTP";
 import * as NS from "carbonldp/NS";
 import * as Pointer from "carbonldp/Pointer";
@@ -27,7 +26,7 @@ export class RoleDetailsComponent {
 	private $element:JQuery;
 	private rolesService:RolesService;
 	private messagesAreaService:MessagesAreaService;
-	private roleAgents:PersistedAgent.Class[] = [];
+	private roleUsers:PersistedUser.Class[] = [];
 	private parentRole:PersistedRole.Class;
 
 	public Modes:typeof Modes = Modes;
@@ -36,7 +35,7 @@ export class RoleDetailsComponent {
 		name: "",
 		description: "",
 		parentRole: "",
-		agents: [],
+		users: [],
 	};
 	public activeTab:string = "details";
 	public errorMessage:Message;
@@ -47,7 +46,6 @@ export class RoleDetailsComponent {
 	@Input() embedded:boolean = true;
 	@Input() mode:string = Modes.READ;
 	@Input() role:PersistedRole.Class = <any>Role.Factory.create( "New Role" );
-	@Input() appContext:App.Context;
 	@Input() selectedRole:string | PersistedRole.Class;
 
 	@Output() onClose:EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -78,11 +76,11 @@ export class RoleDetailsComponent {
 		this.roleFormModel.name = role.name;
 		this.roleFormModel.description = role[ NS.CS.Predicate.description ];
 		this.roleFormModel.parentRole = ! ! role.parentRole ? role.parentRole.id : null;
-		this.mustAddParent = (! this.role.id.endsWith( "roles/app-admin/" ) && ! this.role.parentRole);
-		this.getAgents( this.role ).then( ( agents ) => {
-			this.roleAgents = [];
-			this.roleAgents = agents;
-			this.roleFormModel.agents = [ ...agents ];
+		this.mustAddParent = (! this.role.id.endsWith( "roles/admin/" ) && ! this.role.parentRole);
+		this.getUsers( this.role ).then( ( users ) => {
+			this.roleUsers = [];
+			this.roleUsers = users;
+			this.roleFormModel.users = [ ...users ];
 		} );
 		if( ! ! this.role.parentRole ) {
 			this.getRole( this.role.parentRole.id ).then( ( parentRole:PersistedRole.Class ) => {
@@ -110,10 +108,10 @@ export class RoleDetailsComponent {
 	private editRole( role:PersistedRole.Class, roleData:RoleFormModel ):void {
 		role.name = roleData.name;
 		role[ NS.CS.Predicate.description ] = roleData.description;
-		this.rolesService.saveAndRefresh( this.appContext, role ).then( ( [ updatedRole, [ saveResponse, refreshResponse ] ]:[ PersistedRole.Class, [ HTTP.Response.Class, HTTP.Response.Class ] ] ) => {
-			return this.editRoleAgents( role, roleData.agents );
+		this.rolesService.saveAndRefresh( role ).then( ( [ updatedRole, [ saveResponse, refreshResponse ] ]:[ PersistedRole.Class, [ HTTP.Response.Class, HTTP.Response.Class ] ] ) => {
+			return this.editRoleUsers( role, roleData.users );
 		} ).then( () => {
-			if( role.id.endsWith( "roles/app-admin/" ) )
+			if( role.id.endsWith( "roles/admin/" ) )
 				return new Promise( ( resolve, reject ) => { resolve( role )} );
 			else if( ! role.parentRole )
 				return this.parentRole.addMember( role );
@@ -135,8 +133,8 @@ export class RoleDetailsComponent {
 	private createRole( role:PersistedRole.Class, roleData:RoleFormModel ):void {
 		role.name = roleData.name;
 		role[ NS.CS.Predicate.description ] = roleData.description;
-		this.rolesService.create( this.appContext, this.selectedRole, this.role, roleData.slug ).then( ( persistedRole:PersistedRole.Class ) => {
-			return this.editRoleAgents( persistedRole, roleData.agents );
+		this.rolesService.create( this.selectedRole, this.role, roleData.slug ).then( ( persistedRole:PersistedRole.Class ) => {
+			return this.editRoleUsers( persistedRole, roleData.users );
 		} ).then( ( persistedRole:PersistedRole.Class ) => {
 			this.onSuccess.emit( this.role.id );
 			this.cancelForm();
@@ -154,60 +152,56 @@ export class RoleDetailsComponent {
 		} );
 	}
 
-	private getAgents( role:PersistedRole.Class ):Promise<PersistedAgent.Class[]> {
+	private getUsers( role:PersistedRole.Class ):Promise<PersistedUser.Class[]> {
 		let promises:Promise<any>[] = [],
-			agents:PersistedAgent.Class[] = [];
-		if( typeof role.agents === "undefined" ) return Promise.resolve( agents );
+			users:PersistedUser.Class[] = [];
+		if( typeof role.users === "undefined" ) return Promise.resolve( users );
 
-		(<any>role.agents).forEach( ( agentPointer:Pointer.Class ) => {
-			promises.push( agentPointer.resolve() );
+		(<any>role.users).forEach( ( userPointer:Pointer.Class ) => {
+			promises.push( userPointer.resolve() );
 		} );
-		return Promise.all( promises ).then( ( resolvedAgents:[ PersistedAgent.Class, HTTP.Response.Class ][] ) => {
-			resolvedAgents.forEach( ( [ resolvedAgent, response ]:[ PersistedAgent.Class, HTTP.Response.Class ] ) => {
-				if( resolvedAgent.id.indexOf( this.appContext.getBaseURI() ) !== - 1 )
-					agents.push( resolvedAgent );
-			} );
-			return agents;
+		return Promise.all( promises ).then( ( resolvedUsers:[ PersistedUser.Class, HTTP.Response.Class ][] ) => {
+			return resolvedUsers;
 		} );
 	}
 
 	private getRole( roleID:string ):Promise<PersistedRole.Class> {
-		return this.rolesService.get( roleID, this.appContext );
+		return this.rolesService.get( roleID );
 	}
 
-	private editRoleAgents( role:PersistedRole.Class, selectedAgents:PersistedAgent.Class[] ):Promise<any> {
+	private editRoleUsers( role:PersistedRole.Class, selectedUsers:PersistedUser.Class[] ):Promise<any> {
 		let promises:Promise<any>[] = [],
-			removedAgents:PersistedAgent.Class[] = this.getRemovedAgents( selectedAgents );
+			removedUsers:PersistedUser.Class[] = this.getRemovedUsers( selectedUsers );
 
-		selectedAgents.forEach( ( agent:PersistedAgent.Class ) => {
-			promises.push( this.registerAgentToRole( agent.id, role.id ) )
+		selectedUsers.forEach( ( user:PersistedUser.Class ) => {
+			promises.push( this.registerUserToRole( user.id, role.id ) )
 		} );
-		removedAgents.forEach( ( agent:PersistedAgent.Class ) => {
-			promises.push( this.removeAgentFromRole( agent.id, role.id ) )
+		removedUsers.forEach( ( user:PersistedUser.Class ) => {
+			promises.push( this.removeUserFromRole( user.id, role.id ) )
 		} );
 
 		return Promise.all( promises ).catch( ( error ) => {
 			let generatedMessage:Message = ErrorMessageGenerator.getErrorMessage( error ),
-				finalError:Error = new Error( "The role details were saved but an error occurred while trying to persist the agents: " + generatedMessage.content );
-			finalError.name = "Agent Saved";
+				finalError:Error = new Error( "The role details were saved but an error occurred while trying to persist the users: " + generatedMessage.content );
+			finalError.name = "User Saved";
 			throw finalError;
 		} );
 	}
 
-	private getRemovedAgents( selectedAgents:PersistedAgent.Class[] ):PersistedAgent.Class[] {
-		return this.roleAgents.filter( ( roleAgent:PersistedAgent.Class ) => {
-			return ! selectedAgents.some( ( selectedAgent:PersistedAgent.Class ) => selectedAgent.id === roleAgent.id );
-		} ).map( ( removedAgent:PersistedAgent.Class ) => {
-			return removedAgent
+	private getRemovedUsers( selectedUsers:PersistedUser.Class[] ):PersistedUser.Class[] {
+		return this.roleUsers.filter( ( roleUser:PersistedUser.Class ) => {
+			return ! selectedUsers.some( ( selectedUser:PersistedUser.Class ) => selectedUser.id === roleUser.id );
+		} ).map( ( removedUser:PersistedUser.Class ) => {
+			return removedUser
 		} );
 	}
 
-	private registerAgentToRole( agentID:string, roleID:string ):Promise<HTTP.Response.Class> {
-		return this.rolesService.registerAgent( this.appContext, agentID, roleID );
+	private registerUserToRole( userID:string, roleID:string ):Promise<HTTP.Response.Class> {
+		return this.rolesService.registerUser( userID, roleID );
 	}
 
-	private removeAgentFromRole( agentID:string, roleID:string ):Promise<HTTP.Response.Class> {
-		return this.rolesService.removeAgent( this.appContext, agentID, roleID );
+	private removeUserFromRole( userID:string, roleID:string ):Promise<HTTP.Response.Class> {
+		return this.rolesService.removeUser( userID, roleID );
 	}
 
 	public getSanitizedSlug( slug:string ):string {
@@ -218,8 +212,8 @@ export class RoleDetailsComponent {
 		evt.target.value = DocumentExplorerLibrary.getAppendedSlashSlug( evt.target.value );
 	}
 
-	private changeAgents( selectedAgents:PersistedAgent.Class[] ):void {
-		this.roleFormModel.agents = selectedAgents;
+	private changeUsers( selectedUsers:PersistedUser.Class[] ):void {
+		this.roleFormModel.users = selectedUsers;
 	}
 
 	private changeParentRole( parentRoles:PersistedRole.Class[] ):void {
@@ -257,5 +251,5 @@ export interface RoleFormModel {
 	name:string;
 	description?:string;
 	parentRole?:string;
-	agents:PersistedAgent.Class[];
+	users:PersistedUser.Class[];
 }

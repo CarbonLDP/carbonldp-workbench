@@ -1,0 +1,27 @@
+:host {
+	display: block;
+	width: 100%;
+
+	> div.basic.segment.users {
+		padding: 0;
+	}
+	> div.basic.segment.users.loading {
+		border: 1px solid #d3d3d3;
+	}
+	table.users {
+		tr.user {
+			line-height: 1.5em;
+			cursor: pointer;
+		}
+	}
+	table.users.borderless {
+		border: none;
+	}
+	cw-paginator {
+		display: inline;
+	}
+	select.ui.dropdown {
+		width: auto;
+		display: inline;
+	}
+}

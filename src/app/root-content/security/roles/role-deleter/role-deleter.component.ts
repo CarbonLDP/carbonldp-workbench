@@ -1,7 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
-import * as App from "carbonldp/App";
-import * as PersistedRole from "carbonldp/App/PersistedRole";
+import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 import * as HTTP from "carbonldp/HTTP";
 
 import { Message } from "app/shared/messages-area/message.component";
@@ -26,7 +25,6 @@ export class RoleDeleterComponent implements AfterViewInit {
 	public errorMessages:Message[] = [];
 	public deletingRole:boolean = false;
 
-	@Input() appContext:App.Context;
 	@Input() role:string;
 	@Output() onSuccess:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
@@ -48,7 +46,7 @@ export class RoleDeleterComponent implements AfterViewInit {
 
 	public onSubmitDeleteRole():void {
 		this.deletingRole = true;
-		this.rolesService.getDescendants( this.appContext, this.role ).then( ( rolesToDelete:PersistedRole.Class[] ) => {
+		this.rolesService.getDescendants( this.role ).then( ( rolesToDelete:PersistedRole.Class[] ) => {
 			return rolesToDelete;
 		} ).then(
 			( rolesToDelete:PersistedRole.Class[] ) => {
@@ -75,7 +73,7 @@ export class RoleDeleterComponent implements AfterViewInit {
 	}
 
 	private deleteRole( roleID:string ):Promise<HTTP.Response.Class> {
-		return this.rolesService.delete( this.appContext, roleID ).catch( ( error:HTTP.Errors.Error ) => {
+		return this.rolesService.delete( roleID ).catch( ( error:HTTP.Errors.Error ) => {
 			this.errorMessages.push( ErrorMessageGenerator.getErrorMessage( error ) );
 			throw error;
 		} );

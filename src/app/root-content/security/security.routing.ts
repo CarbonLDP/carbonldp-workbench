@@ -3,12 +3,12 @@ import { Routes, RouterModule } from "@angular/router";
 
 
 import { SecurityView } from "./security.view";
-import { AgentsView } from "./agents/agents.view";
-import { AgentResolver } from "./agents/agent.resolver";
-import { AgentsListView } from "./agents/agents-list/agents-list.view";
-import { AgentDetailsView } from "./agents/agent-details/agent-details.view";
-import { AgentCreatorView } from "./agents/agent-creator/agent-creator.view";
-import { AgentNotFoundView } from "./agents/agent-not-found/agent-not-found.view";
+import { UsersView } from "./users/users.view";
+import { UserResolver } from "./users/user.resolver";
+import { UsersListView } from "./users/users-list/users-list.view";
+import { UserDetailsView } from "./users/user-details/user-details.view";
+import { UserCreatorView } from "./users/user-creator/user-creator.view";
+import { UserNotFoundView } from "./users/user-not-found/user-not-found.view";
 import { RolesView } from "./roles/roles.view";
 import { RoleResolver } from "./roles/role.resolver";
 import { RolesBrowserView } from "./roles/roles-browser/roles-browser.view";
@@ -24,16 +24,16 @@ export const SecurityRoutes:Routes = [
 		children: [
 			{
 				path: "",
-				redirectTo: "agents",
+				redirectTo: "users",
 				pathMatch: "full",
 			},
 			{
-				path: "agents",
+				path: "users",
 				data: {
-					alias: "agents",
-					displayName: "Agents",
+					alias: "users",
+					displayName: "Users",
 				},
-				component: AgentsView,
+				component: UsersView,
 				children: [
 					{
 						path: "",
@@ -41,39 +41,39 @@ export const SecurityRoutes:Routes = [
 							// TODO: Remove hide property when Angular's Router bug is fixed
 							hide: true
 						},
-						component: AgentsListView,
+						component: UsersListView,
 					},
 					{
 						path: "list",
-						component: AgentsListView,
+						component: UsersListView,
 					},
 					{
 						path: "create",
 						data: {
 							alias: "create",
-							displayName: "Create Agent",
+							displayName: "Create User",
 						},
-						component: AgentCreatorView,
+						component: UserCreatorView,
 					},
 					{
-						path: "agent-not-found",
-						component: AgentNotFoundView,
+						path: "user-not-found",
+						component: UserNotFoundView,
 						data: {
-							alias: "agent-not-found",
-							displayName: "No Agent"
+							alias: "user-not-found",
+							displayName: "No User"
 						}
 					},
 					{
-						path: ":agent-slug",
+						path: ":user-slug",
 						resolve: {
-							agent: AgentResolver,
+							user: UserResolver,
 						},
 						data: {
-							param: "agent-slug",
-							displayName: "Agent",
-							title: "Agent",
+							param: "user-slug",
+							displayName: "User",
+							title: "User",
 						},
-						component: AgentDetailsView,
+						component: UserDetailsView,
 					}
 				]
 			},

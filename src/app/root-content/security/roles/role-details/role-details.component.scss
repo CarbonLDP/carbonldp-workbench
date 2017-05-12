@@ -4,11 +4,11 @@
 		display: none;
 	}
 
-	table.agents {
+	table.users {
 		margin-top: 0;
 		border: 1px solid #d3d3d3;
 
-		tr.agent {
+		tr.user {
 			line-height: 1.5em;
 		}
 	}
@@ -28,7 +28,7 @@
 		max-height: 58px;
 	}
 
-	.ui.attached.segment.agents {
+	.ui.attached.segment.users {
 		max-height: 400px;
 		overflow-y: scroll;
 	}
