@@ -94,13 +94,33 @@ export class WorkbenchView {
 			{
 				type: "link",
 				name: "Dashboard",
+				icon: "bar chart icon",
 				route: [ "" ],
 				index: 0,
 			},
 			{
 				type: "link",
-				name: "Apps",
-				route: [ "", "my-apps" ]
+				name: "Document Explorer",
+				icon: "list layout icon",
+				route: [ "explore" ],
+			},
+			{
+				type: "link",
+				name: "SPARQL Client",
+				icon: "terminal icon",
+				route: [ "sparql-client" ],
+			},
+			{
+				type: "link",
+				name: "Security",
+				icon: "lock icon",
+				route: [ "security", "agents" ],
+			},
+			{
+				type: "link",
+				name: "Configuration",
+				icon: "settings icon",
+				route: [ "configure" ],
 			}
 		] );
 	}
