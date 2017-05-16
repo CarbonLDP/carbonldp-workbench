@@ -10,7 +10,6 @@ import { LoginView } from "./login/login.view";
 import { WorkbenchView } from "./workbench/workbench.view";
 import { ErrorView } from "./error-pages/error.view";
 import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
-import { DashboardView } from "./dashboard/dashboard.view";
 
 const appRoutes:Routes = [
 	{
@@ -42,16 +41,7 @@ const appRoutes:Routes = [
 		children: [
 			{
 				path: "",
-				component: DashboardView,
-				data: {
-					alias: "",
-					displayName: "Dashboard",
-					title: false,
-				},
-			},
-			{
-				path: "my-apps",
-				loadChildren: "./my-apps/my-apps.module#MyAppsModule",
+				loadChildren: "./root/root.module#RootModule",
 			},
 		]
 	},

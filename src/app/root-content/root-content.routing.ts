@@ -21,6 +21,10 @@ export const RootContentRoutes:Routes = [
 		children: [
 			{
 				path: "",
+				data: {
+					alias: "",
+					displayName: "Dashboard",
+				},
 				component: DashboardView,
 			},
 			{
@@ -55,10 +59,10 @@ export const RootContentRoutes:Routes = [
 					displayName: "Configuration",
 				},
 			},
-			// {
-			// 	path: "security",
-			// 	loadChildren: "./security/security.module#SecurityModule",
-			// },
+			{
+				path: "security",
+				loadChildren: "./security/security.module#SecurityModule",
+			},
 		]
 	}
 ];
