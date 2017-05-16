@@ -1,7 +1,7 @@
 import { enableProdMode, NgModuleRef } from "@angular/core";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 
-import { appInjector, activeContext } from "angular-carbonldp/boot";
+import { appInjector, carbonProvider } from "angular-carbonldp/boot";
 
 import { Class as Carbon } from "carbonldp/Carbon";
 
@@ -11,7 +11,7 @@ import { AppModule } from "app/app.module";
 let carbon:Carbon = new Carbon();
 if( CARBON_PROTOCOL !== "https" ) carbon.setSetting( "http.ssl", false );
 carbon.setSetting( "domain", CARBON_HOST );
-activeContext.initialize( <any>carbon );
+carbonProvider.initialize( <any>carbon );
 
 if( ! DEBUG ) enableProdMode();
 
