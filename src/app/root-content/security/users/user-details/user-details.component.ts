@@ -2,9 +2,9 @@ import { ElementRef, Component, Input, Output, EventEmitter, AfterViewInit, OnCh
 
 import * as User from "carbonldp/Auth/User";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
-import * as PersistedUser from "carbonldp/Auth/PersistedUser";
+import * as PersistedUser from "app/migration-temp/Auth/PersistedUser";
+import * as Credentials from "app/migration-temp/Auth/Credentials";
 import * as HTTP from "carbonldp/HTTP";
-import * as RDF from "carbonldp/RDF";
 
 import { UsersService } from "../users.service";
 import { RolesService } from "../../roles/roles.service";
@@ -72,28 +72,29 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 
 	ngOnChanges( changes:SimpleChanges ):void {
 		if( ! ! changes[ "user" ] && (changes[ "user" ].currentValue !== changes[ "user" ].previousValue || (typeof changes[ "user" ].currentValue === "undefined" && typeof changes[ "user" ].previousValue === "undefined"  )) ) {
-			if( this.mode === Modes.CREATE && ! this.user ) {
-				this.user = <User.Class & PersistedUser.Class>User.Factory.create( "New User Name", "new-user@mail.com", "password" );
-			}
+			// if( this.mode === Modes.CREATE && ! this.user ) {
+			// 	this.user = <User.Class & PersistedUser.Class>User.Factory.create( "New User Name", "new-user@mail.com", "password" );
+			// }
 			this.changeUser( this.user );
 		}
-		// if(typeof changes[ "user" ].currentValue === "undefined"){}
 	}
 
 	private changeUser( newUser:PersistedUser.Class ):void {
 		this.user = newUser;
-		let userSlug:string = RDF.URI.Util.getSlug( this.user.id );
 		if( this.mode === Modes.CREATE ) {
-			userSlug = "new-user-name";
+			this.updateFormModel( "New User Name", "new-user@mail.com", "password", true, [] );
+		} else {
+			this.user.credentials.resolve().then( ( [ credentials, promise ]:[ PersistedCredentials.Class, HTTP.Response.Class ] ) => {
+				this.updateFormModel(
+					this.user.name,
+					(<Credentials.Class>this.user.credentials).email,
+					(<Credentials.Class>this.user.credentials).password,
+					(<Credentials.Class>this.user.credentials).enabled,
+					[]
+				)
+			} );
 		}
 
-		this.userFormModel.slug = this.getSanitizedSlug( userSlug );
-		this.userFormModel.name = this.user.name;
-		this.userFormModel.email = this.user.email;
-		this.userFormModel.roles = [];
-		this.userFormModel.password = "";
-		this.userFormModel.repeatPassword = "";
-		this.userFormModel.enabled = this.mode === Modes.CREATE ? true : this.user.enabled;
 		this.getRoles( this.user ).then( ( roles:PersistedRole.Class[] ) => {
 			roles.forEach( ( role:PersistedRole.Class ) => {
 				this.userFormModel.roles.push( role.id );
@@ -102,11 +103,20 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 		} );
 	}
 
+	private updateFormModel( name:string, email:string, password:string, enabled:boolean, roles:Array<any> ):void {
+		this.userFormModel.name = name;
+		this.userFormModel.email = email;
+		this.userFormModel.password = password;
+		this.userFormModel.repeatPassword = "";
+		this.userFormModel.enabled = enabled;
+		this.userFormModel.roles = roles;
+	}
+
 	private getRoles():Promise<PersistedRole.Class[]>;
 	private getRoles( user?:PersistedUser.Class ):Promise<PersistedRole.Class[]>;
 	private getRoles( user?:any ):Promise<PersistedRole.Class[]> {
 		if( ! user ) return this.rolesService.getAll();
-		return this.rolesService.getAll(  ).then( ( roles:PersistedRole.Class[] ) => {
+		return this.rolesService.getAll().then( ( roles:PersistedRole.Class[] ) => {
 			return roles.filter( ( role:any ) => {
 				return ! role.users ? false : role.users.some( ( listedUser:User.Class ) => {return listedUser.id === user.id } );
 			} );
@@ -140,17 +150,17 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 				this.editUser( this.user, data );
 				break;
 			case Modes.CREATE:
-				this.createUser( this.user, data );
+				this.createUser( data );
 				break;
 		}
 	}
 
 	private editUser( user:PersistedUser.Class, userData:UserFormModel ):void {
-		user.email = userData.email;
 		user.name = userData.name;
-		user.password = userData.password.trim().length > 0 ? userData.password : user.password;
-		user.enabled = userData.enabled;
-		this.usersService.saveAndRefreshUser(  user ).then( ( [ updatedUser, [ saveResponse, refreshResponse ] ]:[ PersistedUser.Class, [ HTTP.Response.Class, HTTP.Response.Class ] ] ) => {
+		(<Credentials.Class>user.credentials).email = userData.email;
+		(<Credentials.Class>user.credentials).password = userData.password.trim().length > 0 ? userData.password : (<Credentials.Class>user.credentials).password;
+		(<Credentials.Class>user.credentials).enabled = userData.enabled;
+		user.saveAndRefresh().then( ( [ updatedUser, [ saveResponse, refreshResponse ] ]:[ PersistedUser.Class, [ HTTP.Response.Class, HTTP.Response.Class ] ] ) => {
 			return this.editUserRoles( user, userData.roles );
 		} ).then( () => {
 			this.displaySuccessMessage = true;
@@ -163,13 +173,13 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 		} );
 	}
 
-	private createUser( user:PersistedUser.Class, userData:UserFormModel ):void {
-		user.email = userData.email;
-		user.name = userData.name;
-		user.password = userData.password;
-		user.enabled = userData.enabled;
-		this.usersService.createUser( <any>user, userData.slug ).then( ( [ updatedUser, response ]:[ PersistedUser.Class, HTTP.Response.Class ] ) => {
-			return this.editUserRoles( user, userData.roles );
+	private createUser( userData:UserFormModel ):void {
+		this.usersService.createUser( userData.email, userData.password, userData.enabled ).then( ( [ createdUser, response ]:[ PersistedUser.Class, HTTP.Response.Class ] ) => {
+			createdUser.name = userData.name;
+			return createdUser.saveAndRefresh();
+		} ).then( ( [ createdUser, response ]:[ PersistedUser.Class, [ HTTP.Response.Class, HTTP.Response.Class ] ] ) => {
+			this.user = createdUser;
+			return this.editUserRoles( this.user, userData.roles );
 		} ).then( () => {
 			let successMessage:Message = {
 				title: "User Created",
