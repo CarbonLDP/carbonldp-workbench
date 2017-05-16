@@ -1,9 +1,10 @@
 import { Injectable, EventEmitter } from "@angular/core";
 
 import { Class as Carbon } from "carbonldp/Carbon";
-import * as User from "carbonldp/Auth/User";
-import * as Users from "carbonldp/Auth/Users";
-import * as PersistedUser from "carbonldp/Auth/PersistedUser";
+import * as User from "app/migration-temp/Auth/User";
+import * as Users from "app/migration-temp/Auth/Users";
+import * as PersistedUser from "app/migration-temp/Auth/PersistedUser";
+import * as Credentials from "app/migration-temp/Auth/Credentials";
 import * as HTTP from "carbonldp/HTTP";
 import * as Utils from "carbonldp/Utils";
 import * as URI from "carbonldp/RDF/URI";
@@ -28,7 +29,7 @@ export class UsersService {
 
 	public onUserHasChanged:EventEmitter<PersistedUser.Class> = new EventEmitter<User.Class>();
 
-	constructor( carbon:Carbon) {
+	constructor( carbon:Carbon ) {
 		this.carbon = carbon;
 		this.users = new Map<string, PersistedUser.Class>();
 	}
@@ -89,8 +90,7 @@ export class UsersService {
 
 
 		return this.carbon.documents.getMembers<PersistedUser.Class>( uri, false, preferences ).then( ( [ users, response ]:[ PersistedUser.Class[], HTTP.Response.Class ] ) => {
-			users.filter( ( user:PersistedUser.Class ) => ! this.users.has( user.id ) )
-				.forEach( ( user:PersistedUser.Class ) => this.users.set( user.id, user ) );
+			users.forEach( ( user:PersistedUser.Class ) => this.users.set( user.id, user ) );
 
 			let usersArray:PersistedUser.Class[] = Utils.A.from( this.users.values() );
 			if( orderBy ) usersArray = this.getSortedUsers( usersArray, orderBy, ascending );
@@ -99,7 +99,7 @@ export class UsersService {
 		} );
 	}
 
-	public getNumberOfUsers( ):Promise<number> {
+	public getNumberOfUsers():Promise<number> {
 		// TODO: check this query. Probably namespace CS will change
 		let usersURI:string = this.carbon.getBaseURI() + "users/",
 			query:string = `SELECT DISTINCT (COUNT(?user) AS ?count) WHERE {
@@ -119,9 +119,8 @@ export class UsersService {
 		return user.saveAndRefresh();
 	}
 
-	public createUser( user:User.Class, slug?:string ):Promise<[ PersistedUser.Class, HTTP.Response.Class ]> {
-		let users:Users.Class = this.carbon.auth.users;
-		return users.register( user, slug );
+	public createUser( email:string, password:string, enabled:boolean ):Promise<[ PersistedUser.Class, HTTP.Response.Class ]> {
+		return (<Users.Class>this.carbon.auth.users).register( email, password, enabled );
 	}
 
 	public deleteUser( user:User.Class, slug?:string ):Promise<HTTP.Response.Class> {
