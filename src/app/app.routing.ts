@@ -3,7 +3,7 @@ import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
 
 // Guards
 import { AuthenticatedGuard, NotAuthenticatedGuard } from "angular-carbonldp/guards";
-import { ActiveContextResolver } from "angular-carbonldp/resolvers";
+import { CarbonProviderResolver } from "angular-carbonldp/resolvers";
 
 // Components
 import { LoginView } from "./login/login.view";
@@ -41,7 +41,7 @@ const appRoutes:Routes = [
 		children: [
 			{
 				path: "",
-				loadChildren: "./root/root.module#RootModule",
+				loadChildren: "app/root-content/root-content.module#RootContentModule",
 			},
 		]
 	},
@@ -63,7 +63,7 @@ const appRoutes:Routes = [
 
 
 export const appRoutingProviders:any[] = [
-	ActiveContextResolver,
+	CarbonProviderResolver,
 	AuthenticatedGuard,
 	NotAuthenticatedGuard,
 ];

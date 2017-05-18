@@ -5,7 +5,7 @@ import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "../documents-resolver.service"
 import { Message } from "app/shared/messages-area/message.component";
-import { DocumentExplorerLibrary } from "src/app/root-content/explorer/document-explorer/document-explorer-library";
+import { DocumentExplorerLibrary } from "app/root-content/explorer/document-explorer/document-explorer-library";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
 
 import "semantic-ui/semantic";
@@ -45,7 +45,7 @@ export class DocumentDeleterComponent implements AfterViewInit {
 	}
 
 	public onSubmitDeleteDocument( data:{}, $event:any ):void {
-		this.documentsResolverService.delete(  this.documentURI ).then( ( result ) => {
+		this.documentsResolverService.delete( this.documentURI ).then( ( result ) => {
 			this.onSuccess.emit( DocumentExplorerLibrary.getParentURI( this.documentURI ) );
 			this.hide();
 		} ).catch( ( error:HTTPError ) => {
