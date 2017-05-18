@@ -66,20 +66,6 @@
 			<span *ngIf="!repeatPassword.control.hasError( 'required' ) && repeatPassword.control.hasError( 'matchError' )">The passwords don't match</span>
 		</cw-error-label>
 	</div>
-	<div class="field" [ngClass]="{ error: profileId.invalid }" title="A short way to identify your profile">
-		<div class="ui left icon input">
-			<i class="user icon"></i>
-			<input type="text" name="profileId" placeholder="Optional: Profile ID, E.g. my-agent-name"
-			       [(ngModel)]="register.profileId"
-			       cwValidation
-			       (blur)="sanitize( $event )"
-			       cw-slug
-			       #profileId="cwValidation">
-		</div>
-		<cw-error-label *ngIf="!profileId.valid">
-			<span *ngIf="profileId.control.hasError( 'invalidSlug' )">Please enter a valid profile ID. Only alphanumeric characters and dashes are allowed</span>
-		</cw-error-label>
-	</div>
 	<button type="submit"
 	        [ngClass]="{ loading: sending }"
 	        class="ui fluid large submit button"

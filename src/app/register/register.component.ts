@@ -21,12 +21,11 @@ export class RegisterComponent implements OnInit {
 
 	sending:boolean = false;
 	errorMessage:string = "";
-	register:{ name:string, email:string, password:string, repeatPassword:string, profileId:string } = {
+	register:{ name:string, email:string, password:string, repeatPassword:string } = {
 		name: "",
 		email: "",
 		password: "",
-		repeatPassword: "",
-		profileId: ""
+		repeatPassword: ""
 	};
 
 	constructor( element:ElementRef, @Inject( AuthService.Token ) authService:AuthService.Class ) {
@@ -53,11 +52,8 @@ export class RegisterComponent implements OnInit {
 		let name:string = form.controls.name.value;
 		let username:string = form.controls.email.value;
 		let password:string = form.controls.password.value;
-		let profileId:string = form.controls.profileId.value;
 
-		if( ! profileId ) profileId = void 0;
-
-		this.authService.register( name, username, password, profileId ).then( () => {
+		this.authService.register( name, username, password, true ).then( () => {
 			this.sending = false;
 			this.onRegister.emit( null );
 		} ).catch( ( error:any ) => {
@@ -72,7 +68,6 @@ export class RegisterComponent implements OnInit {
 			if( slug ) {
 				slug = slug.toLowerCase().replace( / - | -|- /g, "-" ).replace( /[^-\w ]+/g, "" ).replace( / +/g, "-" );
 				if( slug.charAt( slug.length - 1 ) !== "/" ) slug += "/";
-				this.register.profileId = slug;
 			}
 		}
 	}
