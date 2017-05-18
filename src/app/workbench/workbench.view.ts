@@ -65,7 +65,7 @@ export class WorkbenchView {
 			this.router.navigate( [ "/login" ] );
 		} );
 
-		let name:string = this.carbon.auth.authenticatedAgent[ "name" ] ? this.carbon.auth.authenticatedAgent.name : "User";
+		let name:string = this.carbon.auth.authenticatedUser.name ? this.carbon.auth.authenticatedUser.name : "User";
 		// TODO: Remove any to use HeaderItem instead
 		this.headerService.addItems( <any>[
 			{

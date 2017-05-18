@@ -72,7 +72,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 		} );
 		this.refreshNode.subscribe( ( nodeId:string ) => {
 			let node:JSTreeNode = this.jsTree.get_node( nodeId );
-			if( node[ "parent" ] === "#" ) this.jsTree.move_node( node, this.carbon.getBaseURI() + ".system/roles/admin/" );
+			if( node[ "parent" ] === "#" ) this.jsTree.move_node( node, this.carbon.baseURI + ".system/roles/admin/" );
 			this.jsTree.close_node( node[ "parent" ] );
 			this.jsTree.open_node( node[ "parent" ] );
 			this.loadNode( node );
