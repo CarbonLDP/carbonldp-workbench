@@ -8,9 +8,7 @@ import { Class as Carbon } from "carbonldp/Carbon";
 import { CARBON_PROTOCOL, CARBON_HOST, DEBUG } from "app/config";
 import { AppModule } from "app/app.module";
 
-let carbon:Carbon = new Carbon();
-if( CARBON_PROTOCOL !== "https" ) carbon.setSetting( "http.ssl", false );
-carbon.setSetting( "domain", CARBON_HOST );
+let carbon:Carbon = new Carbon( CARBON_HOST, CARBON_PROTOCOL === "https" );
 carbonProvider.initialize( <any>carbon );
 
 if( ! DEBUG ) enableProdMode();
