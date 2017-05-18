@@ -45,5 +45,5 @@ import { DocumentsResolverService } from "./explorer/document-explorer/documents
 		DocumentsResolverService,
 	],
 } )
-export class AppContentModule {
+export class RootContentModule {
 }

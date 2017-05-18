@@ -61,7 +61,7 @@ export const RootContentRoutes:Routes = [
 			},
 			{
 				path: "security",
-				loadChildren: "./security/security.module#SecurityModule",
+				loadChildren: "app/root-content/security/security.module#SecurityModule",
 			},
 		]
 	}
