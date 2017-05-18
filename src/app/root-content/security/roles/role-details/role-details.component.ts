@@ -161,7 +161,10 @@ export class RoleDetailsComponent {
 			promises.push( userPointer.resolve() );
 		} );
 		return Promise.all( promises ).then( ( resolvedUsers:[ PersistedUser.Class, HTTP.Response.Class ][] ) => {
-			return resolvedUsers;
+			resolvedUsers.forEach( ( [ resolvedUser, response ]:[ PersistedUser.Class, HTTP.Response.Class ] ) => {
+				users.push( resolvedUser );
+			} );
+			return users;
 		} );
 	}
 
