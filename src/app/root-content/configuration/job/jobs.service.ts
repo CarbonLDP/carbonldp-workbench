@@ -20,7 +20,7 @@ export class JobsService {
 	constructor( carbon:Carbon ) {
 		this.carbon = carbon;
 		this.jobs = new Map<string, PersistedDocument.Class>();
-		this.jobsUri = this.carbon.getBaseURI() + ".system/jobs/";
+		this.jobsUri = this.carbon.baseURI + ".system/jobs/";
 	}
 
 	getJobOfType( type:string ):Promise<PersistedDocument.Class> {

@@ -23,7 +23,7 @@ export class RolesService {
 	}
 
 	public get( slugOrURI:string ):Promise<PersistedRole.Class> {
-		let uri:string = this.carbon.getBaseURI() + `.system/roles/${slugOrURI}/`;
+		let uri:string = this.carbon.baseURI + `.system/roles/${slugOrURI}/`;
 		if( URI.Util.isAbsolute( slugOrURI ) ) uri = slugOrURI;
 		this.roles = typeof this.roles === "undefined" ? new Map<string, PersistedRole.Class>() : this.roles;
 		return this.carbon.documents.get<PersistedRole.Class>( uri ).then( ( [ role, response ]:[ PersistedRole.Class, HTTP.Response.Class ] ) => {
@@ -33,7 +33,7 @@ export class RolesService {
 	}
 
 	public getAll( limit?:number, page?:number, orderBy?:string, ascending:boolean = true ):Promise<PersistedRole.Class[]> {
-		let uri:string = this.carbon.getBaseURI() + `.system/roles/`;
+		let uri:string = this.carbon.baseURI + `.system/roles/`;
 		this.roles = typeof this.roles === "undefined" ? new Map<string, PersistedRole.Class>() : this.roles;
 
 		let preferences:RetrievalPreferences = {},
@@ -115,7 +115,7 @@ export class RolesService {
 	}
 
 	public getNumberOfRoles():Promise<number> {
-		let usersURI:string = this.carbon.getBaseURI() + ".system/roles/",
+		let usersURI:string = this.carbon.baseURI + ".system/roles/",
 			query:string = `SELECT DISTINCT (COUNT(?role) AS ?count) WHERE {
 			?role a <https://carbonldp.com/ns/v1/security#Role> . 
 		}`;
@@ -127,7 +127,7 @@ export class RolesService {
 
 
 	public getDescendants( roleID?:string ):Promise<PersistedRole.Class[]> {
-		let rolesURI:string = this.carbon.getBaseURI() + "roles/",
+		let rolesURI:string = this.carbon.baseURI + ".system/roles/",
 			query:string = `
 				SELECT ?parentRole ?childRole ?name
 				WHERE{
@@ -149,7 +149,7 @@ export class RolesService {
 	}
 
 	public getChildren( roleID?:string ):Promise<PersistedRole.Class[]> {
-		let rolesURI:string = this.carbon.getBaseURI() + "roles/",
+		let rolesURI:string = this.carbon.baseURI + ".system/roles/",
 			filter:string = ! ! roleID ? `EXISTS { ?role <${NS.CS.Predicate.parentRole}> <${roleID}> }` : `NOT EXISTS { ?role <${NS.CS.Predicate.parentRole}> ?parentRole } `,
 			query:string = `
 				SELECT ?role ?name ?parentRole ?childRole

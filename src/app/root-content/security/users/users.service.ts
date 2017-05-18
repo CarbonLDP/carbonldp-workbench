@@ -1,10 +1,10 @@
 import { Injectable, EventEmitter } from "@angular/core";
 
 import { Class as Carbon } from "carbonldp/Carbon";
-import * as User from "app/migration-temp/Auth/User";
-import * as Users from "app/migration-temp/Auth/Users";
-import * as PersistedUser from "app/migration-temp/Auth/PersistedUser";
-import * as Credentials from "app/migration-temp/Auth/Credentials";
+import * as User from "carbonldp/Auth/User";
+import * as Users from "carbonldp/Auth/Users";
+import * as PersistedUser from "carbonldp/Auth/PersistedUser";
+import * as Credentials from "carbonldp/Auth/Credentials";
 import * as HTTP from "carbonldp/HTTP";
 import * as Utils from "carbonldp/Utils";
 import * as URI from "carbonldp/RDF/URI";
@@ -27,7 +27,7 @@ export class UsersService {
 		return this._activeUser;
 	}
 
-	public onUserHasChanged:EventEmitter<PersistedUser.Class> = new EventEmitter<User.Class>();
+	public onUserHasChanged:EventEmitter<PersistedUser.Class> = new EventEmitter<PersistedUser.Class>();
 
 	constructor( carbon:Carbon ) {
 		this.carbon = carbon;
@@ -35,7 +35,7 @@ export class UsersService {
 	}
 
 	public get( slugOrURI:string ):Promise<PersistedUser.Class> {
-		let uri:string = this.carbon.getBaseURI() + `users/${slugOrURI}/`;
+		let uri:string = this.carbon.baseURI + `users/${slugOrURI}/`;
 		if( URI.Util.isAbsolute( slugOrURI ) ) uri = slugOrURI;
 		this.users = typeof this.users === "undefined" ? new Map<string, PersistedUser.Class>() : this.users;
 		return this.carbon.documents.get<PersistedUser.Class>( uri ).then( ( [ user, response ]:[ PersistedUser.Class, HTTP.Response.Class ] ) => {
@@ -45,7 +45,7 @@ export class UsersService {
 	}
 
 	public getAll( limit?:number, page?:number, orderBy?:string, ascending:boolean = true ):Promise<PersistedUser.Class[]> {
-		let uri:string = this.carbon.getBaseURI() + "users/";
+		let uri:string = this.carbon.baseURI + "users/";
 		this.users = typeof this.users === "undefined" ? new Map<string, PersistedUser.Class>() : this.users;
 
 		let preferences:RetrievalPreferences = {},
@@ -101,7 +101,7 @@ export class UsersService {
 
 	public getNumberOfUsers():Promise<number> {
 		// TODO: check this query. Probably namespace CS will change
-		let usersURI:string = this.carbon.getBaseURI() + "users/",
+		let usersURI:string = this.carbon.baseURI + "users/",
 			query:string = `SELECT DISTINCT (COUNT(?user) AS ?count) WHERE {
 			?user a <https://carbonldp.com/ns/v1/security#User> . 
 		}`;
@@ -119,8 +119,8 @@ export class UsersService {
 		return user.saveAndRefresh();
 	}
 
-	public createUser( email:string, password:string, enabled:boolean ):Promise<[ PersistedUser.Class, HTTP.Response.Class ]> {
-		return (<Users.Class>this.carbon.auth.users).register( email, password, enabled );
+	public createUser( email:string, password:string, enabled:boolean ):Promise<[ PersistedUser.Class, HTTP.Response.Class[] ]> {
+		return this.carbon.auth.users.register( email, password, enabled );
 	}
 
 	public deleteUser( user:User.Class, slug?:string ):Promise<HTTP.Response.Class> {

@@ -286,7 +286,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		if( this.regExpURL.test( this.endpoint ) ) {
 			this.currentQuery.endpoint = this.endpoint;
 		} else {
-			this.currentQuery.endpoint = this.carbon.getBaseURI() + this.endpoint;
+			this.currentQuery.endpoint = this.carbon.baseURI + this.endpoint;
 		}
 	}
 

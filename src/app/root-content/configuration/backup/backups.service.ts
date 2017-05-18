@@ -14,7 +14,7 @@ export class BackupsService {
 
 	constructor( carbon:Carbon ) {
 		this.carbon = carbon;
-		this.BACKUPS_URI = this.carbon.getBaseURI() + ".system/backups/";
+		this.BACKUPS_URI = this.carbon.baseURI + ".system/backups/";
 		this.extendSchemasForBackups();
 	}
 

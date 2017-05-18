@@ -83,7 +83,7 @@ export class DocumentTreeViewComponent implements AfterViewInit, OnInit {
 		return this.carbon.documents.get( "" ).then( ( [ resolvedRoot, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
 			return resolvedRoot.refresh();
 		} ).then( ( [ updatedRoot, updatedResponse ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
-			this.nodeChildren.push( this.buildNode( this.carbon.getBaseURI(), "default", true ) );
+			this.nodeChildren.push( this.buildNode( this.carbon.baseURI, "default", true ) );
 			this.renderTree();
 
 			return updatedRoot;
