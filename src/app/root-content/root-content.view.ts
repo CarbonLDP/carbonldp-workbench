@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
 import { Class as Carbon } from "carbonldp/Carbon";
-import { Class as InstanceMetadata } from "app/migration-temp/System/InstanceMetadata";
+import { Class as InstanceMetadata } from "carbonldp/System/InstanceMetadata";
 
 @Component( {
 	selector: "cw-root-content",
@@ -24,8 +24,9 @@ export class RootContentView {
 	}
 
 	private getInstanceMetadata():Promise<InstanceMetadata> {
-		return this.carbon.getInstanceMetadata.then( ( instance:InstanceMetadata ) => {
+		return this.carbon.getInstanceMetadata().then( ( instance:InstanceMetadata ) => {
 			this.instance = instance;
+			return instance;
 		} );
 	}
 }

@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
 import { Class as Carbon } from "carbonldp/Carbon";
-import { Class as InstanceMetadata } from "app/migration-temp/System/InstanceMetadata";
+import { Class as InstanceMetadata } from "carbonldp/System/InstanceMetadata";
 
 @Component( {
 	selector: "cw-edit-instance-view",
@@ -15,7 +15,7 @@ export class EditInstanceView {
 
 	constructor( carbon:Carbon ) {
 		this.carbon = carbon;
-		this.carbon.getInstanceMetadata.then( ( instance:InstanceMetadata ) => {
+		this.carbon.getInstanceMetadata().then( ( instance:InstanceMetadata ) => {
 			this.instance = instance;
 		} );
 	}

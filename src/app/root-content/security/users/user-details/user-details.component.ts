@@ -2,8 +2,9 @@ import { ElementRef, Component, Input, Output, EventEmitter, AfterViewInit, OnCh
 
 import * as User from "carbonldp/Auth/User";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
-import * as PersistedUser from "app/migration-temp/Auth/PersistedUser";
-import * as Credentials from "app/migration-temp/Auth/Credentials";
+import * as PersistedUser from "carbonldp/Auth/PersistedUser";
+import * as Credentials from "carbonldp/Auth/Credentials";
+import * as PersistedCredentials from "carbonldp/Auth/PersistedCredentials";
 import * as HTTP from "carbonldp/HTTP";
 
 import { UsersService } from "../users.service";
@@ -174,7 +175,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 	}
 
 	private createUser( userData:UserFormModel ):void {
-		this.usersService.createUser( userData.email, userData.password, userData.enabled ).then( ( [ createdUser, response ]:[ PersistedUser.Class, HTTP.Response.Class ] ) => {
+		this.usersService.createUser( userData.email, userData.password, userData.enabled ).then( ( [ createdUser, responses ]:[ PersistedUser.Class, HTTP.Response.Class[] ] ) => {
 			createdUser.name = userData.name;
 			return createdUser.saveAndRefresh();
 		} ).then( ( [ createdUser, response ]:[ PersistedUser.Class, [ HTTP.Response.Class, HTTP.Response.Class ] ] ) => {

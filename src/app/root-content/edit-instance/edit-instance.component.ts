@@ -4,7 +4,7 @@ import { Class as Carbon } from "carbonldp/Carbon";
 import * as HTTP from "carbonldp/HTTP";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 
-import { Class as InstanceMetadata } from "app/migration-temp/System/InstanceMetadata";
+import { Class as InstanceMetadata } from "carbonldp/System/InstanceMetadata";
 import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
 
