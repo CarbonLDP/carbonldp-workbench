@@ -35,7 +35,6 @@ import { SharedModule } from "./shared/shared.module";
 import { RouterService } from "./router.service";
 import { HeaderService } from "./header/header.service";
 import { SidebarService } from "./sidebar/sidebar.service";
-import { MyAppsSidebarService } from "./my-apps/my-apps-sidebar.service";
 
 
 @NgModule( {
@@ -74,7 +73,7 @@ import { MyAppsSidebarService } from "./my-apps/my-apps-sidebar.service";
 		appRoutingProviders,
 		Title,
 
-		RouterService, HeaderService, SidebarService, MyAppsSidebarService,
+		RouterService, HeaderService, SidebarService,
 	],
 	bootstrap: [ AppComponent ],
 } )
