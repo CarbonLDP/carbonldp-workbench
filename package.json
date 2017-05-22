@@ -38,6 +38,7 @@
     "@types/jquery": "^2.0.41",
     "@types/jstree": "^3.3.34",
     "@types/node": "^7.0.4",
+    "angular-router-loader": "^0.6.0",
     "angular2-template-loader": "^0.6.2",
     "awesome-typescript-loader": "^3.1.2",
     "copy-webpack-plugin": "^4.0.1",
