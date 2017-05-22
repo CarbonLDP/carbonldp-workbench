@@ -20,13 +20,16 @@ export class RootContentView {
 	}
 
 	ngOnInit() {
-		this.getInstanceMetadata();
+		// TODO: Uncomment this when Instance is available
+		// this.getInstanceMetadata();
 	}
 
 	private getInstanceMetadata():Promise<InstanceMetadata> {
 		return this.carbon.getInstanceMetadata().then( ( instance:InstanceMetadata ) => {
 			this.instance = instance;
 			return instance;
+		} ).catch( ( error ) => {
+			console.error( error );
 		} );
 	}
 }
