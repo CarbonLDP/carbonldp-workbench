@@ -15,7 +15,7 @@ const appRoutes:Routes = [
 	{
 		path: "login",
 		component: LoginView,
-		canActivate: [ NotAuthenticatedGuard ],
+		// canActivate: [ NotAuthenticatedGuard ],
 		data: {
 			alias: "login",
 			title: "Workbench | Log In",
@@ -28,7 +28,7 @@ const appRoutes:Routes = [
 	{
 		path: "",
 		component: WorkbenchView,
-		canActivate: [ AuthenticatedGuard ],
+		// canActivate: [ AuthenticatedGuard ],
 		data: {
 			alias: "",
 			displayName: "Workbench",
