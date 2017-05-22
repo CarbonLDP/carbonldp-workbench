@@ -65,7 +65,7 @@ export class WorkbenchView {
 			this.router.navigate( [ "/login" ] );
 		} );
 
-		let name:string = this.carbon.auth.authenticatedUser.name ? this.carbon.auth.authenticatedUser.name : "User";
+		let name:string = (this.carbon.auth.authenticatedUser && this.carbon.auth.authenticatedUser.name) ? this.carbon.auth.authenticatedUser.name : "User";
 		// TODO: Remove any to use HeaderItem instead
 		this.headerService.addItems( <any>[
 			{
@@ -110,18 +110,18 @@ export class WorkbenchView {
 				icon: "terminal icon",
 				route: [ "sparql-client" ],
 			},
-			{
-				type: "link",
-				name: "Security",
-				icon: "lock icon",
-				route: [ "security", "agents" ],
-			},
-			{
-				type: "link",
-				name: "Configuration",
-				icon: "settings icon",
-				route: [ "configure" ],
-			}
+			// {
+			// 	type: "link",
+			// 	name: "Security",
+			// 	icon: "lock icon",
+			// 	route: [ "security", "agents" ],
+			// },
+			// {
+			// 	type: "link",
+			// 	name: "Configuration",
+			// 	icon: "settings icon",
+			// 	route: [ "configure" ],
+			// }
 		] );
 	}
 }
