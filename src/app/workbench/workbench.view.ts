@@ -21,11 +21,13 @@ export class WorkbenchView {
 	private router:Router;
 	private carbon:Carbon;
 	private prevUrl:string;
+	private base:string;
 
 	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
 
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
+		this.base = this.sidebarService.base;
 		this.authService = authService;
 		this.router = router;
 		this.carbon = carbon;
@@ -95,20 +97,20 @@ export class WorkbenchView {
 				type: "link",
 				name: "Dashboard",
 				icon: "bar chart icon",
-				route: [ "" ],
+				route: [ this.base ],
 				index: 0,
 			},
 			{
 				type: "link",
 				name: "Document Explorer",
 				icon: "list layout icon",
-				route: [ "explore" ],
+				route: [ this.base, "explore" ],
 			},
 			{
 				type: "link",
 				name: "SPARQL Client",
 				icon: "terminal icon",
-				route: [ "sparql-client" ],
+				route: [ this.base, "sparql-client" ],
 			},
 			// {
 			// 	type: "link",
