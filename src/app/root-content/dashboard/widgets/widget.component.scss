@@ -1,0 +1,42 @@
+:host{
+	display:block;
+	.ui.cards .ui.card.widget-container{
+		box-shadow: none;
+	}
+
+	.ui.cards{
+	    .ui.card {
+		    width: 245px;
+
+			.widget-header {
+				background-color: orange;
+				padding: .5em .5em;
+			}
+
+			.widget-button{
+				cursor: pointer;
+			}
+
+		    .widget-body{
+			    display: flex;
+			    flex-direction: row;
+		    }
+
+
+		    .widget-icon{
+			    height: 60px;
+		    }
+
+		    .widget-text{
+			    flex: auto;
+			    color: black;
+			    line-height: normal;
+			    font-size: 50px;
+		    }
+		}
+		.ui.card.hidden{
+			display: none;
+		}
+	}
+
+}

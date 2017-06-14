@@ -1,0 +1,27 @@
+<div class="ui cards">
+	<div class="ui card widget-container widget-container--totalDocuments">
+		<div class="content widget-header">Documents
+			<div class="right floated">
+				<i class="refresh small icon widget-button" (click)="refreshDocumentsCount()"></i>
+				<i class="remove small icon widget-button" (click)="close($event, 'Documents')"></i>
+			</div>
+		</div>
+		<div class="content widget-body">
+			<div class="widget-text">{{documentsTotalCount}}</div>
+			<img class="widget-icon" src="/assets/images/documentIcon.png" height="60"/>
+		</div>
+	</div>
+
+	<div class="ui card widget-container widget-container--totalTriples">
+		<div class="content widget-header">Triples
+			<div class="right floated">
+				<i class="refresh small icon widget-button" (click)="refreshTriplesCount()"></i>
+				<i class="remove small icon widget-button" (click)="close($event, 'Triples')"></i>
+			</div>
+	</div>
+			<div class="content widget-body">
+				<div class="widget-text">{{triplesTotalCount}}</div>
+				<img class="widget-icon" src="/assets/images/triplesIcon.png" height="60"/>
+			</div>
+	</div>
+</div>

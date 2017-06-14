@@ -1,0 +1,11 @@
+<div class="ui top right pointing dropdown dashboard-menu">
+	<button class="ui icon circular inverted button dashboard-menuButton"><i class="plus icon"></i></button>
+	<div class="menu">
+		<div class="item widgetsMenu-item--totalDocuments" (click)="toggleSelection($event,'Documents')">
+			<span class="widgetsMenu-textItem">Documents</span><i class="green checkmark icon widgetsMenu-icon"></i>
+		</div>
+		<div class="item widgetsMenu-item--totalTriples" (click)="toggleSelection($event,'Triples')">
+			<span class="widgetsMenu-textItem">Triples</span><i class="green checkmark icon widgetsMenu-icon"></i>
+		</div>
+	</div>
+</div>
