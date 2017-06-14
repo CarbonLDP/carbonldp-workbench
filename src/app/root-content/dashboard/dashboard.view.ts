@@ -4,8 +4,8 @@ import "semantic-ui/semantic";
 
 @Component( {
 	selector: "cw-dashboard-view",
-	template: "<h3>Dashboard View</h3>",
-	styles: [ ":host { display: block; }" ],
+	templateUrl: "./dashboard.view.html",
+	styleUrls: [ "./dashboard.view.scss" ],
 } )
 export class DashboardView {
 }
