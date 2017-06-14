@@ -30,9 +30,6 @@ const appRoutes:Routes = [
 		component: WorkbenchView,
 		// canActivate: [ AuthenticatedGuard ],
 		data: {
-			alias: "",
-			displayName: "Workbench",
-
 			// AuthenticatedGuard cases
 			onReject: [ "/login" ],
 			onError: [ "/error" ],

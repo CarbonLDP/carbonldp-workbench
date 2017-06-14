@@ -14,9 +14,8 @@ export const RootContentRoutes:Routes = [
 		path: "",
 		component: RootContentView,
 		data: {
-			param: "slug",
-			displayName: "App",
-			title: "App",
+			alias: "",
+			displayName: "Workbench",
 		},
 		children: [
 			{

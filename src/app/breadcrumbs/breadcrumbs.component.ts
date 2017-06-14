@@ -18,12 +18,14 @@ export class BreadcrumbsComponent {
 	private routerService:RouterService;
 	sidebarService:SidebarService;
 	private route:ActivatedRoute;
+	base:string;
 
 	constructor( router:Router, routerService:RouterService, sidebarService:SidebarService, route:ActivatedRoute ) {
 		this.route = route;
 		this.router = router;
 		this.routerService = routerService;
 		this.sidebarService = sidebarService;
+		this.base = this.sidebarService.base;
 	}
 
 	ngOnInit():void {
@@ -36,18 +38,17 @@ export class BreadcrumbsComponent {
 				let childrenRoutes = currentRoute.children;
 				currentRoute = null;
 				childrenRoutes.forEach( ( route:ActivatedRoute ) => {
-					if( route.outlet === "primary" ) {
-						let routeSnapshot:ActivatedRouteSnapshot = route.snapshot;
-						if( typeof routeSnapshot === "undefined" ) return;
-						url += this.getURL( routeSnapshot );
-						if( ! ! routeSnapshot.data[ "displayName" ] && ! routeSnapshot.data[ "hide" ] ) {
-							this.breadCrumbs.push( {
-								alias: url,
-								displayName: routeSnapshot.data[ "displayName" ],
-							} );
-						}
-						currentRoute = route;
+					if( route.outlet !== "primary" ) return;
+					if( route.snapshot === void 0 ) return;
+					let routeSnapshot:ActivatedRouteSnapshot = route.snapshot;
+					url += this.getURL( routeSnapshot );
+					if( ! ! routeSnapshot.data[ "displayName" ] && ! routeSnapshot.data[ "hide" ] ) {
+						this.breadCrumbs.push( {
+							url: url,
+							displayName: routeSnapshot.data[ "displayName" ],
+						} );
 					}
+					currentRoute = route;
 				} )
 			} while( currentRoute );
 		} )
