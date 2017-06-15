@@ -1,0 +1,47 @@
+<div class="ui grid segment">
+	<div class="stretched row">
+		<div class="ui active inverted dimmer" *ngIf="loading">
+			<div class="ui text loader">Loading...</div>
+		</div>
+		<div class="error messages" *ngIf="messages.length > 0">
+			<ng-template ngFor let-message="$implicit" [ngForOf]="messages" let-i="index">
+				<cw-message [message]="message" [type]="'error'" [closable]="true"></cw-message>
+			</ng-template>
+		</div>
+		<cw-roles-tree-view class="six wide column tree"
+		                    [refreshNode]="onRefresh"
+		                    [deletedNode]="onDelete"
+		                    (onDoubleClickRole)="resolveRole($event); mode = Modes.READ;"
+		                    (onSelectRole)="selectedRole=$event"
+		                    (onShowCreateRoleForm)="mode = Modes.CREATE"
+		                    (onShowDeleteRoleForm)="roleDeleter.show()"
+		                    (onLoading)="loading=$event"
+		                    (onError)="handleError($event)"></cw-roles-tree-view>
+		<div *ngIf="loading"
+		     class="ui ten wide column role details basic segment">
+			<div class="ui message">
+				<div class="content">
+					<div class="header">
+						Just one second
+					</div>
+					<p>Please wait while the role is being loaded...</p>
+				</div>
+			</div>
+		</div>
+		<cw-role-details *ngIf="!!activeRole && !loading && mode!==Modes.CREATE"
+		                 class="ten wide column role details"
+		                 [role]="activeRole"
+		                 (onSuccess)="onSuccessEdit($event)">
+		</cw-role-details>
+		<cw-role-details *ngIf="!!activeRole && !loading && mode===Modes.CREATE"
+		                 class="ten wide column role details"
+		                 [mode]="'CREATE'"
+		                 [embedded]="false"
+		                 [selectedRole]="selectedRole"
+		                 (onClose)="mode=Modes.READ;"
+		                 (onSuccess)="onSuccessCreate($event)"></cw-role-details>
+		<cw-role-deleter #roleDeleter
+		                 [role]="selectedRole"
+		                 (onSuccess)="onSuccessDelete($event)"></cw-role-deleter>
+	</div>
+</div>

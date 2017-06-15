@@ -1,0 +1,119 @@
+<div class="ui basic segment" *ngIf="!document">
+	<div class="ui icon message">
+		<i class="notched circle loading icon"></i>
+		<div class="content">
+			<div class="header">
+				Just one second
+			</div>
+			<p>Please wait while the document is being loaded...</p>
+		</div>
+	</div>
+</div>
+<a class="ui blue top right attached label saving-message"
+   *ngIf="documentContentHasChanged" (click)="saveDocument()">
+	<i class="save icon"></i>Save changes
+</a>
+<div class="ui positive save success message hidden" #successMessage>
+	<i class="close icon" (click)="closeMessage(successMessage)"></i>
+	<div class="header">
+		Success!
+	</div>
+	<div [innerHTML]="successMessageContent"></div>
+</div>
+<div class="ui unsaved prompt warning icon message hidden">
+	<i class="warning icon"></i>
+	<div class="content">
+		<div class="header">
+			Unsaved changes
+		</div>
+		<p>You have not saved changes, if you refresh the document, your changes will be lost, are you sure you want to refresh de document?</p>
+		<button class="ui basic mini button" (click)="refreshDocument(rootNode['@id'])">
+			Yes
+		</button>
+		<button class="ui basic mini button" (click)="toggleConfirmRefresh()">
+			No
+		</button>
+	</div>
+</div>
+<div class="ui basic segment document-content" *ngIf="document">
+	<div class="ui divided items">
+		<cw-property class="property item"
+		             [documentURI]="rootNode['@id']"
+		             [property]="{copy:{id:'@id', name:'@id', value:rootNode['@id']}}">
+		</cw-property>
+		<div class="item">
+			<div class="content">
+				<div _ngcontent-arx-18="" class="document options">
+					<button class="ui right labeled icon basic mini button" (click)="beforeRefreshDocument( documentURI )">
+						<i class="refresh icon"></i>
+						Refresh
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="item">
+			<div class="content">
+				<div class="description">
+					<div class="ui secondary menu document tabs">
+						<a class="item active" data-tab="documentResource">
+							<div class="floating ui teal circular label marker"
+							     *ngIf="rootNodeHasChanged"
+							     title="Document's properties have changed.&#10;Modified: {{rootNodeRecords.changes.size}}&#10;Added: {{rootNodeRecords.additions.size}}&#10;Deleted: {{rootNodeRecords.deletions.size}}">
+								<i class="asterisk icon"></i>
+							</div>
+							Document</a>
+						<a class="item" data-tab="bNodes">
+							<div class="floating ui teal circular label marker"
+							     *ngIf="bNodesHaveChanged"
+							     title="Blank nodes have changed.&#10;Modified: {{bNodesChanges.changes.size}}&#10;Added: {{bNodesChanges.additions.size}}&#10;Deleted: {{bNodesChanges.deletions.size}}">
+								<i class="asterisk icon"></i>
+							</div>
+							Blank Nodes ({{bNodes.length}})
+						</a>
+						<a class="item" data-tab="namedFragments">
+							<div class="floating ui teal circular label marker"
+							     *ngIf="namedFragmentsHaveChanged"
+							     title="Named Fragments have changed.&#10;Modified: {{namedFragmentsChanges.changes.size}}&#10;Added: {{namedFragmentsChanges.additions.size}}&#10;Deleted: {{namedFragmentsChanges.deletions.size}}">
+								<i class="asterisk icon"></i>
+							</div>
+							Named Fragments ({{namedFragments.length}})</a>
+					</div>
+					<div class="ui active tab segment" data-tab="documentResource">
+						<cw-document-resource class="column"
+
+						                      [rootNode]="rootNode"
+						                      [hiddenProperties]="['@id']"
+						                      [blankNodes]="bNodes"
+						                      [namedFragments]="namedFragments"
+						                      [documentURI]="rootNode['@id']"
+
+						                      (onOpenBlankNode)="openBlankNode($event)"
+						                      (onOpenNamedFragment)="openNamedFragment($event)"
+						                      (onChanges)="registerRootNodeChanges($event)">
+						</cw-document-resource>
+					</div>
+					<div class="ui tab segment" data-tab="bNodes">
+						<cw-blank-nodes class="column"
+						                [documentURI]="document['@id']"
+						                [blankNodes]="bNodes"
+						                [namedFragments]="namedFragments"
+
+						                (onOpenBlankNode)="goToSection($event)"
+						                (onOpenNamedFragment)="openNamedFragment($event)"
+						                (onChanges)="registerBlankNodesChanges($event)"></cw-blank-nodes>
+					</div>
+					<div class="ui tab segment" data-tab="namedFragments">
+						<cw-named-fragments class="column"
+						                    [documentURI]="document['@id']"
+						                    [blankNodes]="bNodes"
+						                    [namedFragments]="namedFragments"
+
+						                    (onOpenBlankNode)="openBlankNode($event)"
+						                    (onOpenNamedFragment)="goToSection($event)"
+						                    (onChanges)="registerNamedFragmentsChanges($event)"></cw-named-fragments>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { Class as Carbon } from "carbonldp/Carbon";
-import { activeContext } from "angular2-carbonldp/boot";
+import { carbonProvider } from "angular-carbonldp/boot";
 
 
 @Component( {
@@ -20,7 +20,7 @@ export class ErrorView implements OnInit, AfterViewInit {
 	}
 
 	ngOnInit():void {
-		activeContext.promise.then( () => {
+		carbonProvider.promise.then( () => {
 			// The active context was successfully loaded, the user must have landed here by visiting the direct URL
 			// Let's redirect him to the home page
 			this.router.navigate( [ "/" ] );
@@ -28,7 +28,7 @@ export class ErrorView implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit():void {
-		activeContext.promise.catch( ( error ) => {
+		carbonProvider.promise.catch( ( error ) => {
 			this.error = error;
 			this.errorType = "requestID" in this.error ? this.error.name : null;
 

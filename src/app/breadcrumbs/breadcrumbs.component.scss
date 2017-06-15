@@ -1,0 +1,16 @@
+.breadcrumb.steps {
+	border: 0;
+	border-radius: 0;
+
+	.step .title {
+		font-weight: 300;
+	}
+	.step.active .title {
+		font-weight: 500;
+	}
+}
+
+.ui.menu {
+	border-radius: 0;
+	min-height: 54px;
+}

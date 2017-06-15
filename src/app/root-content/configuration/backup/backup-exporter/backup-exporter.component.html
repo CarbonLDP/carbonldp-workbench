@@ -1,0 +1,35 @@
+<div class="ui message">
+	<p>Here you can generate a backup of your application.</p>
+	<p>Once you request a backup, a Job will be added to the Jobs queue and then you can be able to download the generated backup.</p>
+</div>
+<div #message class="ui warning icon message">
+	<i class="warning sign icon"></i>
+	<i class="close icon" (click)="closeMessage( message )"></i>
+	Please, make sure your backup contains an Agent with the "app-admin" role, otherwise you won't be able to log in again into the Application!
+</div>
+<div class="right aligned">
+	<button class="ui button"
+	        [ngClass]="{loading:executingBackup}"
+	        (click)="onGenerateBackup()">
+		Generate Backup Now
+	</button>
+</div>
+<div class="ui basic segment" *ngIf="errorMessages.length > 0">
+	<cw-message *ngFor="let errorMessage of errorMessages; let i=index"
+	            [type]="'error'"
+	            [message]="errorMessage"
+	            [closable]="true"
+	            (onClose)="removeMessage(i)">
+	</cw-message>
+</div>
+<div class="ui basic segment" *ngIf="exportSuccess">
+	<div class="ui success message transition">
+		<i class="close icon" (click)="onCloseSuccess()"></i>
+		<div class="content">
+			<div class="header">Successful export</div>
+			<p>
+				The backup has been successfully exported.
+			</p>
+		</div>
+	</div>
+</div>

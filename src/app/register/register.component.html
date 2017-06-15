@@ -1,0 +1,81 @@
+<form #registerForm="ngForm" class="ui form attached segment large" role="form" (submit)="onSubmit( registerForm, $event )">
+	<div class="field" [ngClass]="{ error: name.invalid }">
+		<div class="ui left icon input">
+			<i class="user icon"></i>
+			<input type="text" placeholder="Name"
+			       name="name"
+			       [(ngModel)]="register.name"
+			       cwValidation
+			       required
+			       #name="cwValidation">
+		</div>
+		<cw-error-label *ngIf="!name.valid">
+			<span *ngIf="name.control.hasError('required')">Please enter your name</span>
+		</cw-error-label>
+	</div>
+	<div class="field" [ngClass]="{ error: email.invalid }">
+		<div class="ui left icon input">
+			<i class="mail icon"></i>
+			<input class="field email"
+			       type="text"
+			       placeholder="E-mail address"
+			       name="email"
+			       [(ngModel)]="register.email"
+			       cwValidation
+			       required cw-email
+			       #email="cwValidation">
+		</div>
+		<cw-error-label *ngIf="!email.valid">
+			<span *ngIf="email.control.hasError( 'required' )">Please enter your email address</span>
+			<span *ngIf="!email.control.hasError( 'required' ) && email.control.hasError( 'invalidEmailAddress' )">Please enter a valid email address</span>
+		</cw-error-label>
+	</div>
+	<div class="field" [ngClass]="{ error: password.invalid }">
+		<div class="ui left icon input">
+			<i class="lock icon"></i>
+			<input class="field password"
+			       type="password"
+			       placeholder="Password"
+			       name="password"
+			       [(ngModel)]="register.password"
+			       cwValidation
+			       required
+			       #password="cwValidation">
+		</div>
+		<cw-error-label *ngIf="!password.valid">
+			<span *ngIf="password.control.hasError( 'required' )">Please enter your password</span>
+		</cw-error-label>
+	</div>
+	<div class="field" [ngClass]="{ error: repeatPassword.invalid }">
+		<div class="ui left icon input">
+			<i class="lock icon"></i>
+			<input class="field repeatPassword"
+			       type="password"
+			       placeholder="Repeat password"
+			       name="repeatPassword"
+			       [(ngModel)]="register.repeatPassword"
+			       cwValidation
+			       [matchTo]="register.password"
+			       [control]="repeatPasswordControl"
+			       required cw-match
+			       #repeatPasswordControl="ngModel"
+			       #repeatPassword="cwValidation">
+		</div>
+		<cw-error-label *ngIf="!repeatPassword.valid">
+			<span *ngIf="repeatPassword.control.hasError( 'required' )">Please repeat your password</span>
+			<span *ngIf="!repeatPassword.control.hasError( 'required' ) && repeatPassword.control.hasError( 'matchError' )">The passwords don't match</span>
+		</cw-error-label>
+	</div>
+	<button type="submit"
+	        [ngClass]="{ loading: sending }"
+	        class="ui fluid large submit button"
+	        [disabled]=" ! registerForm.valid || sending "
+	        (click)="onSubmit( registerForm, $event )">
+		Register
+	</button>
+</form>
+<div class="ui bottom attached negative message" *ngIf="errorMessage">
+	<ul class="list">
+		<li *ngIf="errorMessage">{{errorMessage}}</li>
+	</ul>
+</div>

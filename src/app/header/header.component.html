@@ -1,0 +1,6 @@
+<a *ngIf="headerService.logo" class="item" [routerLink]="headerService.logo.route">
+	<img class="ui small image logo" [src]="headerService.logo.image"/>
+</a>
+<div class="right menu">
+	<cw-header-item *ngFor="let item of headerService.items" [item]="item"></cw-header-item>
+</div>

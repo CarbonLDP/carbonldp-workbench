@@ -1,0 +1,18 @@
+:host {
+	margin: 0;
+	border-radius: 0;
+
+	border-top: 1px solid rgba(255, 255, 255, 0.0784314);
+	border-right: 1px solid rgba(255, 255, 255, 0.0784314);
+
+	.item.collapse-menu {
+		padding-top: 9px;
+		padding-bottom: 9px;
+	}
+	> cw-sidebar-items::before {
+		display: block;
+		content: '';
+		height: 1px;
+		background: rgba(255, 255, 255, .08)
+	}
+}

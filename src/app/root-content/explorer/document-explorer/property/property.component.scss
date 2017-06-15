@@ -1,0 +1,56 @@
+:host {
+	display: block;
+	.content {
+		.meta {
+			.parent-uri {
+				margin-right: 0;
+			}
+			.slug {
+				color: #FF4500;
+			}
+		}
+		.description {
+			.ui.accordion {
+				width: 100%;
+			}
+			.edit.form.segment {
+				padding: 0;
+			}
+		}
+		.inverted.dimmer .description {
+			color: #000000;
+		}
+	}
+	.status.indicator {
+		float: right;
+		position: absolute;
+		right: 15px;
+		border-radius: 0;
+	}
+}
+
+.ui {
+	&.items > :host.item {
+		.meta input {
+			// Remove gap between input and save button when creating/editing a property name
+			margin-right: 0;
+		}
+		&.added-property {
+			background-color: #F1FAFF;
+			padding: 0;
+			.content {
+				padding: 15px;
+			}
+		}
+		&.has-changed {
+			background-color: #FFFFE0;
+			padding: 0;
+			.content {
+				padding: 15px;
+			}
+		}
+	}
+	&.divided.items > :host.item .content {
+		margin-top: 0;
+	}
+}

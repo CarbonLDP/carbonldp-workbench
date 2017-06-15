@@ -1,0 +1,92 @@
+<form class="ui create accesspoint modal error form" #createAccessPointFormModal #createAccessPointForm="ngForm" (submit)="onSubmitAccessPoint(createAccessPointForm.value, $event, createAccessPointForm )" *ngIf="visible">
+	<div class="header">
+		<h2 class="ui header">
+			<i class="selected radio icon"></i>
+			<span class="content">
+				Creating an Access Point
+				<span class="sub header">Configure an Access Point to list members to this document.</span>
+			</span>
+		</h2>
+	</div>
+	<div class="content">
+		<div class="field"
+		     [ngClass]="{error: !slug.valid}">
+			<label>Slug: The slug of the access point you want to create. <span cw-grayed-out>(Optional)</span></label>
+			<div class="ui fluid input">
+				<input type="text" name="slug" tabindex="0"
+				       placeholder="E.g. &quot;daughters/&quot;"
+
+				       #slug="cwValidation" cwValidation
+
+				       cw-slug
+				       (keyup.esc)="hideForm()"
+				       [ngModel]="createAccessPointFormModel.slug"
+				       (ngModelChange)="createAccessPointFormModel.slug = getSanitizedSlug($event)"
+				       (blur)="slugLostFocus($event)">
+			</div>
+			<cw-error-label *ngIf="!slug.valid">
+				<span *ngIf="slug.control.hasError( 'invalidSlug' )">Please, provide a valid slug/name for the Access Point. (Only numbers and letters with dashes)</span>
+			</cw-error-label>
+		</div>
+		<br>
+		<div class="field"
+		     [ngClass]="{error: !hasMemberRelation.valid}">
+			<label>
+				<a target="_blank"
+				   tabindex="-1"
+				   href="https://carbonldp.com/documentation/javascript-sdk-getting-started#membership-relation">hasMemberRelation</a>:
+				The name of the property that will hold the array of members (by default member). </label>
+			<div class="ui fluid input">
+				<input type="text" name="hasMemberRelation"
+				       placeholder="E.g: http://example.com/ns#daughter"
+
+				       #hasMemberRelation="cwValidation" cwValidation
+
+				       required cw-uri-fragment
+				       [(ngModel)]="createAccessPointFormModel.hasMemberRelation">
+			</div>
+			<cw-error-label *ngIf="!hasMemberRelation.valid">
+				<span *ngIf="hasMemberRelation.control.hasError('required')">The 'hasMemberRelation' property is required.</span>
+				<span *ngIf="hasMemberRelation.control.hasError('invalidURIAddress')">Please, provide a valid URI for the 'hasMemberRelation' property. E.g: http://example.com/ns#daughter</span>
+				<span *ngIf="hasMemberRelation.control.hasError('missingFragment')">Please, provide a name/fragment for the 'hasMemberRelation' property. E.g: http://example.com/ns#daughter</span>
+				<span *ngIf="hasMemberRelation.control.hasError('multipleFragment')">Please, provide only one name after the hashtag (#) for the 'hasMemberRelation' property. E.g: http://example.com/ns#daughter</span>
+			</cw-error-label>
+		</div>
+		<br>
+		<div class="field"
+		     [ngClass]="{error: !isMemberOfRelation.valid}">
+			<label>
+				<a tabindex="-1" target="_blank"
+				   href="https://carbonldp.com/documentation/javascript-sdk-getting-started#membership-relation">isMemberOfRelation</a>:
+				The name of the property that each member will have, which links back to the document they are member of. <span cw-grayed-out>(Optional)</span>
+			</label>
+			<div class="ui fluid input">
+				<input type="text" name="isMemberOfRelation"
+				       placeholder="E.g: http://example.com/ns#father"
+
+				       #isMemberOfRelation="cwValidation" cwValidation
+
+				       cw-uri-fragment
+				       (keyup.esc)="hideForm()"
+				       [(ngModel)]="createAccessPointFormModel.isMemberOfRelation">
+			</div>
+			<cw-error-label *ngIf="!isMemberOfRelation.valid">
+				<span *ngIf="isMemberOfRelation.control.hasError('invalidURIAddress')">Please, provide a valid URI for the 'isMemberOfRelation' property. E.g: http://example.com/ns#father</span>
+				<span *ngIf="isMemberOfRelation.control.hasError('missingFragment')">Please, provide a name/fragment for the 'isMemberOfRelation' property. E.g: http://example.com/ns#father</span>
+				<span *ngIf="isMemberOfRelation.control.hasError('multipleFragment')">Please, provide only one name after the hashtag (#) for the 'isMemberOfRelation' property. E.g: http://example.com/ns#father</span>
+			</cw-error-label>
+		</div>
+
+
+		<cw-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage($event)" *ngIf="!!errorMessage"></cw-message>
+	</div>
+	<div class="actions">
+		<button type="button" class="ui mini basic button" tabindex="5" title="Cancel creation" (click)="hideForm(createAccessPointForm)">Cancel</button>
+		<button type="submit"
+		        class="ui mini basic right floated button"
+		        [ngClass]="{ 'disabled': !createAccessPointForm.valid, 'green': createAccessPointForm.valid  }"
+		        (click)="onSubmitAccessPoint(createAccessPointForm.value, $event, createAccessPointForm)"
+		        [disabled]="!createAccessPointForm.valid">Create
+		</button>
+	</div>
+</form>

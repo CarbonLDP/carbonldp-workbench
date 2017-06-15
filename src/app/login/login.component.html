@@ -1,0 +1,55 @@
+<form #loginForm="ngForm" class="ui login form attached segment large" role="form" (submit)="onSubmit(loginForm.value, $event)">
+	<div class="field" [ngClass]="{ error: email.invalid }">
+		<div class="ui left icon input">
+			<i class="user icon"></i>
+			<input type="text"
+			       placeholder="E-mail address"
+			       name="email"
+			       [(ngModel)]="login.email"
+			       cwValidation
+			       required cw-email
+			       #email="cwValidation">
+		</div>
+		<cw-error-label *ngIf="!email.valid">
+			<span *ngIf="email.control.hasError('required')">Please enter your email address</span>
+			<span *ngIf="email.control.hasError('invalidEmailAddress')">Please enter a valid email address</span>
+		</cw-error-label>
+	</div>
+	<div class="field" [ngClass]="{ error: password.invalid }">
+		<div class="ui left icon input">
+			<i class="lock icon"></i>
+			<input type="password"
+			       name="password"
+			       placeholder="password"
+			       [(ngModel)]="login.password"
+			       cwValidation
+			       required
+			       #password="cwValidation">
+		</div>
+		<cw-error-label *ngIf="!password.valid">
+			<span *ngIf="password.control.hasError('required')">Please enter your password</span>
+		</cw-error-label>
+	</div>
+	<div class="field">
+		<div class="ui checkbox" [ngClass]="{ checked: rememberMe }">
+			<input type="checkbox"
+			       name="rememberMe"
+			       [(ngModel)]="login.rememberMe"
+			       checked=""
+			       #rememberMe="ngModel">
+			<label>Remember me</label>
+		</div>
+	</div>
+	<button type="submit"
+	        [ngClass]="{ loading: sending }"
+	        class="ui fluid large submit button"
+	        [disabled]="! loginForm.valid || sending"
+	        (click)="onSubmit(loginForm.value, $event)">
+		Login
+	</button>
+</form>
+<div class="ui bottom attached negative message" *ngIf="errorMessage">
+	<ul class="list" *ngIf="errorMessage">
+		<li>{{ errorMessage }}</li>
+	</ul>
+</div>

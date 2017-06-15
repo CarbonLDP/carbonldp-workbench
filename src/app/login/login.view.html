@@ -18,8 +18,8 @@
 		</div>
 	</div>
 	<div class="row">
-		<cp-login *ngIf="hasAccount" (onLogin)="onLogin( $event )"></cp-login>
-		<cp-register *ngIf="! hasAccount" (onRegister)="onRegister( $event )"></cp-register>
+		<cw-login *ngIf="hasAccount" (onLogin)="onLogin( $event )"></cw-login>
+		<cw-register *ngIf="! hasAccount" (onRegister)="onRegister( $event )"></cw-register>
 	</div>
 	<div class="row">
 		<span *ngIf="hasAccount">Don't have an account? <a (click)="activateRegisterForm()">Create one</a></span>
@@ -28,7 +28,7 @@
 	<div class="row">
 		<div class="right aligned bottom aligned column">
 			<footer>
-				<versions-exposer></versions-exposer>
+				<cw-versions-presenter></cw-versions-presenter>
 			</footer>
 		</div>
 	</div>

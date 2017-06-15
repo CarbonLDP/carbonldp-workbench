@@ -3,9 +3,9 @@ import { Router, Event, NavigationEnd } from "@angular/router";
 
 import { Class as Carbon } from "carbonldp/Carbon";
 
-import { AuthService } from "angular2-carbonldp/services";
-import { HeaderService } from "carbonldp-panel/header.service";
-import { SidebarService } from "carbonldp-panel/sidebar.service";
+import { AuthService } from "angular-carbonldp/services";
+import { HeaderService } from "app/header/header.service";
+import { SidebarService } from "app/sidebar/sidebar.service";
 
 
 @Component( {
@@ -21,11 +21,13 @@ export class WorkbenchView {
 	private router:Router;
 	private carbon:Carbon;
 	private prevUrl:string;
+	private base:string;
 
 	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
 
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
+		this.base = this.sidebarService.base;
 		this.authService = authService;
 		this.router = router;
 		this.carbon = carbon;
@@ -65,7 +67,7 @@ export class WorkbenchView {
 			this.router.navigate( [ "/login" ] );
 		} );
 
-		let name:string = this.carbon.auth.authenticatedAgent[ "name" ] ? this.carbon.auth.authenticatedAgent.name : "User";
+		let name:string = (this.carbon.auth.authenticatedUser && this.carbon.auth.authenticatedUser.name) ? this.carbon.auth.authenticatedUser.name : "User";
 		// TODO: Remove any to use HeaderItem instead
 		this.headerService.addItems( <any>[
 			{
@@ -94,14 +96,34 @@ export class WorkbenchView {
 			{
 				type: "link",
 				name: "Dashboard",
-				route: [ "" ],
+				icon: "bar chart icon",
+				route: [ this.base ],
 				index: 0,
 			},
 			{
 				type: "link",
-				name: "Apps",
-				route: [ "", "my-apps" ]
-			}
+				name: "Document Explorer",
+				icon: "list layout icon",
+				route: [ this.base, "explore" ],
+			},
+			{
+				type: "link",
+				name: "SPARQL Client",
+				icon: "terminal icon",
+				route: [ this.base, "sparql-client" ],
+			},
+			// {
+			// 	type: "link",
+			// 	name: "Security",
+			// 	icon: "lock icon",
+			// 	route: [ "security", "agents" ],
+			// },
+			// {
+			// 	type: "link",
+			// 	name: "Configuration",
+			// 	icon: "settings icon",
+			// 	route: [ "configure" ],
+			// }
 		] );
 	}
 }

@@ -1,0 +1,28 @@
+<button class="ui right labeled icon button" (click)="createProperty()" *ngIf="canEdit">
+	<i class="add icon"></i>
+	Add new property
+</button>
+<div class="ui divider" *ngIf="canEdit"></div>
+<div class="ui divided items">
+	<ng-template ngFor let-propertyRow="$implicit" [ngForOf]="properties" let-i="index">
+		<cw-property class="property item" *ngIf="canDisplay(propertyRow.copy? propertyRow.copy.name:propertyRow.added.name)"
+		             [attr.data-tar]="propertyRow.copy? propertyRow.copy.name : propertyRow.added.name"
+
+		             [property]="propertyRow"
+		             [bNodes]="blankNodes"
+		             [namedFragments]="namedFragments"
+		             [documentURI]="documentURI"
+		             [existingProperties]="existingPropertiesNames"
+		             [mode]="(!!propertyRow.isBeingCreated || !!propertyRow.isBeingModified || !!propertyRow.isBeingDeleted)? modes.EDIT : modes.READ"
+
+		             (onChangeProperty)="changeProperty(propertyRow, i)"
+		             (onDeleteProperty)="deleteProperty(propertyRow, i)"
+		             (onSaveNewProperty)="addProperty(propertyRow, i)"
+		             (onChangeNewProperty)="changeProperty(propertyRow, i)"
+		             (onDeleteNewProperty)="deleteProperty(propertyRow, i)"
+
+		             (onGoToBlankNode)="openBlankNode( $event )"
+		             (onGoToNamedFragment)="openNamedFragment($event)">
+		</cw-property>
+	</ng-template>
+</div>

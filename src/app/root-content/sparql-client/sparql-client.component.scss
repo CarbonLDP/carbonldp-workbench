@@ -1,0 +1,52 @@
+:host {
+	display: block;
+	.query-builder {
+		padding-left: 0;
+		padding-right: 0;
+
+		.queries-list {
+			> p {
+				font-size: 2em;
+				color: #ffffff;
+				padding: .5em;
+			}
+			.item {
+				.name {
+					font-size: 1.3em;
+				}
+				.operation {
+					font-size: 1em;
+					font-family: monospace;
+				}
+				.operation.select {
+					color: cornflowerblue;
+				}
+				.operation.describe {
+					color: mediumpurple;
+				}
+				.operation.construct {
+					color: mediumvioletred;
+				}
+				.operation.ask {
+					color: orange;
+				}
+			}
+		}
+	}
+	.query-results {
+		margin-bottom: 6%;
+		padding-left: 0;
+		padding-right: 0;
+
+		.title .column {
+			padding-left: 0;
+			padding-right: 0;
+		}
+
+		.ui.list.responses-list {
+			> .item {
+				padding-bottom: 10px;
+			}
+		}
+	}
+}

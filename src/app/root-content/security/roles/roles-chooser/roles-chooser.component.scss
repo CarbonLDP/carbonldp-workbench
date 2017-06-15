@@ -1,0 +1,14 @@
+:host {
+	display: block;
+	width: 100%;
+
+	table.roles {
+		tr.role {
+			line-height: 1.5em;
+			cursor: pointer;
+		}
+	}
+	table.roles.borderless {
+		border: none;
+	}
+}

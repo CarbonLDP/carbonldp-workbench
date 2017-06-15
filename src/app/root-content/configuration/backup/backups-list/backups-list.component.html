@@ -1,0 +1,84 @@
+<div class="ui segment" [ngClass]="{loading:loadingBackups}">
+	<button class="ui right labeled icon basic mini button" (click)="refreshList()">
+		<i class="refresh icon"></i>
+		Refresh
+	</button>
+	<div class="ui middle aligned divided list" *ngIf="backups?.length > 0 && errorMessages.length === 0 && !failedDownloadMessage">
+		<div class="item" *ngFor="let backup of backups; let i=index">
+			<div class="right floated content">
+				<div class="ui mini basic icon buttons" title="Download">
+					<button #downLoadButton
+					        class="ui green basic button" title="Download"
+					        (click)="downloadBackup(backup.id, downLoadButton)">
+						<i class="arrow down icon"></i>
+					</button>
+					<button class="ui red basic button" title="Delete"
+					        (click)="askToDeleteBackup(backup)">
+						<i class="remove icon"></i>
+					</button>
+				</div>
+			</div>
+			<div class="content">
+				<div class="header">{{backup.created | date:"MMM dd, yyyy - hh:mm:ss a"}}</div>
+				{{backup.fileIdentifier}}
+			</div>
+		</div>
+	</div>
+	<div class="ui icon message" *ngIf="backups?.length === 0 && !failedDownloadMessage">
+		<i class="info circle icon"></i>
+		<div class="content">
+			<div class="header">
+				No backups yet
+			</div>
+			<p>There are no backups yet.
+				Schedule a backup to keep your data safe!</p>
+		</div>
+	</div>
+	<div class="ui basic segment" *ngIf="errorMessages.length > 0">
+		<cw-message *ngFor="let errorMessage of errorMessages; let i=index"
+		            [type]="'error'"
+		            [message]="errorMessage"
+		            [closable]="false">
+		</cw-message>
+	</div>
+	<div class="ui basic segment" *ngIf="!!failedDownloadMessage && errorMessages.length === 0">
+		<cw-message [message]="failedDownloadMessage"
+		            [type]="'error'"
+		            (onClose)="closeFailedDownloadMessage($event)"
+		            [closable]="true"></cw-message>
+	</div>
+</div>
+<div class="ui delete backup modal">
+	<div class="header">
+		Confirm Deletion
+	</div>
+	<div class="content">
+		<div class="description">
+			<div class="ui header">Are you sure?</div>
+			<p>You are about to delete the backup
+				"<span class="emphasize">{{askingBackupToRemove?.fileIdentifier}}</span>" created on <span class="emphasize">{{askingBackupToRemove?.created | date:"MMM dd, yyyy - hh:mm:ss a"}} hrs
+					.</span>.
+			</p>
+			<p>Are you sure you want to delete it?</p>
+			<div class="errors" *ngIf="deleteMessages.length>0">
+				<cw-message *ngFor="let deleteMessage of deleteMessages; let i=index"
+				            [message]="deleteMessage"
+				            [type]="'error'"
+				            [closable]="true"
+				            (onClose)="removeDeleteErrorMessage(i)">
+				</cw-message>
+			</div>
+		</div>
+	</div>
+	<div class="actions">
+		<button class="ui black deny button" (click)="closeDeleteModal()">
+			No
+		</button>
+		<button class="ui positive right labeled icon button"
+		        [ngClass]="{loading:deletingBackup}"
+		        (click)="deleteBackup(askingBackupToRemove)">
+			Yes
+			<i class="checkmark icon"></i>
+		</button>
+	</div>
+</div>

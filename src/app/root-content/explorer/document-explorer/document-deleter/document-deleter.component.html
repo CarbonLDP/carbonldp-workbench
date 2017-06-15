@@ -1,0 +1,18 @@
+<form class="ui delete document basic modal form" #deleteDocumentModal #deleteDocumentForm="ngForm" (submit)="onSubmitDeleteDocument(deleteDocumentFormModel.value, $event)">
+	<div class="header">
+		<h2 class="ui inverted header"><i class="trash outline red icon"></i> Are you sure?</h2>
+	</div>
+	<div class="content">
+		<p class="ui description">
+			<span>You are about to delete the following document:</span><br><br>
+			<span>'{{documentURI}}'</span><br><br>
+			<span>If you delete it, all its children and its access points will also be deleted.</span><br>
+			<span>Do you really want to proceed?</span>
+		</p>
+		<cw-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage($event)" *ngIf="!!errorMessage"></cw-message>
+	</div>
+	<div class="actions">
+		<div class="ui button" title="Cancel deletion" (click)="hideDeleteDocumentForm()">No</div>
+		<div class="ui red button" title="Confirm deletion" (click)="onSubmitDeleteDocument(deleteDocumentForm.value, $event)">Yes</div>
+	</div>
+</form>

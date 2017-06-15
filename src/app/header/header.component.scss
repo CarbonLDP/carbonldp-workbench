@@ -1,0 +1,20 @@
+:host {
+	display: block;
+
+	.mobile.only.row {
+		.navigation.menu {
+			margin: 0;
+		}
+		.vertical.menu {
+			border-radius: 0;
+			border-top: 1px solid #A9A9A9;
+			width: 100%;
+			display: block;
+			margin-top: 0;
+		}
+		.ui.dropdown.item .menu {
+			position: static;
+			margin-top: 15px;
+		}
+	}
+}

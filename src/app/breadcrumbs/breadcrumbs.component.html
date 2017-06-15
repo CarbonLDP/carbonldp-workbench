@@ -1,0 +1,16 @@
+<div class="ui menu">
+	<a class="item toggle" *ngIf="! sidebarService.isVisible" (click)="toggleSidebar()">
+		<i class="sidebar icon"></i>
+		Menu
+	</a>
+	<div class="ui borderless menu small breadcrumb steps">
+		<a class="item step"
+		   *ngFor="let breadCrumb of breadCrumbs; let i = index"
+		   [ngClass]="{active: routerService.isActive( breadCrumb.url ) }"
+		   [routerLink]="breadCrumb.url">
+			<div class="content">
+				<div class="title">{{breadCrumb.displayName}}</div>
+			</div>
+		</a>
+	</div>
+</div>

@@ -7,14 +7,14 @@
 	background-color: #90959A;
 	color: #ffffff;
 
-	cp-header.ui.navigation.inverted.menu {
-		background-color: #534052;
+	cw-header.ui.navigation.inverted.menu {
+		background-color: #363f48;
 		border-radius: 0;
 		padding: 0;
 		margin: 0;
 	}
 
-	cp-sidebar.ui.vertical.menu {
+	cw-sidebar.ui.vertical.menu {
 		flex: 0 0 auto;
 
 		margin: 0;
@@ -22,10 +22,10 @@
 		width: 300px;
 		border-top: 1px solid rgba(255, 255, 255, 0.0784314);
 		border-right: 1px solid rgba(255, 255, 255, 0.0784314);
-		background-color: #534052;
+		background-color: #363f48;
 	}
 
-	cp-messages-area {
+	cw-messages-area {
 		z-index: 2;
 		max-height: 0;
 	}

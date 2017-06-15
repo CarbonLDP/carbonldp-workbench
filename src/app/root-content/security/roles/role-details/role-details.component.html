@@ -1,0 +1,156 @@
+<form class="ui error warning success form" #roleForm="ngForm" (submit)="onSubmit(roleForm.value, $event)">
+	<div class="ui top attached title segment" [ngClass]="{embedded: embedded}">
+		<h3 class="ui header" *ngIf="mode !== Modes.CREATE">
+			{{role.name}}
+			<span class="sub header">{{role.id}}</span>
+		</h3>
+		<h3 class="ui header" *ngIf="mode === Modes.CREATE">
+			<span class="content">
+				Creating a Role
+				<span class="sub header">Create a new role as a child of <strong>{{selectedRole}}</strong></span>
+			</span>
+		</h3>
+	</div>
+	<div class="ui attached options segment" *ngIf="mode !== Modes.CREATE">
+		<button *ngIf="mode === Modes.READ"
+		        class="ui mini basic icon button"
+		        (click)="changeMode(Modes.EDIT)">
+			<i class="edit icon"></i>
+			Edit
+		</button>
+		<div class="ui basic label" *ngIf="mode === Modes.EDIT">
+			Editing...
+		</div>
+	</div>
+	<div class="ui attached pointing secondary menu tabs" [ngClass]="{embedded: embedded}">
+		<a class="item" data-tab="details" (click)="activeTab='details'" [ngClass]="{active: activeTab==='details'}">Description</a>
+		<a class="item" data-tab="users" (click)="activeTab='users'" [ngClass]="{active: activeTab==='users'}">Users</a>
+	</div>
+	<div class="ui attached tab segment form details"
+	     data-tab="details" [ngClass]="{active: activeTab==='details'}">
+		<div class="ui one column divided grid">
+			<div class="stretched row">
+				<div class="column">
+					<div class="field"
+					     [ngClass]="{error: !name.valid}">
+						<label>Name:</label>
+						<div class="ui fluid input">
+							<input type="text" name="name"
+							       placeholder="E.g: Role Name"
+							       #name="cwValidation" cwValidation required
+							       [(ngModel)]="roleFormModel.name"
+							       [disabled]="mode === Modes.READ"
+							       (input)="mode === Modes.CREATE? roleFormModel.slug = getSanitizedSlug($event.srcElement.value) : roleFormModel.slug = roleFormModel.slug"
+							       (blur)="roleFormModel.slug = getSanitizedSlug($event.srcElement.value)">
+						</div>
+						<cw-error-label *ngIf="!name.valid">
+							<span *ngIf="name.control.hasError('required')">Please enter a name</span>
+						</cw-error-label>
+					</div>
+					<div class="field"
+					     [ngClass]="{error: !slug.valid}"
+					     *ngIf="mode === Modes.CREATE">
+						<label>Slug: <span cw-grayed-out>(Optional)</span></label>
+						<div class="ui fluid input">
+							<input type="text" name="slug"
+							       placeholder="E.g: my-role-slug/"
+							       #slug="cwValidation" cwValidation cw-slug
+							       [ngModel]="roleFormModel.slug"
+							       [disabled]="mode === Modes.READ"
+							       (ngModelChange)="roleFormModel.slug = getSanitizedSlug($event)"
+							       (blur)="slugLostFocus($event)">
+						</div>
+						<cw-error-label *ngIf="!slug.valid">
+							<span *ngIf="slug.control.hasError('invalidSlug')">Please, provide a valid slug/id for the role. (Only numbers and letters with dashes)</span>
+						</cw-error-label>
+					</div>
+					<div class="field"
+					     [ngClass]="{error: !description.valid}">
+						<label>Description: <span cw-grayed-out>(Optional)</span></label>
+						<div class="ui fluid input">
+							<textarea type="text" name="description"
+							          placeholder="E.g: Role Description"
+							          #description="cwValidation" cwValidation
+							          [(ngModel)]="roleFormModel.description"
+							          [disabled]="mode === Modes.READ"></textarea>
+						</div>
+					</div>
+					<div class="field" *ngIf="mustAddParent">
+						<div class="ui warning message">
+							<i class="warning icon"></i> This role has no parent, you MUST <a class="add parent" (click)="mode=Modes.EDIT">assign</a> a parent to this role.
+						</div>
+						<div *ngIf="mode !== Modes.READ">
+							<label>Select a parent role:</label>
+							<div class="ui fluid parent role input">
+								<input type="text" name="parentRole" class="hidden"
+								       placeholder="E.g: parent role"
+								       #parentRole="cwValidation" cwValidation required
+								       [(ngModel)]="roleFormModel.parentRole"/>
+								<cw-roles-chooser [single]="true"
+								                  [bordered]="false"
+								                  [excluded]="[role.id]"
+								                  (onChangeSelection)="changeParentRole($event)"></cw-roles-chooser>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="ui attached tab segment users"
+	     data-tab="users" [ngClass]="{active: activeTab==='users'}">
+		<div class="ui one column divided grid">
+			<div class="column field">
+				<label>List of users currently subscribed to this role:</label>
+				<select multiple name="users"
+				        class="users hidden"
+				        [(ngModel)]="roleFormModel.users">
+					<option value="">Please Select</option>
+					<option *ngFor="let user of roleFormModel.users" [ngValue]="user">{{user}}</option>
+				</select>
+				<table class="ui very compact very basic small celled striped users table" *ngIf="mode === Modes.READ">
+					<tbody>
+						<tr class="bottom aligned user" *ngFor="let user of roleUsers; let i = index;">
+							<td>
+								{{user.name}}<br>
+								{{user.id}}
+							</td>
+						</tr>
+						<tr class="warning" *ngIf="roleUsers.length===0">
+							<td>
+								<i class="attention icon"></i>No users subscribed to this role yet.
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<cw-users-chooser *ngIf="mode !== Modes.READ"
+				                   [selectedUsers]="roleFormModel.users"
+				                   (onChangeSelection)="changeUsers($event)"></cw-users-chooser>
+			</div>
+		</div>
+	</div>
+	<div class="ui attached segment" *ngIf="displaySuccessMessage">
+		<div class="ui success message">
+			<i class="close icon" (click)="displaySuccessMessage=false; close();"></i>
+			<div class="header">
+				The role was saved correctly.
+			</div>
+			<p>The role was saved correctly with the users subscriptions.</p>
+		</div>
+	</div>
+	<cw-message class="ui attached segment" [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="closeError($event)" *ngIf="!!errorMessage"></cw-message>
+	<div *ngIf="mode !== Modes.READ"
+	     class="ui bottom attached segment"
+	     [ngClass]="{embedded: embedded}">
+		<button class="ui mini basic button" title="Cancel" type="button" (click)="cancelForm()">Cancel</button>
+		<button class="ui mini basic right floated button" type="submit"
+		        [ngClass]="{ 'disabled': !roleForm.valid, 'green': roleForm.valid  }"
+		        (click)="onSubmit(roleForm.value, $event)"
+		        [disabled]="!roleForm.valid"
+		        [ngSwitch]="mode">
+			<span *ngSwitchCase="Modes.CREATE">Create</span>
+			<span *ngSwitchCase="Modes.EDIT">Save</span>
+			<span *ngSwitchDefault>Save</span>
+		</button>
+	</div>
+</form>

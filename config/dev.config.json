@@ -1,6 +1,6 @@
 {
 	"url": {
-		"base": "/src/"
+		"base": "/"
 	},
 	"carbon": {
 		"protocol": "http",

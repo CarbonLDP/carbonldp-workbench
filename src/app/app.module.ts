@@ -1,11 +1,12 @@
 import { NgModule } from "@angular/core";
 import { APP_BASE_HREF } from "@angular/common";
 import { BrowserModule, Title } from "@angular/platform-browser";
+import { FormsModule } from "@angular/forms";
 
 // Providers
 import { BASE_URL } from "./config";
-import { CARBON_PROVIDERS } from "angular2-carbonldp/boot";
-import { CARBON_SERVICES_PROVIDERS } from "angular2-carbonldp/services";
+import { CARBON_PROVIDERS } from "angular-carbonldp/boot";
+import { CARBON_SERVICES_PROVIDERS } from "angular-carbonldp/services";
 import { routing, appRoutingProviders } from "./app.routing";
 
 // Components
@@ -16,17 +17,32 @@ import { ErrorView } from "./error-pages/error.view";
 import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
 import { DashboardView } from "./dashboard/dashboard.view";
 import { BackgroundVideoComponent } from "./error-pages/background-video.component";
-import { VersionsExposerComponent } from "./versions-exposer/versions-exposer.component";
+import { VersionsPresenterComponent } from "./versions-presenter/versions-presenter.component";
+
+import { RegisterComponent } from "./register/register.component";
+import { LoginComponent } from "./login/login.component";
+import { HeaderItemComponent } from "./header/header-item.component";
+import { HeaderComponent } from "./header/header.component";
+import { SidebarComponent } from "./sidebar/sidebar.component";
+import { SidebarItemsComponent } from "./sidebar/sidebar-items.component";
+import { BreadcrumbsComponent } from "./breadcrumbs/breadcrumbs.component";
+
 
 // Modules
-import { PanelModule } from "carbonldp-panel/panel.module";
+import { SharedModule } from "./shared/shared.module";
+
+// Services
+import { RouterService } from "./router.service";
+import { HeaderService } from "./header/header.service";
+import { SidebarService } from "./sidebar/sidebar.service";
 
 
 @NgModule( {
 	imports: [
 		BrowserModule,
+		FormsModule,
 		routing,
-		PanelModule.forRoot(),
+		SharedModule.forRoot(),
 	],
 	declarations: [
 		AppComponent,
@@ -35,8 +51,17 @@ import { PanelModule } from "carbonldp-panel/panel.module";
 		ErrorView,
 		NotFoundErrorView,
 		DashboardView,
+
+		RegisterComponent,
+		LoginComponent,
+		HeaderItemComponent,
+		HeaderComponent,
+		SidebarComponent,
+		SidebarItemsComponent,
+		BreadcrumbsComponent,
+
 		BackgroundVideoComponent,
-		VersionsExposerComponent
+		VersionsPresenterComponent
 	],
 	providers: [
 		{
@@ -47,6 +72,8 @@ import { PanelModule } from "carbonldp-panel/panel.module";
 		CARBON_SERVICES_PROVIDERS,
 		appRoutingProviders,
 		Title,
+
+		RouterService, HeaderService, SidebarService,
 	],
 	bootstrap: [ AppComponent ],
 } )
