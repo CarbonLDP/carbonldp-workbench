@@ -16,6 +16,7 @@ export const RootContentRoutes:Routes = [
 		data: {
 			alias: "",
 			displayName: "Workbench",
+			hide:true,
 		},
 		children: [
 			{
@@ -23,6 +24,7 @@ export const RootContentRoutes:Routes = [
 				data: {
 					alias: "",
 					displayName: "Dashboard",
+					hide:false,
 				},
 				component: DashboardView,
 			},
