@@ -1,42 +1,40 @@
-:host{
-	display:block;
-	.ui.cards .ui.card.widget-container{
+:host {
+	display: block;
+	.ui.cards .ui.card.widget-container {
 		box-shadow: none;
 	}
 
-	.ui.cards{
-	    .ui.card {
-		    width: 245px;
+	.ui.cards {
+		.ui.card {
+			width: 245px;
 
-			.widget-header {
+			/deep/ .widget-header {
 				background-color: orange;
 				padding: .5em .5em;
 			}
 
-			.widget-button{
+			/deep/ .widget-button {
 				cursor: pointer;
 			}
 
-		    .widget-body{
-			    display: flex;
-			    flex-direction: row;
-		    }
+			/deep/ .widget-body {
+				display: flex;
+				flex-direction: row;
+			}
 
+			/deep/ .widget-icon {
+				height: 60px;
+			}
 
-		    .widget-icon{
-			    height: 60px;
-		    }
-
-		    .widget-text{
-			    flex: auto;
-			    color: black;
-			    line-height: normal;
-			    font-size: 50px;
-		    }
+			/deep/ .widget-text {
+				flex: auto;
+				color: black;
+				line-height: normal;
+				font-size: 50px;
+			}
 		}
-		.ui.card.hidden{
+		.ui.card.hidden {
 			display: none;
 		}
 	}
-
 }

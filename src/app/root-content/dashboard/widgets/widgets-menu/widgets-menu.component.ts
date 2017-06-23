@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 
 import * as $ from "jquery";
 
-import { WidgetsService } from "./widgets.service";
+import { WidgetsService } from "../widgets.service";
 
 @Component({
 	selector: "cw-widgets-menu",

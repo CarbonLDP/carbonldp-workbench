@@ -2,8 +2,10 @@ import { NgModule, ModuleWithProviders } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
 // Components
+import { DocumentsWidgetComponent } from "./widgets/documents/documents-widget.component";
+import { TriplesWidgetComponent } from "./widgets/triples/triples-widget.component";
 import { WidgetComponent } from "./widgets/widget.component";
-import { WidgetsMenu } from "./widgets/widgets-menu.component"
+import { WidgetsMenu } from "./widgets/widgets-menu/widgets-menu.component"
 	
 // Modules
 import { SharedModule } from "app/shared/shared.module";
@@ -17,6 +19,8 @@ import { WidgetsService } from "./widgets/widgets.service";
 		SharedModule,
 	],
 	declarations: [
+		DocumentsWidgetComponent,
+		TriplesWidgetComponent,
 		WidgetComponent,
 		WidgetsMenu,
 	],
