@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 
 // Components
 import { WidgetComponent } from "./widgets/widget.component";
-import { WidgetsMenu } from "./widgets/widgetsMenu.component"
+import { WidgetsMenu } from "./widgets/widgets-menu.component"
 	
 // Modules
 import { SharedModule } from "app/shared/shared.module";

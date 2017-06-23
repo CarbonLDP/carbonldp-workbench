@@ -5,9 +5,9 @@ import * as $ from "jquery";
 import { WidgetsService } from "./widgets.service";
 
 @Component({
-	selector: "cw-widgetsMenu",
-	templateUrl: "./widgetsMenu.component.html",
-	styleUrls: [ "./widgetsMenu.component.scss" ],
+	selector: "cw-widgets-menu",
+	templateUrl: "./widgets-menu.component.html",
+	styleUrls: [ "./widgets-menu.component.scss" ],
 })
 
 export class WidgetsMenu{
