@@ -1,4 +1,4 @@
 <div class="ui cards">
-	<cw-documents-widget class="ui card widget-container widget-container--totalDocuments"></cw-documents-widget>
-	<cw-triples-widget class="ui card widget-container widget-container--totalTriples"></cw-triples-widget>
+	<cw-documents-widget [emitErrors]="true" (errorOccurs)="notifyErrorAreaService($event)" class="ui card widget-container widget-container--totalDocuments"></cw-documents-widget>
+	<cw-triples-widget [emitErrors]="true" (errorOccurs)="notifyErrorAreaService($event)" class="ui card widget-container widget-container--totalTriples"></cw-triples-widget>
 </div>

@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 
 import { Class as Carbon } from "carbonldp/Carbon"
 import * as HTTP from "carbonldp/HTTP";
-import * as SPARQL from "carbonldp/SPARQL"
+import * as SPARQL from "carbonldp/SPARQL";
 
 @Injectable()
 export class WidgetsService {
@@ -51,8 +51,9 @@ export class WidgetsService {
 	}
 
 	toggleWidget(widget:Element, menuItem:Element){
+		let widgetClassList = widget.classList;
 		menuItem.querySelector(".widgetsMenu-icon").classList.toggle("hidden");
-		widget.classList.toggle("hidden");
+		widgetClassList.toggle("hidden");
 	}
 
 	closeWidget(widget:Element, menuItem:Element){
@@ -60,5 +61,4 @@ export class WidgetsService {
 		widget.classList.add("hidden");
 
 	}
-
 }

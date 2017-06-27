@@ -36,5 +36,19 @@
 		.ui.card.hidden {
 			display: none;
 		}
+
+		.ui.card.error {
+			/deep/ .widget-text {
+				flex: auto;
+				color: gray;
+				line-height: normal;
+				font-size: 50px;
+			}
+
+			/deep/ .widget-header {
+				background-color: #bcbec0;
+				padding: .5em .5em;
+			}
+		}
 	}
 }
