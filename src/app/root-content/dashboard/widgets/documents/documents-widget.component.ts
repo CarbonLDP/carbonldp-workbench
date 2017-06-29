@@ -20,9 +20,7 @@ export class DocumentsWidgetComponent {
 	widgetsService:WidgetsService;
 	widgetIcon = "/assets/images/documentIcon.png";
 	documentsTotalCount;
-	messages:any[] = [];
 
-	@Input() emitErrors:boolean = false;
 	@Input() widgetHide:boolean;
 	@Output() errorOccurs:EventEmitter<any> = new EventEmitter();
 	@Output() widgetHideChange:EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -56,11 +54,7 @@ export class DocumentsWidgetComponent {
 		let widget = document.querySelector( ".widget-container--totalDocuments" );
 		this.widgetIcon = "/assets/images/documentBrokenIcon.png";
 		widget.classList.add( "error" );
-		if( this.emitErrors )
-			this.errorOccurs.emit( this.getErrorMessage( error ) );
-		else {
-			this.messages.push( this.getErrorMessage( error ) );
-		}
+		this.errorOccurs.emit( this.getErrorMessage( error ) );
 	}
 
 	public getErrorMessage( error:any ):Message {

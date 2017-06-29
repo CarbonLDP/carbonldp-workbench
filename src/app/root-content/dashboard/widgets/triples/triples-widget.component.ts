@@ -20,9 +20,7 @@ export class TriplesWidgetComponent {
 	widgetsService:WidgetsService;
 	widgetIcon = "/assets/images/triplesIcon.png";
 	triplesTotalCount;
-	messages:any[] = [];
-
-	@Input() emitErrors:boolean = false;
+	
 	@Input() widgetHide:boolean;
 	@Output() errorOccurs:EventEmitter<any> = new EventEmitter();
 	@Output() widgetHideChange:EventEmitter<boolean>=new EventEmitter<boolean>();
@@ -60,11 +58,7 @@ export class TriplesWidgetComponent {
 		let widget = document.querySelector( ".widget-container--totalTriples" );
 		this.widgetIcon = "/assets/images/triplesBrokenIcon.png";
 		widget.classList.add( "error" );
-		if( this.emitErrors )
-			this.errorOccurs.emit( this.getErrorMessage( error ) );
-		else {
-			this.messages.push( this.getErrorMessage( error ) );
-		}
+		this.errorOccurs.emit( this.getErrorMessage( error ) );
 	}
 
 	public getTriplesCount() {
