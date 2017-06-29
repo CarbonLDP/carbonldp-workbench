@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
+import { Component, ElementRef, Input, Output, EventEmitter, SimpleChanges } from "@angular/core";
 
 import { Class as Carbon } from "carbonldp/Carbon";
 
@@ -23,7 +23,9 @@ export class DocumentsWidgetComponent {
 	messages:any[] = [];
 
 	@Input() emitErrors:boolean = false;
+	@Input() widgetHide:boolean;
 	@Output() errorOccurs:EventEmitter<any> = new EventEmitter();
+	@Output() widgetHideChange:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	constructor( element:ElementRef, carbon:Carbon, widgetsService:WidgetsService ) {
 		this.element = element;
@@ -31,33 +33,23 @@ export class DocumentsWidgetComponent {
 		this.carbon = carbon;
 	}
 
+	ngOnChanges( changes:SimpleChanges ):void {
+		if( changes[ "widgetHide" ].currentValue === false ) this.refreshWidget();
+	}
+
 	ngAfterViewInit():void {
 		this.getDocumentsCount();
 	}
 
-	public refreshDocumentsCount() {
+	public refreshWidget() {
+		let widget = document.querySelector( ".widget-container--totalDocuments" );
+		if( widget !== null )  widget.classList.remove( "error" );
+		this.documentsTotalCount = null;
 		this.getDocumentsCount();
 	}
 
-	public getDocumentsCount() {
-		this.widgetsService.getDocumentsTotalCount()
-			.then( ( count ) => {
-				let widget = document.querySelector( ".widget-container--totalDocuments" );
-				this.documentsTotalCount = count;
-				this.widgetIcon = "/assets/images/documentIcon.png";
-				widget.classList.remove( "error" );
-			} )
-			.catch( ( error:any ) => {
-				this.errorWidget( error );
-			} );
-	}
-
-	public close( e, widgetName ) {
-		let widget = document.querySelector( ".widget-container--totalDocuments" );
-		let widgetsMenuItem = document.querySelector( ".widgetsMenu-item--totalDocuments" );
-
-		this.widgetsService.closeWidget( widget, widgetsMenuItem );
-
+	public closeWidget() {
+		this.widgetHideChange.emit( true );
 	}
 
 	public errorWidget( error ) {
@@ -73,5 +65,18 @@ export class DocumentsWidgetComponent {
 
 	public getErrorMessage( error:any ):Message {
 		return ErrorMessageGenerator.getErrorMessage( error );
+	}
+
+	public getDocumentsCount() {
+		this.widgetsService.getDocumentsTotalCount()
+			.then( ( count ) => {
+				let widget = document.querySelector( ".widget-container--totalDocuments" );
+				this.documentsTotalCount = count;
+				this.widgetIcon = "/assets/images/documentIcon.png";
+				widget.classList.remove( "error" );
+			} )
+			.catch( ( error:any ) => {
+				this.errorWidget( error );
+			} );
 	}
 }

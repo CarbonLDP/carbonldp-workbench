@@ -7,8 +7,8 @@ import * as SPARQL from "carbonldp/SPARQL";
 @Injectable()
 export class WidgetsService {
 	carbon:Carbon;
-	
-	constructor(carbon:Carbon){
+
+	constructor( carbon:Carbon ) {
 		this.carbon = carbon;
 	}
 
@@ -23,9 +23,9 @@ export class WidgetsService {
 			`;
 
 		return this.carbon.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
-			results.bindings.forEach((binding)=>{
-				count = binding["count"];
-			});
+			results.bindings.forEach( ( binding )=> {
+				count = binding[ "count" ];
+			} );
 			return count;
 		} );
 
@@ -42,23 +42,12 @@ export class WidgetsService {
 			`;
 
 		return this.carbon.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
-			results.bindings.forEach((binding)=>{
-				count = binding["count"];
-			});
+			results.bindings.forEach( ( binding )=> {
+				count = binding[ "count" ];
+			} );
 			return count;
 		} );
 
 	}
-
-	toggleWidget(widget:Element, menuItem:Element){
-		let widgetClassList = widget.classList;
-		menuItem.querySelector(".widgetsMenu-icon").classList.toggle("hidden");
-		widgetClassList.toggle("hidden");
-	}
-
-	closeWidget(widget:Element, menuItem:Element){
-		menuItem.querySelector(".widgetsMenu-icon").classList.add("hidden");
-		widget.classList.add("hidden");
-
-	}
+	
 }

@@ -1,45 +1,41 @@
-import { Component } from "@angular/core";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
+
+import { Widget } from "../widget.component";
 
 import * as $ from "jquery";
 
 import { WidgetsService } from "../widgets.service";
 
-@Component({
+@Component( {
 	selector: "cw-widgets-menu",
 	templateUrl: "./widgets-menu.component.html",
 	styleUrls: [ "./widgets-menu.component.scss" ],
-})
+} )
 
-export class WidgetsMenu{
+export class WidgetsMenu {
 	widgetsService:WidgetsService;
 
-	constructor( widgetsService:WidgetsService ){
-		this.widgetsService	= widgetsService;
+	@Input() widgetsList:Widget[];
+	@Output() widgetsListChange:EventEmitter<Widget[]> = new EventEmitter<Widget[]>();
+
+	constructor( widgetsService:WidgetsService ) {
+		this.widgetsService = widgetsService;
 	}
 
-	ngOnInit():void{
+	ngOnInit():void {
 		this.initializeDropdown();
 	}
 
-	initializeDropdown(){
-		$(".ui.dropdown").dropdown( {
+	initializeDropdown() {
+		$( ".ui.dropdown" ).dropdown( {
 			action: "nothing"
-		});
+		} );
 	}
 
-	toggleSelection(e, widgetName){
+	toggleSelection( e, widgetId ) {
 		let widget:Element;
-		let widgetsMenuItem:Element;
-		if( widgetName === "Triples") {
-			widget = document.querySelector(".widget-container--totalTriples");
-			widgetsMenuItem = document.querySelector(".widgetsMenu-item--totalTriples");
-		} else if ( widgetName === "Documents" ){
-			widget = document.querySelector(".widget-container--totalDocuments");
-			widgetsMenuItem = document.querySelector(".widgetsMenu-item--totalDocuments");
-		} else {
-			return false;
-		}
+		this.widgetsList[ widgetId - 1 ][ "hide" ] = ! this.widgetsList[ widgetId - 1 ][ "hide" ];
+		this.widgetsListChange.emit( this.widgetsList );
 
-		this.widgetsService.toggleWidget(widget, widgetsMenuItem);
 	}
 }

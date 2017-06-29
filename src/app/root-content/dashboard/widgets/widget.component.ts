@@ -1,17 +1,20 @@
-import { Component } from "@angular/core";
+import { Component, Input, Output, EventEmitter } from "@angular/core";
 
 import { MessagesAreaService } from "app/shared/messages-area/messages-area.service";
 
 import "semantic-ui/semantic";
 
-@Component({
+@Component( {
 	selector: "cw-widgets",
 	templateUrl: "./widget.component.html",
 	styleUrls: [ "./widget.component.scss" ],
-})
+} )
 
-export class WidgetComponent{
+export class WidgetComponent {
 	private messagesAreaService:MessagesAreaService;
+
+	@Input() widgetsList:Widget[];
+	@Output() widgetsListChange:EventEmitter<Widget[]> = new EventEmitter<Widget[]>();
 
 	constructor( messagesAreaService:MessagesAreaService ) {
 		this.messagesAreaService = messagesAreaService;
@@ -27,4 +30,17 @@ export class WidgetComponent{
 			error.endpoint
 		);
 	}
+
+	widgetsListChildChange( widgetHide:boolean, widgetId:number ):void {
+		this.widgetsList[ widgetId - 1 ].hide = widgetHide;
+		this.widgetsListChange.emit( this.widgetsList );
+	}
+
+}
+
+export interface Widget {
+	id:number,
+	name:string,
+	queriedObject:string,
+	hide:boolean
 }

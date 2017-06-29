@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
+import { Component, ElementRef, Input, Output, EventEmitter, SimpleChanges } from "@angular/core";
 
 import { Class as Carbon } from "carbonldp/Carbon";
 
@@ -23,56 +23,62 @@ export class TriplesWidgetComponent {
 	messages:any[] = [];
 
 	@Input() emitErrors:boolean = false;
+	@Input() widgetHide:boolean;
 	@Output() errorOccurs:EventEmitter<any> = new EventEmitter();
+	@Output() widgetHideChange:EventEmitter<boolean>=new EventEmitter<boolean>();
 
 	constructor( element:ElementRef, carbon:Carbon, widgetsService:WidgetsService ) {
 		this.element = element;
 		this.widgetsService = widgetsService;
 		this.carbon = carbon;
 	}
-
+	
+	ngOnChanges( changes:SimpleChanges ):void{
+		if( changes["widgetHide"].currentValue === false ) this.refreshWidget();
+	}
+	
 	ngAfterViewInit():void {
 		this.getTriplesCount();
 	}
 
-
-	public refreshTriplesCount() {
+	public refreshWidget() {
+		let widget = document.querySelector( ".widget-container--totalTriples" );
+		if( widget !== null ) widget.classList.remove("error");
+		this.triplesTotalCount = null;
 		this.getTriplesCount();
 	}
 
-	public getTriplesCount() {
-		this.widgetsService.getTriplesTotalCount()
-			.then( ( count ) => {
-				let widget = document.querySelector( ".widget-container--totalDocuments" );
-				this.triplesTotalCount = count;
-				this.widgetIcon = "/assets/images/triplesIcon.png";
-				widget.classList.remove( "error" );
-			} )
-			.catch( ( error:any ) => {
-				let widget = document.querySelector( ".widget-container--totalTriples" );
-				this.widgetIcon = "/assets/images/triplesBrokenIcon.png";
-				widget.classList.add( "error" );
-				if( this.emitErrors ) {
-					this.errorOccurs.emit( this.getErrorMessage( error ) );
-				} else {
-					this.messages.push( this.getErrorMessage( error ) );
-				}
-			} );
-	}
-
-	public close( e, widgetName ) {
-
-		let widget = document.querySelector( ".widget-container--totalTriples" );
-		let widgetsMenuItem = document.querySelector( ".widgetsMenu-item--totalTriples" );
-
-
-		this.widgetsService.closeWidget( widget, widgetsMenuItem );
-
+	public closeWidget() {
+		this.widgetHideChange.emit(true);
 	}
 
 	public getErrorMessage( error:any ):Message {
 		return ErrorMessageGenerator.getErrorMessage( error );
 	}
 
+	public errorWidget( error ) {
+		let widget = document.querySelector( ".widget-container--totalTriples" );
+		this.widgetIcon = "/assets/images/triplesBrokenIcon.png";
+		widget.classList.add( "error" );
+		if( this.emitErrors )
+			this.errorOccurs.emit( this.getErrorMessage( error ) );
+		else {
+			this.messages.push( this.getErrorMessage( error ) );
+		}
+	}
+
+	public getTriplesCount() {
+		this.widgetsService.getTriplesTotalCount()
+			.then( ( count ) => {
+				let widget = document.querySelector( ".widget-container--totalTriples" );
+				this.triplesTotalCount = count;
+				this.widgetIcon = "/assets/images/triplesIcon.png";
+				widget.classList.remove( "error" );
+			} )
+			.catch( ( error:any ) => {
+				this.errorWidget( error );
+
+			} );
+	}
 
 }
