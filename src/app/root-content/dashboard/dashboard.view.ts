@@ -10,12 +10,8 @@ import "semantic-ui/semantic";
 } )
 export class DashboardView {
 	widgetsList:Widget[] = [
-		{ id: 1, name: "totalDocuments", queriedObject: "Documents", hide: false },
-		{ id: 2, name: "totalTriples", queriedObject: "Triples", hide: false } ];
-
-	widgetsListChange( widgetsList ) {
-		this.widgetsList = widgetsList;
-	}
+		{ id: 1, name: "totalDocuments", title: "Documents", hide: false },
+		{ id: 2, name: "totalTriples", title: "Triples", hide: false } ];
 
 }
 

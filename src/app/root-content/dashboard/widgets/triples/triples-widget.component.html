@@ -1,4 +1,4 @@
-<div class="content widget-header">Triples
+<div class="content widget-header">{{widget.title}}
 	<div class="right floated">
 		<i class="refresh small icon widget-button" (click)="refreshWidget()"></i>
 		<i class="remove small icon widget-button" (click)="closeWidget()"></i>
@@ -6,7 +6,8 @@
 </div>
 <div class="content widget-body">
 	<div class="widget-text">{{triplesTotalCount}}</div>
-	<img class="widget-icon" src="{{widgetIcon}}" height="60"/>
+	<img class="widget-icon" src="/assets/images/triplesIcon.png" height="60" *ngIf="!errorMessage"/>
+	<img class="widget-icon" src="/assets/images/triplesBrokenIcon.png" height="60" *ngIf="errorMessage"/>
 </div>
 
 

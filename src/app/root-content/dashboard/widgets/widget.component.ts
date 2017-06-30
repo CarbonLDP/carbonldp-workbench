@@ -14,7 +14,6 @@ export class WidgetComponent {
 	private messagesAreaService:MessagesAreaService;
 
 	@Input() widgetsList:Widget[];
-	@Output() widgetsListChange:EventEmitter<Widget[]> = new EventEmitter<Widget[]>();
 
 	constructor( messagesAreaService:MessagesAreaService ) {
 		this.messagesAreaService = messagesAreaService;
@@ -31,9 +30,8 @@ export class WidgetComponent {
 		);
 	}
 
-	widgetsListChildChange( widgetHide:boolean, widgetId:number ):void {
-		this.widgetsList[ widgetId - 1 ].hide = widgetHide;
-		this.widgetsListChange.emit( this.widgetsList );
+	closeWidget( widget:Widget ):void {
+		widget.hide = ! widget.hide;
 	}
 
 }
@@ -41,6 +39,6 @@ export class WidgetComponent {
 export interface Widget {
 	id:number,
 	name:string,
-	queriedObject:string,
+	title:string,
 	hide:boolean
 }

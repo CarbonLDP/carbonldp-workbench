@@ -16,7 +16,6 @@ export class WidgetsMenu {
 	widgetsService:WidgetsService;
 
 	@Input() widgetsList:Widget[];
-	@Output() widgetsListChange:EventEmitter<Widget[]> = new EventEmitter<Widget[]>();
 
 	constructor( widgetsService:WidgetsService ) {
 		this.widgetsService = widgetsService;
@@ -32,10 +31,7 @@ export class WidgetsMenu {
 		} );
 	}
 
-	toggleSelection( e, widgetId ) {
-		let widget:Element;
-		this.widgetsList[ widgetId - 1 ][ "hide" ] = ! this.widgetsList[ widgetId - 1 ][ "hide" ];
-		this.widgetsListChange.emit( this.widgetsList );
-
+	toggleSelection( e, widget:Widget ) {
+		widget.hide = ! widget.hide;
 	}
 }

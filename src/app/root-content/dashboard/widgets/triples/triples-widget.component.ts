@@ -7,6 +7,7 @@ import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
 
 import "semantic-ui/semantic";
+import { Widget } from "app/root-content/dashboard/widgets/widget.component";
 
 @Component( {
 	selector: "cw-triples-widget",
@@ -18,36 +19,36 @@ export class TriplesWidgetComponent {
 	carbon:Carbon;
 	element:ElementRef;
 	widgetsService:WidgetsService;
-	widgetIcon = "/assets/images/triplesIcon.png";
+
+	errorMessage:Message;
 	triplesTotalCount;
-	
-	@Input() widgetHide:boolean;
-	@Output() errorOccurs:EventEmitter<any> = new EventEmitter();
-	@Output() widgetHideChange:EventEmitter<boolean>=new EventEmitter<boolean>();
+
+	@Input() widget:Widget;
+	@Output() onErrorOccurs:EventEmitter<any> = new EventEmitter();
+	@Output() onClose:EventEmitter<Widget> = new EventEmitter<Widget>();
 
 	constructor( element:ElementRef, carbon:Carbon, widgetsService:WidgetsService ) {
 		this.element = element;
 		this.widgetsService = widgetsService;
 		this.carbon = carbon;
 	}
-	
-	ngOnChanges( changes:SimpleChanges ):void{
-		if( changes["widgetHide"].currentValue === false ) this.refreshWidget();
+
+	ngOnChanges( changes:SimpleChanges ):void {
+		if( changes[ "widget" ].currentValue === false ) this.refreshWidget();
 	}
-	
+
 	ngAfterViewInit():void {
 		this.getTriplesCount();
 	}
 
 	public refreshWidget() {
-		let widget = document.querySelector( ".widget-container--totalTriples" );
-		if( widget !== null ) widget.classList.remove("error");
+		this.errorMessage = null;
 		this.triplesTotalCount = null;
 		this.getTriplesCount();
 	}
 
 	public closeWidget() {
-		this.widgetHideChange.emit(true);
+		this.onClose.emit( this.widget );
 	}
 
 	public getErrorMessage( error:any ):Message {
@@ -55,10 +56,9 @@ export class TriplesWidgetComponent {
 	}
 
 	public errorWidget( error ) {
-		let widget = document.querySelector( ".widget-container--totalTriples" );
-		this.widgetIcon = "/assets/images/triplesBrokenIcon.png";
-		widget.classList.add( "error" );
-		this.errorOccurs.emit( this.getErrorMessage( error ) );
+		this.element.nativeElement.classList.add( "error" );
+		this.errorMessage = this.getErrorMessage( error );
+		this.onErrorOccurs.emit( this.errorMessage );
 	}
 
 	public getTriplesCount() {
@@ -66,12 +66,10 @@ export class TriplesWidgetComponent {
 			.then( ( count ) => {
 				let widget = document.querySelector( ".widget-container--totalTriples" );
 				this.triplesTotalCount = count;
-				this.widgetIcon = "/assets/images/triplesIcon.png";
 				widget.classList.remove( "error" );
 			} )
 			.catch( ( error:any ) => {
 				this.errorWidget( error );
-
 			} );
 	}
 
