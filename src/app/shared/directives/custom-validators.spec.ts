@@ -278,7 +278,6 @@ export function CustomValidatorsSpecs() {
 
 		} );
 
-
 		describe( "RequiredIfValidator", () => {
 
 			it( "Should return requiredIf", () => {
@@ -309,7 +308,6 @@ export function CustomValidatorsSpecs() {
 			} );
 
 		} );
-
 
 	} );
 }
