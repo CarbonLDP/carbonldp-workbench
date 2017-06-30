@@ -34,7 +34,7 @@ describe( "ResponseComponent", () => {
 
 	beforeEach( () => {
 		fixture = TestBed.createComponent( ResponseComponent );
-		comp = fixture.componentInstance; // BannerComponent test instance
+		comp = fixture.componentInstance;
 		de = fixture.debugElement;
 
 		mockedResponse.duration = 102;
@@ -383,7 +383,7 @@ describe( "ResponseComponent", () => {
 
 		beforeEach( () => {
 			fixture = TestBed.createComponent( ResponseComponent );
-			comp = fixture.componentInstance; // BannerComponent test instance
+			comp = fixture.componentInstance;
 			de = fixture.debugElement;
 
 			mockedResponse.duration = 102;
