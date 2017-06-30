@@ -1,4 +1,4 @@
 <div class="ui cards">
-	<cw-documents-widget [widgetHide]="widgetsList[0].hide" (errorOccurs)="notifyErrorAreaService($event)" (widgetHideChange)="widgetsListChildChange($event, widgetsList[0].id)" class="ui card widget-container widget-container--{{widgetsList[0].name}}" [class.hidden]="widgetsList[0].hide"></cw-documents-widget>
+	<cw-documents-widget [(widget)]="widgetsList[0]" (onErrorOccurs)="notifyErrorAreaService($event)" (onClose)="closeWidget($event)" class="ui card widget-container widget-container--{{widgetsList[0].name}}" [class.hidden]="widgetsList[0].hide"></cw-documents-widget>
 	<cw-triples-widget [(widget)]="widgetsList[1]" (onErrorOccurs)="notifyErrorAreaService($event)" (onClose)="closeWidget($event)" class="ui card widget-container widget-container--{{widgetsList[1].name}}" [class.hidden]="widgetsList[1].hide"></cw-triples-widget>
 </div>

@@ -1,7 +1,8 @@
-import { Component, ElementRef, Input, Output, EventEmitter, SimpleChanges } from "@angular/core";
+import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
 
 import { Class as Carbon } from "carbonldp/Carbon";
 
+import { Widget } from "../widget.component";
 import { WidgetsService } from "../widgets.service";
 import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
@@ -17,13 +18,15 @@ import "semantic-ui/semantic";
 export class DocumentsWidgetComponent {
 	carbon:Carbon;
 	element:ElementRef;
+	errorMessage:Message;
 	widgetsService:WidgetsService;
-	widgetIcon = "/assets/images/documentIcon.png";
 	documentsTotalCount;
 
-	@Input() widgetHide:boolean;
-	@Output() errorOccurs:EventEmitter<any> = new EventEmitter();
-	@Output() widgetHideChange:EventEmitter<boolean> = new EventEmitter<boolean>();
+	private oldWidgetHide:boolean;
+
+	@Input() widget:Widget;
+	@Output() onErrorOccurs:EventEmitter<any> = new EventEmitter();
+	@Output() onClose:EventEmitter<Widget> = new EventEmitter<Widget>();
 
 	constructor( element:ElementRef, carbon:Carbon, widgetsService:WidgetsService ) {
 		this.element = element;
@@ -31,8 +34,12 @@ export class DocumentsWidgetComponent {
 		this.carbon = carbon;
 	}
 
-	ngOnChanges( changes:SimpleChanges ):void {
-		if( changes[ "widgetHide" ].currentValue === false ) this.refreshWidget();
+	ngDoCheck() {
+		if( this.widget.hide != this.oldWidgetHide ) {
+			this.oldWidgetHide = this.widget.hide;
+
+			if( ! this.widget.hide ) this.refreshWidget();
+		}
 	}
 
 	ngAfterViewInit():void {
@@ -40,21 +47,20 @@ export class DocumentsWidgetComponent {
 	}
 
 	public refreshWidget() {
-		let widget = document.querySelector( ".widget-container--totalDocuments" );
-		if( widget !== null )  widget.classList.remove( "error" );
+		this.errorMessage = null;
+		this.element.nativeElement.classList.add( "error" );
 		this.documentsTotalCount = null;
 		this.getDocumentsCount();
 	}
 
 	public closeWidget() {
-		this.widgetHideChange.emit( true );
+		this.onClose.emit( this.widget );
 	}
 
 	public errorWidget( error ) {
-		let widget = document.querySelector( ".widget-container--totalDocuments" );
-		this.widgetIcon = "/assets/images/documentBrokenIcon.png";
-		widget.classList.add( "error" );
-		this.errorOccurs.emit( this.getErrorMessage( error ) );
+		this.element.nativeElement.classList.add( "error" );
+		this.errorMessage = this.getErrorMessage( error );
+		this.onErrorOccurs.emit( this.errorMessage );
 	}
 
 	public getErrorMessage( error:any ):Message {
@@ -66,7 +72,6 @@ export class DocumentsWidgetComponent {
 			.then( ( count ) => {
 				let widget = document.querySelector( ".widget-container--totalDocuments" );
 				this.documentsTotalCount = count;
-				this.widgetIcon = "/assets/images/documentIcon.png";
 				widget.classList.remove( "error" );
 			} )
 			.catch( ( error:any ) => {

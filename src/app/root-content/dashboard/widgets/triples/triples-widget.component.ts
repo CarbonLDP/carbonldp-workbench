@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, SimpleChanges } from "@angular/core";
+import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
 
 import { Class as Carbon } from "carbonldp/Carbon";
 
@@ -19,9 +19,10 @@ export class TriplesWidgetComponent {
 	carbon:Carbon;
 	element:ElementRef;
 	widgetsService:WidgetsService;
-
 	errorMessage:Message;
 	triplesTotalCount;
+	
+	private oldWidgetHide:boolean;
 
 	@Input() widget:Widget;
 	@Output() onErrorOccurs:EventEmitter<any> = new EventEmitter();
@@ -33,8 +34,12 @@ export class TriplesWidgetComponent {
 		this.carbon = carbon;
 	}
 
-	ngOnChanges( changes:SimpleChanges ):void {
-		if( changes[ "widget" ].currentValue === false ) this.refreshWidget();
+	ngDoCheck() {
+		if( this.widget.hide != this.oldWidgetHide ) {
+			this.oldWidgetHide = this.widget.hide;
+
+			if( ! this.widget.hide ) this.refreshWidget();
+		}
 	}
 
 	ngAfterViewInit():void {
