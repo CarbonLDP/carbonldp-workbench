@@ -2,17 +2,17 @@ import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/cor
 
 import { Class as Carbon } from "carbonldp/Carbon";
 
+import { Widget } from "app/root-content/dashboard/widgets/widgets.component";
 import { WidgetsService } from "../widgets.service";
 import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
 
 import "semantic-ui/semantic";
-import { Widget } from "app/root-content/dashboard/widgets/widget.component";
 
 @Component( {
 	selector: "cw-triples-widget",
 	templateUrl: "./triples-widget.component.html",
-	styleUrls: [],
+	styleUrls: ["../widgets.component.scss"],
 } )
 
 export class TriplesWidgetComponent {

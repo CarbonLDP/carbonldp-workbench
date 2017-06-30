@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Widget } from "./widgets/widget.component"
+import { Widget } from "./widgets/widgets.component"
 import "semantic-ui/semantic";
 
 

@@ -6,11 +6,11 @@ import "semantic-ui/semantic";
 
 @Component( {
 	selector: "cw-widgets",
-	templateUrl: "./widget.component.html",
-	styleUrls: [ "./widget.component.scss" ],
+	templateUrl: "./widgets.component.html",
+	styleUrls: [ "./widgets.component.scss" ],
 } )
 
-export class WidgetComponent {
+export class WidgetsComponent {
 	private messagesAreaService:MessagesAreaService;
 
 	@Input() widgetsList:Widget[];

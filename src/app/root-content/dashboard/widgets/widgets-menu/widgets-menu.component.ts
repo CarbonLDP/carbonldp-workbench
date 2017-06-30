@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 
-import { Widget } from "../widget.component";
+import { Widget } from "../widgets.component";
 
 import * as $ from "jquery";
 

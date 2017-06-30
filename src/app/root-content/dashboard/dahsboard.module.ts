@@ -4,7 +4,7 @@ import { CommonModule } from "@angular/common";
 // Components
 import { DocumentsWidgetComponent } from "./widgets/documents/documents-widget.component";
 import { TriplesWidgetComponent } from "./widgets/triples/triples-widget.component";
-import { WidgetComponent } from "./widgets/widget.component";
+import { WidgetsComponent } from "./widgets/widgets.component";
 import { WidgetsMenu } from "./widgets/widgets-menu/widgets-menu.component"
 	
 // Modules
@@ -21,12 +21,12 @@ import { WidgetsService } from "./widgets/widgets.service";
 	declarations: [
 		DocumentsWidgetComponent,
 		TriplesWidgetComponent,
-		WidgetComponent,
+		WidgetsComponent,
 		WidgetsMenu,
 	],
 	exports: [
 		WidgetsMenu,
-		WidgetComponent
+		WidgetsComponent
 	],
 	providers: [ WidgetsService ],
 } )

@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/cor
 
 import { Class as Carbon } from "carbonldp/Carbon";
 
-import { Widget } from "../widget.component";
+import { Widget } from "../widgets.component";
 import { WidgetsService } from "../widgets.service";
 import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
@@ -12,7 +12,7 @@ import "semantic-ui/semantic";
 @Component( {
 	selector: "cw-documents-widget",
 	templateUrl: "./documents-widget.component.html",
-	styleUrls: [ "../widget.component.scss" ],
+	styleUrls: [ "../widgets.component.scss" ],
 } )
 
 export class DocumentsWidgetComponent {
