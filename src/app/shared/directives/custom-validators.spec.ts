@@ -2,7 +2,7 @@ import { FormControl } from "@angular/forms";
 import { EmailValidator, SlugValidator, MatchValidator, DomainValidator, URIValidator, FragmentValidator, URIFragmentValidator, RequiredIfValidator } from "./custom-validators";
 
 
-export function CustomValidatorsSpecs() {
+export function customValidatorsSpecs() {
 
 	describe( "CustomValidators", () => {
 
