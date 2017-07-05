@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon"
+import { Class as Carbon } from "carbonldp/Carbon";
+import { Class as PlatformMetadata } from "carbonldp/System/PlatformMetadata";
 import * as HTTP from "carbonldp/HTTP";
 import * as SPARQL from "carbonldp/SPARQL";
 
@@ -48,6 +49,16 @@ export class WidgetsService {
 			return count;
 		} );
 
+	}
+
+	getPlatformMetadata():Promise<any> {
+		let carbonldpMetadata = {};
+		return this.carbon.getPlatformMetadata().then( ( platformMetadata:PlatformMetadata ) => {
+			carbonldpMetadata["buildDate"] = platformMetadata.buildDate
+			carbonldpMetadata["version"] = platformMetadata.version;
+
+			return carbonldpMetadata;
+		} );
 	}
 	
 }

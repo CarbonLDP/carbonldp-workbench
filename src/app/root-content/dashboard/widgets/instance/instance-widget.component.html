@@ -1,0 +1,43 @@
+<div class="content widget-header">My platform
+	<div class="right floated">
+		<i class="refresh small icon widget-button" (click)="refreshWidget()"></i>
+		<i class="chevron down small icon widget-button" (click)="collapseWidget()"></i>
+	</div>
+</div>
+<div class="content widget-body" [class.hidden]="hide">
+	<div class="widget-text">
+		<table class="ui very basic small compact table">
+			<tbody>
+				<tr>
+					<td class="three wide">
+						<h4 class="ui header">
+							URL
+						</h4></td>
+					<td>
+						{{carbonldpURL}}
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h4 class="ui header">
+							Version
+						</h4></td>
+					<td>
+						{{carbonldpPlatform}}
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<h4 class="ui header">
+							Build date
+						</h4></td>
+					<td>
+						{{carbonldpBuildDate}}
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<img class="widget-icon" src="/assets/images/platformIcon.png" height="60" *ngIf="!errorMessage"/>
+	<img class="widget-icon" src="/assets/images/platformBrokenIcon.png" height="60" *ngIf="errorMessage"/>
+</div>
