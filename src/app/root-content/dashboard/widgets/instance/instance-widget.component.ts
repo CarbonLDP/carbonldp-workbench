@@ -9,8 +9,8 @@ import * as $ from "jquery";
 @Component( {
 	selector: "cw-instance-widget",
 	templateUrl: "./instance-widget.component.html",
-	styleUrls: [ ],
-})
+	styleUrls: [ "./instance-widget.component.scss" ],
+} )
 
 export class InstanceWidgetComponent {
 	private element:ElementRef;
@@ -20,47 +20,48 @@ export class InstanceWidgetComponent {
 	widgetsService:WidgetsService;
 	carbonldpPlatform:string = "";
 	carbonldpURL:string = "";
-	carbonldpBuildDate;
+	carbonldpBuildDate:Date = null;
 	hide:boolean = true;
-	
+
 	errorMessage:Message;
-	
+
 	@Output() onErrorOccurs:EventEmitter<any> = new EventEmitter();
-	
+
 	constructor( element:ElementRef, carbon:Carbon, widgetsService:WidgetsService ) {
 		this.element = element;
 		this.carbon = carbon;
 		this.widgetsService = widgetsService;
 	}
 
-	ngOnInit():void {
-		this.$element = $( this.element.nativeElement );
-	}
-
-	ngAfterViewInit():void{
-		this.carbonldpURL="";
-		this.carbonldpBuildDate = "";
-		this.carbonldpPlatform = "";
+	ngAfterViewInit():void {
 		this.getPlatformMetadata();
 	}
 
-	collapseWidget(){
-		this.hide = !this.hide;
+	collapseWidget() {
+		this.hide = ! this.hide;
+		if( ! this.hide ) {
+			this.refreshWidget();
+		}
 	}
 
-	refreshWidget(){
+	refreshWidget() {
+		this.errorMessage = null;
+		this.carbonldpURL = null;
+		this.carbonldpBuildDate = null;
+		this.carbonldpPlatform = null;
 		this.getPlatformMetadata();
 	}
 
-	getPlatformMetadata(){
+	getPlatformMetadata() {
+		this.element.nativeElement.classList.remove( "error" );
 		this.carbonldpURL = this.carbon.baseURI;
 		this.widgetsService.getPlatformMetadata().then( ( platformMetadata ) => {
-			this.carbonldpBuildDate = platformMetadata.buildDate.toDateString();
-			this.carbonldpPlatform = platformMetadata.version;
+			this.carbonldpBuildDate = platformMetadata[ "buildDate" ];
+			this.carbonldpPlatform = platformMetadata[ "version" ];
 		} )
-		.catch( ( error:any ) => {
-			this.errorWidget( error );
-		} );
+			.catch( ( error:any ) => {
+				this.errorWidget( error );
+			} );
 	}
 
 

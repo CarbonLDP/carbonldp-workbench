@@ -1,0 +1,45 @@
+:host {
+	display: block;
+	.ui.cards .ui.card.widget-container {
+		box-shadow: none;
+	}
+
+
+		.widget-header {
+			background-color: orange;
+			padding: .5em .5em;
+		}
+
+		.widget-button {
+			cursor: pointer;
+		}
+
+	.widget-button.hidden {
+		display: none;
+	}
+
+		.widget-body {
+			display: flex;
+			flex-direction: row;
+		}
+
+		.widget-body.hidden {
+			display: none;
+		}
+
+		.widget-icon {
+			height: 60px;
+			align-self: flex-end;
+		}
+
+		.widget-text {
+			flex: auto;
+			color: black;
+			line-height: normal;
+			margin-right: 20px;
+		}
+
+	.ui.card.hidden {
+		display: none;
+	}
+}
