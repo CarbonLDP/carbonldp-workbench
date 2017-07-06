@@ -18,7 +18,7 @@ const appRoutes:Routes = [
 		// canActivate: [ NotAuthenticatedGuard ],
 		data: {
 			alias: "login",
-			title: "Workbench | Log In",
+			title: "Log In | Workbench",
 
 			// NotAuthenticatedGuard cases
 			onReject: [ "/" ],
