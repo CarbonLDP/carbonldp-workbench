@@ -53,13 +53,16 @@ export class InstanceWidgetComponent {
 	}
 
 	getPlatformMetadata() {
+		let temp;
 		this.element.nativeElement.classList.remove( "error" );
 		this.carbonldpURL = this.carbon.baseURI;
 		this.widgetsService.getPlatformMetadata().then( ( platformMetadata ) => {
+			temp = platformMetadata;
 			this.carbonldpBuildDate = platformMetadata[ "buildDate" ];
 			this.carbonldpPlatform = platformMetadata[ "version" ];
 		} )
 			.catch( ( error:any ) => {
+				console.log( temp );
 				this.errorWidget( error );
 			} );
 	}
