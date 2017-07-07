@@ -62,7 +62,6 @@ export class InstanceWidgetComponent {
 			this.carbonldpPlatform = platformMetadata[ "version" ];
 		} )
 			.catch( ( error:any ) => {
-				console.log( temp );
 				this.errorWidget( error );
 			} );
 	}
