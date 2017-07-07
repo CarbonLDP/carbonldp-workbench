@@ -13,13 +13,11 @@ export class AppComponent {
 	router:Router;
 	title:Title;
 	route:ActivatedRoute;
-	pathFromRoot;
 
 	constructor( title:Title, router:Router, route:ActivatedRoute ) {
 		this.router = router;
 		this.title = title;
 		this.route = route;
-		this.pathFromRoot =this.route.pathFromRoot
 
 		this.router.events.subscribe( ( event:Event ) => {
 			if( event instanceof NavigationEnd ) {
@@ -31,27 +29,29 @@ export class AppComponent {
 	private defineTitle() {
 		let title:string = "",
 			activatedRoutes:ActivatedRouteSnapshot[] = [],
-			currentRoute:ActivatedRouteSnapshot = this.route.snapshot.children[0];
+			currentRoute:ActivatedRouteSnapshot = this.route.snapshot.children[ 0 ];
 
 		do {
 			if( ! ! currentRoute
-				&& (typeof currentRoute.data[ "title" ] !== "undefined" || typeof currentRoute.data[ "displayName" ] !== "undefined" )
-				&& (typeof currentRoute.data[ "hide"] === "undefined" || ! currentRoute.data["hide"] )
-				&& !( currentRoute.data[ "displayName" ] === "Dashboard"))
+				&& (typeof currentRoute.data[ "title" ] !== "undefined") )
 				activatedRoutes.push( currentRoute );
 			currentRoute = currentRoute.children[ 0 ];
 		} while( currentRoute );
 
 
 		activatedRoutes.forEach( ( snapshot:ActivatedRouteSnapshot, idx:number ) => {
-			console.log(idx, snapshot)
 			if( idx === 0 ) return;
-			title = this.getTitle( snapshot ) + title;
-			title = ((activatedRoutes.length > 2 && idx === 1) ? " | ":"")+title;
-
+			let titleAux = this.getTitle(snapshot);
+			if( activatedRoutes.length > 2 && idx !== activatedRoutes.length - 1 ) {
+				title += " > " + titleAux;
+				return;
+			}
+			if( titleAux === "Workbench") return;
+			title += titleAux;
+			console.log( title );
 		} );
+		title = title + ((title !== "") ? " | " : "") + this.getTitle( activatedRoutes[ 0 ] );
 
-		console.log(title);
 		this.title.setTitle( title );
 	}
 
@@ -59,7 +59,7 @@ export class AppComponent {
 		let title:string = "";
 		if( typeof snapShot.data[ "title" ] === "string" ) {
 			title += snapShot.data[ "title" ]
-		} else title += snapShot.data[ "displayName" ];
+		}
 		return title;
 	}
 

@@ -33,7 +33,6 @@ const appRoutes:Routes = [
 			// AuthenticatedGuard cases
 			onReject: [ "/login" ],
 			onError: [ "/error" ],
-			title: "Workbench",
 		},
 		children: [
 			{
