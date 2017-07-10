@@ -13,6 +13,8 @@ require( "zone.js/dist/fake-async-test" );
 
 require( "rxjs/Rx" );
 
+require( "carbonldp/Carbon" );
+
 let testing = require( "@angular/core/testing" );
 let browser = require( "@angular/platform-browser-dynamic/testing" );
 

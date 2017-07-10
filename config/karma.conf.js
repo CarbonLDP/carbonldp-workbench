@@ -1,19 +1,19 @@
 module.exports = function( config ) {
-	const webpackTestConfig = require( "./webpack.test" )( { env: 'test' } );
+	const webpackTestConfig = require( "./webpack.test" )( { env: "test" } );
 
 	const _config = {
 
 		/*
-		 * Webpack's settings
+		 * Webpack"s settings
 		 */
 		basePath: "",
-		frameworks: [ "jasmine" ],
+		frameworks: [ "jasmine-ajax", "jasmine" ],
 		exclude: [],
 		client: {
 			captureConsole: false
 		},
 		files: [
-			{ pattern: './src/assets/**/*', watched: false, included: false, served: true, nocache: false },
+			{ pattern: "./src/assets/**/*", watched: false, included: false, served: true, nocache: false },
 			{ pattern: "./config/karma-test-shim.js", watched: false },
 		],
 		proxies: {
@@ -30,7 +30,7 @@ module.exports = function( config ) {
 			}
 		},
 		webpackServer: {
-			noInfo: true
+			noInfo: false
 		},
 
 
@@ -45,8 +45,8 @@ module.exports = function( config ) {
 		browsers: [ "Chrome" ],
 		customLaunchers: {
 			ChromeTravisCi: {
-				base: 'Chrome',
-				flags: [ '--no-sandbox' ]
+				base: "Chrome",
+				flags: [ "--no-sandbox" ]
 			}
 		},
 		singleRun: false
