@@ -18,10 +18,11 @@ export class InstanceWidgetComponent {
 	private carbon:Carbon;
 
 	widgetsService:WidgetsService;
-	carbonldpPlatform:string = "";
+	carbonldpVersion:string = "";
 	carbonldpURL:string = "";
 	carbonldpBuildDate:Date = null;
 	hide:boolean = true;
+	platformMetadata;
 
 	errorMessage:Message;
 
@@ -46,24 +47,34 @@ export class InstanceWidgetComponent {
 
 	refreshWidget() {
 		this.errorMessage = null;
-		this.carbonldpURL = null;
 		this.carbonldpBuildDate = null;
-		this.carbonldpPlatform = null;
-		this.getPlatformMetadata();
+		this.carbonldpVersion = null;
+
+		if( ! this.platformMetadata ) return this.getPlatformMetadata()
+
+
+		this.widgetsService.refreshPlatformMetadata( this.platformMetadata ).then( ( platformMetadata )=> {
+			console.log("refresh");
+			this.platformMetadata = platformMetadata;
+			this.carbonldpBuildDate = platformMetadata[ "buildDate" ];
+			this.carbonldpVersion = platformMetadata[ "version" ];
+		} ).catch( ( error:any ) => {
+			console.log(error);
+			this.errorWidget( error );
+		} );
 	}
 
 	getPlatformMetadata() {
-		let temp;
 		this.element.nativeElement.classList.remove( "error" );
 		this.carbonldpURL = this.carbon.baseURI;
+
 		this.widgetsService.getPlatformMetadata().then( ( platformMetadata ) => {
-			temp = platformMetadata;
+			this.platformMetadata = platformMetadata;
 			this.carbonldpBuildDate = platformMetadata[ "buildDate" ];
-			this.carbonldpPlatform = platformMetadata[ "version" ];
-		} )
-			.catch( ( error:any ) => {
-				this.errorWidget( error );
-			} );
+			this.carbonldpVersion = platformMetadata[ "version" ];
+		} ).catch( ( error:any ) => {
+			this.errorWidget( error );
+		} );
 	}
 
 
