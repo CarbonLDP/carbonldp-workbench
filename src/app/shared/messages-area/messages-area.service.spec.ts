@@ -21,11 +21,11 @@ export function messageAreaServiceSpecs() {
 			service = TestBed.get( MessagesAreaService );
 		} );
 
-		fit( "can instantiate service when inject service", inject( [ MessagesAreaService ], ( service:MessagesAreaService ) => {
+		it( "can instantiate service when inject service", inject( [ MessagesAreaService ], ( service:MessagesAreaService ) => {
 			expect( service instanceof MessagesAreaService ).toBe( true );
 		} ) );
 
-		fit( "Should emit message", async () => {
+		it( "Should emit message", async () => {
 			service.addMessageEmitter.subscribe( ( message:Message ) => {
 				expect( message ).toBeDefined();
 			} );
@@ -38,7 +38,7 @@ export function messageAreaServiceSpecs() {
 			service.addMessage( message );
 		} );
 
-		fit( "Should return Message object when receiving string params", async () => {
+		it( "Should return Message object when receiving string params", async () => {
 			service.addMessageEmitter.subscribe( ( message:Message ) => {
 				expect( message ).toBeDefined();
 				expect( typeof message ).toEqual( "object" );
