@@ -46,6 +46,7 @@ module.exports = function( options ) {
 			alias: {
 				"app": helpers.root( "src", "app" ),
 				"jquery": "jquery/src/jquery",
+				"semantic": helpers.root( "src/semantic" ),
 				"semantic-ui": helpers.root( "src/semantic/dist" ),
 			},
 			modules: [ helpers.root( "node_modules" ) ]
@@ -71,7 +72,13 @@ module.exports = function( options ) {
 				},
 				{
 					test: /\.s?css$/,
+					include: helpers.root( "src/app" ),
 					use: [ "raw-loader", "sass-loader" ]
+				},
+				{
+					test: /\.s?css$/,
+					exclude: helpers.root( "src/app" ),
+					use: [ "style-loader", "css-loader", "sass-loader" ]
 				},
 			]
 		},
