@@ -15,6 +15,9 @@ require( "rxjs/Rx" );
 
 require( "carbonldp/Carbon" );
 
+require( "semantic/dist/semantic" );
+require( "semantic/dist/semantic.css" );
+
 let testing = require( "@angular/core/testing" );
 let browser = require( "@angular/platform-browser-dynamic/testing" );
 
