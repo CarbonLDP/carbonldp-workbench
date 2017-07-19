@@ -90,8 +90,6 @@ export function messageAreaComponentSpecs() {
 		} );
 
 		it( "Should change the type of the message", () => {
-			debugger;
-
 			let message:Message = {
 				title: "My info message",
 				content: "The content of the info message",

@@ -38,7 +38,7 @@ export function paginatorSpecs() {
 			fixture.detectChanges();
 		} );
 
-		fit( "Should have the correct amount of pages", () => {
+		it( "Should have the correct amount of pages", () => {
 			let totalPages:number;
 			let pages:HTMLElement[];
 			let backBtn:HTMLElement;
@@ -73,7 +73,7 @@ export function paginatorSpecs() {
 			// let paginatorDiv:HTMLElement = fixture.nativeElement.querySelector( "cw-paginator .pagination.menu" );
 		} );
 
-		fit( "Should change the active page number", () => {
+		it( "Should change the active page number", () => {
 			debugger;
 
 			comp.elementsPerPage = 5;
@@ -99,7 +99,7 @@ export function paginatorSpecs() {
 			expect( comp.paginator.activePage ).toEqual( 0 );
 		} );
 
-		fit( "Should emit active page after changing page", ( done ) => {
+		it( "Should emit active page after changing page", ( done ) => {
 			debugger;
 
 			spyOn( comp.paginator.onPageChange, "emit" ).and.callThrough();
