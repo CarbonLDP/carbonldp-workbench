@@ -3,6 +3,7 @@ import { errorLabelSpecs } from "./messages-area/error/error-label.component.spe
 import { errorMessageGeneratorSpecs } from "./messages-area/error/error-message-generator.spec";
 import { messageComponentSpecs } from "./messages-area/message.component.spec";
 import { messageAreaComponentSpecs } from "./messages-area/messages-area.component.spec";
+import { paginatorSpecs } from "./paginator/paginator.component.spec";
 import { messageAreaServiceSpecs } from "./messages-area/messages-area.service.spec";
 
 describe( "SharedModule", () => {
@@ -16,6 +17,8 @@ describe( "SharedModule", () => {
 	messageComponentSpecs();
 
 	messageAreaComponentSpecs();
+
+	paginatorSpecs();
 
 	messageAreaServiceSpecs();
 } );
