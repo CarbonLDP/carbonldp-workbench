@@ -36,7 +36,7 @@ export function collapsibleSpecs() {
 			fixture.detectChanges();
 		} );
 
-		fit( "Should add class 'active'", () => {
+		it( "Should add class 'active'", () => {
 			comp.collapsible.ngAfterContentInit();
 
 			let title:HTMLElement = fixture.nativeElement.querySelector( ".title" );
@@ -58,7 +58,7 @@ export function collapsibleSpecs() {
 			expect( comp.collapsible.active ).toBe( true );
 		} );
 
-		fit( "Should toggle class 'active'", () => {
+		it( "Should toggle class 'active'", () => {
 			comp.collapsible.ngAfterContentInit();
 
 			let title:HTMLElement = fixture.nativeElement.querySelector( ".title" );
@@ -89,8 +89,7 @@ export function collapsibleSpecs() {
 			expect( comp.collapsible.active ).toBe( false );
 		} );
 
-		fit( "Should emit active change", ( done ) => {
-			debugger;
+		it( "Should emit active change", ( done ) => {
 			spyOn( comp.collapsible.activeChange, "emit" ).and.callThrough();
 			comp.collapsible.ngAfterContentInit();
 			comp.collapsible.activeChange.subscribe( ( isActive:boolean ) => {
@@ -129,7 +128,7 @@ export function collapsibleSpecs() {
 			fixture.detectChanges();
 		} );
 
-		fit( "Should add class 'active'", () => {
+		it( "Should add class 'active'", () => {
 			let title:HTMLElement = fixture.nativeElement.querySelector( ".title" );
 
 			expect( title.classList ).not.toContain( "active" );
@@ -141,7 +140,7 @@ export function collapsibleSpecs() {
 			expect( title.classList ).not.toContain( "active" );
 		} );
 
-		fit( "Should have variable element of ElementRef", () => {
+		it( "Should have variable element of ElementRef", () => {
 			let title:HTMLElement = fixture.nativeElement.querySelector( ".title" );
 
 			expect( comp.title.element ).toBeDefined();
@@ -174,7 +173,7 @@ export function collapsibleSpecs() {
 			fixture.detectChanges();
 		} );
 
-		fit( "Should add class 'active'", () => {
+		it( "Should add class 'active'", () => {
 			let content:HTMLElement = fixture.nativeElement.querySelector( ".content" );
 
 			expect( content.classList ).not.toContain( "active" );
