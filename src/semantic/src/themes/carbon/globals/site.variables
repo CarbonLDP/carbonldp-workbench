@@ -30,19 +30,19 @@
 
 // Pontano Sans
 	@fontName          : 'Pontano Sans';
-	@googleFontSizes   : '600, 600italic';
-	@googleSubset      : 'latin,latin-ext';
+//	@googleFontSizes   : '600, 600italic';
+//	@googleSubset      : 'latin,latin-ext';
 
 
 
 @fontSmoothing     : antialiased;
-@headerFont        : @fontName, 'Helvetica Neue', Arial, Helvetica, sans-serif;
-@pageFont          : @fontName, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+@headerFont        : @fontName, 'Helvetica Neue Light', 'HelveticaNeue-Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+@pageFont          : @fontName, 'Helvetica Neue Light', 'HelveticaNeue-Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
-@googleFontName    : @fontName;
-@googleProtocol    : 'https://';
-@googleFontRequest : '@{googleFontName}:@{googleFontSizes}&subset=@{googleSubset}';
-@importGoogleFonts : true;
+//  @googleFontName    : @fontName;
+//  @googleProtocol    : 'https://';
+//  @googleFontRequest : '@{googleFontName}:@{googleFontSizes}&subset=@{googleSubset}';
+@importGoogleFonts : false;
 
 /*-------------------
       Site Colors
