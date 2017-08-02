@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit, OnInit } from "@angular/core";
+import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
 import { Class as Carbon } from "carbonldp/Carbon";
 import * as Pointer from "carbonldp/Pointer";
@@ -11,6 +11,7 @@ import * as $ from "jquery";
 import "semantic-ui/semantic";
 
 import "jstree/dist/jstree.min";
+import "!style-loader!css-loader!jstree/dist/themes/default/style.min.css";
 
 @Component( {
 	selector: "cw-document-treeview",
@@ -18,7 +19,7 @@ import "jstree/dist/jstree.min";
 	styleUrls: [ "./document-tree-view.component.scss" ],
 } )
 
-export class DocumentTreeViewComponent implements AfterViewInit, OnInit {
+export class DocumentTreeViewComponent implements AfterViewInit {
 	element:ElementRef;
 	$element:JQuery;
 	carbon:Carbon;
@@ -50,16 +51,6 @@ export class DocumentTreeViewComponent implements AfterViewInit, OnInit {
 	constructor( element:ElementRef, carbon:Carbon ) {
 		this.element = element;
 		this.carbon = carbon;
-	}
-
-	ngOnInit():void {
-		let alreadyImported:boolean = document.querySelectorAll( "head [href='assets/node_modules/jstree/dist/themes/default/style.min.css']" ).length > 0;
-		if( alreadyImported ) return;
-		let link:HTMLLinkElement = document.createElement( "link" );
-		link.rel = "stylesheet";
-		link.href = "assets/node_modules/jstree/dist/themes/default/style.min.css";
-		let head:Element = document.querySelector( "head" );
-		head.appendChild( link );
 	}
 
 	ngAfterViewInit():void {
