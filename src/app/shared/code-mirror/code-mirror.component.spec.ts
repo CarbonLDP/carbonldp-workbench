@@ -1,9 +1,9 @@
-import { Component, ViewChild, DebugElement, QueryList } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 
 import * as CodeMirror from "codemirror";
-import { Class as CodeMirrorComponent, Mode } from "./code-mirror.component";
+import { Class as CodeMirrorComponent } from "./code-mirror.component";
 
 export function codeMirrorSpecs() {
 
@@ -11,7 +11,6 @@ export function codeMirrorSpecs() {
 
 		let comp:TestComponent;
 		let fixture:ComponentFixture<TestComponent>;
-		let de:DebugElement;
 
 		@Component( {
 			template: `
@@ -41,7 +40,6 @@ export function codeMirrorSpecs() {
 		beforeEach( () => {
 			fixture = TestBed.createComponent( TestComponent );
 			comp = fixture.componentInstance;
-			de = fixture.debugElement;
 			fixture.detectChanges();
 		} );
 
