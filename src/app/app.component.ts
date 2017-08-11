@@ -41,14 +41,13 @@ export class AppComponent {
 
 		activatedRoutes.forEach( ( snapshot:ActivatedRouteSnapshot, idx:number ) => {
 			if( idx === 0 ) return;
-			let titleAux = this.getTitle(snapshot);
+			let titleAux = this.getTitle( snapshot );
 			if( activatedRoutes.length > 2 && idx !== activatedRoutes.length - 1 ) {
 				title += " > " + titleAux;
 				return;
 			}
-			if( titleAux === "Workbench") return;
+			if( titleAux === "Workbench" ) return;
 			title += titleAux;
-			console.log( title );
 		} );
 		title = title + ((title !== "") ? " | " : "") + this.getTitle( activatedRoutes[ 0 ] );
 
