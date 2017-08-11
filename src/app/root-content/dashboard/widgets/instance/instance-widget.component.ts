@@ -54,12 +54,10 @@ export class InstanceWidgetComponent {
 
 
 		this.widgetsService.refreshPlatformMetadata( this.platformMetadata ).then( ( platformMetadata )=> {
-			console.log("refresh");
 			this.platformMetadata = platformMetadata;
 			this.carbonldpBuildDate = platformMetadata[ "buildDate" ];
 			this.carbonldpVersion = platformMetadata[ "version" ];
 		} ).catch( ( error:any ) => {
-			console.log(error);
 			this.errorWidget( error );
 		} );
 	}
