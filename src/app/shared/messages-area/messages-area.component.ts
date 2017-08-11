@@ -12,7 +12,6 @@ import "semantic-ui/semantic";
 } )
 export class MessagesAreaComponent implements AfterViewInit {
 	messages:Message[] = [];
-	messageExists:boolean = false;
 	messagesAreaService:MessagesAreaService;
 
 	constructor( errorsAreaService:MessagesAreaService ) {
@@ -22,14 +21,15 @@ export class MessagesAreaComponent implements AfterViewInit {
 	ngAfterViewInit():void {
 		this.messagesAreaService.addMessageEmitter.subscribe(
 			( message ):void => {
-				this.messages.forEach( ( messageAux )=> {
-					if( messageAux.statusCode !== message.statusCode ) return;
-					this.messageExists = true;
-				} );
-				if( ! this.messageExists ) {
-					this.messages.push( message );
+				if( this.messages.some( messageExists ) ) return;
+				this.messages.push( message );
+
+				function messageExists( messageAux ) {
+					return ( message.statusCode === messageAux.statusCode
+						&& message.title === messageAux.title &&
+						message.content === messageAux.content &&
+						message.statusMessage === messageAux.statusMessage );
 				}
-				this.messageExists = false;
 			}
 		);
 	}
