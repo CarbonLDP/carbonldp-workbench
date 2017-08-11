@@ -78,7 +78,7 @@
     "js-cookie": "^2.1.2",
     "jstree": "3.3.3",
     "rxjs": "^5.1.0",
-    "semantic-ui": "^2.2.4",
+    "semantic-ui": "2.2.10",
     "zone.js": "^0.8.10"
   }
 }
