@@ -219,12 +219,17 @@ export function literalSpecs() {
 
 		describe( "On EDIT mode", () => {
 
-			it( "Should display Confirm & Cancel buttons", () => {
+			let literal:Literal;
+			let literalRow:LiteralRow;
 
-				let literal:Literal = { "@value": "42" };
-				let literalRow:LiteralRow = { copy: literal };
+			beforeEach( () => {
+				literal = { "@value": "42" };
+				literalRow = { copy: literal };
 				comp.literalRow = literalRow;
 				fixture.detectChanges();
+			} );
+
+			it( "Should display Confirm & Cancel buttons", () => {
 
 				let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
 				editButton.click();
@@ -238,11 +243,6 @@ export function literalSpecs() {
 			} );
 
 			it( "Should set type to string when @type is not present in literal", () => {
-
-				let literal:Literal = { "@value": "42" };
-				let literalRow:LiteralRow = { copy: literal };
-				comp.literalRow = literalRow;
-				fixture.detectChanges();
 
 				let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
 				editButton.click();
@@ -273,8 +273,8 @@ export function literalSpecs() {
 				fixture.detectChanges();
 
 				let errorMessage:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".error.message" );
-				expect( errorMessage ).toBeDefined();
-				expect( errorMessage.innerText ).toContain( "Invalid value type, please enter a valid http://www.w3.org/2001/XMLSchema#int." )
+				expect( errorMessage ).not.toBeNull();
+				expect( errorMessage.innerText ).toContain( `Invalid value type, please enter a valid ${NS.XSD.DataType.int}.` );
 
 
 				valueInput.value = "4";
@@ -283,66 +283,6 @@ export function literalSpecs() {
 
 				errorMessage = comp.literalCmp.element.nativeElement.querySelector( ".error.message" );
 				expect( errorMessage ).toBeNull();
-			} );
-
-			it( "Should show original @value when cancelling changes", () => {
-
-				let literal:Literal = {
-					"@value": 42,
-					"@type": NS.XSD.DataType.int,
-				};
-				let literalRow:LiteralRow = {
-					copy: literal
-				};
-				comp.literalRow = literalRow;
-				fixture.detectChanges();
-
-				let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
-				editButton.click();
-				fixture.detectChanges();
-				comp.literalCmp.ngAfterViewChecked();
-
-				let valueInput:HTMLInputElement = comp.literalCmp.element.nativeElement.querySelector( "input[name='valueInput']" );
-				valueInput.value = "Some text";
-				valueInput.dispatchEvent( new Event( "input" ) );
-				fixture.detectChanges();
-
-				let cancelButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Cancel']" );
-				cancelButton.click();
-				fixture.detectChanges();
-				// comp.literalCmp.ngAfterViewChecked();
-
-				let valueLabel:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".value .read-mode p.value" );
-				expect( valueLabel.innerText ).toEqual( "42" );
-			} );
-
-			it( "Should show original @type when cancelling changes", () => {
-
-				let literal:Literal = {
-					"@value": 42,
-					"@type": NS.XSD.DataType.int,
-				};
-				let literalRow:LiteralRow = {
-					copy: literal
-				};
-				comp.literalRow = literalRow;
-				fixture.detectChanges();
-
-				let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
-				editButton.click();
-				fixture.detectChanges();
-				comp.literalCmp.ngAfterViewChecked();
-
-				comp.literalCmp.searchDropdown.dropdown( "set selected", NS.XSD.DataType.decimal );
-				fixture.detectChanges();
-
-				let cancelButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Cancel']" );
-				cancelButton.click();
-				fixture.detectChanges();
-				// comp.literalCmp.ngAfterViewChecked();
-
-				let typeLabel:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".type .read-mode p.value" );
-				expect( typeLabel.innerText ).toEqual( NS.XSD.DataType.int );
 			} );
 
 			it( "Should display dropdown language when @language is present", () => {
@@ -367,29 +307,187 @@ export function literalSpecs() {
 				expect( languageDiv.style.display ).not.toEqual( "none" );
 			} );
 
-		} );
+			describe( "When clicking on cancel", () => {
 
-		it( "Should change mode to read when cancel edit", () => {
+				it( "Should show original @value", () => {
 
-			let literal:Literal = {
-				"@type": NS.XSD.DataType.dateTime,
-				"@value": "2017-06-10T23:38:19.000Z"
-			};
-			let literalRow:LiteralRow = {
-				copy: literal
-			};
-			comp.literalRow = literalRow;
-			fixture.detectChanges();
+					let literal:Literal = {
+						"@value": 42,
+						"@type": NS.XSD.DataType.int,
+					};
+					let literalRow:LiteralRow = {
+						copy: literal
+					};
+					comp.literalRow = literalRow;
+					fixture.detectChanges();
 
-			// Enter edit mode
-			let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
-			editButton.click();
-			fixture.detectChanges();
-			// Cancel edit mode
-			let cancelButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Cancel']" );
-			cancelButton.click();
-			fixture.detectChanges();
-			expect( comp.literalCmp.mode === Modes.READ );
+					let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
+					editButton.click();
+					fixture.detectChanges();
+					comp.literalCmp.ngAfterViewChecked();
+
+					let valueInput:HTMLInputElement = comp.literalCmp.element.nativeElement.querySelector( "input[name='valueInput']" );
+					valueInput.value = "Some text";
+					valueInput.dispatchEvent( new Event( "input" ) );
+					fixture.detectChanges();
+
+					let cancelButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Cancel']" );
+					cancelButton.click();
+					fixture.detectChanges();
+
+					let valueLabel:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".value .read-mode p.value" );
+					expect( valueLabel.innerText ).toEqual( "42" );
+				} );
+
+				it( "Should show original @type", () => {
+
+					let literal:Literal = {
+						"@value": 42,
+						"@type": NS.XSD.DataType.int,
+					};
+					let literalRow:LiteralRow = {
+						copy: literal
+					};
+					comp.literalRow = literalRow;
+					fixture.detectChanges();
+
+					let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
+					editButton.click();
+					fixture.detectChanges();
+					comp.literalCmp.ngAfterViewChecked();
+
+					comp.literalCmp.searchDropdown.dropdown( "set selected", NS.XSD.DataType.decimal );
+					fixture.detectChanges();
+
+					let cancelButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Cancel']" );
+					cancelButton.click();
+					fixture.detectChanges();
+
+					let typeLabel:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".type .read-mode p.value" );
+					expect( typeLabel.innerText ).toEqual( NS.XSD.DataType.int );
+				} );
+
+				it( "Should change mode to read", () => {
+
+					let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
+					editButton.click();
+					fixture.detectChanges();
+
+					let cancelButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Cancel']" );
+					cancelButton.click();
+					fixture.detectChanges();
+					expect( comp.literalCmp.mode === Modes.READ );
+				} );
+
+				it( "Should emit literal when cancelled literal is being added", ( done ) => {
+
+					let literal:Literal = {
+						"@value": "",
+						"@language": "en",
+					};
+					let literalRow:LiteralRow = { copy: undefined, added: literal };
+					comp.literalRow = literalRow;
+					fixture.detectChanges();
+
+					let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
+					editButton.click();
+					fixture.detectChanges();
+
+					comp.literalCmp.onDeleteLiteral.subscribe( ( value ) => {
+						expect( value ).toBeDefined();
+						expect( value ).toEqual( literalRow );
+						done();
+					} );
+					let cancelButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Cancel']" );
+					cancelButton.click();
+				} );
+			} );
+
+			describe( "When clicking on save", () => {
+
+				it( "Should emit literal", ( done ) => {
+
+					let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
+					editButton.click();
+					fixture.detectChanges();
+
+					let valueInput:HTMLInputElement = comp.literalCmp.element.nativeElement.querySelector( "input[name='valueInput']" );
+					valueInput.value = literalRow.copy[ "@value" ] + "";
+					valueInput.dispatchEvent( new Event( "input" ) );
+					fixture.detectChanges();
+
+					comp.literalCmp.onSave.subscribe( ( value ) => {
+						expect( value ).toBeDefined();
+						expect( value ).toEqual( literalRow );
+						done();
+					} );
+					let saveButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Save']" );
+					saveButton.click();
+				} );
+
+				it( "Should emit literal with property added if it's a new literal", ( done ) => {
+
+					let literal:Literal = {
+						"@value": "new literal",
+						"@language": "en",
+					};
+					let literalRow:LiteralRow = { copy: undefined, added: literal };
+					comp.literalRow = literalRow;
+					fixture.detectChanges();
+
+					let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
+					editButton.click();
+					fixture.detectChanges();
+
+					let valueInput:HTMLInputElement = comp.literalCmp.element.nativeElement.querySelector( "input[name='valueInput']" );
+					valueInput.value = literalRow.added[ "@value" ] + "";
+					valueInput.dispatchEvent( new Event( "input" ) );
+					fixture.detectChanges();
+
+					comp.literalCmp.onSave.subscribe( ( value ) => {
+						expect( value ).toBeDefined();
+						expect( value ).toEqual( literalRow );
+						done();
+					} );
+					let saveButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Save']" );
+					saveButton.click();
+				} );
+
+				it( "Should emit literal with property modified if it's been modified", ( done ) => {
+
+					let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
+					editButton.click();
+					fixture.detectChanges();
+
+					let valueInput:HTMLInputElement = comp.literalCmp.element.nativeElement.querySelector( "input[name='valueInput']" );
+					valueInput.value = "My changed text";
+					valueInput.dispatchEvent( new Event( "input" ) );
+					fixture.detectChanges();
+
+					comp.literalCmp.onSave.subscribe( ( value:LiteralRow ) => {
+						expect( value ).toBeDefined();
+						expect( value.copy ).toEqual( literalRow.copy );
+						expect( value.modified ).toBeDefined();
+						expect( value.modified[ "@value" ] ).toEqual( "My changed text" );
+						done();
+					} );
+					let saveButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Save']" );
+					saveButton.click();
+				} );
+
+				it( "Should change mode to read", () => {
+
+					let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
+					editButton.click();
+					fixture.detectChanges();
+
+					let saveButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Save']" );
+					saveButton.click();
+					fixture.detectChanges();
+					expect( comp.literalCmp.mode === Modes.READ );
+				} );
+			} );
+
 		} );
 
 	} );
