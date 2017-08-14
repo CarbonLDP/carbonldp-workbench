@@ -21,7 +21,15 @@ export class MessagesAreaComponent implements AfterViewInit {
 	ngAfterViewInit():void {
 		this.messagesAreaService.addMessageEmitter.subscribe(
 			( message ):void => {
+				if( this.messages.some( messageExists ) ) return;
 				this.messages.push( message );
+
+				function messageExists( messageAux ) {
+					return ( message.statusCode === messageAux.statusCode
+						&& message.title === messageAux.title &&
+						message.content === messageAux.content &&
+						message.statusMessage === messageAux.statusMessage );
+				}
 			}
 		);
 	}
