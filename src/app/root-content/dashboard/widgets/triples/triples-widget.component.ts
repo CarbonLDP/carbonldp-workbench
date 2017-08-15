@@ -12,7 +12,7 @@ import "semantic-ui/semantic";
 @Component( {
 	selector: "cw-triples-widget",
 	templateUrl: "./triples-widget.component.html",
-	styleUrls: [],
+	
 } )
 
 export class TriplesWidgetComponent {
