@@ -64,9 +64,9 @@ export class InstanceWidgetComponent {
 
 	getPlatformMetadata() {
 		this.element.nativeElement.classList.remove( "error" );
-		this.carbonldpURL = this.carbon.baseURI;
 
 		this.widgetsService.getPlatformMetadata().then( ( platformMetadata ) => {
+			this.carbonldpURL = this.carbon.baseURI;
 			this.platformMetadata = platformMetadata;
 			this.carbonldpBuildDate = platformMetadata[ "buildDate" ];
 			this.carbonldpVersion = platformMetadata[ "version" ];
