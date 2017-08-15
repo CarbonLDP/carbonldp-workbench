@@ -4,7 +4,6 @@ import { Class as Carbon } from "carbonldp/Carbon";
 import { WidgetsService } from "../widgets.service";
 import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
-import * as $ from "jquery";
 
 @Component( {
 	selector: "cw-instance-widget",
