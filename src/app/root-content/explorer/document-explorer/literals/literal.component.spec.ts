@@ -115,6 +115,16 @@ export function literalSpecs() {
 				expect( deleteButton ).not.toBeNull();
 			} );
 
+			it( "Should not display buttons when canEdit is false", () => {
+
+				comp.literalCmp.canEdit = false;
+				fixture.detectChanges();
+				comp.literalCmp.ngAfterViewChecked();
+
+				let actionButtons:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".buttons" );
+				expect( actionButtons ).toBeNull();
+			} );
+
 			describe( "When being part of a list", () => {
 
 				beforeEach( () => {
@@ -305,6 +315,16 @@ export function literalSpecs() {
 
 				let languageDiv:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( "td.language" );
 				expect( languageDiv.style.display ).not.toEqual( "none" );
+			} );
+
+			it( "Should not display buttons when canEdit is false", () => {
+
+				comp.literalCmp.canEdit = false;
+				fixture.detectChanges();
+				comp.literalCmp.ngAfterViewChecked();
+
+				let actionButtons:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".buttons" );
+				expect( actionButtons ).toBeNull();
 			} );
 
 			describe( "When clicking on cancel", () => {
