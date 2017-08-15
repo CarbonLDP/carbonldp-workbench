@@ -17,6 +17,15 @@
 	.widget-body {
 		display: flex;
 		flex-direction: row;
+		background-image: url(/assets/images/platformIcon.png);
+		background-position: right bottom;
+		background-repeat: no-repeat;
+		background-size: 60px;
+		background-origin: content-box;
+	}
+
+	.widget-body.broken {
+		background-image: url(/assets/images/platformBrokenIcon.png);
 	}
 
 	.widget-body.hidden {
@@ -32,7 +41,7 @@
 		flex: auto;
 		color: black;
 		line-height: normal;
-		margin-right: 20px;
+		margin-right: 80px;
 	}
 
 }

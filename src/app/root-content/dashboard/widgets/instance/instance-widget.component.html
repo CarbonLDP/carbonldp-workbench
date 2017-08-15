@@ -5,7 +5,7 @@
 		<i class="chevron up small icon widget-button" (click)="collapseWidget()" *ngIf="!hide"></i>
 	</div>
 </div>
-<div class="content widget-body" [class.hidden]="hide">
+<div class="content widget-body" [class.hidden]="hide" [class.broken]="errorMessage">
 	<div class="widget-text">
 		<table class="ui very basic small compact table">
 			<tbody>
@@ -39,6 +39,4 @@
 			</tbody>
 		</table>
 	</div>
-	<img class="widget-icon" src="/assets/images/platformIcon.png" height="60" *ngIf="!errorMessage"/>
-	<img class="widget-icon" src="/assets/images/platformBrokenIcon.png" height="60" *ngIf="errorMessage"/>
 </div>
