@@ -4,10 +4,8 @@
 		<i class="remove small icon widget-button" (click)="closeWidget()"></i>
 	</div>
 </div>
-<div class="content widget-body">
+<div class="content widget-body" [ngStyle]="errorMessage ? {'background-image': 'url(' +'/assets/images/documentBrokenIcon.png'+ ')'} : {'background-image': 'url(' +'/assets/images/documentIcon.png'+ ')'}">
 	<div class="widget-text">{{documentsTotalCount}}</div>
-	<img class="widget-icon" src="/assets/images/documentIcon.png" height="60" *ngIf="!errorMessage"/>
-	<img class="widget-icon" src="/assets/images/documentBrokenIcon.png" height="60" *ngIf="errorMessage"/>
 </div>
 
 
