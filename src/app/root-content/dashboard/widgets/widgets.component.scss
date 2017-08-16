@@ -42,6 +42,7 @@
 			/deep/ .widget-body {
 				display: flex;
 				flex-direction: row;
+				min-height: 100px;
 				background-position: right bottom;
 				background-repeat: no-repeat;
 				background-size: 60px;
