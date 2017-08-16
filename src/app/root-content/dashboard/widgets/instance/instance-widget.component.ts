@@ -13,7 +13,6 @@ import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-mess
 
 export class InstanceWidgetComponent {
 	private element:ElementRef;
-	private $element:JQuery;
 	private carbon:Carbon;
 
 	widgetsService:WidgetsService;
