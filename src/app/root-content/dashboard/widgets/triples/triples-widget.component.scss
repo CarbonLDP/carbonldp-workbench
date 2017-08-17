@@ -1,0 +1,11 @@
+:host {
+	display: block;
+
+	.widget-body {
+		background-image: url(/assets/images/triplesIcon.png);
+	}
+
+	.widget-body.broken {
+		background-image: url(/assets/images/triplesBrokenIcon.png);
+	}
+}

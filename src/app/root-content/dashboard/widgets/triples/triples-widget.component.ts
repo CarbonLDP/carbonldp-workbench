@@ -12,7 +12,7 @@ import "semantic-ui/semantic";
 @Component( {
 	selector: "cw-triples-widget",
 	templateUrl: "./triples-widget.component.html",
-	
+	styleUrls: [ "./triples-widget.component.scss" ]
 } )
 
 export class TriplesWidgetComponent {
@@ -21,7 +21,7 @@ export class TriplesWidgetComponent {
 	widgetsService:WidgetsService;
 	errorMessage:Message;
 	triplesTotalCount;
-	
+
 	private oldWidgetHide:boolean;
 
 	@Input() widget:Widget;

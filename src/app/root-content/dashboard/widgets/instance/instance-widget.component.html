@@ -5,7 +5,7 @@
 		<i class="chevron up small icon widget-button" (click)="collapseWidget()" *ngIf="!hide"></i>
 	</div>
 </div>
-<div class="content widget-body" [class.hidden]="hide" [ngStyle]="errorMessage ? {'background-image': 'url(' +'/assets/images/platformBrokenIcon.png'+ ')'} : {'background-image': 'url(' +'/assets/images/platformIcon.png'+ ')'}">
+<div class="content widget-body" [class.hidden]="hide" [class.broken]="errorMessage">
 	<div class="widget-text">
 		<table class="ui very basic small compact table">
 			<tbody>

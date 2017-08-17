@@ -4,7 +4,7 @@
 		<i class="remove small icon widget-button" (click)="closeWidget()"></i>
 	</div>
 </div>
-<div class="content widget-body" [ngStyle]="errorMessage ? {'background-image': 'url(' +'/assets/images/triplesBrokenIcon.png'+ ')'} : {'background-image': 'url(' +'/assets/images/triplesIcon.png'+ ')'}">
+<div class="content widget-body" [class.broken]="errorMessage">
 	<div class="widget-text">{{triplesTotalCount}}</div>
 </div>
 

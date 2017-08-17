@@ -12,6 +12,7 @@ import "semantic-ui/semantic";
 @Component( {
 	selector: "cw-documents-widget",
 	templateUrl: "./documents-widget.component.html",
+	styleUrls: [ "./documents-widget.component.scss" ]
 } )
 
 export class DocumentsWidgetComponent {
