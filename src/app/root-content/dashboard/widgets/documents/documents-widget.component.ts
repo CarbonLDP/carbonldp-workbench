@@ -48,7 +48,6 @@ export class DocumentsWidgetComponent {
 
 	public refreshWidget() {
 		this.errorMessage = null;
-		this.element.nativeElement.classList.add( "error" );
 		this.documentsTotalCount = null;
 		this.getDocumentsCount();
 	}

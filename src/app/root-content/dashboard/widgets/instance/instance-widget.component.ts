@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
+import { Component, ElementRef, Output, EventEmitter } from "@angular/core";
 
 import { Class as Carbon } from "carbonldp/Carbon";
 import { WidgetsService } from "../widgets.service";
@@ -55,19 +55,19 @@ export class InstanceWidgetComponent {
 			this.platformMetadata = platformMetadata;
 			this.carbonldpBuildDate = platformMetadata[ "buildDate" ];
 			this.carbonldpVersion = platformMetadata[ "version" ];
+			this.element.nativeElement.classList.remove( "error" );
 		} ).catch( ( error:any ) => {
 			this.errorWidget( error );
 		} );
 	}
 
 	getPlatformMetadata() {
-		this.element.nativeElement.classList.remove( "error" );
-
 		this.widgetsService.getPlatformMetadata().then( ( platformMetadata ) => {
 			this.carbonldpURL = this.carbon.baseURI;
 			this.platformMetadata = platformMetadata;
 			this.carbonldpBuildDate = platformMetadata[ "buildDate" ];
 			this.carbonldpVersion = platformMetadata[ "version" ];
+			this.element.nativeElement.classList.remove( "error" );
 		} ).catch( ( error:any ) => {
 			this.errorWidget( error );
 		} );

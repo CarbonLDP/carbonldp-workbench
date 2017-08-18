@@ -4,6 +4,9 @@
 	.widget-header {
 		background-color: orange;
 		padding: .5em .5em;
+		span {
+			cursor: pointer;
+		}
 	}
 
 	.widget-button {

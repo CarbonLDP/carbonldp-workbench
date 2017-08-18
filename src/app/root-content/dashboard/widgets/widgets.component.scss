@@ -10,16 +10,16 @@
 	}
 
 	.ui.card.error {
-		/deep/ .ui.table, /deep/ .ui.header {
+		::ng-deep .ui.table, ::ng-deep .ui.header {
 			color: gray;
 		}
-		/deep/ .widget-text {
+		::ng-deep .widget-text {
 			flex: auto;
 			color: gray;
 
 		}
 
-		/deep/ .widget-header {
+		::ng-deep .widget-header {
 			background-color: #bcbec0;
 			padding: .5em .5em;
 		}
@@ -30,16 +30,16 @@
 			font-size: .95em;
 			width: 245px;
 
-			/deep/ .widget-header {
+			::ng-deep .widget-header {
 				background-color: orange;
 				padding: .5em .5em;
 			}
 
-			/deep/ .widget-button {
+			::ng-deep .widget-button {
 				cursor: pointer;
 			}
 
-			/deep/ .widget-body {
+			::ng-deep .widget-body {
 				display: flex;
 				flex-direction: row;
 				min-height: 100px;
@@ -49,11 +49,11 @@
 				background-origin: content-box;
 			}
 
-			/deep/ .widget-icon {
+			::ng-deep .widget-icon {
 				height: 60px;
 			}
 
-			/deep/ .widget-text {
+			::ng-deep .widget-text {
 				flex: auto;
 				color: black;
 				line-height: normal;
@@ -62,20 +62,20 @@
 		}
 
 		.ui.card.error {
-			/deep/ .widget-text {
+			::ng-deep .widget-text {
 				flex: auto;
 				color: gray;
 				line-height: normal;
 				font-size: 50px;
 			}
-			/deep/ .widget-header {
+			::ng-deep .widget-header {
 				background-color: #bcbec0;
 				padding: .5em .5em;
 			}
 		}
 	}
 
-	/deep/ .ui.card.hidden {
+	::ng-deep .ui.card.hidden {
 		display: none;
 	}
 

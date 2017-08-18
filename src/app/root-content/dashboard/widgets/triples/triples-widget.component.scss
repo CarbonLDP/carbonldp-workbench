@@ -1,11 +1,10 @@
-:host {
-	display: block;
+.ui.card, .ui.cards
+.widget-body {
+	background-image: url(/assets/images/triplesIcon.png);
+}
 
-	.widget-body {
-		background-image: url(/assets/images/triplesIcon.png);
-	}
-
-	.widget-body.broken {
+.ui.card, .ui.cards
+.widget-body.broken {
 		background-image: url(/assets/images/triplesBrokenIcon.png);
-	}
+
 }
