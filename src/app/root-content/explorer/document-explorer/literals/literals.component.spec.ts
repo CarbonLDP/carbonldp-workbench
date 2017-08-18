@@ -93,7 +93,7 @@ export function literalsSpecs() {
 			expect( addedLiteral ).not.toBeNull();
 		} );
 
-		it( "Should add class `modified-literal` to literals that are being added", () => {
+		it( "Should add class `modified-literal` to literals that are being modified", () => {
 
 			comp.literalsCmp.literals[ 0 ] = {
 				copy: { "@value": "literal 3" },
