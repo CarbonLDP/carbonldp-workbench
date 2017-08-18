@@ -1,0 +1,82 @@
+:host {
+	display: block;
+	.ui.cards .ui.card.widget-container {
+		box-shadow: none;
+	}
+
+	.ui.fluid.card {
+		font-size: .95em;
+		box-shadow: none;
+	}
+
+	.ui.card.error {
+		::ng-deep .ui.table, ::ng-deep .ui.header {
+			color: gray;
+		}
+		::ng-deep .widget-text {
+			flex: auto;
+			color: gray;
+
+		}
+
+		::ng-deep .widget-header {
+			background-color: #bcbec0;
+			padding: .5em .5em;
+		}
+	}
+
+	.ui.cards {
+		.ui.card {
+			font-size: .95em;
+			width: 245px;
+
+			::ng-deep .widget-header {
+				background-color: orange;
+				padding: .5em .5em;
+			}
+
+			::ng-deep .widget-button {
+				cursor: pointer;
+			}
+
+			::ng-deep .widget-body {
+				display: flex;
+				flex-direction: row;
+				min-height: 100px;
+				background-position: right bottom;
+				background-repeat: no-repeat;
+				background-size: 60px;
+				background-origin: content-box;
+			}
+
+			::ng-deep .widget-icon {
+				height: 60px;
+			}
+
+			::ng-deep .widget-text {
+				flex: auto;
+				color: black;
+				line-height: normal;
+				font-size: 50px;
+			}
+		}
+
+		.ui.card.error {
+			::ng-deep .widget-text {
+				flex: auto;
+				color: gray;
+				line-height: normal;
+				font-size: 50px;
+			}
+			::ng-deep .widget-header {
+				background-color: #bcbec0;
+				padding: .5em .5em;
+			}
+		}
+	}
+
+	::ng-deep .ui.card.hidden {
+		display: none;
+	}
+
+}
