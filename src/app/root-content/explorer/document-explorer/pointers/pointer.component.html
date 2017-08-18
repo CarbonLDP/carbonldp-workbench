@@ -50,7 +50,7 @@
 				</optgroup>
 			</select>
 			<div class="ui error message wide" *ngIf="!idInput.valid">
-				<p *ngIf="idInput.control.hasError('required')">Select a type or enter your own type.</p>
+				<p *ngIf="idInput.control.hasError('required')">Enter an @id.</p>
 				<p *ngIf="idInput.control.hasError('invalidId')">Enter a valid @id value.</p>
 			</div>
 		</div>
