@@ -145,7 +145,7 @@ export class PointerComponent implements OnChanges {
 			this.pointer.modified = this.tempPointer;
 		}
 
-		this.onSave.emit( this.tempPointer );
+		this.onSave.emit( this.pointer );
 		this.mode = Modes.READ;
 	}
 
