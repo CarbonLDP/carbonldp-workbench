@@ -47,7 +47,7 @@ export class PointerComponent implements OnChanges {
 
 	@Input() set pointer( value:PointerRow ) {
 		this._pointer = value;
-		if( this.pointer.isBeingCreated ) this.mode = Modes.EDIT;
+		if( this.pointer.isBeingCreated ) setTimeout(()=> { this.mode = Modes.EDIT; }, 1);
 
 		if( typeof this.pointer.modified !== "undefined" ) {
 			this.id = ! ! this.tempPointer[ "@id" ] ? this.tempPointer[ "@id" ] : this.pointer.modified[ "@id" ];
