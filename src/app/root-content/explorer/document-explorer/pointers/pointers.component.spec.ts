@@ -56,7 +56,7 @@ export function pointersSpecs() {
 		} );
 
 
-		fit( "Should add class `added-pointer` to pointers that are being added", () => {
+		it( "Should add class `added-pointer` to pointers that are being added", () => {
 
 			comp.pointersCmp.addNewPointer();
 			fixture.detectChanges();
@@ -65,7 +65,7 @@ export function pointersSpecs() {
 			expect( addedPointer ).not.toBeNull();
 		} );
 
-		fit( "Should add class `modified-pointer` to pointers that are being modified", () => {
+		it( "Should add class `modified-pointer` to pointers that are being modified", () => {
 
 			comp.pointersCmp.pointers[ 0 ] = {
 				copy: { "@id": "http://pointer-1.com" },
@@ -77,7 +77,7 @@ export function pointersSpecs() {
 			expect( modifiedPointer ).not.toBeNull();
 		} );
 
-		fit( "Should emit pointers when a pointer is saved", ( done ) => {
+		it( "Should emit pointers when a pointer is saved", ( done ) => {
 
 			let pointers:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.cw-pointer" );
 			expect( pointers.length ).toEqual( 3 );
@@ -97,7 +97,7 @@ export function pointersSpecs() {
 			fixture.detectChanges();
 		} );
 
-		fit( "Should emit pointers when a pointer is deleted", ( done ) => {
+		it( "Should emit pointers when a pointer is deleted", ( done ) => {
 
 
 			let pointers:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.cw-pointer" );
@@ -122,7 +122,7 @@ export function pointersSpecs() {
 			expect( pointers.length ).toEqual( 2 );
 		} );
 
-		fit( "Should emit pointers and remove the deleted pointer if it was an added pointer", ( done ) => {
+		it( "Should emit pointers and remove the deleted pointer if it was an added pointer", ( done ) => {
 
 			comp.pointersCmp.addNewPointer();
 			fixture.detectChanges();
@@ -144,7 +144,7 @@ export function pointersSpecs() {
 			fixture.detectChanges();
 		} );
 
-		fit( "Should not display pointer when it's been deleted", () => {
+		it( "Should not display pointer when it's been deleted", () => {
 
 			let pointers:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.cw-pointer" );
 			expect( pointers.length ).toEqual( 3 );
@@ -159,7 +159,7 @@ export function pointersSpecs() {
 			expect( pointers.length ).toEqual( 2 );
 		} );
 
-		fit( "Should return all added pointers when calling `getAddedPointers`", () => {
+		it( "Should return all added pointers when calling `getAddedPointers`", () => {
 
 			comp.pointersCmp.addNewPointer();
 			comp.pointersCmp.addNewPointer();
@@ -170,7 +170,7 @@ export function pointersSpecs() {
 			expect( addedPointers.length ).toEqual( 3 );
 		} );
 
-		fit( "Should return all deleted pointers when calling `getDeletedPointers`", () => {
+		it( "Should return all deleted pointers when calling `getDeletedPointers`", () => {
 
 			comp.pointersCmp.pointers[ 0 ].deleted = comp.pointersCmp.pointers[ 0 ].copy;
 			comp.pointersCmp.pointers[ 2 ].deleted = comp.pointersCmp.pointers[ 2 ].copy;
@@ -184,7 +184,7 @@ export function pointersSpecs() {
 			expect( deletedPointers.length ).toEqual( 2 );
 		} );
 
-		fit( "Should return all modified pointers when calling `getModifiedPointers`", () => {
+		it( "Should return all modified pointers when calling `getModifiedPointers`", () => {
 
 			comp.pointersCmp.pointers[ 1 ] = {
 				copy: { "@id": "http://pointer-2" },
@@ -200,13 +200,13 @@ export function pointersSpecs() {
 			expect( modifiedPointers.length ).toEqual( 2 );
 		} );
 
-		fit( "Should return all untouched pointers when calling `getUntouchedPointers`", () => {
+		it( "Should return all untouched pointers when calling `getUntouchedPointers`", () => {
 
 			let untouchedPointers:PointerRow[] = comp.pointersCmp.getUntouchedPointers();
 			expect( untouchedPointers.length ).toEqual( 3 );
 		} );
 
-		fit( "Should add new pointer when `onAddNewPointer` emitter is fired", ( done ) => {
+		it( "Should add new pointer when `onAddNewPointer` emitter is fired", ( done ) => {
 
 			comp.pointersCmp.onAddNewPointer.subscribe( ( value:boolean ) => {
 				fixture.detectChanges();
@@ -221,7 +221,7 @@ export function pointersSpecs() {
 			comp.addEmiter.emit( true );
 		} );
 
-		fit( "Should not display Actions column if cannot edit", () => {
+		it( "Should not display Actions column if cannot edit", () => {
 
 			let headers:HTMLElement[] = de.nativeElement.querySelectorAll( "th" );
 			expect( headers.length ).toEqual( 2 );
@@ -233,7 +233,7 @@ export function pointersSpecs() {
 			expect( headers.length ).toEqual( 1 );
 		} );
 
-		fit( "Should not display any pointers if there isn't any added, modified or deleted pointer", () => {
+		it( "Should not display any pointers if there isn't any added, modified or deleted pointer", () => {
 
 			comp.pointers = [];
 			fixture.detectChanges();
