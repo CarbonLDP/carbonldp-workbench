@@ -3,9 +3,9 @@ import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 
 import { FormsModule } from "@angular/forms";
 
-import {  ListRow, ListComponent } from "./../lists/list.component";
-import {  LiteralRow, LiteralComponent } from "./../literals/literal.component";
-import {  PointerRow, PointerComponent } from "./../pointers/pointer.component";
+import { ListRow, ListComponent } from "./../lists/list.component";
+import { LiteralRow, LiteralComponent } from "./../literals/literal.component";
+import { PointerRow, PointerComponent } from "./../pointers/pointer.component";
 import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
 import { BlankNodeRow } from "app/root-content/explorer/document-explorer/blank-nodes/blank-node.component";
 import { NamedFragmentRow } from "app/root-content/explorer/document-explorer/named-fragments/named-fragment.component";
@@ -93,21 +93,58 @@ export function listSpecs() {
 			comp.namedFragments = namedFragments;
 			comp.blankNodes = blankNodes;
 			comp.listCmp.ngAfterViewInit();
-			// comp.list = {
-			// 	copy: [
-			// 		{
-			// 			copy: { "@id": "http://example.com" },
-			// 		},
-			// 		{
-			// 			copy: { "@value": "my value" },
-			// 		},
-			// 		{
-			// 			copy: { "@id": "http://example-2.com" }
-			// 		}
-			// 	]
-			// };
-			//
-			// fixture.detectChanges();
+		} );
+
+		it( "Should emit blank node id when clicking on it", ( done ) => {
+
+			comp.list = <ListRow>{
+				copy: [
+					{
+						copy: { "@id": "_:sq23wLWUDsXhst823" },
+					},
+					{
+						copy: { "@value": "my value" },
+					},
+					{
+						copy: { "@id": "http://example-2.com" }
+					}
+				]
+			};
+			fixture.detectChanges();
+
+			comp.listCmp.onGoToBlankNode.subscribe( ( id:string ) => {
+				expect( id ).toEqual( comp.list.copy[ 0 ].copy[ "@id" ] );
+				done();
+			} );
+
+			let pointerId:HTMLElement = de.nativeElement.querySelector( "tr.cw-pointer .read-mode a" );
+			pointerId.click();
+		} );
+
+		it( "Should emit named fragment id when clicking on it", ( done ) => {
+
+			comp.list = <ListRow>{
+				copy: [
+					{
+						copy: { "@id": "http://localhost:8083/#Fragment-1" }
+					},
+					{
+						copy: { "@id": "_:sq23wLWUDsXhst823" },
+					},
+					{
+						copy: { "@value": "my value" },
+					}
+				]
+			};
+			fixture.detectChanges();
+
+			comp.listCmp.onGoToNamedFragment.subscribe( ( id:string ) => {
+				expect( id ).toEqual( comp.list.copy[ 0 ].copy[ "@id" ] );
+				done();
+			} );
+
+			let pointerId:HTMLElement = de.nativeElement.querySelector( "tr.cw-pointer .read-mode a" );
+			pointerId.click();
 		} );
 
 		it( "Should display Empty list when the list doesn't have any children", () => {
