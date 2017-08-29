@@ -19,7 +19,7 @@ export class BlankNodeComponent implements AfterViewInit {
 	$element:JQuery;
 	modes:Modes = Modes;
 	records:BlankNodeRecords;
-	nonEditableProperties:string[] = [ "@id", "https://carbonldp.com/ns/v1/platform#bNodeIdentifier" ];
+	nonEditableProperties:string[] = [ "@id" ];
 	copyOrAdded:string = "";
 	tempPropertiesNames:string[] = [];
 
@@ -220,7 +220,6 @@ export class BlankNodeComponent implements AfterViewInit {
 }
 export interface BlankNodeRow {
 	id?:string;
-	bNodeIdentifier?:string;
 
 	copy?:RDFNode.Class;
 	added?:RDFNode.Class;
