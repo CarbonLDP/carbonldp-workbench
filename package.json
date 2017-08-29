@@ -32,7 +32,7 @@
     "server:dev": "node_modules/.bin/webpack-dev-server --config config/webpack.dev.js --inline --progress --profile --watch "
   },
   "devDependencies": {
-    "@angular/compiler-cli": "^4.0.0",
+    "@angular/compiler-cli": "4.0.0",
     "@ngtools/webpack": "^1.2.12",
     "@types/codemirror": "0.0.38",
     "@types/jquery": "^2.0.41",
@@ -53,7 +53,7 @@
     "raw-loader": "^0.5.1",
     "run-sequence": "^1.2.2",
     "sass-loader": "^6.0.1",
-    "typescript": "^2.2.1",
+    "typescript": "2.2.2",
     "webpack": "^2.2.1",
     "webpack-bundle-analyzer": "^2.3.1",
     "webpack-dev-server": "^2.4.1",
@@ -68,8 +68,8 @@
     "@angular/platform-browser": "4.0.0",
     "@angular/platform-browser-dynamic": "4.0.0",
     "@angular/router": "4.0.0",
-    "angular-carbonldp": "^0.9.0",
-    "carbonldp": "^0.42.0",
+    "angular-carbonldp": "^1.0.0-alpha.1",
+    "carbonldp": "^1.0.0-alpha.1",
     "carbonldp-panel": "0.8.0",
     "codemirror": "^5.23.0",
     "core-js": "^2.4.1",
@@ -78,7 +78,7 @@
     "js-cookie": "^2.1.2",
     "jstree": "3.3.3",
     "rxjs": "^5.1.0",
-    "semantic-ui": "^2.2.4",
+    "semantic-ui": "2.2.10",
     "zone.js": "^0.8.10"
   }
 }
