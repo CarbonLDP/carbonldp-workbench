@@ -120,14 +120,11 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 	}
 
 	createBlankNode():void {
-		let id:string = "_:" + this.generateUUID(),
-			bNodeIdentifier:string = this.generateUUID();
+		let id:string = "_:" + this.generateUUID();
 		let newBlankNode:BlankNodeRow = <BlankNodeRow>{
 			id: id,
-			bNodeIdentifier: bNodeIdentifier,
 			copy: {
 				"@id": id,
-				"https://carbonldp.com/ns/v1/platform#bNodeIdentifier": [ { "@value": bNodeIdentifier } ]
 			}
 		};
 		newBlankNode.added = newBlankNode.copy;
