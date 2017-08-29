@@ -140,7 +140,6 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 			( bNode:RDFNode.Class ) => {
 				return {
 					id: bNode[ "@id" ],
-					bNodeIdentifier: bNode[ "https://carbonldp.com/ns/v1/platform#bNodeIdentifier" ][ 0 ][ "@value" ],
 					copy: bNode
 				}
 			} );
