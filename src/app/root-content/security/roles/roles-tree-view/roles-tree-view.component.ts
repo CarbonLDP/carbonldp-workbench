@@ -9,6 +9,8 @@ import { RolesService } from "../roles.service";
 
 import "jstree/dist/jstree.min";
 
+// TODO: uncomment when security module is included in the Workbench
+// import "!style-loader!css-loader!jstree/dist/themes/default/style.min.css";
 
 @Component( {
 	selector: "cw-roles-tree-view",

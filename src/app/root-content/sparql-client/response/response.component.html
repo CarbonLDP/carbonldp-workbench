@@ -7,7 +7,7 @@
 		</div>
 		<div class="right menu">
 			<div class="ui small basic icon buttons" style="border:none;">
-				<button (click)="toggleAccordion()" class="ui button" title="Collapse Response">
+				<button (click)="toggleAccordion()" class="ui button btn-collapse" title="Collapse Response">
 					<i class="caret icon" [ngClass]="{ down: accordionOpen, right: ! accordionOpen }"></i>
 				</button>
 				<button (click)="onConfigureResponse($event)" class="ui button btn-edit" title="Edit Query">
