@@ -27,7 +27,7 @@ export class PointerComponent implements OnChanges {
 
 	private _mode = Modes.READ;
 	@Input() set mode( value:string ) {
-		this._mode = value;
+		setTimeout( () => { this._mode = value }, 1 );
 		this.onEditMode.emit( this.mode === Modes.EDIT );
 		if( this.mode === Modes.EDIT ) {
 			this.initializePointersDropdown();

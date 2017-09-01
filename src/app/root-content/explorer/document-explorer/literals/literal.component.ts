@@ -26,7 +26,7 @@ export class LiteralComponent implements AfterViewChecked {
 	languageDropdown:JQuery;
 
 	@Input() set mode( value:string ) {
-		this._mode = value;
+		setTimeout( () => { this._mode = value }, 1 );
 		this.onEditMode.emit( this.mode === Modes.EDIT );
 		if( this.mode === Modes.EDIT ) {
 			this.initializeTypesDropdown();
