@@ -27,11 +27,12 @@ export class PointerComponent implements OnChanges {
 
 	private _mode = Modes.READ;
 	@Input() set mode( value:string ) {
-		setTimeout( () => { this._mode = value }, 1 );
-		this.onEditMode.emit( this.mode === Modes.EDIT );
-		if( this.mode === Modes.EDIT ) {
-			this.initializePointersDropdown();
-		}
+		setTimeout( () => { this._mode = value
+			this.onEditMode.emit( this.mode === Modes.EDIT );
+			if( this.mode === Modes.EDIT ) {
+				this.initializePointersDropdown();
+			}
+		}, 0 );
 	}
 
 	get mode() {
@@ -158,6 +159,7 @@ export class PointerComponent implements OnChanges {
 			} );
 		}
 		this.pointersDropdown.dropdown( "set selected", this.id );
+		this.pointersDropdown.dropdown( "set text", this.id );
 	}
 
 	changeId( id:string, text?:string, choice?:JQuery ):void {
