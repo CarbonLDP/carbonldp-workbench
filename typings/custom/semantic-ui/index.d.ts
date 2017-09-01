@@ -296,6 +296,7 @@ interface JQuery {
 	dimmer( arguments?:SemanticDimmerArguments ):JQuery;
 
 	dropdown( action:"set selected", selector:string );
+	dropdown( action:"set text", selector:string );
 	dropdown( arguments?:SemanticDropdownArguments ):JQuery;
 
 	form( arguments:any ):JQuery;
