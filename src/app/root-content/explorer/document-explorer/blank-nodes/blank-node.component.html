@@ -1,6 +1,6 @@
-<button class="ui right labeled icon button" (click)="createProperty()" *ngIf="canEdit">
-	<i class="add icon"></i>
-	Add new property
+<button class="ui basic compact labeled right icon button" (click)="createProperty()" *ngIf="canEdit">
+	<i class="plus icon"></i>
+	Add Property
 </button>
 <div class="ui divided items">
 	<ng-template ngFor let-propertyRow="$implicit" [ngForOf]="properties" let-i="index">
