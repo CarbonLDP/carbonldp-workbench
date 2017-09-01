@@ -25,11 +25,19 @@
 					       [control]="idInput"
 					       cw-property-id
 					       cw-uri
-					       name="idInput" [(ngModel)]="value" #idInput="ngModel" (keyup.escape)="cancelIdEdition()" (keyup.enter)="idInput.valid? saveId() : null">
-					<button class="ui button"
-					        [disabled]="!idInput.valid"
-					        (click)="saveId(idInput.value)">Save
-					</button>
+					       name="idInput" [(ngModel)]="value" #idInput="ngModel" (keyup.escape)="cancelIdModification()" (keyup.enter)="idInput.valid? saveId() : null">
+					<div class="ui save-cancel buttons">
+						<button class="ui button"
+						        [disabled]="!idInput.valid"
+						        (click)="saveId(idInput.value)">Save
+						</button>
+						<div class="ui dropdown icon button">
+							<i class="dropdown icon"></i>
+							<div class="menu">
+								<div class="item" (click)="cancelIdModification()">Cancel</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="ui error message wide" *ngIf="!idInput.valid">
 					<p *ngIf="idInput.control.hasError('required')">Enter an id.</p>
@@ -108,11 +116,19 @@
 					       [originalName]="originalName"
 					       [control]="nameInput"
 					       cw-property-name
-					       name="nameInput" [(ngModel)]="name" #nameInput="ngModel" (keyup.escape)="cancelEdition()" (keyup.enter)="nameInput.valid? save() : null">
-					<button class="ui button"
-					        [disabled]="!nameInput.valid"
-					        (click)="save(nameInput.value)">Save
-					</button>
+					       name="nameInput" [(ngModel)]="name" #nameInput="ngModel" (keyup.escape)="cancelModification()" (keyup.enter)="nameInput.valid? save() : null">
+					<div class="ui save-cancel buttons">
+						<button class="ui button"
+						        [disabled]="!nameInput.valid"
+						        (click)="save(nameInput.value)">Save
+						</button>
+						<div class="ui dropdown icon button">
+							<i class="dropdown icon"></i>
+							<div class="menu">
+								<div class="item" (click)="cancelModification()">Cancel</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="ui error message wide" *ngIf="!nameInput.valid">
 					<p *ngIf="nameInput.control.hasError('required')">Enter a name for the property.</p>
