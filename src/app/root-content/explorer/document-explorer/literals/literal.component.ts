@@ -818,7 +818,7 @@ export class LiteralComponent implements AfterViewChecked {
 
 	@Input() set literal( value:LiteralRow ) {
 		this._literal = value;
-		if( this.literal.isBeingCreated ) this.mode = Modes.EDIT;
+		if( this.literal.isBeingCreated ) setTimeout(()=> { this.mode = Modes.EDIT; }, 1);
 
 		if( typeof this.literal.modified !== "undefined" ) {
 			this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal.modified[ "@value" ];

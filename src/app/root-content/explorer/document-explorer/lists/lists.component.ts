@@ -10,7 +10,7 @@ import "semantic-ui/semantic";
 @Component( {
 	selector: "cw-lists",
 	templateUrl: "./lists.component.html",
-	styleUrls: [  "./lists.component.scss"  ],
+	styleUrls: [ "./lists.component.scss" ],
 } )
 
 export class ListsComponent implements OnInit {

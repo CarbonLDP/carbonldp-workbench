@@ -47,7 +47,6 @@ export function errorMessageGeneratorSpecs() {
 		} );
 
 		it( "Should return Message object", async () => {
-			debugger;
 			let errorMessage:Message = ErrorMessageGenerator.getErrorMessage( notFoundError );
 			expect( errorMessage ).toBeDefined();
 			expect( errorMessage ).toEqual( {

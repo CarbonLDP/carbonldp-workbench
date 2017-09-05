@@ -46,7 +46,6 @@ export function tabComponentSpecs() {
 		} );
 
 		it( "Should have content defined inside ng-content", () => {
-			debugger;
 			let tab:HTMLElement = fixture.nativeElement.querySelector( "sui-tab.second" );
 
 			expect( tab.innerText ).toBe( "Second Tab" );

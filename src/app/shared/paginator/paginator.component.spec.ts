@@ -74,7 +74,6 @@ export function paginatorSpecs() {
 		} );
 
 		it( "Should change the active page number", () => {
-			debugger;
 
 			comp.elementsPerPage = 5;
 			comp.totalElements = 15;
@@ -100,7 +99,6 @@ export function paginatorSpecs() {
 		} );
 
 		it( "Should emit active page after changing page", ( done ) => {
-			debugger;
 
 			spyOn( comp.paginator.onPageChange, "emit" ).and.callThrough();
 
