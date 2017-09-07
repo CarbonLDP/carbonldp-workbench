@@ -1,8 +1,8 @@
-<div class="content widget-header"><span (click)="collapseWidget()">My platform</span>
+<div class="content widget-header" (click)="collapseWidget($event)">My platform
 	<div class="right floated">
-		<i class="refresh small icon widget-button" [class.hidden]="hide" (click)="refreshWidget()"></i>
-		<i class="chevron down small icon widget-button" (click)="collapseWidget()" *ngIf="hide"></i>
-		<i class="chevron up small icon widget-button" (click)="collapseWidget()" *ngIf="!hide"></i>
+		<i class="refresh small icon widget-button" [class.hidden]="hide" (click)="refreshWidget($event)"></i>
+		<i class="chevron down small icon widget-button" (click)="collapseWidget($event)" *ngIf="hide"></i>
+		<i class="chevron up small icon widget-button" (click)="collapseWidget($event)" *ngIf="!hide"></i>
 	</div>
 </div>
 <div class="content widget-body" [class.hidden]="hide" [class.broken]="errorMessage">

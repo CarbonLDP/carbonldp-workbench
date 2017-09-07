@@ -36,14 +36,16 @@ export class InstanceWidgetComponent {
 		this.getPlatformMetadata();
 	}
 
-	collapseWidget() {
+	collapseWidget( event ) {
+		event.stopImmediatePropagation();
 		this.hide = ! this.hide;
 		if( ! this.hide ) {
 			this.refreshWidget();
 		}
 	}
 
-	refreshWidget() {
+	refreshWidget( event? ) {
+		if( event )event.stopImmediatePropagation();
 		this.errorMessage = null;
 		this.carbonldpBuildDate = null;
 		this.carbonldpVersion = null;
