@@ -12,7 +12,7 @@ export class DocumentsResolverService {
 
 	carbon:Carbon;
 
-	documents:Map<string,  { document:RDFDocument.Class, ETag:string }> = new Map<string, { document:RDFDocument.Class, ETag:string }>();
+	documents:Map<string, { document:RDFDocument.Class, ETag:string }> = new Map<string, { document:RDFDocument.Class, ETag:string }>();
 	private parser:RDFDocument.Parser = new RDFDocument.Parser();
 
 	constructor( carbon:Carbon ) {

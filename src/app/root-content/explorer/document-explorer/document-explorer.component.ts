@@ -50,7 +50,9 @@ export class DocumentExplorerComponent {
 
 	resolveDocument( uri:string ):void {
 		this.zone.run( () => {this.loadingDocument = true;} );
-		this.documentsResolverService.get( uri ).then( ( document:RDFDocument.Class ) => {
+		this.documentsResolverService.get( uri ).catch( ( error ) => {
+			this.handleExternalError( error );
+		} ).then( ( document:RDFDocument.Class ) => {
 			this.zone.run( () => {
 				this.inspectingDocument = document;
 				this.loadingDocument = false;

@@ -9,7 +9,7 @@ import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 import { DocumentsResolverService } from "../documents-resolver.service";
 import { RootRecords } from "../document-resource/document-resource.component";
 import { BlankNodesComponent, BlankNodesRecords } from "../blank-nodes/blank-nodes.component";
-import { NamedFragmentsComponent, NamedFragmentsRecords }from "../named-fragments/named-fragments.component";
+import { NamedFragmentsComponent, NamedFragmentsRecords } from "../named-fragments/named-fragments.component";
 import { BlankNodeRow } from "../blank-nodes/blank-node.component";
 import { NamedFragmentRow } from "../named-fragments/named-fragment.component";
 
@@ -52,7 +52,8 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	@Input() uri:string;
 	@Input() displaySuccessMessage:EventEmitter<string> = new EventEmitter<string>();
 	private _document:RDFDocument.Class;
-	@Input() set document( value:RDFDocument.Class ) {
+	@Input()
+	set document( value:RDFDocument.Class ) {
 		this._document = value;
 		this.receiveDocument( value );
 	}
@@ -103,6 +104,8 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	}
 
 	ngOnChanges( changes:{ [propName:string]:SimpleChange } ):void {
+
+		// In case the DocumentViewer is used by passing a URI, it can make the call to resolve the URI by itself
 		if( changes[ "uri" ] && ! ! changes[ "uri" ].currentValue && changes[ "uri" ].currentValue !== changes[ "uri" ].previousValue ) {
 			this.loadingDocument = true;
 			this.getDocument( this.uri ).then( ( document:RDFDocument.Class ) => {
@@ -132,7 +135,9 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	}
 
 	getDocument( uri:string ):Promise<RDFDocument.Class> {
-		return this.documentsResolverService.get( uri );
+		return this.documentsResolverService.get( uri ).catch( ( error:HTTPError ) => {
+			this.onError.emit( error );
+		} );
 	}
 
 	generateFragments():void {
