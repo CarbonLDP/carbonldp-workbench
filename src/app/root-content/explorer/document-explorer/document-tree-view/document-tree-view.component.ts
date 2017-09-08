@@ -79,7 +79,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 			return updatedRoot;
 		} ).catch( ( error:HTTP.Errors.Error ) => {
-			console.error( error );
+			// console.error( error );
 			this.onError.emit( error );
 		} );
 	}
@@ -166,6 +166,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			}
 		} ).then( () => {
 			this.jsTree.set_icon( parentNode, originalIcon );
+		} ).catch( ( error ) => {
+			this.emptyNode( parentId );
+			this.jsTree.set_icon( parentNode, originalIcon );
+			return Promise.reject( error );
 		} );
 	}
 
@@ -175,6 +179,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 				this.jsTree.open_node( node );
 			}
 			this.onResolveUri.emit( node.id );
+		} ).catch( ( error ) => {
+			this.onError.emit( error );
 		} );
 	}
 
@@ -235,8 +241,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 			return nodes;
 		} ).catch( ( error ) => {
-			console.error( error );
-			return [];
+			// console.error( error );
+			return Promise.reject( error );
 		} );
 	}
 
