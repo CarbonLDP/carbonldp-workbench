@@ -1,5 +1,5 @@
 <div class="ui basic segment options treeview">
-	<div class="ui top left pointing dropdown mini basic violet button">
+	<div class="ui top left pointing dropdown mini basic violet button" [ngClass]="{'disabled':nodeChildren.length===0}">
 		<i class="plus icon"></i>
 		<span class="text">New</span>
 		<div class="menu">
@@ -13,12 +13,13 @@
 			</a>
 		</div>
 	</div>
-	<button class="ui mini basic red right aligned icon button" title="Delete document" (click)="showDeleteChildForm()">
+	<button class="ui mini basic red right aligned icon button" title="Delete document"
+	        [disabled]="nodeChildren.length===0"
+	        (click)="showDeleteChildForm()">
 		<i class="trash outline icon"></i>
 	</button>
 </div>
 
 <div class="content treeview">
-	<ul>
-	</ul>
+	<ul></ul>
 </div>
