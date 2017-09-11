@@ -1,10 +1,8 @@
-.ui.card, .ui.cards
-.widget-body {
-	background-image: url(/assets/images/documentIcon.png);
-}
-
-.ui.card, .ui.cards
-.widget-body.broken {
-	background-image: url(/assets/images/documentBrokenIcon.png);
-
+:host {
+	.content.widget-body {
+		background-image: url(/assets/images/documentIcon.png);
+	}
+	.content.widget-body.broken {
+		background-image: url(/assets/images/documentBrokenIcon.png);
+	}
 }
