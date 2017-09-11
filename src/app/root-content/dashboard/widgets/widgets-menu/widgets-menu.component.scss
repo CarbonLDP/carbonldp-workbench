@@ -1,0 +1,43 @@
+:host {
+	display: block;
+
+	.ui.dropdown {
+
+		.ui.icon.button {
+			padding: .5em;
+		}
+
+		.ui.inverted.button {
+			box-shadow: 0 0 0 1.5px #fff inset !important;
+			background: transparent none;
+			color: #fff;
+		}
+		.ui.inverted.button:focus {
+			box-shadow: 0 0 0 2px #fff inset !important;
+			background: transparent none;
+			color: #fff;
+			text-shadow: none !important;
+		}
+
+		.menu {
+			right: 0;
+			left: auto;
+
+			> .item {
+				width: 170px;
+				> .widgetsMenu-textItem {
+					margin-right: 2em;
+				}
+				> .icon.widgetsMenu-icon {
+					float: right;
+					margin-right: 0;
+				}
+			}
+
+			i.icon.hidden {
+				display: none;
+			}
+
+		}
+	}
+}

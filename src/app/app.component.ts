@@ -29,33 +29,36 @@ export class AppComponent {
 	private defineTitle() {
 		let title:string = "",
 			activatedRoutes:ActivatedRouteSnapshot[] = [],
-			currentRoute:ActivatedRoute = this.route.root;
+			currentRoute:ActivatedRouteSnapshot = this.route.snapshot.children[ 0 ];
 
 		do {
-			if( ! ! currentRoute.snapshot && (typeof currentRoute.snapshot.data[ "title" ] !== "undefined" || typeof currentRoute.snapshot.data[ "displayName" ] !== "undefined" ) )
-				activatedRoutes.push( currentRoute.snapshot );
+			if( ! ! currentRoute
+				&& (typeof currentRoute.data[ "title" ] !== "undefined") )
+				activatedRoutes.push( currentRoute );
 			currentRoute = currentRoute.children[ 0 ];
 		} while( currentRoute );
 
 
 		activatedRoutes.forEach( ( snapshot:ActivatedRouteSnapshot, idx:number ) => {
 			if( idx === 0 ) return;
-			if( activatedRoutes.length === 2 && idx === 1 && ! snapshot.data[ "title" ] ) return;
-			if( idx !== (activatedRoutes.length - 1) && typeof snapshot.data[ "title" ] === "undefined" ) return;
-			title += this.getTitle( snapshot );
-			if( idx < activatedRoutes.length - 1 ) title += " > ";
+			let titleAux = this.getTitle( snapshot );
+			if( activatedRoutes.length > 2 && idx !== activatedRoutes.length - 1 ) {
+				title += " > " + titleAux;
+				return;
+			}
+			if( titleAux === "Workbench" ) return;
+			title += titleAux;
 		} );
-		title = title + (activatedRoutes.length > 2 ? " | " : "") + this.getTitle( activatedRoutes[ 0 ] );
+		title = title + ((title !== "") ? " | " : "") + this.getTitle( activatedRoutes[ 0 ] );
+
 		this.title.setTitle( title );
 	}
 
 	private getTitle( snapShot:ActivatedRouteSnapshot ):string {
 		let title:string = "";
-		if( typeof snapShot.data[ "param" ] !== "undefined" ) {
-			title += snapShot.data[ "displayName" ] + " (" + snapShot.params[ snapShot.data[ "param" ] ] + " )";
-		} else if( typeof snapShot.data[ "title" ] === "string" ) {
+		if( typeof snapShot.data[ "title" ] === "string" ) {
 			title += snapShot.data[ "title" ]
-		} else title += snapShot.data[ "displayName" ];
+		}
 		return title;
 	}
 

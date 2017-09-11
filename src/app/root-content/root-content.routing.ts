@@ -16,6 +16,8 @@ export const RootContentRoutes:Routes = [
 		data: {
 			alias: "",
 			displayName: "Workbench",
+			title: "Workbench",
+			hide:true,
 		},
 		children: [
 			{
@@ -23,6 +25,7 @@ export const RootContentRoutes:Routes = [
 				data: {
 					alias: "",
 					displayName: "Dashboard",
+					hide:false,
 				},
 				component: DashboardView,
 			},
@@ -40,6 +43,7 @@ export const RootContentRoutes:Routes = [
 				data: {
 					alias: "sparql-client",
 					displayName: "SPARQL Client",
+					title: "SPARQL Client",
 				},
 			},
 			{
@@ -48,6 +52,7 @@ export const RootContentRoutes:Routes = [
 				data: {
 					alias: "explore",
 					displayName: "Explorer",
+					title: "Explorer",
 				},
 			},
 			{
@@ -56,6 +61,7 @@ export const RootContentRoutes:Routes = [
 				data: {
 					alias: "configure",
 					displayName: "Configuration",
+					title: "Configuration",
 				},
 			},
 			{

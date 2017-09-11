@@ -18,7 +18,7 @@ const appRoutes:Routes = [
 		// canActivate: [ NotAuthenticatedGuard ],
 		data: {
 			alias: "login",
-			title: "Workbench | Log In",
+			title: "Log In | Workbench",
 
 			// NotAuthenticatedGuard cases
 			onReject: [ "/" ],
@@ -33,7 +33,6 @@ const appRoutes:Routes = [
 			// AuthenticatedGuard cases
 			onReject: [ "/login" ],
 			onError: [ "/error" ],
-			title: "Workbench",
 		},
 		children: [
 			{

@@ -17,6 +17,7 @@ import { SharedModule } from "app/shared/shared.module";
 import { SPARQLClientModule } from "./sparql-client/sparql-client.module";
 import { ConfigurationModule } from "./configuration/configuration.module";
 import { DocumentExplorerModule } from "./explorer/document-explorer/document-explorer.module";
+import { DashboardModule } from "./dashboard/dahsboard.module";
 
 // Services
 import { DocumentsResolverService } from "./explorer/document-explorer/documents-resolver.service";
@@ -31,6 +32,7 @@ import { DocumentsResolverService } from "./explorer/document-explorer/documents
 		SPARQLClientModule,
 		ConfigurationModule,
 		DocumentExplorerModule,
+		DashboardModule,
 	],
 	declarations: [
 		RootContentView,
