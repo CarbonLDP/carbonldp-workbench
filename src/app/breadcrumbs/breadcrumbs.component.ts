@@ -26,9 +26,6 @@ export class BreadcrumbsComponent {
 		this.routerService = routerService;
 		this.sidebarService = sidebarService;
 		this.base = this.sidebarService.base;
-	}
-
-	ngOnInit():void {
 		this.router.events.subscribe( ( event ) => {
 			if( ! (event instanceof NavigationEnd ) ) return;
 			this.breadCrumbs = [];
