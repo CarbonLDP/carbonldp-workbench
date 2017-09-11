@@ -115,19 +115,18 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	}
 
 	receiveDocument( document:RDFDocument.Class ):void {
-		if( ! ! document ) {
-			this.loadingDocument = true;
-			this.setRoot();
-			this.generateFragments();
-			this.clearDocumentChanges();
-			this.loadingDocument = false;
-			this.documentURI = this.document[ "@id" ];
+		if( ! document ) return;
+		this.loadingDocument = true;
+		this.setRoot();
+		this.generateFragments();
+		this.clearDocumentChanges();
+		this.documentURI = this.document[ "@id" ];
 
-			setTimeout( () => {
-				this.goToSection( "documentResource" );
-				this.initializeTabs();
-			}, 250 );
-		}
+		setTimeout( () => {
+			this.loadingDocument = false;
+			this.goToSection( "documentResource" );
+			this.initializeTabs();
+		}, 1 );
 	}
 
 	setRoot():void {
@@ -172,7 +171,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	}
 
 	goToSection( section:string ):void {
-		if( this.sections.indexOf( section ) === - 1 ) return;
+		if( this.sections.indexOf( section ) === - 1 || this.loadingDocument ) return;
 		this.scrollTo( ">div:first-child" );
 		this.$element.find( ".secondary.menu.document.tabs .item" ).tab( "changeTab", section );
 	}
