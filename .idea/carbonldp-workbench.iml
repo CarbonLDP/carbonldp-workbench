@@ -8,10 +8,6 @@
       <excludeFolder url="file://$MODULE_DIR$/../carbonldp-js-sdk/node_modules" />
       <excludeFolder url="file://$MODULE_DIR$/../carbonldp-js-sdk/test/jspm_packages" />
     </content>
-    <content url="file://$MODULE_DIR$/../carbonldp-panel">
-      <excludeFolder url="file://$MODULE_DIR$/../carbonldp-panel/dist" />
-      <excludeFolder url="file://$MODULE_DIR$/../carbonldp-panel/node_modules" />
-    </content>
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/node_modules" />

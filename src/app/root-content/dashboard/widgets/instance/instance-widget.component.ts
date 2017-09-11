@@ -19,7 +19,7 @@ export class InstanceWidgetComponent {
 	carbonldpVersion:string = "";
 	carbonldpURL:string = "";
 	carbonldpBuildDate:Date = null;
-	hide:boolean = true;
+	hide:boolean = false;
 	platformMetadata;
 
 	errorMessage:Message;
@@ -45,7 +45,7 @@ export class InstanceWidgetComponent {
 	}
 
 	refreshWidget( event? ) {
-		if( event )event.stopImmediatePropagation();
+		if( event ) event.stopImmediatePropagation();
 		this.errorMessage = null;
 		this.carbonldpBuildDate = null;
 		this.carbonldpVersion = null;
@@ -53,7 +53,7 @@ export class InstanceWidgetComponent {
 		if( ! this.platformMetadata ) return this.getPlatformMetadata()
 
 
-		this.widgetsService.refreshPlatformMetadata( this.platformMetadata ).then( ( platformMetadata )=> {
+		this.widgetsService.refreshPlatformMetadata( this.platformMetadata ).then( ( platformMetadata ) => {
 			this.platformMetadata = platformMetadata;
 			this.carbonldpBuildDate = platformMetadata[ "buildDate" ];
 			this.carbonldpVersion = platformMetadata[ "version" ];
