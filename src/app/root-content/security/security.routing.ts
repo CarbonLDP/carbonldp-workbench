@@ -19,6 +19,7 @@ export const SecurityRoutes:Routes = [
 		data: {
 			alias: "security",
 			displayName: "Security",
+			title: "Security",
 		},
 		component: SecurityView,
 		children: [

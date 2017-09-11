@@ -68,7 +68,7 @@ export class ErrorMessageGenerator {
 				break;
 			case error instanceof HTTP.Errors.UnknownError:
 				// TODO: Check if the UnknownError is due to a bad CORS configuration.
-				tempMessage = "An error occurred while trying to fetch the resource content. This could be caused by a missing allowed domain for your App. Please, make sure this is not the case and try again later.";
+				tempMessage = "An error occurred while trying to fetch the resource content. This could be caused by a missing allowed domain. Please, make sure this is not the case and try again later.";
 				break;
 			default:
 				tempMessage = "There was a problem processing the request. Error: " + error.response.status;
