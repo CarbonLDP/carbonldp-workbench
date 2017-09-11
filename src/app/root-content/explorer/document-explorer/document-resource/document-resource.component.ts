@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } fro
 
 import * as RDFNode from "carbonldp/RDF/Node";
 
+import { DocumentsResolverService } from "app/root-content/explorer/document-explorer/documents-resolver.service";
 import { Property, PropertyRow, Modes } from "../property/property.component";
 
 import * as $ from "jquery";
@@ -17,9 +18,12 @@ export class DocumentResourceComponent implements AfterViewInit {
 
 	element:ElementRef;
 	$element:JQuery;
+	documentsResolverService:DocumentsResolverService;
+
 	modes:Modes = Modes;
 	properties:PropertyRow[] = [];
 	existingPropertiesNames:string[] = [];
+	accessPointsHasMemberRelationProperties:string[] = [];
 	records:RootRecords;
 	private _rootHasChanged:boolean;
 	set rootHasChanged( hasChanged:boolean ) {
@@ -38,7 +42,8 @@ export class DocumentResourceComponent implements AfterViewInit {
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
 	private _rootNode:RDFNode.Class;
-	@Input() set rootNode( value:RDFNode.Class ) {
+	@Input()
+	set rootNode( value:RDFNode.Class ) {
 		this._rootNode = value;
 		this.records = new RootRecords();
 		this.getProperties();
@@ -53,8 +58,9 @@ export class DocumentResourceComponent implements AfterViewInit {
 	@Output() onChanges:EventEmitter<RootRecords> = new EventEmitter<RootRecords>();
 
 
-	constructor( element:ElementRef ) {
+	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
+		this.documentsResolverService = documentsResolverService;
 	}
 
 	ngAfterViewInit():void {
@@ -138,22 +144,33 @@ export class DocumentResourceComponent implements AfterViewInit {
 	}
 
 	getProperties():void {
-		this.updateExistingProperties();
+
+		this.getAccessPointsHasMemberRelationProperties( this.documentURI )
+			.then( ( accessPointsHasMemberRelationProperties:string[] ) => {
+				this.accessPointsHasMemberRelationProperties = accessPointsHasMemberRelationProperties;
+				this.updateExistingProperties();
+			} );
 	}
 
 	updateExistingProperties():void {
 		this.properties = [];
 		this.existingPropertiesNames = Object.keys( this.rootNode );
+		// Add hasMemberRelationProperties
+		this.existingPropertiesNames.splice( this.existingPropertiesNames.length - 3, 0, ...this.accessPointsHasMemberRelationProperties );
+		// Remove duplicated properties
+		this.existingPropertiesNames = this.existingPropertiesNames.filter( ( name:string, index:number, array:string[] ) => array.indexOf( name ) === index );
+		// Fill exisiting properties
 		this.existingPropertiesNames.forEach( ( propName:string ) => {
 			this.properties.push( {
 				copy: {
 					id: propName,
 					name: propName,
-					value: this.rootNode[ propName ]
+					value: typeof this.rootNode[ propName ] !== "undefined"? this.rootNode[ propName ] : []
 				}
 			} );
 		} );
 		if( ! this.records ) return;
+
 		this.records.additions.forEach( ( value, key ) => {
 			this.existingPropertiesNames.push( key );
 			this.properties.splice( 2, 0, value );
@@ -176,11 +193,15 @@ export class DocumentResourceComponent implements AfterViewInit {
 		} );
 		this.rootHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
+
+	getAccessPointsHasMemberRelationProperties( documentURI:string ):Promise<string[]> {
+		return this.documentsResolverService.getAccessPointsHasMemberRelationProperties( documentURI );
+	}
 }
 
 export class RootRecords {
-	changes:Map<string,PropertyRow> = new Map<string, PropertyRow>();
-	deletions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
-	additions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
+	changes:Map<string, PropertyRow> = new Map<string, PropertyRow>();
+	deletions:Map<string, PropertyRow> = new Map<string, PropertyRow>();
+	additions:Map<string, PropertyRow> = new Map<string, PropertyRow>();
 }
 

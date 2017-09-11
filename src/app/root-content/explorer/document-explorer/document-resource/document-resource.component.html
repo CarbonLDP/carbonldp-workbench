@@ -13,6 +13,7 @@
 		             [namedFragments]="namedFragments"
 		             [documentURI]="documentURI"
 		             [existingProperties]="existingPropertiesNames"
+		             [accessPointsHasMemberRelationProperties]="accessPointsHasMemberRelationProperties"
 		             [mode]="(!!propertyRow.isBeingCreated || !!propertyRow.isBeingModified || !!propertyRow.isBeingDeleted)? modes.EDIT : modes.READ"
 
 		             (onChangeProperty)="changeProperty(propertyRow, i)"
