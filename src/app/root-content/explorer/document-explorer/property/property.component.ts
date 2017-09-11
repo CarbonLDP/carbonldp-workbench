@@ -56,6 +56,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 	@Input() isPartOfNamedFragment:boolean = false;
 	@Input() canEdit:boolean = true;
 	@Input() existingProperties:string[] = [];
+	@Input() accessPointsHasMemberRelationProperties:string[] = [];
 	private _property:PropertyRow;
 	@Input()
 	set property( prop:PropertyRow ) {
@@ -94,6 +95,8 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 	listsHaveChanged:boolean = false;
 
 	get propertyHasChanged():boolean { return this.nameHasChanged || this.valueHasChanged || this.literalsHaveChanged || this.pointersHaveChanged || this.listsHaveChanged; }
+
+	get isAccessPointHasMemberRelationProperty():boolean { return this.accessPointsHasMemberRelationProperties.indexOf( this.id ) !== -1; }
 
 	// TODO: Add @lists and @sets support
 	constructor( element:ElementRef ) {
