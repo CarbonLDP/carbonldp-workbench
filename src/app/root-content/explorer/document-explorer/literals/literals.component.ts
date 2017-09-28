@@ -54,6 +54,7 @@ export class LiteralsComponent implements OnInit {
 		}, 1 );
 	}
 
+	// TODO: Remove unused parameters
 	saveLiteral( modifiedLiteral:Literal, originalLiteral:Literal, index:number ) {
 		if( typeof this.literals[ index ].added !== "undefined" ) delete this.literals[ index ].isBeingCreated;
 		this.isLanguagePresent = this.existsToken( "@language" );

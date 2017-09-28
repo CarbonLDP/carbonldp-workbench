@@ -1,7 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, AfterViewInit, OnChanges } from "@angular/core";
 
 import * as RDFNode from "carbonldp/RDF/Node";
-import * as Utils from "carbonldp/Utils";
 
 import { BlankNodeRow } from "./blank-node.component"
 
@@ -11,7 +10,7 @@ import "semantic-ui/semantic";
 @Component( {
 	selector: "cw-blank-nodes",
 	templateUrl: "./blank-nodes.component.html",
-	styleUrls: [  "./blank-nodes.component.scss"  ],
+	styleUrls: [ "./blank-nodes.component.scss" ],
 } )
 
 export class BlankNodesComponent implements AfterViewInit, OnChanges {
@@ -50,7 +49,7 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 		}
 	}
 
-	openBlankNode( nodeOrId:RDFNode.Class|string ):void {
+	openBlankNode( nodeOrId:RDFNode.Class | string ):void {
 		let node:BlankNodeRow;
 		if( typeof nodeOrId === "string" ) {
 			node = this.blankNodes.find( ( node ) => { return node.id === nodeOrId} );
@@ -80,8 +79,8 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 	}
 
 	getShortId( id:string ):string {
-		if( ! id )return;
-		return id.substr( 0, id.indexOf( "-" ) ) + "...";
+		if( ! id ) return;
+		return "..." + id.substr( id.length - 8, id.length );
 	}
 
 	refreshTabs():void {
@@ -120,25 +119,18 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 	}
 
 	createBlankNode():void {
-		let id:string = "_:" + this.generateUUID(),
-			bNodeIdentifier:string = this.generateUUID();
+		let id:string = "_:" + this.generateTemporalID();
 		let newBlankNode:BlankNodeRow = <BlankNodeRow>{
 			id: id,
-			bNodeIdentifier: bNodeIdentifier,
 			copy: {
 				"@id": id,
-				"https://carbonldp.com/ns/v1/platform#bNodeIdentifier": [ { "@value": bNodeIdentifier } ]
 			}
 		};
 		newBlankNode.added = newBlankNode.copy;
-		this.blankNodes.splice( 0, 0, newBlankNode );
+		this.blankNodes.splice( this.blankNodes.length, 0, newBlankNode );
 		this.blankNodesRecords.additions.set( id, newBlankNode );
 		this.onChanges.emit( this.blankNodesRecords );
 		this.openBlankNode( id );
-	}
-
-	generateUUID():string {
-		return Utils.UUID.generate();
 	}
 
 	initializeDeletionDimmer():void {
@@ -161,12 +153,21 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 		this.$element.find( ".confirm-deletion.dimmer" ).dimmer( "hide" );
 	}
 
+	generateTemporalID():string {
+		let newId:number = 1;
+
+		while( this.blankNodesRecords.additions.has( "_:New_Blank_Node_Temporal_Id_ " + newId ) ) {
+			newId ++;
+		}
+
+		return "New_Blank_Node_Temporal_Id_ " + newId;
+	}
 }
 
 export class BlankNodesRecords {
-	changes:Map<string,BlankNodeRow> = new Map<string, BlankNodeRow>();
-	deletions:Map<string,BlankNodeRow> = new Map<string, BlankNodeRow>();
-	additions:Map<string,BlankNodeRow> = new Map<string, BlankNodeRow>();
+	changes:Map<string, BlankNodeRow> = new Map<string, BlankNodeRow>();
+	deletions:Map<string, BlankNodeRow> = new Map<string, BlankNodeRow>();
+	additions:Map<string, BlankNodeRow> = new Map<string, BlankNodeRow>();
 
 	clear():void {
 		this.changes.clear();

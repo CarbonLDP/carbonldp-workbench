@@ -17,7 +17,7 @@ import "semantic-ui/semantic";
 @Component( {
 	selector: "cw-property",
 	templateUrl: "./property.component.html",
-	styleUrls: [  "./property.component.scss"  ],
+	styleUrls: [ "./property.component.scss" ],
 	host: { "[class.has-changed]": "property.modified", "[class.deleted-property]": "property.deleted", "[class.added-property]": "property.added" },
 } )
 
@@ -39,7 +39,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 	originalId:string;
 	name:string;
 	originalName:string;
-	value:any[]|string = [];
+	value:any[] | string = [];
 
 	addNewLiteral:EventEmitter<boolean> = new EventEmitter<boolean>();
 	addNewPointer:EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -56,8 +56,10 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 	@Input() isPartOfNamedFragment:boolean = false;
 	@Input() canEdit:boolean = true;
 	@Input() existingProperties:string[] = [];
+	@Input() accessPointsHasMemberRelationProperties:string[] = [];
 	private _property:PropertyRow;
-	@Input() set property( prop:PropertyRow ) {
+	@Input()
+	set property( prop:PropertyRow ) {
 		this.copyOrAdded = ! ! prop.copy ? (! ! prop.modified ? "modified" : "copy") : "added";
 		this._property = prop;
 
@@ -94,6 +96,8 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 
 	get propertyHasChanged():boolean { return this.nameHasChanged || this.valueHasChanged || this.literalsHaveChanged || this.pointersHaveChanged || this.listsHaveChanged; }
 
+	get isAccessPointHasMemberRelationProperty():boolean { return this.accessPointsHasMemberRelationProperties.indexOf( this.id ) !== -1; }
+
 	// TODO: Add @lists and @sets support
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -111,8 +115,8 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 	}
 
 	getDisplayName( uri:string ):string {
-		if( this.commonToken.indexOf( uri ) > - 1 )return uri;
-		if( URI.Util.hasFragment( uri ) )return this.unescape( this.getFragment( uri ) );
+		if( this.commonToken.indexOf( uri ) > - 1 ) return uri;
+		if( URI.Util.hasFragment( uri ) ) return this.unescape( this.getFragment( uri ) );
 		return this.unescape( URI.Util.getSlug( uri ) );
 	}
 
@@ -169,6 +173,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 		this.$element.find( ".ui.options.dropdown.button" ).dropdown( {
 			transition: "swing up"
 		} );
+		this.$element.find( ".ui.save-cancel.buttons .dropdown.button" ).dropdown();
 	}
 
 	initializeDeletionDimmer():void {
@@ -191,13 +196,14 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 		this.$element.find( ".property.confirm-deletion.dimmer" ).dimmer( "hide" );
 	}
 
-	cancelEdition():void {
+	cancelModification():void {
 		if( this.nameInputControl.valid ) {
 			this.mode = Modes.READ;
 		}
+		if( this.property.isBeingCreated ) this.onDeleteNewProperty.emit( this.property );
 	}
 
-	cancelIdEdition():void {
+	cancelIdModification():void {
 		if( this.idInputControl.valid ) {
 			this.mode = Modes.READ;
 		}
@@ -442,6 +448,7 @@ export interface PropertyRow {
 	modifiedPointers?:PointerRow[];
 	modifiedLists?:ListRow[];
 }
+
 export interface Property {
 	id:string;
 	name:string;

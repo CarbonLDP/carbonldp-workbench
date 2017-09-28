@@ -19,7 +19,7 @@ export class BlankNodeComponent implements AfterViewInit {
 	$element:JQuery;
 	modes:Modes = Modes;
 	records:BlankNodeRecords;
-	nonEditableProperties:string[] = [ "@id", "https://carbonldp.com/ns/v1/platform#bNodeIdentifier" ];
+	nonEditableProperties:string[] = [ "@id" ];
 	copyOrAdded:string = "";
 	tempPropertiesNames:string[] = [];
 
@@ -132,7 +132,7 @@ export class BlankNodeComponent implements AfterViewInit {
 			isBeingModified: false,
 			isBeingDeleted: false
 		};
-		this.properties.splice( 2, 0, newProperty );
+		this.properties.splice( 1, 0, newProperty );
 		// Animates created property
 		setTimeout( () => {
 			let createdPropertyComponent:JQuery = this.$element.find( "cw-property.added-property" ).first();
@@ -217,10 +217,15 @@ export class BlankNodeComponent implements AfterViewInit {
 			}
 		} );
 	}
+
+	isTemporalId( property:PropertyRow ):boolean {
+		let copyAddedOrModified:string = property.added ? "added" : property.modified ? "modified" : "copy";
+		return property[ copyAddedOrModified ].id === "@id" && property[ copyAddedOrModified ].value.startsWith( "_:New_Blank_Node_Temporal_Id_" );
+	}
 }
+
 export interface BlankNodeRow {
 	id?:string;
-	bNodeIdentifier?:string;
 
 	copy?:RDFNode.Class;
 	added?:RDFNode.Class;
@@ -229,8 +234,9 @@ export interface BlankNodeRow {
 
 	records?:BlankNodeRecords;
 }
+
 export class BlankNodeRecords {
-	changes:Map<string,PropertyRow> = new Map<string, PropertyRow>();
-	deletions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
-	additions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
+	changes:Map<string, PropertyRow> = new Map<string, PropertyRow>();
+	deletions:Map<string, PropertyRow> = new Map<string, PropertyRow>();
+	additions:Map<string, PropertyRow> = new Map<string, PropertyRow>();
 }

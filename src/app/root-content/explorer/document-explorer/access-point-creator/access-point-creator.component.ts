@@ -43,6 +43,7 @@ export class AccessPointCreatorComponent implements AfterViewInit {
 
 	constructor( element:ElementRef, carbon:Carbon, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
+		this.carbon = carbon;
 		this.documentsResolverService = documentsResolverService;
 	}
 

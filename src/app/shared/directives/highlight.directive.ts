@@ -1,7 +1,7 @@
 import { Directive, ElementRef, AfterViewInit } from "@angular/core";
 
 import Highlight from "highlight.js";
-// import "highlight.js/styles/tomorrow-night.css";
+// import "!style-loader!css-loader!highlight.js/styles/tomorrow-night.css";
 
 @Directive( {
 	selector: "[cwHighlight]",

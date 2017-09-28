@@ -1,8 +1,16 @@
+<!-- START: Property @Id  -->
 <div class="content" *ngIf="name === '@id'">
+
+	<!-- Displays property @Id friendly name -->
 	<div class="header">
 		<p>{{unescape(getSlug(value))}}</p>
 	</div>
+
+
+	<!-- Display property @Id full name -->
 	<div class="meta">
+
+		<!-- Display property @Id full name -->
 		<div [hidden]="mode === modes.EDIT">
 			<p *ngIf="!isUrl(value)">
 				<i class="file outline icon"></i> {{value}}</p>
@@ -13,6 +21,8 @@
 				</a>
 			</p>
 		</div>
+
+		<!-- @Id form -->
 		<div [hidden]="mode === modes.READ">
 			<div class="ui error form">
 				<div class="ui fluid action input">
@@ -25,11 +35,19 @@
 					       [control]="idInput"
 					       cw-property-id
 					       cw-uri
-					       name="idInput" [(ngModel)]="value" #idInput="ngModel" (keyup.escape)="cancelIdEdition()" (keyup.enter)="idInput.valid? saveId() : null">
-					<button class="ui button"
-					        [disabled]="!idInput.valid"
-					        (click)="saveId(idInput.value)">Save
-					</button>
+					       name="idInput" [(ngModel)]="value" #idInput="ngModel" (keyup.escape)="cancelIdModification()" (keyup.enter)="idInput.valid? saveId() : null">
+					<div class="ui save-cancel buttons">
+						<button class="ui button"
+						        [disabled]="!idInput.valid"
+						        (click)="saveId(idInput.value)">Save
+						</button>
+						<div class="ui dropdown icon button">
+							<i class="dropdown icon"></i>
+							<div class="menu">
+								<div class="item" (click)="cancelIdModification()">Cancel</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="ui error message wide" *ngIf="!idInput.valid">
 					<p *ngIf="idInput.control.hasError('required')">Enter an id.</p>
@@ -41,6 +59,8 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- Property @Id options buttons -->
 	<div class="description" *ngIf="canEdit && isPartOfNamedFragment">
 		<div class="ui icon bottom left pointing dropdown basic mini button options" title="Options">
 			<i class="ellipsis horizontal icon"></i>
@@ -52,7 +72,10 @@
 		</div>
 	</div>
 </div>
+<!-- END: Property @Id  -->
 
+
+<!-- START: Property @type  -->
 <div class="content" *ngIf="!property.deleted && name === '@type'">
 	<p class="header">
 		{{name}}
@@ -76,10 +99,16 @@
 		</table>
 	</div>
 </div>
+<!-- END: Property @Id  -->
 
+
+<!-- START: Normal Property -->
 <p class="ui grey label status indicator" *ngIf="!!property.added">Added</p>
 <p class="ui grey label status indicator" *ngIf="!!property.modified">Changed</p>
 <div class="content" *ngIf="!property.deleted && name !== '@id' && name !== '@type'">
+
+
+	<!-- Delete property confirmation message -->
 	<div class="ui confirm-deletion property inverted dimmer">
 		<div class="content">
 			<div class="center">
@@ -90,16 +119,31 @@
 			</div>
 		</div>
 	</div>
+
+
+	<!-- Property friendly name -->
 	<div class="header">
 		<p>{{getDisplayName(name)}}</p>
 	</div>
+
+
+	<!-- START: property friendly name -->
 	<div class="meta">
+
+
+		<!-- Display property full name -->
 		<div [hidden]="mode === modes.EDIT">
 			<a *ngIf="isUrl(name)" [attr.href]="name" target="_blank">{{name}}</a>
 			<p *ngIf="!isUrl(name)">{{name}}</p>
 		</div>
+
+
+		<!-- Display property name editor -->
 		<div [hidden]="mode === modes.READ">
 			<div class="ui error form">
+
+
+				<!-- Name form -->
 				<div class="ui fluid action input">
 					<input type="text"
 					       [existingProperties]="existingProperties"
@@ -108,12 +152,23 @@
 					       [originalName]="originalName"
 					       [control]="nameInput"
 					       cw-property-name
-					       name="nameInput" [(ngModel)]="name" #nameInput="ngModel" (keyup.escape)="cancelEdition()" (keyup.enter)="nameInput.valid? save() : null">
-					<button class="ui button"
-					        [disabled]="!nameInput.valid"
-					        (click)="save(nameInput.value)">Save
-					</button>
+					       name="nameInput" [(ngModel)]="name" #nameInput="ngModel" (keyup.escape)="cancelModification()" (keyup.enter)="nameInput.valid? save() : null">
+					<div class="ui save-cancel buttons">
+						<button class="ui button"
+						        [disabled]="!nameInput.valid"
+						        (click)="save(nameInput.value)">Save
+						</button>
+						<div class="ui dropdown icon button">
+							<i class="dropdown icon"></i>
+							<div class="menu">
+								<div class="item" (click)="cancelModification()">Cancel</div>
+							</div>
+						</div>
+					</div>
 				</div>
+
+
+				<!-- Error messages -->
 				<div class="ui error message wide" *ngIf="!nameInput.valid">
 					<p *ngIf="nameInput.control.hasError('required')">Enter a name for the property.</p>
 					<p *ngIf="nameInput.control.hasError('invalidName')">Enter a valid URL. Only alphanumeric values (a-z, A-Z, 0..9)</p>
@@ -123,7 +178,13 @@
 			</div>
 		</div>
 	</div>
+
+
+	<!-- Property content -->
 	<div class="description" [hidden]="!id">
+
+
+		<!-- Add buttons for normal properties -->
 		<div *ngIf="canEdit">
 			<button class="ui right labeled icon basic mini button" (click)="addLiteral()">
 				<i class="plus icon"></i>
@@ -149,9 +210,14 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Display message when property is empty -->
 		<div class="ui mini warning message" [hidden]="literalsContainer.canDisplayLiterals || pointersContainer.canDisplayPointers || listsContainer.canDisplayLists">
 			<p>The property needs at least one literal, one pointer or one list in order to be saved, otherwise the property won't be added to the document. Add a literal, a pointer or a list.</p>
 		</div>
+
+
+		<!-- Dispaly property content pointers/literals/lists -->
 		<div [hidden]="!literalsContainer.canDisplayLiterals && !pointersContainer.canDisplayPointers && lists.length===0">
 			<cw-literals #literalsContainer
 			             [canEdit]="canEdit"
@@ -185,3 +251,4 @@
 		</div>
 	</div>
 </div>
+<!-- END: Normal Property -->

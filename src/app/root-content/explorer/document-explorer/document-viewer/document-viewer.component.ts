@@ -9,7 +9,7 @@ import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 import { DocumentsResolverService } from "../documents-resolver.service";
 import { RootRecords } from "../document-resource/document-resource.component";
 import { BlankNodesComponent, BlankNodesRecords } from "../blank-nodes/blank-nodes.component";
-import { NamedFragmentsComponent, NamedFragmentsRecords }from "../named-fragments/named-fragments.component";
+import { NamedFragmentsComponent, NamedFragmentsRecords } from "../named-fragments/named-fragments.component";
 import { BlankNodeRow } from "../blank-nodes/blank-node.component";
 import { NamedFragmentRow } from "../named-fragments/named-fragment.component";
 
@@ -52,7 +52,8 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	@Input() uri:string;
 	@Input() displaySuccessMessage:EventEmitter<string> = new EventEmitter<string>();
 	private _document:RDFDocument.Class;
-	@Input() set document( value:RDFDocument.Class ) {
+	@Input()
+	set document( value:RDFDocument.Class ) {
 		this._document = value;
 		this.receiveDocument( value );
 	}
@@ -103,6 +104,8 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	}
 
 	ngOnChanges( changes:{ [propName:string]:SimpleChange } ):void {
+
+		// In case the DocumentViewer is used by passing a URI, it can make the call to resolve the URI by itself
 		if( changes[ "uri" ] && ! ! changes[ "uri" ].currentValue && changes[ "uri" ].currentValue !== changes[ "uri" ].previousValue ) {
 			this.loadingDocument = true;
 			this.getDocument( this.uri ).then( ( document:RDFDocument.Class ) => {
@@ -112,19 +115,18 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	}
 
 	receiveDocument( document:RDFDocument.Class ):void {
-		if( ! ! document ) {
-			this.loadingDocument = true;
-			this.setRoot();
-			this.generateFragments();
-			this.clearDocumentChanges();
-			this.loadingDocument = false;
-			this.documentURI = this.document[ "@id" ];
+		if( ! document ) return;
+		this.loadingDocument = true;
+		this.setRoot();
+		this.generateFragments();
+		this.clearDocumentChanges();
+		this.documentURI = this.document[ "@id" ];
 
-			setTimeout( () => {
-				this.goToSection( "documentResource" );
-				this.initializeTabs();
-			}, 250 );
-		}
+		setTimeout( () => {
+			this.loadingDocument = false;
+			this.goToSection( "documentResource" );
+			this.initializeTabs();
+		}, 1 );
 	}
 
 	setRoot():void {
@@ -132,7 +134,9 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	}
 
 	getDocument( uri:string ):Promise<RDFDocument.Class> {
-		return this.documentsResolverService.get( uri );
+		return this.documentsResolverService.get( uri ).catch( ( error:HTTPError ) => {
+			this.onError.emit( error );
+		} );
 	}
 
 	generateFragments():void {
@@ -140,7 +144,6 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 			( bNode:RDFNode.Class ) => {
 				return {
 					id: bNode[ "@id" ],
-					bNodeIdentifier: bNode[ "https://carbonldp.com/ns/v1/platform#bNodeIdentifier" ][ 0 ][ "@value" ],
 					copy: bNode
 				}
 			} );
@@ -168,7 +171,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	}
 
 	goToSection( section:string ):void {
-		if( this.sections.indexOf( section ) === - 1 ) return;
+		if( this.sections.indexOf( section ) === - 1 || this.loadingDocument ) return;
 		this.scrollTo( ">div:first-child" );
 		this.$element.find( ".secondary.menu.document.tabs .item" ).tab( "changeTab", section );
 	}

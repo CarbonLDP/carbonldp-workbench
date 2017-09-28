@@ -6,13 +6,14 @@ import * as NS from "carbonldp/NS";
 import * as RDFDocument from "carbonldp/RDF/Document";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as AccessPoint from "carbonldp/AccessPoint";
+import * as SPARQL from "carbonldp/SPARQL";
 
 @Injectable()
 export class DocumentsResolverService {
 
 	carbon:Carbon;
 
-	documents:Map<string,  { document:RDFDocument.Class, ETag:string }> = new Map<string, { document:RDFDocument.Class, ETag:string }>();
+	documents:Map<string, { document:RDFDocument.Class, ETag:string }> = new Map<string, { document:RDFDocument.Class, ETag:string }>();
 	private parser:RDFDocument.Parser = new RDFDocument.Parser();
 
 	constructor( carbon:Carbon ) {
@@ -71,6 +72,22 @@ export class DocumentsResolverService {
 				return createdChild;
 			}
 		).catch( ( error ) => {
+			console.error( error );
+			return Promise.reject( error );
+		} );
+	}
+
+	getAccessPointsHasMemberRelationProperties( documentURI:string ):Promise<string[]> {
+		return this.carbon.documents.executeSELECTQuery( documentURI,
+			`SELECT ?accessPointURI ?propertyName 
+						WHERE {
+						      ?accessPointURI <${NS.LDP.Predicate.membershipResource}> <${documentURI}>.
+					          ?accessPointURI <${NS.LDP.Predicate.hasMemberRelation}> ?propertyName
+			            }`
+		).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
+
+			return results.bindings.map( ( value:{ accessPointURI:any, propertyName:any } ) => value.propertyName.id );
+		} ).catch( ( error ) => {
 			console.error( error );
 			return Promise.reject( error );
 		} );

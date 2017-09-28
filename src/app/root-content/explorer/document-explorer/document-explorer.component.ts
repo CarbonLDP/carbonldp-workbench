@@ -41,7 +41,7 @@ export class DocumentExplorerComponent {
 	}
 
 	onLoadingDocument( loadingDocument:boolean ):void {
-		this.loadingDocument = loadingDocument;
+		setTimeout( () => {this.loadingDocument = loadingDocument;}, 1 );
 	}
 
 	showLoading( savingDocument:boolean ):void {
@@ -49,8 +49,10 @@ export class DocumentExplorerComponent {
 	}
 
 	resolveDocument( uri:string ):void {
-		this.loadingDocument = true;
-		this.documentsResolverService.get( uri ).then( ( document:RDFDocument.Class ) => {
+		this.zone.run( () => {this.loadingDocument = true;} );
+		this.documentsResolverService.get( uri ).catch( ( error ) => {
+			this.handleExternalError( error );
+		} ).then( ( document:RDFDocument.Class ) => {
 			this.zone.run( () => {
 				this.inspectingDocument = document;
 				this.loadingDocument = false;
