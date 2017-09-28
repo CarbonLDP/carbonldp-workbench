@@ -1,6 +1,6 @@
 {
   "name": "carbonldp-workbench",
-  "version": "0.8.0",
+  "version": "1.0.0-alpha.2",
   "description": "Workbench to administer an on premise installation of Carbon LDP",
   "contributors": [
     {
@@ -71,7 +71,7 @@
     "@types/jasmine": "^2.5.53",
     "@types/jasmine-ajax": "^3.1.37",
     "angular-carbonldp": "^1.0.0-alpha.1",
-    "carbonldp": "^1.0.0-alpha.3",
+    "carbonldp": "1.0.0-alpha.3",
     "codemirror": "^5.27.4",
     "core-js": "^2.4.1",
     "css-loader": "^0.28.4",
