@@ -1,7 +1,8 @@
 import * as HTTP from "carbonldp/HTTP";
 import * as JSONLDParser from "carbonldp/JSONLD/Parser";
+import { C } from "carbonldp/NS";
 
-import { Message, Types } from "../message.component";
+import { Message, ValidationResult, ValidationDetails, ValidationError, Types } from "../message.component";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
 
@@ -39,13 +40,52 @@ export class ErrorMessageGenerator {
 
 	private static getErrors( error:HTTPError ):Promise<any[]> {
 		let parser:JSONLDParser.Class = new JSONLDParser.Class();
-		let mainError = {};
 		let errors:any[] = [];
-		return parser.parse( error.response.data ).then( ( mainErrors ) => {
-			mainError = mainErrors.find( ( error ) => { return error[ "@type" ].indexOf( "https://carbonldp.com/ns/v1/platform#ErrorResponse" ) !== - 1} );
-			errors = mainErrors.filter( ( error ) => { return error[ "@type" ].indexOf( "https://carbonldp.com/ns/v1/platform#Error" ) !== - 1} );
+		return parser.parse( error.response.data ).then( ( errorResponse ) => {
+
+			errors = errorResponse.filter( ( subject ) => { return subject[ "@type" ] && subject[ "@type" ].indexOf( `${C.namespace}Error` ) !== - 1} );
+			errors.forEach( ( error ) => {
+				if( error[ "@type" ].indexOf( `${C.namespace}ValidationError` ) !== - 1 ) {
+
+					error.validationError = <ValidationError>{
+						errorCode: error[ `${C.namespace}errorCode` ][ 0 ][ "@value" ],
+						errorMessage: error[ `${C.namespace}errorMessage` ][ 0 ][ "@value" ],
+						errorDetails: this.getValidationDetails( error[ `${C.namespace}errorDetails` ][ 0 ][ "@id" ], errorResponse ),
+					};
+				}
+			} );
 			return errors;
 		} );
+	}
+
+	// Get the details of the validation
+	private static getValidationDetails( nodeID:string, errorResponse ):ValidationDetails {
+		let rawValidationDetails = errorResponse.find( ( subject ) => { return subject[ "@id" ].indexOf( nodeID ) !== - 1} );
+		let validationResultsNodesID:string[] = [];
+		rawValidationDetails[ "http://www.w3.org/ns/shacl#result" ].forEach( ( resultPointer ) => {
+			validationResultsNodesID.push( resultPointer[ "@id" ] );
+		} );
+
+		let validationDetails:ValidationDetails = {
+			conforms: rawValidationDetails[ "http://www.w3.org/ns/shacl#conforms" ][ 0 ][ "@value" ],
+			result: []
+		};
+
+		// Get validation results
+		validationResultsNodesID.forEach( ( nodeID:string ) => {
+			validationDetails.result.push( this.getValidationResult( nodeID, errorResponse ) )
+		} );
+
+		return validationDetails;
+	}
+
+	// Get the results of the validation
+	private static getValidationResult( nodeID:string, errorResponse ):ValidationResult {
+		let rawValidationResult:any[] = errorResponse.filter( ( subject ) => { return subject[ "@id" ].indexOf( nodeID ) !== - 1} );
+		return {
+			resultMessage: rawValidationResult[ 0 ][ "http://www.w3.org/ns/shacl#resultMessage" ][ 0 ][ "@value" ],
+			resultSeverity: rawValidationResult[ 0 ][ "http://www.w3.org/ns/shacl#resultSeverity" ][ 0 ][ "@id" ],
+		};
 	}
 
 	private static getFriendlyHTTPMessage( error:HTTPError ):string {
