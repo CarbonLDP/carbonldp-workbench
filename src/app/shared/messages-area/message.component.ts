@@ -1,4 +1,4 @@
-import { Component, Input, Output, ViewChild, ElementRef, SimpleChange, EventEmitter, OnChanges, AfterViewInit } from "@angular/core";
+import { Component, Input, Output, OnChanges, AfterViewInit, ViewChild, ElementRef, SimpleChange, EventEmitter } from "@angular/core";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
@@ -85,4 +85,20 @@ export class Types {
 	public static SUCCESS = "success";
 	public static NEGATIVE = "negative";
 	public static ERROR = "error";
+}
+
+export interface ValidationResult {
+	resultMessage:string,
+	resultSeverity:string,
+}
+
+export interface ValidationDetails {
+	conforms:boolean,
+	result:ValidationResult[]
+}
+
+export interface ValidationError {
+	errorCode:string,
+	errorMessage:string,
+	errorDetails:ValidationDetails
 }
