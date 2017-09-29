@@ -26,7 +26,7 @@
     "build:semantic": "node_modules/.bin/gulp --gulpfile src/semantic/gulpfile.js build",
     "clean:dist": "node_modules/.bin/gulp clean:dist",
     "copy:assets": "node_modules/.bin/gulp copy:assets",
-    "postinstall": "npm explore semantic-ui -- npm run-script install",
+    "postinstall": "node scripts/force-semantic-ui-to-install-correctly.js && npm explore semantic-ui -- npm run-script install",
     "test": "karma start",
     "start": "npm run server:dev",
     "server:dev": "node_modules/.bin/webpack-dev-server --config config/webpack.dev.js --inline --progress --profile --watch "
