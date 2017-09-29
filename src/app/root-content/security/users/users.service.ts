@@ -107,7 +107,7 @@ export class UsersService {
 		}`;
 		return this.carbon.documents.executeSELECTQuery( usersURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
 			if( typeof results.bindings[ 0 ] === "undefined" ) return 0;
-			return results.bindings[ 0 ][ "count" ];
+			return <number>results.bindings[ 0 ][ "count" ];
 		} );
 	}
 
@@ -115,7 +115,7 @@ export class UsersService {
 		return user.save();
 	}
 
-	public saveAndRefreshUser( user:PersistedUser.Class ):Promise<[ PersistedUser.Class, [ HTTP.Response.Class, HTTP.Response.Class ] ]> {
+	public saveAndRefreshUser( user:PersistedUser.Class ):Promise<[ PersistedUser.Class, HTTP.Response.Class [] ]> {
 		return user.saveAndRefresh();
 	}
 

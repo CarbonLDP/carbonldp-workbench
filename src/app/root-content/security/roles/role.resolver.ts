@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router, Resolve, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
+import { Router, Resolve, ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
 import { Class as Carbon } from "carbonldp/Carbon";
 import * as Role from "carbonldp/Auth/Role";
@@ -10,7 +10,7 @@ import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 import { RolesService } from "./roles.service";
 
 @Injectable()
-export class RoleResolver implements Resolve<PersistedRole.Class> {
+export class RoleResolver implements Resolve<PersistedRole.Class | boolean> {
 
 	private router:Router;
 	private carbon:Carbon;
@@ -27,7 +27,7 @@ export class RoleResolver implements Resolve<PersistedRole.Class> {
 
 
 	// TODO: Change the use of location to the righ way of navigate with an activatedRoute, check if this 'bug' has been resolved on further angular versions
-	resolve( route:ActivatedRouteSnapshot ):Promise<PersistedRole.Class> | PersistedRole.Class {
+	resolve( route:ActivatedRouteSnapshot, state:RouterStateSnapshot ):Promise<PersistedRole.Class | boolean> {
 		let slug:string = route.params[ "role-slug" ];
 		// TODO: Remove extendObjectSchema when SDK implements description and childRole
 		this.carbon.extendObjectSchema( Role.RDF_CLASS, {
@@ -40,6 +40,7 @@ export class RoleResolver implements Resolve<PersistedRole.Class> {
 				"@container": "@set"
 			}
 		} );
+
 		return this.rolesService.get( slug ).then( ( role:PersistedRole.Class ) => {
 			return role;
 		} ).catch( ( error:any ):boolean => {

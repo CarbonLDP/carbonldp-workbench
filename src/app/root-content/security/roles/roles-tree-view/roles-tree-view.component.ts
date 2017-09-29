@@ -91,7 +91,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 		} );
 	}
 
-	private getTree():Promise<JSTreeNode[]> {
+	private getTree():Promise<JSTreeNode[] | void> {
 		return this.getChildren().then( ( nodes:JSTreeNode[] ) => {
 			this.renderTree( nodes );
 			return nodes;

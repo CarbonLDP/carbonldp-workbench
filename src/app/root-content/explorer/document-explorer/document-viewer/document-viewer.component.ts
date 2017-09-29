@@ -133,7 +133,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		this.rootNode = RDFDocument.Util.getDocumentResources( this.document )[ 0 ];
 	}
 
-	getDocument( uri:string ):Promise<RDFDocument.Class> {
+	getDocument( uri:string ):Promise<RDFDocument.Class | void> {
 		return this.documentsResolverService.get( uri ).catch( ( error:HTTPError ) => {
 			this.onError.emit( error );
 		} );

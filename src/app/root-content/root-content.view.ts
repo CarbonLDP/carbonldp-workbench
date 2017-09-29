@@ -24,7 +24,7 @@ export class RootContentView {
 		// this.getInstanceMetadata();
 	}
 
-	private getInstanceMetadata():Promise<InstanceMetadata> {
+	private getInstanceMetadata():Promise<InstanceMetadata | void> {
 		return this.carbon.getInstanceMetadata().then( ( instance:InstanceMetadata ) => {
 			this.instance = instance;
 			return instance;

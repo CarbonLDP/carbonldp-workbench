@@ -85,8 +85,8 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 	@Output() onDeleteProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
 	@Output() onDeleteNewProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
-	@Output() onSaveNewProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
-	@Output() onChangeNewProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
+	@Output() onSaveNewProperty:EventEmitter<Property> = new EventEmitter<Property>();
+	@Output() onChangeNewProperty:EventEmitter<Property> = new EventEmitter<Property>();
 
 	nameHasChanged:boolean = false;
 	valueHasChanged:boolean = false;

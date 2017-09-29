@@ -49,7 +49,7 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 		}
 	}
 
-	openBlankNode( nodeOrId:RDFNode.Class | string ):void {
+	openBlankNode( nodeOrId:BlankNodeRow | string ):void {
 		let node:BlankNodeRow;
 		if( typeof nodeOrId === "string" ) {
 			node = this.blankNodes.find( ( node ) => { return node.id === nodeOrId} );

@@ -7,7 +7,7 @@ import * as PersistedUser from "carbonldp/Auth/PersistedUser";
 import { UsersService } from "./users.service";
 
 @Injectable()
-export class UserResolver implements Resolve<PersistedUser.Class> {
+export class UserResolver implements Resolve<PersistedUser.Class | boolean> {
 
 	private router:Router;
 	private activatedRoute:ActivatedRoute;
@@ -22,7 +22,7 @@ export class UserResolver implements Resolve<PersistedUser.Class> {
 
 
 	// TODO: Change the use of location to the righ way of navigate with an activatedRoute, check if this 'bug' has been resolved on further angular versions
-	resolve( route:ActivatedRouteSnapshot ):Promise<PersistedUser.Class> | PersistedUser.Class {
+	resolve( route:ActivatedRouteSnapshot ):Promise<PersistedUser.Class | boolean> | PersistedUser.Class {
 		let slug:string = route.params[ "user-slug" ];
 		return this.usersService.get( slug ).then( ( user:PersistedUser.Class ) => {
 			return user;

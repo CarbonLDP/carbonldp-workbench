@@ -51,7 +51,8 @@ export class NamedFragmentComponent implements AfterViewInit {
 	@Input() documentURI:string = "";
 
 	private _namedFragment:NamedFragmentRow;
-	@Input() set namedFragment( namedFragment:NamedFragmentRow ) {
+	@Input()
+	set namedFragment( namedFragment:NamedFragmentRow ) {
 		this._namedFragment = namedFragment;
 		this.rootNode = namedFragment.copy;
 		if( ! ! namedFragment.records ) this.records = namedFragment.records;
@@ -62,7 +63,7 @@ export class NamedFragmentComponent implements AfterViewInit {
 
 	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onChanges:EventEmitter<NamedFragmentRow> = new EventEmitter<NamedFragmentRow>();
+	@Output() onChanges:EventEmitter<NamedFragmentRecords> = new EventEmitter<NamedFragmentRecords>();
 
 
 	constructor( element:ElementRef ) {
@@ -203,6 +204,7 @@ export class NamedFragmentComponent implements AfterViewInit {
 		return rawNode;
 	}
 }
+
 export interface NamedFragmentRow {
 	id?:string;
 	name?:string;
@@ -214,9 +216,10 @@ export interface NamedFragmentRow {
 
 	records?:NamedFragmentRecords;
 }
+
 export class NamedFragmentRecords {
-	changes:Map<string,PropertyRow> = new Map<string, PropertyRow>();
-	deletions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
-	additions:Map<string,PropertyRow> = new Map<string, PropertyRow>();
+	changes:Map<string, PropertyRow> = new Map<string, PropertyRow>();
+	deletions:Map<string, PropertyRow> = new Map<string, PropertyRow>();
+	additions:Map<string, PropertyRow> = new Map<string, PropertyRow>();
 }
 
