@@ -42,7 +42,7 @@ export class DocumentsResolverService {
 
 			return parsedDocument;
 		} ).catch( ( error ) => {
-			console.error( error );
+			// console.error( error );
 			return Promise.reject( error );
 		} );
 	}
@@ -61,7 +61,7 @@ export class DocumentsResolverService {
 				return createdChild;
 			}
 		).catch( ( error ) => {
-			console.error( error );
+			// console.error( error );
 			return Promise.reject( error );
 		} );
 	}
@@ -72,7 +72,7 @@ export class DocumentsResolverService {
 				return createdChild;
 			}
 		).catch( ( error ) => {
-			console.error( error );
+			// console.error( error );
 			return Promise.reject( error );
 		} );
 	}
@@ -88,14 +88,14 @@ export class DocumentsResolverService {
 
 			return results.bindings.map( ( value:{ accessPointURI:any, propertyName:any } ) => value.propertyName.id );
 		} ).catch( ( error ) => {
-			console.error( error );
+			// console.error( error );
 			return Promise.reject( error );
 		} );
 	}
 
 	delete( documentURI:string ):Promise<HTTP.Response.Class> {
 		return this.carbon.documents.delete( documentURI ).catch( ( error ) => {
-			console.error( error );
+			// console.error( error );
 			return Promise.reject( error );
 		} );
 	}
@@ -120,7 +120,7 @@ export class DocumentsResolverService {
 			if( ! parsedDocument ) return null;
 			return parsedDocument;
 		} ).catch( ( error ) => {
-			console.error( error );
+			// console.error( error );
 			return Promise.reject( error );
 		} );
 	}
