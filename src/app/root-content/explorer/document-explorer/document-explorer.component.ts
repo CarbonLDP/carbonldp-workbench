@@ -94,7 +94,6 @@ export class DocumentExplorerComponent {
 	public handleExternalError( error:HTTPError | Response.Class ):void {
 		if( error instanceof Response.Class ) {
 			this.carbon.documents._parseErrorResponse( error ).catch( ( parsedError:HTTPError ) => {
-				console.log( parsedError );
 				this.messages.push( ErrorMessageGenerator.getErrorMessage( parsedError ) );
 			} );
 		} else {
