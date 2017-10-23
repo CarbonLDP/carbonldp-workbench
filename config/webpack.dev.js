@@ -12,8 +12,6 @@ const workbench = require( "../package.json" );
 
 // Plugins
 const DefinePlugin = require( "webpack/lib/DefinePlugin" );
-const CommonsChunkPlugin = require( "webpack/lib/optimize/CommonsChunkPlugin" );
-const IgnorePlugin = require( "webpack/lib/IgnorePlugin" );
 
 
 // Webpack Constants
@@ -80,10 +78,6 @@ module.exports = function( options ) {
 					}
 				}
 			} ),
-
-			// Ignore node imports
-			// TODO: remove this line when SDK provides fix
-			new IgnorePlugin( /^(http|https|file-type)$/, /carbonldp/ ),
 
 			// Webpack inject scripts and links for us with the HtmlWebpackPlugin
 			new HtmlWebpackPlugin( {
