@@ -85,7 +85,7 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 		this.fetchBackupsListInterval = <any>setInterval( () => this.getBackups(), this.refreshPeriod );
 	}
 
-	getBackups():Promise<PersistedDocument.Class[]> {
+	getBackups():Promise<PersistedDocument.Class[] | HTTPError> {
 		this.errorMessages = [];
 		return this.backupsService.getAll().then(
 			( [ backups, response ]:[ PersistedDocument.Class[], Response.Class ] ) => {

@@ -19,17 +19,15 @@ export class BackupsService {
 	}
 
 	upload( file:Blob ):Promise<[ Pointer.Class, HTTP.Response.Class ]> {
-		return this.carbon.documents.upload( this.BACKUPS_URI, file ).then( ( [ uploadedBackupPointer, uploadResponse ]:[ Pointer.Class, HTTP.Response.Class ] ) => {
-			return this.convertToNonRDFSource( uploadedBackupPointer ).then( ( []:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+		return this.carbon.documents.upload( this.BACKUPS_URI, file ).then( ( [ uploadedBackupPointer, uploadResponse ]:[ Pointer.Class, HTTP.Response.Class ] ):any => {
+			return this.convertToNonRDFSource( uploadedBackupPointer ).then( () => {
 				return [ uploadedBackupPointer, uploadResponse ];
-			} );
+			} )
 		} );
 	}
 
 	getAll():Promise<[ PersistedDocument.Class[], HTTP.Response.Class ]> {
-		return this.carbon.documents.getChildren( this.BACKUPS_URI ).then( ( [ backups, response ]:[ PersistedDocument.Class[], HTTP.Response.Class ] ) => {
-			return [ backups, response ];
-		} );
+		return this.carbon.documents.getChildren( this.BACKUPS_URI );
 	}
 
 	getDownloadURL( documentURI:string ):Promise<string> {

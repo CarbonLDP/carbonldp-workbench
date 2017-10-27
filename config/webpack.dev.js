@@ -12,7 +12,6 @@ const workbench = require( "../package.json" );
 
 // Plugins
 const DefinePlugin = require( "webpack/lib/DefinePlugin" );
-const CommonsChunkPlugin = require( "webpack/lib/optimize/CommonsChunkPlugin" );
 
 
 // Webpack Constants

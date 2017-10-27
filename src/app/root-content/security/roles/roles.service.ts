@@ -86,6 +86,7 @@ export class RolesService {
 
 	public create( parentRole:string | PersistedRole.Class, role:PersistedRole.Class, slug?:string ):Promise<PersistedRole.Class> {
 		class MockedRoles extends Roles.Class {}
+
 		let roles:Roles.Class = new MockedRoles( this.carbon );
 		return roles.createChild( parentRole, <Role.Class & PersistedRole.Class>role, slug ).then( ( [ role, response ]:[ PersistedRole.Class, HTTP.Response.Class ] ) => {
 			return role;
@@ -94,22 +95,25 @@ export class RolesService {
 
 	public delete( roleID:string ):Promise<HTTP.Response.Class> {
 		class MockedRoles extends Roles.Class {}
+
 		let roles:Roles.Class = new MockedRoles( this.carbon );
 		return this.carbon.documents.delete( roleID );
 	}
 
-	public saveAndRefresh( role:PersistedRole.Class ):Promise<[ PersistedRole.Class, [ HTTP.Response.Class, HTTP.Response.Class ] ]> {
+	public saveAndRefresh( role:PersistedRole.Class ):Promise<[ PersistedRole.Class, HTTP.Response.Class [] ]> {
 		return role.saveAndRefresh();
 	}
 
 	public registerUser( userID:string, roleID:string ):Promise<HTTP.Response.Class> {
 		class MockedRoles extends Roles.Class {}
+
 		let roles:Roles.Class = new MockedRoles( this.carbon );
 		return roles.addUser( roleID, userID )
 	}
 
 	public removeUser( userID:string, roleID:string ):Promise<HTTP.Response.Class> {
 		class MockedRoles extends Roles.Class {}
+
 		let roles:Roles.Class = new MockedRoles( this.carbon );
 		return roles.removeUser( roleID, userID )
 	}
@@ -117,11 +121,11 @@ export class RolesService {
 	public getNumberOfRoles():Promise<number> {
 		let usersURI:string = this.carbon.baseURI + ".system/roles/",
 			query:string = `SELECT DISTINCT (COUNT(?role) AS ?count) WHERE {
-			?role a <https://carbonldp.com/ns/v1/security#Role> . 
+			?role a <${NS.CS.Class.Role}> . 
 		}`;
 		return this.carbon.documents.executeSELECTQuery( usersURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
 			if( typeof results.bindings[ 0 ] === "undefined" ) return 0;
-			return results.bindings[ 0 ][ "count" ];
+			return <number>results.bindings[ 0 ][ "count" ];
 		} );
 	}
 
@@ -131,9 +135,9 @@ export class RolesService {
 			query:string = `
 				SELECT ?parentRole ?childRole ?name
 				WHERE{
-					<${roleID}> <https://carbonldp.com/ns/v1/security#childRole>* ?childRole.
-					?childRole <https://carbonldp.com/ns/v1/security#name> ?name.
-					?childRole <https://carbonldp.com/ns/v1/security#parentRole> ?parentRole.
+					<${roleID}> <${NS.CS.Predicate.childRole}>* ?childRole.
+					?childRole <${NS.CS.Predicate.namae}> ?name.
+					?childRole <${NS.CS.Predicate.parentRole}> ?parentRole.
 				}
 			`;
 
@@ -155,11 +159,11 @@ export class RolesService {
 				SELECT ?role ?name ?parentRole ?childRole
 				WHERE{
 				  GRAPH ?role { 
-				    ?role a <https://carbonldp.com/ns/v1/security#Role> .
-					?role <https://carbonldp.com/ns/v1/security#name> ?name .
-					OPTIONAL { ?role <https://carbonldp.com/ns/v1/security#parentRole> ?parentRole } .
+				    ?role a <${NS.CS.Class.Role}> .
+					?role <${NS.CS.Predicate.namae}> ?name .
+					OPTIONAL { ?role <${NS.CS.Predicate.parentRole}> ?parentRole } .
 				  }
-				  BIND( EXISTS { GRAPH ?role { ?role <https://carbonldp.com/ns/v1/security#childRole> ?childRole } } as ?childRole)
+				  BIND( EXISTS { GRAPH ?role { ?role <${NS.CS.Predicate.childRole}> ?childRole } } as ?childRole)
 				  FILTER( ${filter} )
 				}`;
 		return this.carbon.documents.executeSELECTQuery( rolesURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {

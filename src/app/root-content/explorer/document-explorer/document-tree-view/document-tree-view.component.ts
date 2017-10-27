@@ -70,7 +70,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} );
 	}
 
-	getDocumentTree():Promise<PersistedDocument.Class> {
+	getDocumentTree():Promise<PersistedDocument.Class | void> {
 		return this.carbon.documents.get( "" ).then( ( [ resolvedRoot, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
 			return resolvedRoot.refresh();
 		} ).then( ( [ updatedRoot, updatedResponse ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {

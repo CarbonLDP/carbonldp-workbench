@@ -380,7 +380,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				break;
 			default:
 				// Unsupported Operation
-				promise = new Promise( ( resolve:() => string, reject:( msg:string ) => string ) => {
+				promise = new Promise( ( resolve, reject ) => {
 					reject( "Unsupported Type" );
 				} );
 		}
@@ -724,10 +724,12 @@ export interface SPARQLQueryOperationFormat {
 	name:string;
 	value:string;
 }
+
 export interface SPARQLQueryOperation {
 	name:string;
 	formats:SPARQLQueryOperationFormat[];
 }
+
 export interface SPARQLQueryOperations {
 	select:SPARQLQueryOperation;
 	describe:SPARQLQueryOperation;
@@ -740,6 +742,7 @@ export interface SPARQLQueryOperations {
 	drop:SPARQLQueryOperation;
 	load:SPARQLQueryOperation;
 }
+
 export interface SPARQLTypes {
 	query:string;
 	update:string;

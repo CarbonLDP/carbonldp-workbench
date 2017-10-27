@@ -3,7 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$/../angular-carbonldp" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../carbonldp-js-sdk" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../carbonldp-panel" vcs="Git" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
 </project>

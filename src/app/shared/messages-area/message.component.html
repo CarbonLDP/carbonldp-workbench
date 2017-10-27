@@ -10,12 +10,27 @@
 		<span *ngIf="!!statusMessage">{{statusMessage}}<br></span>
 		<span *ngIf="!!endpoint">URI: {{endpoint}}</span>
 	</p>
-	<ol class="ui list" *ngIf="!!errors">
-		<li value="*" *ngFor="let error of errors; let i = index;">
-			<span *ngIf="!!error['https://carbonldp.com/ns/v1/platform#carbonCode']">Carbon code: {{error["https://carbonldp.com/ns/v1/platform#carbonCode"][0]["@value"]}} -</span>
-			<span *ngIf="!!error['https://carbonldp.com/ns/v1/platform#message']">{{error["https://carbonldp.com/ns/v1/platform#message"][0]["@value"]}}</span>
+	<ul class="list" *ngIf="!!errors">
+
+		<li class="item" *ngFor="let error of errors; let i = index;">
+			<div>
+				<span *ngIf="!!error['https://carbonldp.com/ns/v1/platform#errorCode']">Code: {{error["https://carbonldp.com/ns/v1/platform#errorCode"][0]["@value"]}} -</span>
+				<span *ngIf="!!error['https://carbonldp.com/ns/v1/platform#errorMessage']">{{error["https://carbonldp.com/ns/v1/platform#errorMessage"][0]["@value"]}}</span>
+			</div>
+
+			<!-- Show validation details if present -->
+			<div *ngIf="error.validationError">
+				Details
+				<ul class="list">
+					<li class="item" *ngFor="let validationResult of error.validationError.errorDetails.result; let i = index;">
+						{{validationResult.resultMessage}}
+					</li>
+				</ul>
+			</div>
 		</li>
-	</ol>
+	</ul>
+
+	<!-- Show error stack if present -->
 	<div class="ui stack accordion" [hidden]="!showStack || !stack">
 		<div class="title">
 			<i class="dropdown icon"></i>
