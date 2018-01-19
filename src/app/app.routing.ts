@@ -12,26 +12,26 @@ import { ErrorView } from "./error-pages/error.view";
 import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
 
 const appRoutes:Routes = [
-	{
-		path: "login",
-		component: LoginView,
-		// canActivate: [ NotAuthenticatedGuard ],
-		data: {
-			alias: "login",
-			title: "Log In | Workbench",
-
-			// NotAuthenticatedGuard cases
-			onReject: [ "/" ],
-			onError: [ "/error" ],
-		}
-	},
+	// {
+	// 	path: "login",
+	// 	component: LoginView,
+	// 	// canActivate: [ NotAuthenticatedGuard ],
+	// 	data: {
+	// 		alias: "login",
+	// 		title: "Log In | Workbench",
+	//
+	// 		// NotAuthenticatedGuard cases
+	// 		onReject: [ "/" ],
+	// 		onError: [ "/error" ],
+	// 	}
+	// },
 	{
 		path: "",
 		component: WorkbenchView,
 		// canActivate: [ AuthenticatedGuard ],
 		data: {
 			// AuthenticatedGuard cases
-			onReject: [ "/login" ],
+			onReject: [ "" ],
 			onError: [ "/error" ],
 		},
 		children: [
