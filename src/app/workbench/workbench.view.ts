@@ -74,7 +74,7 @@ export class WorkbenchView {
 				name: "Dashboard",
 				route: [ "" ],
 				index: 0,
-				// },
+			},
 				// {
 				// 	name: name,
 				// 	children: [
@@ -86,7 +86,7 @@ export class WorkbenchView {
 				// 		}
 				// 	],
 				// 	index: 100,
-			}
+				// }
 		] );
 	}
 
