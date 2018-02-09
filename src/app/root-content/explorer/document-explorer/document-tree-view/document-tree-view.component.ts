@@ -189,7 +189,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	emptyNode( nodeId:string ):void {
-		let $children:JQuery = this.jsTree.get_children_dom( nodeId );
+		let $children:JQuery = <JQuery>this.jsTree.get_children_dom( nodeId );
 		let childElements:Element[] = jQuery.makeArray( $children );
 		while( childElements.length > 0 ) {
 			this.jsTree.delete_node( childElements[ 0 ] );

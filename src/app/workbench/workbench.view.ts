@@ -75,18 +75,18 @@ export class WorkbenchView {
 				route: [ "" ],
 				index: 0,
 			},
-			{
-				name: name,
-				children: [
-					{
-						icon: "sign out icon",
-						name: "Log Out",
-						onClick: onLogout,
-						index: 100,
-					}
-				],
-				index: 100,
-			}
+				// {
+				// 	name: name,
+				// 	children: [
+				// 		{
+				// 			icon: "sign out icon",
+				// 			name: "Log Out",
+				// 			onClick: onLogout,
+				// 			index: 100,
+				// 		}
+				// 	],
+				// 	index: 100,
+				// }
 		] );
 	}
 
