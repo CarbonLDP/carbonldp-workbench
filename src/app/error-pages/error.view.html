@@ -7,23 +7,25 @@
 			</div>
 			<div class="cw-error-view__message" *ngIf="errorType === 'UnknownError'">
 				<p>
-					While retrieving the application context <code>angular-carbonldp</code> returned an <code>HTTP.Errors.UnknownError</code>.
+					While retrieving the <code>Carbon</code> object, it returned an <code>HTTP.Errors.UnknownError</code>.
 				</p>
 				<p>
 					This usually means that the server response didn't include the necessary
-					<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">CORS</a> headers. 90% of the time, it's because
-					the application you are trying to retrieve doesn't exist.
+					<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">CORS</a> headers.
 				</p>
 				<p>
-					<strong>Double check that your application exists</strong>
+					<strong>Double check that your platform is up and running.</strong>
 				</p>
 				<p>
 					Other common reasons are:
 				</p>
 				<ul>
-					<li>The configured Carbon platform host is wrong (right now it's set to <code>{{ carbon.getSetting( "domain" ) }}</code>)</li>
-					<li *ngIf="carbon.getSetting( 'http.ssl' )">The platform server doesn't support https and you didn't turn it off (use <code>carbon.setSetting( 'http.ssl', false );</code>)</li>
-					<li>The platform server is down or not accessible (open <code>{{carbon.resolve( "api/" )}}</code> in the browser to test it)</li>
+					<li>The configured Carbon platform host is wrong (right now it's set to <code>{{ carbon.baseURI }}</code>)</li>
+					<li *ngIf="sslEnabled">The platform server doesn't support https and you specified when building the <code>Carbon</code> object</li>
+					<li>
+						The platform server is down or not accessible (open
+						<a target="_blank" href="{{carbon.resolve( '.system/platform/' )}}">{{carbon.resolve( ".system/platform/" )}}</a> in the browser to test it)
+					</li>
 				</ul>
 			</div>
 		</div>

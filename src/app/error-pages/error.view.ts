@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { Class as Carbon } from "carbonldp/Carbon";
-import { carbonProvider } from "angular-carbonldp/boot";
+import { carbonProvider } from "app/angular-carbonldp/utils";
 
 
 @Component( {
@@ -14,9 +14,11 @@ export class ErrorView implements OnInit, AfterViewInit {
 	error:any;
 	errorType:string;
 	carbon:Carbon;
+	sslEnabled:boolean = false;
 
 	constructor( private router:Router, carbon:Carbon ) {
 		this.carbon = carbon;
+		this.sslEnabled = this.carbon.baseURI.indexOf( "https" ) !== - 1;
 	}
 
 	ngOnInit():void {
