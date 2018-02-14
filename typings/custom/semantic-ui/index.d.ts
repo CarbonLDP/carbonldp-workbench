@@ -293,7 +293,11 @@ interface SemanticShapeArguments extends SemanticDebugSettings {
 interface JQuery {
 	accordion( arguments?:any ):JQuery;
 	checkbox( arguments?:any ):JQuery;
+
 	dimmer( arguments?:SemanticDimmerArguments ):JQuery;
+	dimmer( action:"add content", element:any)
+	dimmer( action:"set opacity", opacity:any)
+	dimmer( action:"show" | "hide" | "toggle" | "create" | "get duration" | "get dimmer" | "has dimmer" | "is active" | "is animating" | "is dimmer" | "is dimmable" | "is disabled" | "is enabled" | "is page" | "is page dimmer" | "set active" | "set dimmable" | "set dimmed" | "set page dimmer" | "set disabled" ):JQuery;
 
 	dropdown( action:"set selected", selector:string );
 	dropdown( action:"set text", selector:string );
