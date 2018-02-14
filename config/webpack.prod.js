@@ -1,4 +1,3 @@
-const webpack = require( "webpack" );
 const webpackMerge = require( "webpack-merge" );
 const helpers = require( "./webpack.helpers" );
 const config = require( "./prod.config.json" );
@@ -13,12 +12,10 @@ const DefinePlugin = require( "webpack/lib/DefinePlugin" );
 const LoaderOptionsPlugin = require( "webpack/lib/LoaderOptionsPlugin" );
 const NoEmitOnErrorsPlugin = require( "webpack/lib/NoEmitOnErrorsPlugin" );
 const UglifyJsPlugin = require( "webpack/lib/optimize/UglifyJsPlugin" );
-const AotPlugin = require( "@ngtools/webpack" ).AotPlugin;
 const OccurenceOrderPlugin = require( "webpack/lib/optimize/OccurrenceOrderPlugin" );
-const CommonsChunkPlugin = require( "webpack/lib/optimize/CommonsChunkPlugin" );
 const BundleAnalyzerPlugin = require( "webpack-bundle-analyzer" ).BundleAnalyzerPlugin;
-const IgnorePlugin = require( "webpack/lib/IgnorePlugin" );
 const HtmlWebpackPlugin = require( "html-webpack-plugin" );
+const AngularCompilerPlugin = require( "@ngtools/webpack" ).AngularCompilerPlugin;
 
 
 // Webpack Constants
@@ -134,15 +131,15 @@ module.exports = function( env ) {
 				}
 			} ),
 
-			// Ignore node imports
-			new IgnorePlugin( /^(http|https|url|file-type)$/, /carbonldp/ ),
-
 			// new BundleAnalyzerPlugin(),
-			new AotPlugin( {
-				tsConfigPath: helpers.root( "tsconfig-aot.json" ),
+			new AngularCompilerPlugin( {
+				tsConfigPath: helpers.root( "tsconfig.json" ),
 				entryModule: helpers.root( "src/app/app.module#AppModule" ),
 				mainPath: helpers.root( "src/main.ts" ),
-				skipCodeGeneration: false,
+				sourceMap: true,
+				genDir: "compiled",
+				skipMetadataEmit: true,
+				typeChecking: true
 			} ),
 
 			// Webpack inject scripts and links for us with the HtmlWebpackPlugin
