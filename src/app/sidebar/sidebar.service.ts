@@ -80,6 +80,7 @@ export interface SidebarItem {
 
 export interface SidebarLink extends SidebarItem {
 	type:"link";
+	name:string;
 	route:any[];
 	icon?:string;
 }

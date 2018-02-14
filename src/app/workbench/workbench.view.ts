@@ -116,7 +116,7 @@ export class WorkbenchView {
 			// 	type: "link",
 			// 	name: "Security",
 			// 	icon: "lock icon",
-			// 	route: [ "security", "agents" ],
+			// 	route: [ this.base, "security", "users" ],
 			// },
 			// {
 			// 	type: "link",
