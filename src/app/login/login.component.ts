@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, Inject, EventEmitter, OnInit } from "@angular/core";
 
-import { AuthService } from "angular-carbonldp/services";
+import { AuthService } from "app/angular-carbonldp/services";
 
 import { Class as Credentials } from "carbonldp/Auth/Credentials";
 import * as HTTP from "carbonldp/HTTP";

@@ -3,7 +3,7 @@ import { Router, Event, NavigationEnd } from "@angular/router";
 
 import { Class as Carbon } from "carbonldp/Carbon";
 
-import { AuthService } from "angular-carbonldp/services";
+import { AuthService } from "app/angular-carbonldp/services";
 import { HeaderService } from "app/header/header.service";
 import { SidebarService } from "app/sidebar/sidebar.service";
 

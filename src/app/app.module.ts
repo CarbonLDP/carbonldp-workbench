@@ -5,8 +5,8 @@ import { FormsModule } from "@angular/forms";
 
 // Providers
 import { BASE_URL } from "./config";
-import { CARBON_PROVIDERS } from "angular-carbonldp/boot";
-import { CARBON_SERVICES_PROVIDERS } from "angular-carbonldp/services";
+import { CARBON_PROVIDERS } from "app/angular-carbonldp/utils";
+import { CARBON_SERVICES_PROVIDERS } from "app/angular-carbonldp/services";
 import { routing, appRoutingProviders } from "./app.routing";
 
 // Components
