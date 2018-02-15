@@ -12,7 +12,14 @@
 		<cw-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage($event)" *ngIf="!!errorMessage"></cw-message>
 	</div>
 	<div class="actions">
-		<div class="ui button" title="Cancel deletion" (click)="hideDeleteDocumentForm()">No</div>
-		<div class="ui red button" title="Confirm deletion" (click)="onSubmitDeleteDocument(deleteDocumentForm.value, $event)">Yes</div>
+		<div class="ui button" title="Cancel deletion"
+		     [ngClass]="{disabled:isDeleting}"
+		     [attr.disabled]="isDeleting"
+		     (click)="hideDeleteDocumentForm()">No
+		</div>
+		<div class="ui red button" title="Confirm deletion"
+		     [ngClass]="{loading:isDeleting}"
+		     (click)="onSubmitDeleteDocument(deleteDocumentForm.value, $event)">Yes
+		</div>
 	</div>
 </form>
