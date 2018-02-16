@@ -14,7 +14,8 @@
 		</div>
 	</div>
 	<button class="ui mini basic red right aligned icon button" title="Delete document"
-	        [disabled]="nodeChildren.length===0"
+	        [ngClass]="{disabled: (nodeChildren.length===0 || !canDelete) }"
+	        [disabled]="nodeChildren.length===0 || !canDelete"
 	        (click)="showDeleteChildForm()">
 		<i class="trash outline icon"></i>
 	</button>

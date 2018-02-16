@@ -28,6 +28,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	jsTree:JSTree;
 	$tree:JQuery;
 	nodeChildren:JSTreeNode[] = [];
+	canDelete:boolean = true;
+
 	private _selectedURI:string = "";
 
 	set selectedURI( value:string ) {
@@ -135,6 +137,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.$tree.on( "select_node.jstree", ( e:Event, data:any ):void => {
 			let node:any = data.node;
 			this.selectedURI = node.id;
+			this.canDelete = ! node.data.isRequiredSystemDocument;
 		} );
 		this.$tree.on( "loaded.jstree", () => {
 			this.jsTree.select_node( this.nodeChildren[ 0 ].id );
