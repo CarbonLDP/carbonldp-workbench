@@ -5,7 +5,7 @@ import { Router, Resolve, ActivatedRouteSnapshot } from "@angular/router";
 
 import { Class as Carbon } from "carbonldp/Carbon";
 
-import { carbonProvider } from "./../utils";
+import { carbonProvider } from "app/authentication/utils";
 
 @Injectable()
 export class CarbonProviderResolver implements Resolve<boolean | Carbon> {
