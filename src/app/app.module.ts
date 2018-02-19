@@ -5,7 +5,7 @@ import { FormsModule } from "@angular/forms";
 
 // Providers
 import { BASE_URL } from "./config";
-import { CARBON_PROVIDERS } from "app/authentication/utils";
+import { CARBON_PROVIDERS } from "app/providers";
 import { CARBON_SERVICES_PROVIDERS } from "app/authentication/services";
 import { routing, appRoutingProviders } from "./app.routing";
 
@@ -26,7 +26,6 @@ import { HeaderComponent } from "./header/header.component";
 import { SidebarComponent } from "./sidebar/sidebar.component";
 import { SidebarItemsComponent } from "./sidebar/sidebar-items.component";
 import { BreadcrumbsComponent } from "./breadcrumbs/breadcrumbs.component";
-
 
 // Modules
 import { SharedModule } from "./shared/shared.module";
