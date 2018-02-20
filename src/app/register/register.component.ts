@@ -2,7 +2,7 @@ import { Component, ElementRef, Output, Inject, EventEmitter, OnInit } from "@an
 
 import * as HTTP from "carbonldp/HTTP";
 
-import { AuthService } from "angular-carbonldp/services";
+import { AuthService } from "app/authentication/services";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";

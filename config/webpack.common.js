@@ -1,4 +1,3 @@
-const webpack = require( "webpack" );
 const helpers = require( "./webpack.helpers" );
 const headImports = require( "./head.config" );
 

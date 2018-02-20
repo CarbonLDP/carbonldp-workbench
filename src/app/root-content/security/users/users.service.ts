@@ -4,13 +4,12 @@ import { Class as Carbon } from "carbonldp/Carbon";
 import * as User from "carbonldp/Auth/User";
 import * as Users from "carbonldp/Auth/Users";
 import * as PersistedUser from "carbonldp/Auth/PersistedUser";
-import * as Credentials from "carbonldp/Auth/Credentials";
 import * as HTTP from "carbonldp/HTTP";
 import * as Utils from "carbonldp/Utils";
 import * as URI from "carbonldp/RDF/URI";
-import * as NS from "carbonldp/NS";
 import * as SPARQL from "carbonldp/SPARQL";
-import { Class as RetrievalPreferences, OrderByProperty } from "carbonldp/RetrievalPreferences";
+import * as NS from "carbonldp/NS";
+import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument";
 
 @Injectable()
 export class UsersService {
@@ -48,48 +47,21 @@ export class UsersService {
 		let uri:string = this.carbon.baseURI + "users/";
 		this.users = typeof this.users === "undefined" ? new Map<string, PersistedUser.Class>() : this.users;
 
-		let preferences:RetrievalPreferences = {},
-			property:OrderByProperty,
-			name:OrderByProperty = {
-				"@id": NS.CS.Predicate.namae,
-				"@type": "string",
-			},
-			email:OrderByProperty = {
-				"@id": NS.VCARD.Predicate.email,
-				"@type": "string",
-			},
-			created:OrderByProperty = {
-				"@id": NS.C.Predicate.created,
-				"@type": "dateTime",
-			},
-			modified:OrderByProperty = {
-				"@id": NS.C.Predicate.modified,
-				"@type": "dateTime",
-			};
-		switch( orderBy ) {
-			case "name":
-				property = name;
-				break;
-			case "email":
-				property = email;
-				break;
-			case "created":
-				property = created;
-				break;
-			case "modified":
-				property = modified;
-				break;
-			default:
-				property = name;
-				break;
-		}
-		if( ! orderBy ) preferences.orderBy = [ property ];
-		if( ! ascending ) property[ "@id" ] = "-" + property[ "@id" ];
-		if( typeof limit !== "undefined" ) preferences.limit = limit;
-		if( typeof page !== "undefined" ) preferences.offset = page * limit;
+		let property:string = orderBy ? orderBy : "name";
 
+		return this.carbon.documents.getMembers<PersistedUser.Class>( uri, ( _:QueryDocumentsBuilder.Class ) => {
+			let func = _.properties( {
+				"name": _.inherit,
+				"email": _.inherit,
+				"created": _.inherit,
+				"modified": _.inherit,
+			} );
+			if( ! orderBy ) func.orderBy( property, ascending ? "ASC" : "DESC" );
+			if( typeof limit !== "undefined" ) func.limit( limit );
+			if( typeof page !== "undefined" ) func.offset( page * limit );
+			return func;
 
-		return this.carbon.documents.getMembers<PersistedUser.Class>( uri, false, preferences ).then( ( [ users, response ]:[ PersistedUser.Class[], HTTP.Response.Class ] ) => {
+		} ).then( ( [ users, response ]:[ PersistedUser.Class[], HTTP.Response.Class ] ) => {
 			users.forEach( ( user:PersistedUser.Class ) => this.users.set( user.id, user ) );
 
 			let usersArray:PersistedUser.Class[] = Utils.A.from( this.users.values() );
@@ -100,10 +72,9 @@ export class UsersService {
 	}
 
 	public getNumberOfUsers():Promise<number> {
-		// TODO: check this query. Probably namespace CS will change
 		let usersURI:string = this.carbon.baseURI + "users/",
 			query:string = `SELECT DISTINCT (COUNT(?user) AS ?count) WHERE {
-			?user a <https://carbonldp.com/ns/v1/security#User> . 
+			?user a <${NS.CS.Class.User}> . 
 		}`;
 		return this.carbon.documents.executeSELECTQuery( usersURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
 			if( typeof results.bindings[ 0 ] === "undefined" ) return 0;
@@ -119,7 +90,7 @@ export class UsersService {
 		return user.saveAndRefresh();
 	}
 
-	public createUser( email:string, password:string, enabled:boolean ):Promise<[ PersistedUser.Class, HTTP.Response.Class[] ]> {
+	public createUser( email:string, password:string, enabled:boolean ):Promise<[ PersistedUser.Class, HTTP.Response.Class ]> {
 		return this.carbon.auth.users.register( email, password, enabled );
 	}
 

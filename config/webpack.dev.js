@@ -1,10 +1,8 @@
-const webpack = require( "webpack" );
 const commonConfig = require( "./webpack.common.js" );
 const helpers = require( "./webpack.helpers" );
 const config = require( "./dev.config.json" );
 const carbonConfig = config.carbon;
 const webpackMerge = require( "webpack-merge" );
-const HtmlWebpackPlugin = require( "html-webpack-plugin" );
 
 // carbonldp's projects versions
 const workbench = require( "../package.json" );
@@ -12,6 +10,8 @@ const workbench = require( "../package.json" );
 
 // Plugins
 const DefinePlugin = require( "webpack/lib/DefinePlugin" );
+const ContextReplacementPlugin = require( "webpack/lib/ContextReplacementPlugin" );
+const HtmlWebpackPlugin = require( "html-webpack-plugin" );
 
 
 // Webpack Constants
@@ -47,7 +47,6 @@ module.exports = function( options ) {
 
 		output: {
 			path: helpers.root( "dist" ),
-			publicPath: "http://" + HOST + ":" + PORT + "/",
 			filename: "[name].js",
 			sourceMapFilename: "[file].map",
 			chunkFilename: "[id].chunk.js",
@@ -56,19 +55,17 @@ module.exports = function( options ) {
 		plugins: [
 
 			// Workaround for angular/angular#11580
-			new webpack.ContextReplacementPlugin(
+			new ContextReplacementPlugin(
 				// The (\\|\/) piece accounts for path separators in *nix and Windows
-				/angular(\\|\/)core(\\|\/)@angular/,
+				/\@angular(\\|\/)core(\\|\/)esm5/,
 				helpers.root( "./src" ), // location of your src
 				{} // a map of your routes
 			),
 
 			new DefinePlugin( {
-				"ENV": JSON.stringify( METADATA.ENV ),
 				"process.env": {
 					"baseUrl": JSON.stringify( METADATA.baseUrl ),
 					"ENV": JSON.stringify( METADATA.ENV ),
-					"NODE_ENV": JSON.stringify( METADATA.ENV ),
 					"CARBON": {
 						"protocol": JSON.stringify( carbonConfig.protocol ),
 						"domain": JSON.stringify( carbonConfig.domain ),
@@ -89,13 +86,15 @@ module.exports = function( options ) {
 		],
 
 		devServer: {
-			port: METADATA.port,
-			host: METADATA.host,
-			historyApiFallback: true,
+			open: true,	                // Opens web browser
+			port: METADATA.port,	    // Port of project
+			host: METADATA.host,        // Host to use by the dev server
+			inline: true,	            // A script will be inserted in index.html to take care of live reloading, and build messages will appear in the browser console
+			historyApiFallback: true,	// Server index.html page when 404 responses
 			watchOptions: {
-				aggregateTimeout: 300,
-				poll: 1000
-			},
+				aggregateTimeout: 300,	// Add a delay in milliseconds before rebuilding
+				poll: 1000	            // Check for changes every second
+			}
 		},
 
 	} );

@@ -3,7 +3,7 @@ import { Router, Event, NavigationEnd } from "@angular/router";
 
 import { Class as Carbon } from "carbonldp/Carbon";
 
-import { AuthService } from "angular-carbonldp/services";
+import { AuthService } from "app/authentication/services";
 import { HeaderService } from "app/header/header.service";
 import { SidebarService } from "app/sidebar/sidebar.service";
 
@@ -75,18 +75,18 @@ export class WorkbenchView {
 				route: [ "" ],
 				index: 0,
 			},
-				// {
-				// 	name: name,
-				// 	children: [
-				// 		{
-				// 			icon: "sign out icon",
-				// 			name: "Log Out",
-				// 			onClick: onLogout,
-				// 			index: 100,
-				// 		}
-				// 	],
-				// 	index: 100,
-				// }
+			// {
+			// 	name: name,
+			// 	children: [
+			// 		{
+			// 			icon: "sign out icon",
+			// 			name: "Log Out",
+			// 			onClick: onLogout,
+			// 			index: 100,
+			// 		}
+			// 	],
+			// 	index: 100,
+			// }
 		] );
 	}
 
@@ -116,7 +116,7 @@ export class WorkbenchView {
 			// 	type: "link",
 			// 	name: "Security",
 			// 	icon: "lock icon",
-			// 	route: [ "security", "agents" ],
+			// 	route: [ this.base, "security", "users" ],
 			// },
 			// {
 			// 	type: "link",

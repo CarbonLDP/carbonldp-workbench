@@ -9,7 +9,7 @@ import * as Utils from "carbonldp/Utils";
 import * as URI from "carbonldp/RDF/URI";
 import * as NS from "carbonldp/NS";
 import * as SPARQL from "carbonldp/SPARQL";
-import { Class as RetrievalPreferences, OrderByProperty } from "carbonldp/RetrievalPreferences";
+import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument";
 
 @Injectable()
 export class RolesService {
@@ -36,44 +36,21 @@ export class RolesService {
 		let uri:string = this.carbon.baseURI + `.system/roles/`;
 		this.roles = typeof this.roles === "undefined" ? new Map<string, PersistedRole.Class>() : this.roles;
 
-		let preferences:RetrievalPreferences = {},
-			property:OrderByProperty,
-			name:OrderByProperty = {
-				"@id": NS.CS.Predicate.namae,
-				"@type": "string",
-			},
-			email:OrderByProperty = {
-				"@id": NS.VCARD.Predicate.email,
-				"@type": "string",
-			},
-			created:OrderByProperty = {
-				"@id": NS.C.Predicate.created,
-				"@type": "dateTime",
-			},
-			modified:OrderByProperty = {
-				"@id": NS.C.Predicate.modified,
-				"@type": "dateTime",
-			};
-		switch( orderBy ) {
-			case "name":
-				property = name;
-				break;
-			case "email":
-				property = email;
-				break;
-			case "created":
-				property = created;
-				break;
-			case "modified":
-				property = modified;
-				break;
-		}
-		if( ! ascending ) property[ "@id" ] = "-" + property[ "@id" ];
-		if( ! ! orderBy ) preferences.orderBy = [ property ];
-		if( typeof limit !== "undefined" ) preferences.limit = limit;
-		if( typeof page !== "undefined" ) preferences.offset = page * limit;
+		let property:string = orderBy ? orderBy : "name";
 
-		return this.carbon.documents.getChildren<PersistedRole.Class>( uri, preferences ).then( ( [ roles, response ]:[ PersistedRole.Class[], HTTP.Response.Class ] ) => {
+		return this.carbon.documents.getChildren<PersistedRole.Class>( uri, ( _:QueryDocumentsBuilder.Class ) => {
+			let func:QueryDocumentsBuilder.Class = _.properties( {
+				"name": _.inherit,
+				"email": _.inherit,
+				"created": _.inherit,
+				"modified": _.inherit
+			} );
+			if( ! orderBy ) func.orderBy( property, ascending ? "ASC" : "DESC" );
+			if( typeof limit !== "undefined" ) func.limit( limit );
+			if( typeof page !== "undefined" ) func.offset( page * limit );
+			return func;
+
+		} ).then( ( [ roles, response ]:[ PersistedRole.Class[], HTTP.Response.Class ] ) => {
 			roles.filter( ( role:PersistedRole.Class ) => ! this.roles.has( role.id ) )
 				.forEach( ( role:PersistedRole.Class ) => this.roles.set( role.id, role ) );
 

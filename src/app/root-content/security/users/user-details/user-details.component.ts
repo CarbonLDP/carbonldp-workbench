@@ -175,7 +175,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 	}
 
 	private createUser( userData:UserFormModel ):void {
-		this.usersService.createUser( userData.email, userData.password, userData.enabled ).then( ( [ createdUser, responses ]:[ PersistedUser.Class, HTTP.Response.Class[] ] ) => {
+		this.usersService.createUser( userData.email, userData.password, userData.enabled ).then( ( [ createdUser, responses ]:[ PersistedUser.Class, HTTP.Response.Class ] ) => {
 			createdUser.name = userData.name;
 			return createdUser.saveAndRefresh();
 		} ).then( ( [ createdUser, response ]:[ PersistedUser.Class, [ HTTP.Response.Class, HTTP.Response.Class ] ] ) => {
