@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { Class as Carbon } from "carbonldp/Carbon";
-import { carbonProvider } from "app/angular-carbonldp/utils";
+import { carbonProvider } from "app/providers";
 
 
 @Component( {

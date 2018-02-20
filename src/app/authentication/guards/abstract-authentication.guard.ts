@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate } from "@angular/router";
 
-import { inject, carbonProvider } from "./../utils";
+import { inject } from "./../utils";
 import { AuthService } from "./../services";
+import { carbonProvider } from "app/providers";
 
 @Injectable()
 export abstract class AbstractAuthenticationGuard implements CanActivate {

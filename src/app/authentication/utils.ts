@@ -7,8 +7,6 @@ import * as Errors from "carbonldp/Errors";
 import * as HTTP from "carbonldp/HTTP";
 import { Method, Token } from "carbonldp/Auth";
 
-let carbon:Carbon;
-
 
 /**
  * Function that holds the app's injector. To initialize it, call it passing appRef.injector as a parameter.
@@ -45,11 +43,13 @@ function inject( token:any ):Promise<any> {
 	} );
 }
 
-function authenticationCookieIsPresent():boolean {
+
+// Exports
+export function authenticationCookieIsPresent():boolean {
 	return typeof Cookies.get( AUTH_COOKIE ) !== "undefined";
 }
 
-function authenticateWithCookie( carbon:Carbon ):Promise<any> {
+export function authenticateWithCookie( carbon:Carbon ):Promise<any> {
 	let token:Token.Class;
 	try {
 		token = <any>Cookies.getJSON( AUTH_COOKIE );
@@ -65,51 +65,9 @@ function authenticateWithCookie( carbon:Carbon ):Promise<any> {
 	} );
 }
 
-function aotCarbonFactory():Carbon {
-	return carbon;
-}
-
-const carbonProviderFn:CarbonProviderFn = (():CarbonProviderFn => {
-	let _carbonProvider:Carbon = null;
-
-	let carbonProviderFn:CarbonProviderFn = ():Carbon => {
-		return _carbonProvider;
-	};
-	carbonProviderFn.promise = Promise.resolve();
-	carbonProviderFn.initialize = ( configuredCarbon:Carbon ):Promise<void> => {
-		carbon = configuredCarbon;
-		_carbonProvider = carbon;
-		carbonProviderFn.promise = carbonProviderFn.promise.then( () => {
-			if( authenticationCookieIsPresent() ) {
-				return authenticateWithCookie( carbon );
-			}
-		} );
-		return carbonProviderFn.promise;
-	};
-
-	return carbonProviderFn;
-})();
-
-// Exports
 export const AUTH_COOKIE:string = "carbonldp-workbench-token";
-
-export const CARBON_PROVIDERS:any[] = [
-	{
-		provide: Carbon,
-		useFactory: aotCarbonFactory,
-	}
-];
-
-export interface CarbonProviderFn {
-	():Carbon;
-
-	promise?:Promise<void>;
-	initialize?:( carbon:Carbon ) => Promise<void>;
-}
 
 export {
 	inject,
-	aotCarbonFactory,
 	appInjectorFn as appInjector,
-	carbonProviderFn as carbonProvider
 };
