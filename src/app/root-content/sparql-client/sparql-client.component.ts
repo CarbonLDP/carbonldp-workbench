@@ -298,12 +298,12 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	 */
 	getSPARQLOperation( query:string ):string {
 		switch( true ) {
-			case (this.regExpSelect.test( query )):
-				return this.sparqlQueryOperations.select.name;
 			case (this.regExpConstruct.test( query )):
 				return this.sparqlQueryOperations.construct.name;
 			case (this.regExpAsk.test( query )):
 				return this.sparqlQueryOperations.ask.name;
+			case (this.regExpSelect.test( query )):
+				return this.sparqlQueryOperations.select.name;
 			case (this.regExpDescribe.test( query )):
 				return this.sparqlQueryOperations.describe.name;
 			case (this.regExpInsert.test( query )):
