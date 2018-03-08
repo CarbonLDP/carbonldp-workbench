@@ -95,11 +95,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			id: uri,
 			text: this.getSlug( uri ),
 			state: { "opened": false },
-			children: [],
+			children: hasChildren,
 			data: {},
 		};
 		if( nodeType === "accesspoint" ) node.type = "accesspoint";
-		if( hasChildren ) node.children.push( { "text": "Loading...", } );
 		node.data.isRequiredSystemDocument = ! ! isRequiredSystemDocument;
 		return node;
 	}
@@ -107,7 +106,16 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	renderTree():void {
 		this.jsTree = this.$tree.jstree( {
 			"core": {
-				"data": this.nodeChildren,
+				"data": ( node:JSTreeNode, childrenBuilder ) => {
+					// If the node doesn't have and id, load the first node, else load node's children
+					if( node.id === "#" ) {
+						childrenBuilder( this.nodeChildren );
+					} else {
+						this.getNodeChildren( node.id ).then( ( children:JSTreeNode[] ) => {
+							childrenBuilder( children );
+						} );
+					}
+				},
 				"check_callback": true,
 				"multiple": false,
 			},
@@ -128,12 +136,6 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			},
 			"plugins": [ "types", "wholerow" ],
 		} ).jstree( true );
-		this.$tree.on( "before_open.jstree", ( e:Event, data:any ):void => {
-			let parentId:any = data.node.id;
-			let parentNode:any = data.node;
-			let position:string = "last";
-			this.onBeforeOpenNode( parentId, parentNode, position );
-		} );
 		this.$tree.on( "select_node.jstree", ( e:Event, data:any ):void => {
 			let node:any = data.node;
 			this.selectedURI = node.id;
@@ -142,17 +144,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.$tree.on( "loaded.jstree", () => {
 			this.jsTree.select_node( this.nodeChildren[ 0 ].id );
 			this.jsTree.open_node( this.nodeChildren[ 0 ].id );
-			if( this.nodeChildren && this.nodeChildren.length > 0 ) {
-				this.onResolveUri.emit( <string>this.nodeChildren[ 0 ].id );
-			}
+			this.onResolveUri.emit( <string>this.nodeChildren[ 0 ].id );
 		} );
-		this.$tree.on( "dblclick.jstree", ".jstree-anchor", ( e:Event ) => {
+		this.$tree.on( "dblclick.jstree", ( e:Event ) => {
 			this.loadNode( e.target );
-		} );
-		this.$tree.on( "dblclick.jstree", ".jstree-wholerow", ( e:Event ) => {
-			e.stopImmediatePropagation();
-			let tmpEvt:JQueryEventObject = $.Event( "dblclick" );
-			$( e.currentTarget ).closest( ".jstree-node" ).children( ".jstree-anchor" ).first().trigger( tmpEvt ).focus();
 		} );
 	}
 
@@ -161,48 +156,9 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		let parentId:any = node.id;
 		let parentNode:any = node;
 		let position:string = "last";
-		this.onChange( parentId, parentNode, position );
-	}
-
-	onBeforeOpenNode( parentId:string, parentNode:any, position:string ):Promise<any> {
-		let originalIcon:string = ! ! this.jsTree.settings.types[ parentNode.type ] ? this.jsTree.settings.types[ parentNode.type ].icon : "help icon";
-		this.jsTree.set_icon( parentNode, this.jsTree.settings.types.loading.icon );
-		return this.getNodeChildren( parentNode.id ).then( ( children:any[] ):void => {
-			this.emptyNode( parentId );
-			if( children.length > 0 ) {
-				children.forEach( ( childNode:any ) => this.addChild( parentId, childNode, position ) );
-			}
-		} ).then( () => {
-			this.jsTree.set_icon( parentNode, originalIcon );
-		} ).catch( ( error ) => {
-			this.emptyNode( parentId );
-			this.jsTree.set_icon( parentNode, originalIcon );
-			return Promise.reject( error );
-		} );
-	}
-
-	onChange( parentId:string, node:any, position:string ):void {
-		this.onBeforeOpenNode( parentId, node, position ).then( () => {
-			if( ! this.jsTree.is_open( node ) ) {
-				this.jsTree.open_node( node );
-			}
-			this.onResolveUri.emit( node.id );
-		} ).catch( ( error ) => {
-			this.onError.emit( error );
-		} );
-	}
-
-	addChild( parentId:string, node:any, position:string ):void {
-		this.jsTree.create_node( parentId, node, position );
-	}
-
-	emptyNode( nodeId:string ):void {
-		let $children:JQuery = <JQuery>this.jsTree.get_children_dom( nodeId );
-		let childElements:Element[] = jQuery.makeArray( $children );
-		while( childElements.length > 0 ) {
-			this.jsTree.delete_node( childElements[ 0 ] );
-			childElements.splice( 0, 1 );
-		}
+		this.jsTree.open_node( node );
+		this.jsTree.refresh_node( node );
+		this.onResolveUri.emit( node.id );
 	}
 
 	getNodeChildren( uri:string ):Promise<JSTreeNode[]> {
