@@ -106,16 +106,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	renderTree():void {
 		this.jsTree = this.$tree.jstree( {
 			"core": {
-				"data": ( node:JSTreeNode, childrenBuilder ) => {
-					// If the node doesn't have and id, load the first node, else load node's children
-					if( node.id === "#" ) {
-						childrenBuilder( this.nodeChildren );
-					} else {
-						this.getNodeChildren( node.id ).then( ( children:JSTreeNode[] ) => {
-							childrenBuilder( children );
-						} );
-					}
-				},
+				"data": this.resolveNodeData.bind( this ),
 				"check_callback": true,
 				"multiple": false,
 			},
@@ -153,12 +144,22 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 	loadNode( obj:any ):void {
 		let node:JSTreeNode = this.jsTree.get_node( obj );
-		let parentId:any = node.id;
-		let parentNode:any = node;
-		let position:string = "last";
-		this.jsTree.open_node( node );
 		this.jsTree.refresh_node( node );
+		this.jsTree.open_node( node );
 		this.onResolveUri.emit( node.id );
+	}
+
+	resolveNodeData( node:JSTreeNode, callBack:( children:JSTreeNode[] ) => {} ):void {
+
+		// If the node doesn't have an id, load the first node, else load node's children
+		if( node.id === "#" ) {
+			callBack( this.nodeChildren );
+		} else {
+			this.getNodeChildren( node.id )
+				.then( ( children:JSTreeNode[] ) => {
+					callBack( children );
+				} );
+		}
 	}
 
 	getNodeChildren( uri:string ):Promise<JSTreeNode[]> {
@@ -223,6 +224,9 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} );
 	}
 
+	refreshSelectedNode():void {
+		this.jsTree.refresh_node( this.selectedURI );
+	}
 
 	getSlug( pointer:Pointer.Class | string ):string {
 		if( typeof pointer !== "string" ) return (<Pointer.Class>pointer).id;
