@@ -240,16 +240,12 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 					switch( binding.p.id ) {
 						case LDP.Predicate.contains:
-							children.set( binding.o.id, {
-								hasChildren: children.get( binding.o.id ) ? true : ! ! binding.p2,
-								isRequiredSystemDocument: ! ! binding.isRequiredSystemDocument
-							} );
+
+							this.convertBindingToNode( children, binding );
 							break;
 						case C.Predicate.accessPoint:
-							accessPoints.set( binding.o.id, {
-								hasChildren: children.get( binding.o.id ) ? true : ! ! binding.p2,
-								isRequiredSystemDocument: ! ! binding.isRequiredSystemDocument
-							} );
+
+							this.convertBindingToNode( accessPoints, binding );
 							break;
 					}
 				} );
@@ -285,6 +281,16 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.onShowDeleteChildForm.emit( true );
 	}
 
+	private convertBindingToNode( collection:Map<string, PreJSTreeNode>, binding:{ p:Pointer.Class, o:Pointer.Class, p2:Pointer.Class, o2:Pointer.Class, isRequiredSystemDocument:boolean } ):void {
+
+		if( binding.o.isResolved() ) {
+			binding.isRequiredSystemDocument = (<PersistedDocument.Class>binding.o).types.indexOf( "https://carbonldp.com/ns/v1/platform#RequiredSystemDocument" ) !== - 1;
+		}
+		collection.set( binding.o.id, {
+			hasChildren: collection.get( binding.o.id ) ? true : ! ! binding.p2,
+			isRequiredSystemDocument: ! ! binding.isRequiredSystemDocument
+		} );
+	}
 }
 
 interface PreJSTreeNode {
