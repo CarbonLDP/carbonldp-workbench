@@ -6,7 +6,7 @@ import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as HTTP from "carbonldp/HTTP";
 import * as URI from "carbonldp/RDF/URI";
 import * as SPARQL from "carbonldp/SPARQL";
-import { C, LDP } from "carbonldp/NS";
+import { C, LDP } from "carbonldp/Vocabularies";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
@@ -196,11 +196,11 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 					if( ! ! binding.o2 && binding.o2.id.indexOf( "/users/me/" ) !== - 1 ) return;
 
 					switch( binding.p.id ) {
-						case LDP.Predicate.contains:
+						case LDP.contains:
 
 							this.convertBindingToNode( children, binding );
 							break;
-						case C.Predicate.accessPoint:
+						case C.accessPoint:
 
 							this.convertBindingToNode( accessPoints, binding );
 							break;

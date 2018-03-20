@@ -1,7 +1,7 @@
 import { Component, ElementRef, Output, EventEmitter } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import * as NS from "carbonldp/NS";
+import { C } from "carbonldp/Vocabularies";
 
 import { WidgetsService } from "../widgets.service";
 import { Message } from "app/shared/messages-area/message.component";
@@ -67,19 +67,19 @@ export class InstanceWidgetComponent {
 
 	private getPlatformMetadata():Promise<any> {
 		// TODO: Remove extendObjectSchema when SDK implements instance with its properties
-		this.carbonldp.extendObjectSchema( NS.C.namespace + "PlatformInstance", {
+		this.carbonldp.extendObjectSchema( C.namespace + "PlatformInstance", {
 			"version": {
-				"@id": NS.C.namespace + "version",
+				"@id": C.namespace + "version",
 				"@type": "string"
 			},
 			"buildDate": {
-				"@id": NS.C.namespace + "buildDate",
+				"@id": C.namespace + "buildDate",
 				"@type": "dateTime"
 			}
 		} );
-		this.carbonldp.extendObjectSchema( NS.C.namespace + "Platform", {
+		this.carbonldp.extendObjectSchema( C.namespace + "Platform", {
 			"instance": {
-				"@id": NS.C.namespace + "instance",
+				"@id": C.namespace + "instance",
 				"@type": "@id"
 			}
 		} );

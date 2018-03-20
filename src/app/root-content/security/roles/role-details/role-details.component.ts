@@ -4,7 +4,7 @@ import * as Role from "carbonldp/Auth/Role";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 import * as PersistedUser from "carbonldp/Auth/PersistedUser";
 import * as HTTP from "carbonldp/HTTP";
-import * as NS from "carbonldp/NS";
+import { CS } from "carbonldp/Vocabularies";
 import * as Pointer from "carbonldp/Pointer";
 
 import { RolesService } from "./../roles.service";
@@ -74,7 +74,7 @@ export class RoleDetailsComponent {
 		this.errorMessage = null;
 		this.roleFormModel.slug = this.getSanitizedSlug( role.id );
 		this.roleFormModel.name = role.name;
-		this.roleFormModel.description = role[ NS.CS.Predicate.description ];
+		this.roleFormModel.description = role[ CS.description ];
 		this.roleFormModel.parentRole = ! ! role.parentRole ? role.parentRole.id : null;
 		this.mustAddParent = (! this.role.id.endsWith( "roles/admin/" ) && ! this.role.parentRole);
 		this.getUsers( this.role ).then( ( users ) => {
@@ -107,7 +107,7 @@ export class RoleDetailsComponent {
 
 	private editRole( role:PersistedRole.Class, roleData:RoleFormModel ):void {
 		role.name = roleData.name;
-		role[ NS.CS.Predicate.description ] = roleData.description;
+		role[ CS.description ] = roleData.description;
 		this.rolesService.saveAndRefresh( role ).then( ( [ updatedRole, [ saveResponse, refreshResponse ] ]:[ PersistedRole.Class, [ HTTP.Response.Class, HTTP.Response.Class ] ] ) => {
 			return this.editRoleUsers( role, roleData.users );
 		} ).then( () => {
@@ -132,7 +132,7 @@ export class RoleDetailsComponent {
 
 	private createRole( role:PersistedRole.Class, roleData:RoleFormModel ):void {
 		role.name = roleData.name;
-		role[ NS.CS.Predicate.description ] = roleData.description;
+		role[ CS.description ] = roleData.description;
 		this.rolesService.create( this.selectedRole, this.role, roleData.slug ).then( ( persistedRole:PersistedRole.Class ) => {
 			return this.editRoleUsers( persistedRole, roleData.users );
 		} ).then( ( persistedRole:PersistedRole.Class ) => {

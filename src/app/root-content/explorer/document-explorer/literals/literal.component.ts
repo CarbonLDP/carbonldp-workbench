@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, AfterViewChecked, EventEmitter, ViewChild, ChangeDetectorRef } from "@angular/core";
 
-import * as NS from "carbonldp/NS";
+import { XSD } from "carbonldp/Vocabularies";
 import * as Utils from "carbonldp/Utils";
 import * as URI from "carbonldp/RDF/URI";
 
@@ -42,7 +42,7 @@ export class LiteralComponent implements AfterViewChecked {
 
 	modes:typeof Modes = Modes;
 	dataTypes:any = this.getDataTypes();
-	isStringType:boolean = (! this.type || this.type === NS.XSD.DataType.string);
+	isStringType:boolean = (! this.type || this.type === XSD.string);
 	languages:{ code:string, name:string }[] = [
 		{
 			code: "aa",
@@ -795,14 +795,14 @@ export class LiteralComponent implements AfterViewChecked {
 	}
 
 	// Literal Type;
-	private _type:string = NS.XSD.DataType.string;
+	private _type:string = XSD.string;
 	get type() {return this._type;}
 
 	set type( type:string ) {
 		if( type === "empty" ) {type = null;}
-		else if( ! type || type.length === 0 ) type = NS.XSD.DataType.string;
+		else if( ! type || type.length === 0 ) type = XSD.string;
 		this._type = type;
-		this.isStringType = type === NS.XSD.DataType.string;
+		this.isStringType = type === XSD.string;
 	}
 
 	// Literal Language;
@@ -911,15 +911,15 @@ export class LiteralComponent implements AfterViewChecked {
 			this.tempLiteral[ "@language" ] = this.language;
 		}
 
-		if( this.tempLiteral[ "@type" ] !== NS.XSD.DataType.string ) delete this.tempLiteral[ "@language" ];
-		if( this.tempLiteral[ "@type" ] === NS.XSD.DataType.string || this.type === NS.XSD.DataType.string ) delete this.tempLiteral[ "@type" ];
+		if( this.tempLiteral[ "@type" ] !== XSD.string ) delete this.tempLiteral[ "@language" ];
+		if( this.tempLiteral[ "@type" ] === XSD.string || this.type === XSD.string ) delete this.tempLiteral[ "@type" ];
 
 		// Check for tempLiteral to contain valid json+ld for literals
 		// 1. @value always present, if not clean whole object.
-		// 2. If @type empty or NS.XSD.DataType.string, then delete @type from tempLiteral.
-		// 3. If @language empty or when @type different than NS.XSD.DataType.string, then delete @language from tempLiteral.
+		// 2. If @type empty or XSD.string, then delete @type from tempLiteral.
+		// 3. If @language empty or when @type different than XSD.string, then delete @language from tempLiteral.
 		if( this.tempLiteral[ "@type" ] === null || typeof this.tempLiteral[ "@type" ] === "undefined" ) delete this.tempLiteral[ "@type" ];
-		if( this.tempLiteral[ "@language" ] === null || typeof this.tempLiteral[ "@language" ] === "undefined" || (typeof this.tempLiteral[ "@type" ] !== "undefined" && this.tempLiteral[ "@type" ] !== NS.XSD.DataType.string) ) {
+		if( this.tempLiteral[ "@language" ] === null || typeof this.tempLiteral[ "@language" ] === "undefined" || (typeof this.tempLiteral[ "@type" ] !== "undefined" && this.tempLiteral[ "@type" ] !== XSD.string) ) {
 			delete this.tempLiteral[ "@language" ];
 		}
 		if( this.tempLiteral[ "@value" ] === null || typeof this.tempLiteral[ "@value" ] === "undefined" ) {
@@ -948,8 +948,8 @@ export class LiteralComponent implements AfterViewChecked {
 	}
 
 	changeType( type:string, text?:string, choice?:JQuery ):void {
-		this.isStringType = type === NS.XSD.DataType.string;
-		if( type === NS.XSD.DataType.string ) { type = null; }
+		this.isStringType = type === XSD.string;
+		if( type === XSD.string ) { type = null; }
 		if( ! this.isStringType ) { this.language = null; }
 		this.type = type;
 	}
@@ -986,12 +986,12 @@ export class LiteralComponent implements AfterViewChecked {
 
 	private getXSDDataTypes():any[] {
 		let xsdDataTypes:any[] = [];
-		Utils.forEachOwnProperty( NS.XSD.DataType, ( key:string, value:any ):void => {
+		Utils.forEachOwnProperty( XSD, ( key:string, value:any ):void => {
 			if( URI.Util.isAbsolute( key ) ) {
 				xsdDataTypes.push( {
 					title: value,
-					description: NS.XSD.DataType[ value ],
-					value: NS.XSD.DataType[ value ],
+					description: XSD[ value ],
+					value: XSD[ value ],
 				} );
 			}
 		} );

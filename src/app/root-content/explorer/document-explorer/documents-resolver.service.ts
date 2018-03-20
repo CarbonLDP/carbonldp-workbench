@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import * as HTTP from "carbonldp/HTTP";
-import * as NS from "carbonldp/NS";
+import { LDP } from "carbonldp/Vocabularies";
 import * as RDFDocument from "carbonldp/RDF/Document";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as AccessPoint from "carbonldp/AccessPoint";
@@ -26,7 +26,7 @@ export class DocumentsResolverService {
 		if( this.carbonldp.auth.isAuthenticated() ) this.carbonldp.auth.addAuthentication( requestOptions );
 
 		HTTP.Request.Util.setAcceptHeader( "application/ld+json", requestOptions );
-		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.RDFSource, requestOptions );
+		HTTP.Request.Util.setPreferredInteractionModel( LDP.RDFSource, requestOptions );
 
 		let eTag:string;
 
@@ -78,8 +78,8 @@ export class DocumentsResolverService {
 		return this.carbonldp.documents.executeSELECTQuery( documentURI,
 			`SELECT ?accessPointURI ?propertyName 
 						WHERE {
-						      ?accessPointURI <${NS.LDP.Predicate.membershipResource}> <${documentURI}>.
-					          ?accessPointURI <${NS.LDP.Predicate.hasMemberRelation}> ?propertyName
+						      ?accessPointURI <${LDP.membershipResource}> <${documentURI}>.
+					          ?accessPointURI <${LDP.hasMemberRelation}> ?propertyName
 			            }`
 		).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
 
@@ -108,7 +108,7 @@ export class DocumentsResolverService {
 		HTTP.Request.Util.setAcceptHeader( "application/ld+json", requestOptions );
 		HTTP.Request.Util.setContentTypeHeader( "application/ld+json", requestOptions );
 		HTTP.Request.Util.setIfMatchHeader( eTag, requestOptions );
-		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.RDFSource, requestOptions );
+		HTTP.Request.Util.setPreferredInteractionModel( LDP.RDFSource, requestOptions );
 		return HTTP.Request.Service.put( uri, body, requestOptions ).then( ( response:HTTP.Response.Class ) => {
 			return this.get( uri );
 		} ).then( ( parsedDocument:RDFDocument.Class ) => {

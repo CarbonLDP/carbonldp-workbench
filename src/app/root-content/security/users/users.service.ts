@@ -8,7 +8,7 @@ import * as HTTP from "carbonldp/HTTP";
 import * as Utils from "carbonldp/Utils";
 import * as URI from "carbonldp/RDF/URI";
 import * as SPARQL from "carbonldp/SPARQL";
-import * as NS from "carbonldp/NS";
+import { CS } from "carbonldp/Vocabularies";
 import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument";
 
 @Injectable()
@@ -74,7 +74,7 @@ export class UsersService {
 	public getNumberOfUsers():Promise<number> {
 		let usersURI:string = this.carbonldp.baseURI + "users/",
 			query:string = `SELECT DISTINCT (COUNT(?user) AS ?count) WHERE {
-			?user a <${NS.CS.Class.User}> . 
+			?user a <${CS.User}> . 
 		}`;
 		return this.carbonldp.documents.executeSELECTQuery( usersURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
 			if( typeof results.bindings[ 0 ] === "undefined" ) return 0;

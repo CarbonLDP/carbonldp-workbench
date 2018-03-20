@@ -7,7 +7,7 @@ import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 import * as HTTP from "carbonldp/HTTP";
 import * as Utils from "carbonldp/Utils";
 import * as URI from "carbonldp/RDF/URI";
-import * as NS from "carbonldp/NS";
+import { CS } from "carbonldp/Vocabularies";
 import * as SPARQL from "carbonldp/SPARQL";
 import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument";
 
@@ -98,7 +98,7 @@ export class RolesService {
 	public getNumberOfRoles():Promise<number> {
 		let usersURI:string = this.carbonldp.baseURI + ".system/roles/",
 			query:string = `SELECT DISTINCT (COUNT(?role) AS ?count) WHERE {
-			?role a <${NS.CS.Class.Role}> . 
+			?role a <${CS.Role}> . 
 		}`;
 		return this.carbonldp.documents.executeSELECTQuery( usersURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
 			if( typeof results.bindings[ 0 ] === "undefined" ) return 0;
@@ -112,9 +112,9 @@ export class RolesService {
 			query:string = `
 				SELECT ?parentRole ?childRole ?name
 				WHERE{
-					<${roleID}> <${NS.CS.Predicate.childRole}>* ?childRole.
-					?childRole <${NS.CS.Predicate.namae}> ?name.
-					?childRole <${NS.CS.Predicate.parentRole}> ?parentRole.
+					<${roleID}> <${CS.childRole}>* ?childRole.
+					?childRole <${CS.name}> ?name.
+					?childRole <${CS.parentRole}> ?parentRole.
 				}
 			`;
 
@@ -131,16 +131,16 @@ export class RolesService {
 
 	public getChildren( roleID?:string ):Promise<PersistedRole.Class[]> {
 		let rolesURI:string = this.carbonldp.baseURI + ".system/roles/",
-			filter:string = ! ! roleID ? `EXISTS { ?role <${NS.CS.Predicate.parentRole}> <${roleID}> }` : `NOT EXISTS { ?role <${NS.CS.Predicate.parentRole}> ?parentRole } `,
+			filter:string = ! ! roleID ? `EXISTS { ?role <${CS.parentRole}> <${roleID}> }` : `NOT EXISTS { ?role <${CS.parentRole}> ?parentRole } `,
 			query:string = `
 				SELECT ?role ?name ?parentRole ?childRole
 				WHERE{
 				  GRAPH ?role { 
-				    ?role a <${NS.CS.Class.Role}> .
-					?role <${NS.CS.Predicate.namae}> ?name .
-					OPTIONAL { ?role <${NS.CS.Predicate.parentRole}> ?parentRole } .
+				    ?role a <${CS.Role}> .
+					?role <${CS.namae}> ?name .
+					OPTIONAL { ?role <${CS.parentRole}> ?parentRole } .
 				  }
-				  BIND( EXISTS { GRAPH ?role { ?role <${NS.CS.Predicate.childRole}> ?childRole } } as ?childRole)
+				  BIND( EXISTS { GRAPH ?role { ?role <${CS.childRole}> ?childRole } } as ?childRole)
 				  FILTER( ${filter} )
 				}`;
 		return this.carbonldp.documents.executeSELECTQuery( rolesURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {

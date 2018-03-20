@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from "@angular/core";
 import { CarbonLDP } from "carbonldp";
 import * as HTTP from "carbonldp/HTTP";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
+import { CS } from "carbonldp/Vocabularies";
 
 import { Class as InstanceMetadata } from "carbonldp/System/InstanceMetadata";
 import { Message } from "app/shared/messages-area/message.component";
@@ -40,7 +41,7 @@ export class EditInstanceComponent implements OnInit {
 	ngOnInit():void {
 		let allowAllOrigins:boolean = false;
 		if( ! ! this.instance.allowsOrigins && this.instance.allowsOrigins.length > 0 ) {
-			allowAllOrigins = this.instance.allowsOrigins[ 0 ][ "id" ] === Carbon.NS.CS.Class.AllOrigins;
+			allowAllOrigins = this.instance.allowsOrigins[ 0 ][ "id" ] === CS.AllOrigins;
 			if( ! allowAllOrigins ) this.allowedDomains = <string[]>this.instance.allowsOrigins;
 		}
 
@@ -81,7 +82,7 @@ export class EditInstanceComponent implements OnInit {
 		if( name ) this.instance.name = name;
 		if( description ) this.instance.description = description;
 		if( allowsAllOrigins ) {
-			this.instance.allowsOrigins = [ Carbon.Pointer.Factory.create( Carbon.NS.CS.Class.AllOrigins ) ];
+			this.instance.allowsOrigins = [ Carbon.Pointer.Factory.create( CS.AllOrigins ) ];
 		} else {
 			this.instance.allowsOrigins = allowedDomains.length > 0 ? allowedDomains : this.instance.allowsOrigins;
 		}

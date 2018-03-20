@@ -4,7 +4,7 @@ import { Router, Resolve, ActivatedRoute, ActivatedRouteSnapshot, RouterStateSna
 
 import { CarbonLDP } from "carbonldp";
 import * as Role from "carbonldp/Auth/Role";
-import * as NS from "carbonldp/NS";
+import { CS } from "carbonldp/Vocabularies";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 
 import { RolesService } from "./roles.service";
@@ -32,11 +32,11 @@ export class RoleResolver implements Resolve<PersistedRole.Class | boolean> {
 		// TODO: Remove extendObjectSchema when SDK implements description and childRole
 		this.carbonldp.extendObjectSchema( Role.RDF_CLASS, {
 			"description": {
-				"@id": NS.CS.Predicate.description,
+				"@id": CS.description,
 				"@type": "string"
 			},
 			"childRole": {
-				"@id": NS.CS.Predicate.childRole,
+				"@id": CS.childRole,
 				"@container": "@set"
 			}
 		} );

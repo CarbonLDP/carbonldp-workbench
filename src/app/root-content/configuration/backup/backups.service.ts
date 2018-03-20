@@ -4,7 +4,7 @@ import { CarbonLDP } from "carbonldp";
 import * as HTTP from "carbonldp/HTTP";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as Pointer from "carbonldp/Pointer";
-import * as NS from "carbonldp/NS";
+import { LDP } from "carbonldp/Vocabularies";
 
 @Injectable()
 export class BackupsService {
@@ -42,7 +42,7 @@ export class BackupsService {
 
 	private convertToNonRDFSource( backupPointer:Pointer.Class ):Promise<[ PersistedDocument.Class, HTTP.Response.Class ]> {
 		return backupPointer.resolve().then( ( [ backupDocument, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
-			backupDocument.defaultInteractionModel = Pointer.Factory.create( NS.LDP.Class.NonRDFSource );
+			backupDocument.defaultInteractionModel = Pointer.Factory.create( LDP.NonRDFSource );
 			return backupDocument.save();
 		} );
 	}
