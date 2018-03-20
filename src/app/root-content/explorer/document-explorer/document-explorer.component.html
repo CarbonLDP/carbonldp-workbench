@@ -29,10 +29,10 @@
 		                    (onRefreshDocument)="refreshDocument($event)"></cw-document-viewer>
 		<cw-document-creator #documentCreator
 		                     [parentURI]="selectedDocumentURI"
-		                     (onSuccess)="onSuccessAccessPoint($event)"></cw-document-creator>
+		                     (onSuccess)="onSuccessCreateDocument($event)"></cw-document-creator>
 		<cw-access-point-creator #accessPointCreator
 		                         [parentURI]="selectedDocumentURI"
-		                         (onSuccess)="onSuccessCreateDocument($event)"></cw-access-point-creator>
+		                         (onSuccess)="onSuccessAccessPoint($event)"></cw-access-point-creator>
 		<cw-document-deleter #documentDeleter
 		                     [documentURI]="selectedDocumentURI"
 		                     (onSuccess)="onSuccessDeleteDocument($event)"></cw-document-deleter>
