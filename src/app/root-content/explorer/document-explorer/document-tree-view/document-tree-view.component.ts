@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as Pointer from "carbonldp/Pointer";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as HTTP from "carbonldp/HTTP";
@@ -23,7 +23,7 @@ import "!style-loader!css-loader!jstree/dist/themes/default/style.min.css";
 export class DocumentTreeViewComponent implements AfterViewInit {
 	element:ElementRef;
 	$element:JQuery;
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 
 	jsTree:JSTree;
 	$tree:JQuery;
@@ -51,9 +51,9 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	@Output() onShowCreateAccessPointForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSelectDocument:EventEmitter<string> = new EventEmitter<string>();
 
-	constructor( element:ElementRef, carbon:Carbon ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 	}
 
 	ngAfterViewInit():void {
@@ -74,13 +74,13 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	getDocumentTree():Promise<PersistedDocument.Class | void> {
-		return this.carbon.documents.get( "" ).then( ( [ resolvedRoot, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+		return this.carbonldp.documents.get( "" ).then( ( [ resolvedRoot, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
 			return resolvedRoot.refresh();
 		} ).then( ( [ updatedRoot, updatedResponse ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
 
 			let isRequiredSystemDocument:boolean = updatedRoot.types.findIndex( ( type:string ) => type === `${C.namespace}RequiredSystemDocument` ) !== - 1;
 
-			this.nodeChildren.push( this.buildNode( this.carbon.baseURI, "default", true, isRequiredSystemDocument ) );
+			this.nodeChildren.push( this.buildNode( this.carbonldp.baseURI, "default", true, isRequiredSystemDocument ) );
 
 			this.renderTree();
 
@@ -184,7 +184,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			    }
 			}
 		`;
-		return this.carbon.documents.executeSELECTQuery( uri, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
+		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
 			let accessPoints:Map<string, PreJSTreeNode> = new Map<string, PreJSTreeNode>(),
 				children:Map<string, PreJSTreeNode> = new Map<string, PreJSTreeNode>(),
 				nodes:JSTreeNode[] = [];

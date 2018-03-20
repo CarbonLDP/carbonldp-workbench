@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, ViewChild, AfterViewInit, OnChanges } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as RDFNode from "carbonldp/RDF/Node";
 import * as RDFDocument from "carbonldp/RDF/Document";
 import * as JSONLDParser from "carbonldp/JSONLD/Parser";
@@ -24,7 +24,7 @@ import "semantic-ui/semantic";
 } )
 
 export class DocumentViewerComponent implements AfterViewInit, OnChanges {
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 	element:ElementRef;
 	$element:JQuery;
 	$successMessage:JQuery;
@@ -88,9 +88,9 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	get loadingDocument():boolean { return this._loadingDocument; }
 
 
-	constructor( element:ElementRef, carbon:Carbon, documentsResolverService:DocumentsResolverService ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.documentsResolverService = documentsResolverService;
 	}
 

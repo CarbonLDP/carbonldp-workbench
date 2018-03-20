@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as HTTP from "carbonldp/HTTP";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 

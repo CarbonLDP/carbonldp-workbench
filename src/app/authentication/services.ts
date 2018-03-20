@@ -1,14 +1,14 @@
 import * as AuthService from "./services/auth.service";
-import { CarbonAuthService } from "./services/carbon-auth.service";
+import { CarbonLDPAuthService } from "./services/carbonldp-auth.service";
 
-export const CARBON_SERVICES_PROVIDERS:any[] = [
+export const CARBONLDP_SERVICES_PROVIDERS:any[] = [
 	{
 		provide: AuthService.Token,
-		useClass: CarbonAuthService,
+		useClass: CarbonLDPAuthService,
 	},
 ];
 
 export {
 	AuthService,
-	CarbonAuthService
+	CarbonLDPAuthService
 };

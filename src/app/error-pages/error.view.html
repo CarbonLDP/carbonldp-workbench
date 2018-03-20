@@ -20,11 +20,11 @@
 					Other common reasons are:
 				</p>
 				<ul>
-					<li>The configured Carbon platform host is wrong (right now it's set to <code>{{ carbon.baseURI }}</code>)</li>
+					<li>The configured Carbon platform host is wrong (right now it's set to <code>{{ carbonldp.baseURI }}</code>)</li>
 					<li *ngIf="sslEnabled">The platform server doesn't support https and you specified when building the <code>Carbon</code> object</li>
 					<li>
 						The platform server is down or not accessible (open
-						<a target="_blank" href="{{carbon.resolve( '.system/platform/' )}}">{{carbon.resolve( ".system/platform/" )}}</a> in the browser to test it)
+						<a target="_blank" href="{{carbonldp.resolve( '.system/platform/' )}}">{{carbonldp.resolve( ".system/platform/" )}}</a> in the browser to test it)
 					</li>
 				</ul>
 			</div>

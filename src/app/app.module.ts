@@ -5,8 +5,8 @@ import { FormsModule } from "@angular/forms";
 
 // Providers
 import { BASE_URL } from "./config";
-import { CARBON_PROVIDERS } from "app/providers";
-import { CARBON_SERVICES_PROVIDERS } from "app/authentication/services";
+import { CARBONLDP_PROVIDERS } from "app/providers";
+import { CARBONLDP_SERVICES_PROVIDERS } from "app/authentication/services";
 import { routing, appRoutingProviders } from "./app.routing";
 
 // Components
@@ -67,8 +67,8 @@ import { SidebarService } from "./sidebar/sidebar.service";
 			provide: APP_BASE_HREF,
 			useFactory: BASE_URL
 		},
-		CARBON_PROVIDERS,
-		CARBON_SERVICES_PROVIDERS,
+		CARBONLDP_PROVIDERS,
+		CARBONLDP_SERVICES_PROVIDERS,
 		appRoutingProviders,
 		Title,
 

@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
@@ -18,7 +18,7 @@ import "semantic-ui/semantic";
 
 export class DocumentCreatorComponent implements AfterViewInit {
 
-	private carbon:Carbon;
+	private carbonldp:CarbonLDP;
 	private element:ElementRef;
 	private $element:JQuery;
 
@@ -39,9 +39,9 @@ export class DocumentCreatorComponent implements AfterViewInit {
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
 
 
-	constructor( element:ElementRef, carbon:Carbon, documentsResolverService:DocumentsResolverService ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.documentsResolverService = documentsResolverService;
 	}
 

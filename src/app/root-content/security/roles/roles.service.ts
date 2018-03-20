@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as Roles from "carbonldp/Auth/Roles";
 import * as Role from "carbonldp/Auth/Role";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
@@ -14,31 +14,31 @@ import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument";
 @Injectable()
 export class RolesService {
 
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 	roles:Map<string, PersistedRole.Class>;
 
-	constructor( carbon:Carbon ) {
-		this.carbon = carbon;
+	constructor( carbonldp:CarbonLDP ) {
+		this.carbonldp = carbonldp;
 		this.roles = new Map<string, PersistedRole.Class>();
 	}
 
 	public get( slugOrURI:string ):Promise<PersistedRole.Class> {
-		let uri:string = this.carbon.baseURI + `.system/roles/${slugOrURI}/`;
+		let uri:string = this.carbonldp.baseURI + `.system/roles/${slugOrURI}/`;
 		if( URI.Util.isAbsolute( slugOrURI ) ) uri = slugOrURI;
 		this.roles = typeof this.roles === "undefined" ? new Map<string, PersistedRole.Class>() : this.roles;
-		return this.carbon.documents.get<PersistedRole.Class>( uri ).then( ( [ role, response ]:[ PersistedRole.Class, HTTP.Response.Class ] ) => {
+		return this.carbonldp.documents.get<PersistedRole.Class>( uri ).then( ( [ role, response ]:[ PersistedRole.Class, HTTP.Response.Class ] ) => {
 			this.roles.set( role.id, role );
 			return role;
 		} );
 	}
 
 	public getAll( limit?:number, page?:number, orderBy?:string, ascending:boolean = true ):Promise<PersistedRole.Class[]> {
-		let uri:string = this.carbon.baseURI + `.system/roles/`;
+		let uri:string = this.carbonldp.baseURI + `.system/roles/`;
 		this.roles = typeof this.roles === "undefined" ? new Map<string, PersistedRole.Class>() : this.roles;
 
 		let property:string = orderBy ? orderBy : "name";
 
-		return this.carbon.documents.getChildren<PersistedRole.Class>( uri, ( _:QueryDocumentsBuilder.Class ) => {
+		return this.carbonldp.documents.getChildren<PersistedRole.Class>( uri, ( _:QueryDocumentsBuilder.Class ) => {
 			let func:QueryDocumentsBuilder.Class = _.properties( {
 				"name": _.inherit,
 				"email": _.inherit,
@@ -64,7 +64,7 @@ export class RolesService {
 	public create( parentRole:string | PersistedRole.Class, role:PersistedRole.Class, slug?:string ):Promise<PersistedRole.Class> {
 		class MockedRoles extends Roles.Class {}
 
-		let roles:Roles.Class = new MockedRoles( this.carbon );
+		let roles:Roles.Class = new MockedRoles( this.carbonldp );
 		return roles.createChild( parentRole, <Role.Class & PersistedRole.Class>role, slug ).then( ( [ role, response ]:[ PersistedRole.Class, HTTP.Response.Class ] ) => {
 			return role;
 		} );
@@ -73,8 +73,8 @@ export class RolesService {
 	public delete( roleID:string ):Promise<HTTP.Response.Class> {
 		class MockedRoles extends Roles.Class {}
 
-		let roles:Roles.Class = new MockedRoles( this.carbon );
-		return this.carbon.documents.delete( roleID );
+		let roles:Roles.Class = new MockedRoles( this.carbonldp );
+		return this.carbonldp.documents.delete( roleID );
 	}
 
 	public saveAndRefresh( role:PersistedRole.Class ):Promise<[ PersistedRole.Class, HTTP.Response.Class [] ]> {
@@ -84,23 +84,23 @@ export class RolesService {
 	public registerUser( userID:string, roleID:string ):Promise<HTTP.Response.Class> {
 		class MockedRoles extends Roles.Class {}
 
-		let roles:Roles.Class = new MockedRoles( this.carbon );
+		let roles:Roles.Class = new MockedRoles( this.carbonldp );
 		return roles.addUser( roleID, userID )
 	}
 
 	public removeUser( userID:string, roleID:string ):Promise<HTTP.Response.Class> {
 		class MockedRoles extends Roles.Class {}
 
-		let roles:Roles.Class = new MockedRoles( this.carbon );
+		let roles:Roles.Class = new MockedRoles( this.carbonldp );
 		return roles.removeUser( roleID, userID )
 	}
 
 	public getNumberOfRoles():Promise<number> {
-		let usersURI:string = this.carbon.baseURI + ".system/roles/",
+		let usersURI:string = this.carbonldp.baseURI + ".system/roles/",
 			query:string = `SELECT DISTINCT (COUNT(?role) AS ?count) WHERE {
 			?role a <${NS.CS.Class.Role}> . 
 		}`;
-		return this.carbon.documents.executeSELECTQuery( usersURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
+		return this.carbonldp.documents.executeSELECTQuery( usersURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
 			if( typeof results.bindings[ 0 ] === "undefined" ) return 0;
 			return <number>results.bindings[ 0 ][ "count" ];
 		} );
@@ -108,7 +108,7 @@ export class RolesService {
 
 
 	public getDescendants( roleID?:string ):Promise<PersistedRole.Class[]> {
-		let rolesURI:string = this.carbon.baseURI + ".system/roles/",
+		let rolesURI:string = this.carbonldp.baseURI + ".system/roles/",
 			query:string = `
 				SELECT ?parentRole ?childRole ?name
 				WHERE{
@@ -118,7 +118,7 @@ export class RolesService {
 				}
 			`;
 
-		return this.carbon.documents.executeSELECTQuery( rolesURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
+		return this.carbonldp.documents.executeSELECTQuery( rolesURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
 			let roles:PersistedRole.Class[] = [];
 			results.bindings.forEach( ( rolePointer:SPARQL.SELECTResults.BindingObject ) => {
 				let role:Role.Class = Role.Factory.createFrom( { id: rolePointer[ "childRole" ][ "id" ] }, <string>rolePointer[ "name" ] );
@@ -130,7 +130,7 @@ export class RolesService {
 	}
 
 	public getChildren( roleID?:string ):Promise<PersistedRole.Class[]> {
-		let rolesURI:string = this.carbon.baseURI + ".system/roles/",
+		let rolesURI:string = this.carbonldp.baseURI + ".system/roles/",
 			filter:string = ! ! roleID ? `EXISTS { ?role <${NS.CS.Predicate.parentRole}> <${roleID}> }` : `NOT EXISTS { ?role <${NS.CS.Predicate.parentRole}> ?parentRole } `,
 			query:string = `
 				SELECT ?role ?name ?parentRole ?childRole
@@ -143,7 +143,7 @@ export class RolesService {
 				  BIND( EXISTS { GRAPH ?role { ?role <${NS.CS.Predicate.childRole}> ?childRole } } as ?childRole)
 				  FILTER( ${filter} )
 				}`;
-		return this.carbon.documents.executeSELECTQuery( rolesURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
+		return this.carbonldp.documents.executeSELECTQuery( rolesURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
 			let roles:PersistedRole.Class[] = [];
 			results.bindings.forEach( ( rolePointer:SPARQL.SELECTResults.BindingObject ) => {
 				let role:Role.Class = Role.Factory.createFrom( { id: rolePointer[ "role" ][ "id" ] }, <string>rolePointer[ "name" ] );

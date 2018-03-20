@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, OnDestroy } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as Response from "carbonldp/HTTP/Response";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as Pointer from "carbonldp/Pointer";
@@ -20,7 +20,7 @@ import "semantic-ui/semantic";
 } )
 
 export class BackupImporterComponent implements OnInit, OnDestroy {
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 
 	element:ElementRef;
 	monitorExecutionInterval:number;
@@ -44,9 +44,9 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 	errorMessages:Message[] = [];
 	errorMessage:Message;
 
-	constructor( element:ElementRef, carbon:Carbon, backupsService:BackupsService, jobsService:JobsService ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP, backupsService:BackupsService, jobsService:JobsService ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.backupsService = backupsService;
 		this.jobsService = jobsService;
 	}

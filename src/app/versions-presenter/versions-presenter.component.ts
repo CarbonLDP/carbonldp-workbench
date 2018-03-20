@@ -1,5 +1,5 @@
 import { Component, ElementRef } from "@angular/core";
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import { Class as PlatformMetadata } from "carbonldp/System/PlatformMetadata";
 import * as NS from "carbonldp/NS";
 import * as $ from "jquery";
@@ -12,30 +12,30 @@ import * as $ from "jquery";
 export class VersionsPresenterComponent {
 	private element:ElementRef;
 	private $element:JQuery;
-	private carbon:Carbon;
+	private carbonldp:CarbonLDP;
 
 	carbonldpSDK:string;
 	carbonldpWorkbench:string;
 	carbonldpPlatform:string;
 	carbonldpURL:string;
 
-	constructor( element:ElementRef, carbon:Carbon ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 	}
 
 	ngOnInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.carbonldpSDK = this.carbon.version;
+		this.carbonldpSDK = this.carbonldp.version;
 		this.carbonldpWorkbench = process.env.PACKAGES[ "carbonldp-workbench" ];
-		this.carbonldpURL = this.carbon.baseURI;
+		this.carbonldpURL = this.carbonldp.baseURI;
 		this.getPlatformVersion();
 	}
 
 	getPlatformVersion():Promise<PlatformMetadata> {
 
 		// TODO: Remove extendObjectSchema when SDK implements instance with its properties
-		this.carbon.extendObjectSchema( NS.C.namespace + "PlatformInstance", {
+		this.carbonldp.extendObjectSchema( NS.C.namespace + "PlatformInstance", {
 			"version": {
 				"@id": NS.C.namespace + "version",
 				"@type": "string"
@@ -45,13 +45,13 @@ export class VersionsPresenterComponent {
 				"@type": "dateTime"
 			}
 		} );
-		this.carbon.extendObjectSchema( NS.C.namespace + "Platform", {
+		this.carbonldp.extendObjectSchema( NS.C.namespace + "Platform", {
 			"instance": {
 				"@id": NS.C.namespace + "instance",
 				"@type": "@id"
 			}
 		} );
-		return this.carbon.getPlatformMetadata().then( ( platformMetadata:any ) => {
+		return this.carbonldp.getPlatformMetadata().then( ( platformMetadata:any ) => {
 			this.carbonldpPlatform = platformMetadata.instance.version;
 			return platformMetadata;
 		} ).catch( ( error ) => {

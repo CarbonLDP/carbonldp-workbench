@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 
 import { JobsService } from "../job/jobs.service";
@@ -17,15 +17,15 @@ import "semantic-ui/semantic";
 } )
 
 export class BackupsComponent implements OnInit {
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 	jobsService:JobsService;
 	backupJob:PersistedDocument.Class;
 
 	@ViewChild( BackupsListComponent ) backupsListComponent:BackupsListComponent;
 
-	constructor( jobsService:JobsService, carbon:Carbon ) {
+	constructor( jobsService:JobsService, carbonldp:CarbonLDP ) {
 		this.jobsService = jobsService;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 	}
 
 	ngOnInit():void {

@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import { Class as InstanceMetadata } from "carbonldp/System/InstanceMetadata";
 
 @Component( {
@@ -10,13 +10,13 @@ import { Class as InstanceMetadata } from "carbonldp/System/InstanceMetadata";
 } )
 export class RootContentView {
 
-	public carbon:Carbon;
+	public carbonldp:CarbonLDP;
 
 	public instance:InstanceMetadata;
 
 
-	constructor( carbon:Carbon ) {
-		this.carbon = carbon;
+	constructor( carbonldp:CarbonLDP ) {
+		this.carbonldp = carbonldp;
 	}
 
 	ngOnInit() {
@@ -25,7 +25,7 @@ export class RootContentView {
 	}
 
 	private getInstanceMetadata():Promise<InstanceMetadata | void> {
-		return this.carbon.getInstanceMetadata().then( ( instance:InstanceMetadata ) => {
+		return this.carbonldp.getInstanceMetadata().then( ( instance:InstanceMetadata ) => {
 			this.instance = instance;
 			return instance;
 		} ).catch( ( error ) => {

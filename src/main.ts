@@ -2,15 +2,15 @@ import { enableProdMode, NgModuleRef } from "@angular/core";
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 
 import { appInjector } from "app/authentication/utils";
-import { carbonProvider } from "app/providers/carbon.provider";
+import { carbonldpProvider } from "app/providers/carbonldp.provider";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 
-import { CARBON_PROTOCOL, CARBON_HOST, DEBUG } from "app/config";
+import { CARBON_HOST, DEBUG } from "app/config";
 import { AppModule } from "app/app.module";
 
-let carbon:Carbon = new Carbon( CARBON_HOST, CARBON_PROTOCOL === "https" );
-carbonProvider.initialize( <any>carbon );
+let carbonldp:CarbonLDP = new CarbonLDP( CARBON_HOST );
+carbonldpProvider.initialize( <any>carbonldp );
 
 if( ! DEBUG ) enableProdMode();
 

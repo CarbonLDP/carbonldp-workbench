@@ -27,7 +27,7 @@ export function errorMessageGeneratorSpecs() {
 		};
 
 		beforeAll( () => {
-			// let carbon:Carbon = new Carbon( "http://example.com" );
+			// let carbonldp:CarbonLDP = new Carbon( "http://example.com" );
 			jasmine.Ajax.install();
 			jasmine.Ajax.stubRequest( "http://example.com/404", null ).andReturn( testsResponses.notFound );
 			jasmine.Ajax.stubRequest( "http://example.com/500", null ).andReturn( testsResponses.internal );

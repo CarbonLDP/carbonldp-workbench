@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute, NavigationExtras } from "@angular/router";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as User from "carbonldp/Auth/User";
 import * as PersistedUser from "carbonldp/Auth/PersistedUser";
 import * as URI from "carbonldp/RDF/URI";
@@ -21,7 +21,7 @@ import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-mess
 export class UsersListComponent implements OnInit {
 
 	private router:Router;
-	private carbon:Carbon;
+	private carbonldp:CarbonLDP;
 	private route:ActivatedRoute;
 	private usersService:UsersService;
 
@@ -38,9 +38,9 @@ export class UsersListComponent implements OnInit {
 	public deletingUser:User.Class;
 
 
-	constructor( router:Router, carbon:Carbon, route:ActivatedRoute, usersService:UsersService ) {
+	constructor( router:Router, carbonldp:CarbonLDP, route:ActivatedRoute, usersService:UsersService ) {
 		this.router = router;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.route = route;
 		this.usersService = usersService;
 	}

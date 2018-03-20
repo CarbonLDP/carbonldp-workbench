@@ -1,16 +1,16 @@
 import { Injectable } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import { Class as PlatformMetadata } from "carbonldp/System/PlatformMetadata";
 import * as HTTP from "carbonldp/HTTP";
 import * as SPARQL from "carbonldp/SPARQL";
 
 @Injectable()
 export class WidgetsService {
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 
-	constructor( carbon:Carbon ) {
-		this.carbon = carbon;
+	constructor( carbonldp:CarbonLDP ) {
+		this.carbonldp = carbonldp;
 	}
 
 	getDocumentsTotalCount():Promise<number> {
@@ -23,7 +23,7 @@ export class WidgetsService {
 				}
 			`;
 
-		return this.carbon.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
+		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
 			results.bindings.forEach( ( binding )=> {
 				count = binding[ "count" ];
 			} );
@@ -42,7 +42,7 @@ export class WidgetsService {
 				}
 			`;
 
-		return this.carbon.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
+		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
 			results.bindings.forEach( ( binding )=> {
 				count = binding[ "count" ];
 			} );
@@ -52,7 +52,7 @@ export class WidgetsService {
 	}
 
 	getPlatformMetadata():Promise<any> {
-		return this.carbon.getPlatformMetadata();
+		return this.carbonldp.getPlatformMetadata();
 	}
 
 	refreshPlatformMetadata( platformMetadata:any ):Promise<any> {

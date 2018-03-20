@@ -1,6 +1,6 @@
 import { Component, ElementRef, Output, EventEmitter } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as NS from "carbonldp/NS";
 
 import { WidgetsService } from "../widgets.service";
@@ -15,7 +15,7 @@ import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-mess
 
 export class InstanceWidgetComponent {
 	private element:ElementRef;
-	private carbon:Carbon;
+	private carbonldp:CarbonLDP;
 	private widgetsService:WidgetsService;
 
 	carbonldpVersion:string;
@@ -28,9 +28,9 @@ export class InstanceWidgetComponent {
 
 	@Output() onErrorOccurs:EventEmitter<any> = new EventEmitter();
 
-	constructor( element:ElementRef, carbon:Carbon, widgetsService:WidgetsService ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP, widgetsService:WidgetsService ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.widgetsService = widgetsService;
 	}
 
@@ -67,7 +67,7 @@ export class InstanceWidgetComponent {
 
 	private getPlatformMetadata():Promise<any> {
 		// TODO: Remove extendObjectSchema when SDK implements instance with its properties
-		this.carbon.extendObjectSchema( NS.C.namespace + "PlatformInstance", {
+		this.carbonldp.extendObjectSchema( NS.C.namespace + "PlatformInstance", {
 			"version": {
 				"@id": NS.C.namespace + "version",
 				"@type": "string"
@@ -77,7 +77,7 @@ export class InstanceWidgetComponent {
 				"@type": "dateTime"
 			}
 		} );
-		this.carbon.extendObjectSchema( NS.C.namespace + "Platform", {
+		this.carbonldp.extendObjectSchema( NS.C.namespace + "Platform", {
 			"instance": {
 				"@id": NS.C.namespace + "instance",
 				"@type": "@id"
@@ -86,7 +86,7 @@ export class InstanceWidgetComponent {
 
 		return this.widgetsService.getPlatformMetadata().then( ( platformMetadata:any ) => {
 			this.platformMetadata = platformMetadata;
-			this.carbonldpURL = this.carbon.baseURI;
+			this.carbonldpURL = this.carbonldp.baseURI;
 			this.carbonldpBuildDate = platformMetadata.instance.buildDate;
 			this.carbonldpVersion = platformMetadata.instance.version;
 			this.element.nativeElement.classList.remove( "error" );

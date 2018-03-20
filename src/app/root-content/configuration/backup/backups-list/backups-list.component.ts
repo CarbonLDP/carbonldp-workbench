@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, EventEmitter, SimpleChange, AfterViewInit, OnChanges, OnDestroy } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as Response from "carbonldp/HTTP/Response";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import { StatusCode as HTTPStatusCode } from "carbonldp/HTTP";
@@ -20,7 +20,7 @@ import "semantic-ui/semantic";
 
 export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy {
 
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 	element:ElementRef;
 	$element:JQuery;
 	$deleteBackupConfirmationModal:JQuery;
@@ -39,9 +39,9 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 	@Input() backupJob:PersistedDocument.Class;
 	fetchBackupsList:EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	constructor( element:ElementRef, carbon:Carbon, backupsService:BackupsService ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP, backupsService:BackupsService ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.backupsService = backupsService;
 		this.fetchBackupsList.subscribe( ( doFetch ) => {
 			if( ! doFetch ) return;

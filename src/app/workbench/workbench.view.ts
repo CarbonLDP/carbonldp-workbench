@@ -1,7 +1,7 @@
 import { Component, Inject, EventEmitter } from "@angular/core";
 import { Router, Event, NavigationEnd } from "@angular/router";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 
 import { AuthService } from "app/authentication/services";
 import { HeaderService } from "app/header/header.service";
@@ -19,18 +19,18 @@ export class WorkbenchView {
 	private sidebarService:SidebarService;
 	private authService:AuthService.Class;
 	private router:Router;
-	private carbon:Carbon;
+	private carbonldp:CarbonLDP;
 	private prevUrl:string;
 	private base:string;
 
-	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbon:Carbon ) {
+	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbonldp:CarbonLDP ) {
 
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
 		this.base = this.sidebarService.base;
 		this.authService = authService;
 		this.router = router;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.router.events.subscribe( ( event:Event ) => {
 			let url:string = "", scrollableContent:Element;
 			if( event instanceof NavigationEnd ) {
@@ -67,7 +67,7 @@ export class WorkbenchView {
 			this.router.navigate( [ "/login" ] );
 		} );
 
-		let name:string = (this.carbon.auth.authenticatedUser && this.carbon.auth.authenticatedUser.name) ? this.carbon.auth.authenticatedUser.name : "User";
+		let name:string = (this.carbonldp.auth.authenticatedUser && this.carbonldp.auth.authenticatedUser.name) ? this.carbonldp.auth.authenticatedUser.name : "User";
 		// TODO: Remove any to use HeaderItem instead
 		this.headerService.addItems( <any>[
 			{

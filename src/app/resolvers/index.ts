@@ -1,1 +1,1 @@
-export * from "./carbon-provider.resolver";
+export * from "./carbonldp-provider.resolver";

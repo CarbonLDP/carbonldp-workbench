@@ -1,6 +1,6 @@
 import { Component, Input, Output, ElementRef, AfterViewInit, OnInit, EventEmitter } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 import * as HTTP from "carbonldp/HTTP";
 import * as URI from "carbonldp/RDF/URI";
@@ -19,7 +19,7 @@ import "jstree/dist/jstree.min";
 } )
 export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 
-	private carbon:Carbon;
+	private carbonldp:CarbonLDP;
 	private element:ElementRef;
 	private $element:JQuery;
 	private jsTree:JSTree;
@@ -48,9 +48,9 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 	@Output() onShowCreateRoleForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onShowDeleteRoleForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	constructor( element:ElementRef, carbon:Carbon, rolesService:RolesService ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP, rolesService:RolesService ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.rolesService = rolesService;
 	}
 
@@ -74,7 +74,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 		} );
 		this.refreshNode.subscribe( ( nodeId:string ) => {
 			let node:JSTreeNode = this.jsTree.get_node( nodeId );
-			if( node[ "parent" ] === "#" ) this.jsTree.move_node( node, this.carbon.baseURI + ".system/roles/admin/" );
+			if( node[ "parent" ] === "#" ) this.jsTree.move_node( node, this.carbonldp.baseURI + ".system/roles/admin/" );
 			this.jsTree.close_node( node[ "parent" ] );
 			this.jsTree.open_node( node[ "parent" ] );
 			this.loadNode( node );

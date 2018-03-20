@@ -1,1 +1,1 @@
-export * from "./carbon.provider"
+export * from "./carbonldp.provider"

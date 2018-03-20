@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, NgZone } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as RDFDocument from "carbonldp/RDF/Document";
 import * as Response from "carbonldp/HTTP/Response";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
@@ -28,17 +28,17 @@ export class DocumentExplorerComponent {
 	messages:Message[] = [];
 
 
-	@Input() carbon:Carbon;
+	@Input() carbonldp:CarbonLDP;
 	@Output() onRefreshNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onDisplaySuccessMessage:EventEmitter<string> = new EventEmitter<string>();
 
 	private zone:NgZone;
 
-	constructor( documentsResolverService:DocumentsResolverService, zone:NgZone, carbon:Carbon ) {
+	constructor( documentsResolverService:DocumentsResolverService, zone:NgZone, carbonldp:CarbonLDP ) {
 		this.documentsResolverService = documentsResolverService;
 		this.zone = zone;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 	}
 
 	onLoadingDocument( loadingDocument:boolean ):void {
@@ -93,7 +93,7 @@ export class DocumentExplorerComponent {
 
 	public handleExternalError( error:HTTPError | Response.Class ):void {
 		if( error instanceof Response.Class ) {
-			this.carbon.documents._parseErrorResponse( error ).catch( ( parsedError:HTTPError ) => {
+			this.carbonldp.documents._parseErrorResponse( error ).catch( ( parsedError:HTTPError ) => {
 				this.messages.push( ErrorMessageGenerator.getErrorMessage( parsedError ) );
 			} );
 		} else {
