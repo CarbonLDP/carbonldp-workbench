@@ -110,13 +110,14 @@ export class RoleDetailsComponent {
 		role[ CS.description ] = roleData.description;
 		this.rolesService.saveAndRefresh( role ).then( ( updatedRole:PersistedRole.Class ) => {
 			return this.editRoleUsers( role, roleData.users );
-		} ).then( () => {
-			if( role.id.endsWith( "roles/admin/" ) )
-				return new Promise( ( resolve, reject ) => { resolve( role )} );
-			else if( ! role.parentRole )
+		} ).then( ():any => {
+			if( role.id.endsWith( "roles/admin/" ) ) {
+				return Promise.resolve( role );
+			} else if( ! role.parentRole ) {
 				return this.parentRole.addMember( role );
-			else
-				return new Promise( ( resolve, reject ) => { resolve( this.parentRole )} );
+			} else {
+				return Promise.resolve( this.parentRole );
+			}
 		} ).then( () => {
 			return role.refresh();
 		} ).then( () => {
@@ -135,7 +136,7 @@ export class RoleDetailsComponent {
 		role[ CS.description ] = roleData.description;
 		this.rolesService.create( this.selectedRole, this.role, roleData.slug ).then( ( persistedRole:PersistedRole.Class ) => {
 			return this.editRoleUsers( persistedRole, roleData.users );
-		} ).then( ( persistedRole:PersistedRole.Class ) => {
+		} ).then( () => {
 			this.onSuccess.emit( this.role.id );
 			this.cancelForm();
 			let successMessage:Message = {
@@ -172,8 +173,8 @@ export class RoleDetailsComponent {
 		return this.rolesService.get( roleID );
 	}
 
-	private editRoleUsers( role:PersistedRole.Class, selectedUsers:PersistedUser.Class[] ):Promise<any> {
-		let promises:Promise<any>[] = [],
+	private editRoleUsers( role:PersistedRole.Class, selectedUsers:PersistedUser.Class[] ):Promise<void[]> {
+		let promises:Promise<void>[] = [],
 			removedUsers:PersistedUser.Class[] = this.getRemovedUsers( selectedUsers );
 
 		selectedUsers.forEach( ( user:PersistedUser.Class ) => {
