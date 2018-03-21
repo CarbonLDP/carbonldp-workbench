@@ -1,4 +1,4 @@
-import { Service } from "carbonldp/HTTP/Request";
+import { RequestService } from "carbonldp/HTTP/Request";
 
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
@@ -32,11 +32,11 @@ export function errorMessageGeneratorSpecs() {
 			jasmine.Ajax.stubRequest( "http://example.com/404", null ).andReturn( testsResponses.notFound );
 			jasmine.Ajax.stubRequest( "http://example.com/500", null ).andReturn( testsResponses.internal );
 
-			Service.send( "GET", "http://example.com/404" ).then( ( _response ) => {
+			RequestService.send( "GET", "http://example.com/404" ).then( ( _response ) => {
 			} ).catch( ( exception:HTTPError ) => {
 				notFoundError = exception;
 			} );
-			Service.send( "GET", "http://example.com/500" ).then( ( _response ) => {
+			RequestService.send( "GET", "http://example.com/500" ).then( ( _response ) => {
 			} ).catch( ( exception:HTTPError ) => {
 				internalError = exception;
 			} );
