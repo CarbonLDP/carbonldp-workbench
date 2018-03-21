@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, NgZone } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import * as RDFDocument from "carbonldp/RDF/Document";
-import * as Response from "carbonldp/HTTP/Response";
+import { Response } from "carbonldp/HTTP";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "./documents-resolver.service";

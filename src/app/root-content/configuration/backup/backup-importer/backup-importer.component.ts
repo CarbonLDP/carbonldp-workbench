@@ -1,9 +1,9 @@
 import { Component, ElementRef, Input, OnInit, OnDestroy } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import * as Response from "carbonldp/HTTP/Response";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
 import { Pointer } from "carbonldp/Pointer";
+import { Response } from "carbonldp/HTTP";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { BackupsService } from "../backups.service";
