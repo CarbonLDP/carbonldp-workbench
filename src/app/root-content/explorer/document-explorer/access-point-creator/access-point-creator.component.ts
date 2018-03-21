@@ -4,7 +4,7 @@ import { NgForm } from "@angular/forms";
 import { CarbonLDP } from "carbonldp";
 import { Response, Errors } from "carbonldp/HTTP";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
-import * as AccessPoint from "carbonldp/AccessPoint";
+import { AccessPointBase } from "carbonldp/AccessPoint";
 
 import { DocumentsResolverService } from "../documents-resolver.service"
 import { Message } from "app/shared/messages-area/message.component";
@@ -54,7 +54,7 @@ export class AccessPointCreatorComponent implements AfterViewInit {
 	private onSubmitAccessPoint( data:{ slug:string, hasMemberRelation:string, isMemberOfRelation:string }, $event:any, form:NgForm ):void {
 		$event.preventDefault();
 		let slug:string = data.slug;
-		let accessPoint:AccessPoint.Class = {
+		let accessPoint:AccessPointBase = {
 			hasMemberRelation: data.hasMemberRelation
 		};
 		if( ! ! data.isMemberOfRelation ) accessPoint.isMemberOfRelation = data.isMemberOfRelation;

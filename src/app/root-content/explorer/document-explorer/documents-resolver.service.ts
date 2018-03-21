@@ -5,7 +5,7 @@ import { Request, Response } from "carbonldp/HTTP";
 import { LDP } from "carbonldp/Vocabularies";
 import { RDFDocument, RDFDocumentParser } from "carbonldp/RDF/Document";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
-import * as AccessPoint from "carbonldp/AccessPoint";
+import { AccessPointBase } from "carbonldp/AccessPoint";
 import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 
 @Injectable()
@@ -64,9 +64,9 @@ export class DocumentsResolverService {
 		} );
 	}
 
-	createAccessPoint( document:PersistedDocument, accessPoint:AccessPoint.Class, slug?:string ):Promise<PersistedDocument> {
+	createAccessPoint( document:PersistedDocument, accessPoint:AccessPointBase, slug?:string ):Promise<PersistedDocument> {
 		return document.createAccessPoint( accessPoint, slug ).then(
-			( [ createdChild, response ]:[ PersistedDocument, Response.Response ] ) => {
+			( createdChild:PersistedDocument ) => {
 				return createdChild;
 			}
 		).catch( ( error ) => {
