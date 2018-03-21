@@ -91,7 +91,7 @@ export class EditInstanceComponent implements OnInit {
 		this.instance.saveAndRefresh().then( ( [ updatedInstance, response ]:[ PersistedDocument, [ Response, Response.Response ] ] ) => {
 			this.displaySuccessMessage = true;
 			return updatedInstance;
-		} ).catch( ( error:HTTP.Errors.Error ):void => {
+		} ).catch( ( error:Errors.HTTPError ):void => {
 			this.errorMessage = ErrorMessageGenerator.getErrorMessage( error )
 			this.errorMessage.content = this.getErrorMessage( error );
 		} ).then( ():void => {
