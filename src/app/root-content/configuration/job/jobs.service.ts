@@ -38,7 +38,7 @@ export class JobsService {
 	}
 
 	getAll():Promise<PersistedDocument[]> {
-		return this.carbonldp.documents.getChildren( this.jobsUri ).then( ( [ existingJobs, response ]:[ PersistedDocument[], Response ] ) => {
+		return this.carbonldp.documents.getChildren( this.jobsUri ).then( ( [ existingJobs, response ]:[ PersistedDocument[], Response.Response ] ) => {
 			existingJobs.filter( ( job:PersistedDocument ) => ! this.jobs.has( job.id ) )
 				.forEach( ( job:PersistedDocument ) => this.jobs.set( job.id, job ) );
 			return Utils.A.from( this.jobs.values() );
@@ -50,8 +50,8 @@ export class JobsService {
 			( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
 				let tempJob:any = {};
 				tempJob[ "types" ] = [ Job.Type.EXPORT_BACKUP ];
-				this.carbonldp.documents.createChild( this.jobsUri, tempJob ).then( ( [ pointer, response ]:[ Pointer.Class, Response ] ) => {
-					pointer.resolve().then( ( [ importJob, response ]:[ PersistedDocument, Response ] ) => {
+				this.carbonldp.documents.createChild( this.jobsUri, tempJob ).then( ( [ pointer, response ]:[ Pointer.Class, Response.Response ] ) => {
+					pointer.resolve().then( ( [ importJob, response ]:[ PersistedDocument, Response.Response ] ) => {
 						resolve( importJob );
 						this.jobs.set( importJob.id, importJob );
 					} );
@@ -66,9 +66,9 @@ export class JobsService {
 		tempJob[ "types" ] = [ Job.Type.IMPORT_BACKUP ];
 		tempJob[ Job.namespace + "backup" ] = this.carbonldp.documents.getPointer( backupURI );
 
-		return this.carbonldp.documents.createChild( this.jobsUri, tempJob ).then( ( [ pointer, response ]:[ Pointer.Class, Response ] ) => {
+		return this.carbonldp.documents.createChild( this.jobsUri, tempJob ).then( ( [ pointer, response ]:[ Pointer.Class, Response.Response ] ) => {
 			return pointer.resolve();
-		} ).then( ( [ importJob, response ]:[ PersistedDocument, Response ] ) => {
+		} ).then( ( [ importJob, response ]:[ PersistedDocument, Response.Response ] ) => {
 			this.jobs.set( importJob.id, importJob );
 			return importJob;
 		} );
@@ -77,9 +77,9 @@ export class JobsService {
 	runJob( job:PersistedDocument ):Promise<PersistedDocument> {
 		let tempJob:any = {};
 		tempJob[ "types" ] = [ Job.namespace + "Execution" ];
-		return this.carbonldp.documents.createChild( job.id, tempJob ).then( ( [ pointer, response ]:[ Pointer.Class, Response ] ) => {
+		return this.carbonldp.documents.createChild( job.id, tempJob ).then( ( [ pointer, response ]:[ Pointer.Class, Response.Response ] ) => {
 			return pointer.resolve();
-		} ).then( ( [ importJob, response ]:[ PersistedDocument, Response ] ) => {
+		} ).then( ( [ importJob, response ]:[ PersistedDocument, Response.Response ] ) => {
 			return importJob;
 		} );
 	}
@@ -87,12 +87,12 @@ export class JobsService {
 	checkJobExecution( jobExecution:PersistedDocument ):Promise<PersistedDocument> {
 		if( jobExecution.isResolved() ) {
 			return jobExecution.refresh().then(
-				( [ resolvedJobExecution, response ]:[ PersistedDocument, Response ] ) => {
+				( [ resolvedJobExecution, response ]:[ PersistedDocument, Response.Response ] ) => {
 					return resolvedJobExecution;
 				} ).catch( ( error ) => { return Promise.reject( error ) } );
 		} else {
 			return this.carbonldp.documents.get( jobExecution.id ).then(
-				( [ resolvedJobExecution, response ]:[ PersistedDocument, Response ] ) => {
+				( [ resolvedJobExecution, response ]:[ PersistedDocument, Response.Response ] ) => {
 					return resolvedJobExecution;
 				} ).catch( ( error ) => { return Promise.reject( error ) } );
 		}

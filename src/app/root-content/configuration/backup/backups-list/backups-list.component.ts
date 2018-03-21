@@ -87,7 +87,7 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 	getBackups():Promise<PersistedDocument[] | HTTPError> {
 		this.errorMessages = [];
 		return this.backupsService.getAll().then(
-			( [ backups, response ]:[ PersistedDocument[], Response ] ) => {
+			( [ backups, response ]:[ PersistedDocument[], Response.Response ] ) => {
 				backups = backups.sort( ( a:any, b:any ) => b.modified < a.modified ? - 1 : b.modified > a.modified ? 1 : 0 );
 				this.backups = backups;
 				return backups;
@@ -134,9 +134,9 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 		this.$deleteBackupConfirmationModal.modal( "show" );
 	}
 
-	deleteBackup( backup:PersistedDocument ):Promise<Response> {
+	deleteBackup( backup:PersistedDocument ):Promise<Response.Response> {
 		this.deletingBackup = true;
-		return this.backupsService.delete( backup.id ).then( ( response:Response ):Response => {
+		return this.backupsService.delete( backup.id ).then( ( response:Response.Response ):Response.Response => {
 			if( response.status !== StatusCode.OK ) return <any>Promise.reject( response );
 			this.getBackups();
 			this.closeDeleteModal();
@@ -163,7 +163,7 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 				};
 			}
 			this.deleteMessages.push( deleteMessage );
-		} ).then( ( response:Response ) => {
+		} ).then( ( response:Response.Response ) => {
 			this.deletingBackup = false;
 			return response;
 		} );

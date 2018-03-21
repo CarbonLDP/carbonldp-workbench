@@ -59,7 +59,7 @@ export class AccessPointCreatorComponent implements AfterViewInit {
 		};
 		if( ! ! data.isMemberOfRelation ) accessPoint.isMemberOfRelation = data.isMemberOfRelation;
 
-		this.carbonldp.documents.get( this.parentURI ).then( ( [ document, response ]:[ PersistedDocument, Response ] ) => {
+		this.carbonldp.documents.get( this.parentURI ).then( ( [ document, response ]:[ PersistedDocument, Response.Response ] ) => {
 			return this.documentsResolverService.createAccessPoint( document, accessPoint, slug );
 		} ).then( ( document:PersistedDocument ) => {
 			this.onSuccess.emit( document );

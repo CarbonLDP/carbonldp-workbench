@@ -72,7 +72,7 @@ export class RoleDeleterComponent implements AfterViewInit {
 		} );
 	}
 
-	private deleteRole( roleID:string ):Promise<Response> {
+	private deleteRole( roleID:string ):Promise<Response.Response> {
 		return this.rolesService.delete( roleID ).catch( ( error:Errors.HTTPError ) => {
 			this.errorMessages.push( ErrorMessageGenerator.getErrorMessage( error ) );
 			throw error;

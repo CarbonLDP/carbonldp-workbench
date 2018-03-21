@@ -18,15 +18,15 @@ export class BackupsService {
 		this.extendSchemasForBackups();
 	}
 
-	upload( file:Blob ):Promise<[ Pointer.Class, Response ]> {
-		return this.carbonldp.documents.upload( this.BACKUPS_URI, file ).then( ( [ uploadedBackupPointer, uploadResponse ]:[ Pointer.Class, Response ] ):any => {
+	upload( file:Blob ):Promise<[ Pointer.Class, Response.Response ]> {
+		return this.carbonldp.documents.upload( this.BACKUPS_URI, file ).then( ( [ uploadedBackupPointer, uploadResponse ]:[ Pointer.Class, Response.Response ] ):any => {
 			return this.convertToNonRDFSource( uploadedBackupPointer ).then( () => {
 				return [ uploadedBackupPointer, uploadResponse ];
 			} )
 		} );
 	}
 
-	getAll():Promise<[ PersistedDocument[], Response ]> {
+	getAll():Promise<[ PersistedDocument[], Response.Response ]> {
 		return this.carbonldp.documents.getChildren( this.BACKUPS_URI );
 	}
 
@@ -36,12 +36,12 @@ export class BackupsService {
 		} );
 	}
 
-	delete( uri:string ):Promise<Response> {
+	delete( uri:string ):Promise<Response.Response> {
 		return this.carbonldp.documents.delete( uri );
 	}
 
-	private convertToNonRDFSource( backupPointer:Pointer.Class ):Promise<[ PersistedDocument, Response ]> {
-		return backupPointer.resolve().then( ( [ backupDocument, response ]:[ PersistedDocument, Response ] ) => {
+	private convertToNonRDFSource( backupPointer:Pointer.Class ):Promise<[ PersistedDocument, Response.Response ]> {
+		return backupPointer.resolve().then( ( [ backupDocument, response ]:[ PersistedDocument, Response.Response ] ) => {
 			backupDocument.defaultInteractionModel = Pointer.Factory.create( LDP.NonRDFSource );
 			return backupDocument.save();
 		} );

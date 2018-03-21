@@ -37,7 +37,7 @@ export class UsersService {
 		let uri:string = this.carbonldp.baseURI + `users/${slugOrURI}/`;
 		if( URI.Util.isAbsolute( slugOrURI ) ) uri = slugOrURI;
 		this.users = typeof this.users === "undefined" ? new Map<string, PersistedUser.Class>() : this.users;
-		return this.carbonldp.documents.get<PersistedUser.Class>( uri ).then( ( [ user, response ]:[ PersistedUser.Class, Response ] ) => {
+		return this.carbonldp.documents.get<PersistedUser.Class>( uri ).then( ( [ user, response ]:[ PersistedUser.Class, Response.Response ] ) => {
 			this.users.set( user.id, user );
 			return user;
 		} );
@@ -61,7 +61,7 @@ export class UsersService {
 			if( typeof page !== "undefined" ) func.offset( page * limit );
 			return func;
 
-		} ).then( ( [ users, response ]:[ PersistedUser.Class[], Response ] ) => {
+		} ).then( ( [ users, response ]:[ PersistedUser.Class[], Response.Response ] ) => {
 			users.forEach( ( user:PersistedUser.Class ) => this.users.set( user.id, user ) );
 
 			let usersArray:PersistedUser.Class[] = Utils.A.from( this.users.values() );
@@ -76,13 +76,13 @@ export class UsersService {
 			query:string = `SELECT DISTINCT (COUNT(?user) AS ?count) WHERE {
 			?user a <${CS.User}> . 
 		}`;
-		return this.carbonldp.documents.executeSELECTQuery( usersURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, Response ] ) => {
+		return this.carbonldp.documents.executeSELECTQuery( usersURI, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, Response.Response ] ) => {
 			if( typeof results.bindings[ 0 ] === "undefined" ) return 0;
 			return <number>results.bindings[ 0 ][ "count" ];
 		} );
 	}
 
-	public saveUser( user:PersistedUser.Class ):Promise<[ PersistedUser.Class, Response ]> {
+	public saveUser( user:PersistedUser.Class ):Promise<[ PersistedUser.Class, Response.Response ]> {
 		return user.save();
 	}
 
@@ -90,11 +90,11 @@ export class UsersService {
 		return user.saveAndRefresh();
 	}
 
-	public createUser( email:string, password:string, enabled:boolean ):Promise<[ PersistedUser.Class, Response ]> {
+	public createUser( email:string, password:string, enabled:boolean ):Promise<[ PersistedUser.Class, Response.Response ]> {
 		return this.carbonldp.auth.users.register( email, password, enabled );
 	}
 
-	public deleteUser( user:User.Class, slug?:string ):Promise<Response> {
+	public deleteUser( user:User.Class, slug?:string ):Promise<Response.Response> {
 		let users:Users.Class = this.carbonldp.auth.users;
 		return users.delete( user.id );
 	}

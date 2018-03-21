@@ -23,7 +23,7 @@ export class WidgetsService {
 				}
 			`;
 
-		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, Response ] ) => {
+		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, Response.Response ] ) => {
 			results.bindings.forEach( ( binding )=> {
 				count = binding[ "count" ];
 			} );
@@ -42,7 +42,7 @@ export class WidgetsService {
 				}
 			`;
 
-		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, Response ] ) => {
+		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, Response.Response ] ) => {
 			results.bindings.forEach( ( binding )=> {
 				count = binding[ "count" ];
 			} );

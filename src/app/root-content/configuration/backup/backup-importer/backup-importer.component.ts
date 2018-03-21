@@ -57,7 +57,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 
 
 	getBackups():void {
-		this.backupsService.getAll().then( ( [ backups, response ]:[ PersistedDocument[], Response ] ) => {
+		this.backupsService.getAll().then( ( [ backups, response ]:[ PersistedDocument[], Response.Response ] ) => {
 			this.backups = backups.sort( ( a:any, b:any ) => b.modified < a.modified ? - 1 : b.modified > a.modified ? 1 : 0 );
 		} )
 	}
@@ -164,7 +164,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 	uploadBackup( file:Blob ):void {
 		this.uploading.start();
 		this.backupsService.upload( file ).then(
-			( [ pointer, response ]:[ Pointer.Class, Response ] ) => {
+			( [ pointer, response ]:[ Pointer.Class, Response.Response ] ) => {
 				this.uploading.success();
 				this.createBackupImport( pointer.id );
 			}

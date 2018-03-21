@@ -74,9 +74,9 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	getDocumentTree():Promise<PersistedDocument | void> {
-		return this.carbonldp.documents.get( "" ).then( ( [ resolvedRoot, response ]:[ PersistedDocument, Response ] ) => {
+		return this.carbonldp.documents.get( "" ).then( ( [ resolvedRoot, response ]:[ PersistedDocument, Response.Response ] ) => {
 			return resolvedRoot.refresh();
-		} ).then( ( [ updatedRoot, updatedResponse ]:[ PersistedDocument, Response ] ) => {
+		} ).then( ( [ updatedRoot, updatedResponse ]:[ PersistedDocument, Response.Response ] ) => {
 
 			let isRequiredSystemDocument:boolean = updatedRoot.types.findIndex( ( type:string ) => type === `${C.namespace}RequiredSystemDocument` ) !== - 1;
 
@@ -184,7 +184,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			    }
 			}
 		`;
-		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, Response ] ) => {
+		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, Response.Response ] ) => {
 			let accessPoints:Map<string, PreJSTreeNode> = new Map<string, PreJSTreeNode>(),
 				children:Map<string, PreJSTreeNode> = new Map<string, PreJSTreeNode>(),
 				nodes:JSTreeNode[] = [];

@@ -108,7 +108,7 @@ export class RoleDetailsComponent {
 	private editRole( role:PersistedRole.Class, roleData:RoleFormModel ):void {
 		role.name = roleData.name;
 		role[ CS.description ] = roleData.description;
-		this.rolesService.saveAndRefresh( role ).then( ( [ updatedRole, [ saveResponse, refreshResponse ] ]:[ PersistedRole.Class, [ Response, Response ] ] ) => {
+		this.rolesService.saveAndRefresh( role ).then( ( [ updatedRole, [ saveResponse, refreshResponse ] ]:[ PersistedRole.Class, [ Response, Response.Response ] ] ) => {
 			return this.editRoleUsers( role, roleData.users );
 		} ).then( () => {
 			if( role.id.endsWith( "roles/admin/" ) )
@@ -160,8 +160,8 @@ export class RoleDetailsComponent {
 		(<any>role.users).forEach( ( userPointer:Pointer.Class ) => {
 			promises.push( userPointer.resolve() );
 		} );
-		return Promise.all( promises ).then( ( resolvedUsers:[ PersistedUser.Class, Response ][] ) => {
-			resolvedUsers.forEach( ( [ resolvedUser, response ]:[ PersistedUser.Class, Response ] ) => {
+		return Promise.all( promises ).then( ( resolvedUsers:[ PersistedUser.Class, Response.Response ][] ) => {
+			resolvedUsers.forEach( ( [ resolvedUser, response ]:[ PersistedUser.Class, Response.Response ] ) => {
 				users.push( resolvedUser );
 			} );
 			return users;
@@ -199,11 +199,11 @@ export class RoleDetailsComponent {
 		} );
 	}
 
-	private registerUserToRole( userID:string, roleID:string ):Promise<Response> {
+	private registerUserToRole( userID:string, roleID:string ):Promise<Response.Response> {
 		return this.rolesService.registerUser( userID, roleID );
 	}
 
-	private removeUserFromRole( userID:string, roleID:string ):Promise<Response> {
+	private removeUserFromRole( userID:string, roleID:string ):Promise<Response.Response> {
 		return this.rolesService.removeUser( userID, roleID );
 	}
 

@@ -30,8 +30,8 @@ export class DocumentsResolverService {
 
 		let eTag:string;
 
-		return Request.RequestService.get( uri, requestOptions ).then( ( response:Response ) => {
-			eTag = Response.getETag( response );
+		return Request.RequestService.get( uri, requestOptions ).then( ( response:Response.Response ) => {
+			eTag = response.getETag();
 			return this.parser.parse( response.data );
 		} ).then( ( parsedDocuments:any ) => {
 			if( ! parsedDocuments[ 0 ] ) return null;
@@ -56,7 +56,7 @@ export class DocumentsResolverService {
 
 	createChild( parentURI:string, content:any, childSlug?:string ):Promise<PersistedDocument> {
 		return this.carbonldp.documents.createChild( parentURI, content, childSlug ).then(
-			( [ createdChild, response ]:[ PersistedDocument, Response ] ) => {
+			( [ createdChild, response ]:[ PersistedDocument, Response.Response ] ) => {
 				return createdChild;
 			}
 		).catch( ( error ) => {
@@ -66,7 +66,7 @@ export class DocumentsResolverService {
 
 	createAccessPoint( document:PersistedDocument, accessPoint:AccessPoint.Class, slug?:string ):Promise<PersistedDocument> {
 		return document.createAccessPoint( accessPoint, slug ).then(
-			( [ createdChild, response ]:[ PersistedDocument, Response ] ) => {
+			( [ createdChild, response ]:[ PersistedDocument, Response.Response ] ) => {
 				return createdChild;
 			}
 		).catch( ( error ) => {
@@ -81,7 +81,7 @@ export class DocumentsResolverService {
 						      ?accessPointURI <${LDP.membershipResource}> <${documentURI}>.
 					          ?accessPointURI <${LDP.hasMemberRelation}> ?propertyName
 			            }`
-		).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, Response ] ) => {
+		).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, Response.Response ] ) => {
 
 			return results.bindings.map( ( value:{ accessPointURI:any, propertyName:any } ) => value.propertyName.id );
 		} ).catch( ( error ) => {
@@ -89,7 +89,7 @@ export class DocumentsResolverService {
 		} );
 	}
 
-	delete( documentURI:string ):Promise<Response> {
+	delete( documentURI:string ):Promise<Response.Response> {
 		return this.carbonldp.documents.delete( documentURI ).catch( ( error ) => {
 			return Promise.reject( error );
 		} );
@@ -109,7 +109,7 @@ export class DocumentsResolverService {
 		Request.RequestUtils.setContentTypeHeader( "application/ld+json", requestOptions );
 		Request.RequestUtils.setIfMatchHeader( eTag, requestOptions );
 		Request.RequestUtils.setPreferredInteractionModel( LDP.RDFSource, requestOptions );
-		return Request.RequestService.put( uri, body, requestOptions ).then( ( response:Response ) => {
+		return Request.RequestService.put( uri, body, requestOptions ).then( ( response:Response.Response ) => {
 			return this.get( uri );
 		} ).then( ( parsedDocument:RDFDocument.Class ) => {
 			if( ! parsedDocument ) return null;
