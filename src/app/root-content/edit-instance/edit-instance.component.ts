@@ -88,7 +88,7 @@ export class EditInstanceComponent implements OnInit {
 			this.instance.allowsOrigins = allowedDomains.length > 0 ? allowedDomains : this.instance.allowsOrigins;
 		}
 
-		this.instance.saveAndRefresh().then( ( [ updatedInstance, response ]:[ PersistedDocument, [ Response, Response.Response ] ] ) => {
+		this.instance.saveAndRefresh().then( ( updatedInstance:PersistedDocument ) => {
 			this.displaySuccessMessage = true;
 			return updatedInstance;
 		} ).catch( ( error:Errors.HTTPError ):void => {
