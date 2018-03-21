@@ -85,7 +85,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 		if( this.mode === Modes.CREATE ) {
 			this.updateFormModel( "New User Name", "new-user@mail.com", "password", true, [] );
 		} else {
-			this.user.credentials.resolve().then( ( [ credentials, promise ]:[ PersistedCredentials.Class, Response.Response ] ) => {
+			this.user.credentials.resolve().then( ( credentials:PersistedCredentials.Class ) => {
 				this.updateFormModel(
 					this.user.name,
 					(<Credentials.Class>this.user.credentials).email,
@@ -161,7 +161,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 		(<Credentials.Class>user.credentials).email = userData.email;
 		(<Credentials.Class>user.credentials).password = userData.password.trim().length > 0 ? userData.password : (<Credentials.Class>user.credentials).password;
 		(<Credentials.Class>user.credentials).enabled = userData.enabled;
-		user.saveAndRefresh().then( ( [ updatedUser, [ saveResponse, refreshResponse ] ]:[ PersistedUser.Class, [ Response, Response.Response ] ] ) => {
+		user.saveAndRefresh().then( ( updatedUser:PersistedUser.Class ) => {
 			return this.editUserRoles( user, userData.roles );
 		} ).then( () => {
 			this.displaySuccessMessage = true;
@@ -175,10 +175,10 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 	}
 
 	private createUser( userData:UserFormModel ):void {
-		this.usersService.createUser( userData.email, userData.password, userData.enabled ).then( ( [ createdUser, responses ]:[ PersistedUser.Class, Response.Response ] ) => {
+		this.usersService.createUser( userData.email, userData.password, userData.enabled ).then( ( createdUser:PersistedUser.Class ) => {
 			createdUser.name = userData.name;
 			return createdUser.saveAndRefresh();
-		} ).then( ( [ createdUser, response ]:[ PersistedUser.Class, [ Response, Response.Response ] ] ) => {
+		} ).then( ( createdUser:PersistedUser.Class ) => {
 			this.user = createdUser;
 			return this.editUserRoles( this.user, userData.roles );
 		} ).then( () => {

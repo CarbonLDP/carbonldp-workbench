@@ -38,7 +38,7 @@ export class JobsService {
 	}
 
 	getAll():Promise<PersistedDocument[]> {
-		return this.carbonldp.documents.getChildren( this.jobsUri ).then( ( [ existingJobs, response ]:[ PersistedDocument[], Response.Response ] ) => {
+		return this.carbonldp.documents.getChildren( this.jobsUri ).then( ( existingJobs:PersistedDocument[] ) => {
 			existingJobs.filter( ( job:PersistedDocument ) => ! this.jobs.has( job.id ) )
 				.forEach( ( job:PersistedDocument ) => this.jobs.set( job.id, job ) );
 			return ArrayUtils.from( this.jobs.values() );
@@ -51,7 +51,7 @@ export class JobsService {
 				let tempJob:any = {};
 				tempJob[ "types" ] = [ Job.Type.EXPORT_BACKUP ];
 				this.carbonldp.documents.createChild( this.jobsUri, tempJob ).then( ( [ pointer, response ]:[ Pointer, Response.Response ] ) => {
-					pointer.resolve().then( ( [ importJob, response ]:[ PersistedDocument, Response.Response ] ) => {
+					pointer.resolve().then( ( importJob:PersistedDocument ) => {
 						resolve( importJob );
 						this.jobs.set( importJob.id, importJob );
 					} );
@@ -68,7 +68,7 @@ export class JobsService {
 
 		return this.carbonldp.documents.createChild( this.jobsUri, tempJob ).then( ( [ pointer, response ]:[ Pointer, Response.Response ] ) => {
 			return pointer.resolve();
-		} ).then( ( [ importJob, response ]:[ PersistedDocument, Response.Response ] ) => {
+		} ).then( ( importJob:PersistedDocument ) => {
 			this.jobs.set( importJob.id, importJob );
 			return importJob;
 		} );
@@ -79,7 +79,7 @@ export class JobsService {
 		tempJob[ "types" ] = [ Job.namespace + "Execution" ];
 		return this.carbonldp.documents.createChild( job.id, tempJob ).then( ( [ pointer, response ]:[ Pointer, Response.Response ] ) => {
 			return pointer.resolve();
-		} ).then( ( [ importJob, response ]:[ PersistedDocument, Response.Response ] ) => {
+		} ).then( ( importJob:PersistedDocument ) => {
 			return importJob;
 		} );
 	}
@@ -87,12 +87,12 @@ export class JobsService {
 	checkJobExecution( jobExecution:PersistedDocument ):Promise<PersistedDocument> {
 		if( jobExecution.isResolved() ) {
 			return jobExecution.refresh().then(
-				( [ resolvedJobExecution, response ]:[ PersistedDocument, Response.Response ] ) => {
+				( resolvedJobExecution:PersistedDocument ) => {
 					return resolvedJobExecution;
 				} ).catch( ( error ) => { return Promise.reject( error ) } );
 		} else {
 			return this.carbonldp.documents.get( jobExecution.id ).then(
-				( [ resolvedJobExecution, response ]:[ PersistedDocument, Response.Response ] ) => {
+				( resolvedJobExecution:PersistedDocument ) => {
 					return resolvedJobExecution;
 				} ).catch( ( error ) => { return Promise.reject( error ) } );
 		}

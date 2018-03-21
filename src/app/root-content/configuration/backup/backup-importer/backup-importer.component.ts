@@ -57,7 +57,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 
 
 	getBackups():void {
-		this.backupsService.getAll().then( ( [ backups, response ]:[ PersistedDocument[], Response.Response ] ) => {
+		this.backupsService.getAll().then( ( backups:PersistedDocument[] ) => {
 			this.backups = backups.sort( ( a:any, b:any ) => b.modified < a.modified ? - 1 : b.modified > a.modified ? 1 : 0 );
 		} )
 	}

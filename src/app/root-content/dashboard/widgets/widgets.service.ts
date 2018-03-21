@@ -23,8 +23,8 @@ export class WidgetsService {
 				}
 			`;
 
-		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, Response.Response ] ) => {
-			results.bindings.forEach( ( binding )=> {
+		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( results:SPARQL.SELECTResults.Class ) => {
+			results.bindings.forEach( ( binding ) => {
 				count = binding[ "count" ];
 			} );
 			return count;
@@ -42,8 +42,8 @@ export class WidgetsService {
 				}
 			`;
 
-		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, Response.Response ] ) => {
-			results.bindings.forEach( ( binding )=> {
+		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( results:SPARQL.SELECTResults.Class ) => {
+			results.bindings.forEach( ( binding ) => {
 				count = binding[ "count" ];
 			} );
 			return count;
@@ -56,7 +56,7 @@ export class WidgetsService {
 	}
 
 	refreshPlatformMetadata( platformMetadata:any ):Promise<any> {
-		return platformMetadata.refresh().then( ( [platformMetadata]:[PlatformMetadata] ) => {
+		return platformMetadata.refresh().then( ( [ platformMetadata ]:[ PlatformMetadata ] ) => {
 			return platformMetadata;
 		} );
 	}

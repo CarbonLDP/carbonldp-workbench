@@ -108,7 +108,7 @@ export class RoleDetailsComponent {
 	private editRole( role:PersistedRole.Class, roleData:RoleFormModel ):void {
 		role.name = roleData.name;
 		role[ CS.description ] = roleData.description;
-		this.rolesService.saveAndRefresh( role ).then( ( [ updatedRole, [ saveResponse, refreshResponse ] ]:[ PersistedRole.Class, [ Response, Response.Response ] ] ) => {
+		this.rolesService.saveAndRefresh( role ).then( ( updatedRole:PersistedRole.Class ) => {
 			return this.editRoleUsers( role, roleData.users );
 		} ).then( () => {
 			if( role.id.endsWith( "roles/admin/" ) )

@@ -81,7 +81,7 @@ export class DocumentsResolverService {
 						      ?accessPointURI <${LDP.membershipResource}> <${documentURI}>.
 					          ?accessPointURI <${LDP.hasMemberRelation}> ?propertyName
 			            }`
-		).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, Response.Response ] ) => {
+		).then( ( results:SPARQL.SELECTResults.Class ) => {
 
 			return results.bindings.map( ( value:{ accessPointURI:any, propertyName:any } ) => value.propertyName.id );
 		} ).catch( ( error ) => {
@@ -89,7 +89,7 @@ export class DocumentsResolverService {
 		} );
 	}
 
-	delete( documentURI:string ):Promise<Response.Response> {
+	delete( documentURI:string ):Promise<void> {
 		return this.carbonldp.documents.delete( documentURI ).catch( ( error ) => {
 			return Promise.reject( error );
 		} );

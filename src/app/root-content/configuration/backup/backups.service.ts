@@ -26,7 +26,7 @@ export class BackupsService {
 		} );
 	}
 
-	getAll():Promise<[ PersistedDocument[], Response.Response ]> {
+	getAll():Promise<PersistedDocument[]> {
 		return this.carbonldp.documents.getChildren( this.BACKUPS_URI );
 	}
 
@@ -36,12 +36,12 @@ export class BackupsService {
 		} );
 	}
 
-	delete( uri:string ):Promise<Response.Response> {
+	delete( uri:string ):Promise<void> {
 		return this.carbonldp.documents.delete( uri );
 	}
 
-	private convertToNonRDFSource( backupPointer:Pointer ):Promise<[ PersistedDocument, Response.Response ]> {
-		return backupPointer.resolve().then( ( [ backupDocument, response ]:[ PersistedDocument, Response.Response ] ) => {
+	private convertToNonRDFSource( backupPointer:Pointer ):Promise<PersistedDocument> {
+		return backupPointer.resolve().then( ( backupDocument:PersistedDocument ) => {
 			backupDocument.defaultInteractionModel = Pointer.create( LDP.NonRDFSource );
 			return backupDocument.save();
 		} );
