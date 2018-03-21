@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, ViewC
 
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node"
-import * as RDFDocument from "carbonldp/RDF/Document";
+import { RDFDocument } from "carbonldp/RDF/Document";
 import * as JSONLDParser from "carbonldp/JSONLD/Parser";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
@@ -51,14 +51,14 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	documentsResolverService:DocumentsResolverService;
 	@Input() uri:string;
 	@Input() displaySuccessMessage:EventEmitter<string> = new EventEmitter<string>();
-	private _document:RDFDocument.Class;
+	private _document:RDFDocument;
 	@Input()
-	set document( value:RDFDocument.Class ) {
+	set document( value:RDFDocument ) {
 		this._document = value;
 		this.receiveDocument( value );
 	}
 
-	get document():RDFDocument.Class {return this._document;}
+	get document():RDFDocument {return this._document;}
 
 
 	@Output() onError:EventEmitter<HTTPError> = new EventEmitter<HTTPError>();
@@ -108,13 +108,13 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		// In case the DocumentViewer is used by passing a URI, it can make the call to resolve the URI by itself
 		if( changes[ "uri" ] && ! ! changes[ "uri" ].currentValue && changes[ "uri" ].currentValue !== changes[ "uri" ].previousValue ) {
 			this.loadingDocument = true;
-			this.getDocument( this.uri ).then( ( document:RDFDocument.Class ) => {
+			this.getDocument( this.uri ).then( ( document:RDFDocument ) => {
 				this.document = document[ 0 ];
 			} );
 		}
 	}
 
-	receiveDocument( document:RDFDocument.Class ):void {
+	receiveDocument( document:RDFDocument ):void {
 		if( ! document ) return;
 		this.loadingDocument = true;
 		this.setRoot();
@@ -133,7 +133,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		this.rootNode = RDFDocument.Util.getDocumentResources( this.document )[ 0 ];
 	}
 
-	getDocument( uri:string ):Promise<RDFDocument.Class | void> {
+	getDocument( uri:string ):Promise<RDFDocument | void> {
 		return this.documentsResolverService.get( uri ).catch( ( error:HTTPError ) => {
 			this.onError.emit( error );
 		} );
@@ -211,7 +211,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		}
 	}
 
-	modifyBNodesWithChanges( document:RDFDocument.Class ):void {
+	modifyBNodesWithChanges( document:RDFDocument ):void {
 		let tempIdx:number;
 		if( ! this.bNodesChanges ) return;
 		this.bNodesChanges.deletions.forEach( ( blankNodeRow:BlankNodeRow, bNodeId ) => {
@@ -228,7 +228,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		} );
 	}
 
-	modifyNamedFragmentsWithChanges( document:RDFDocument.Class ):void {
+	modifyNamedFragmentsWithChanges( document:RDFDocument ):void {
 		let tempIdx:number;
 		if( ! this.namedFragmentsChanges ) return;
 		this.namedFragmentsChanges.deletions.forEach( ( namedFragmentRow:NamedFragmentRow, namedFragmentId ) => {
@@ -256,14 +256,14 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 
 	saveDocument():void {
 		this.savingDocument = true;
-		let backupDocument:RDFDocument.Class = JSON.parse( JSON.stringify( this.document ) );
+		let backupDocument:RDFDocument = JSON.parse( JSON.stringify( this.document ) );
 		let backupRootNode:RDFNode = RDFDocument.Util.getDocumentResources( backupDocument )[ 0 ];
 		this.modifyRootNodeWithChanges( backupRootNode );
 		this.modifyBNodesWithChanges( backupDocument );
 		this.modifyNamedFragmentsWithChanges( backupDocument );
 		let body:string = JSON.stringify( backupDocument, null, "\t" );
 		this.documentsResolverService.update( backupDocument[ "@id" ], body ).then(
-			( updatedDocument:RDFDocument.Class ) => {
+			( updatedDocument:RDFDocument ) => {
 				this.document = updatedDocument;
 				this.showSuccessMessage( "<p>Changes saved successfully</p>", 4500 );
 			}

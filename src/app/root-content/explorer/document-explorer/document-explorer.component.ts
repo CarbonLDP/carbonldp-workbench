@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, NgZone } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import * as RDFDocument from "carbonldp/RDF/Document";
+import { RDFDocument } from "carbonldp/RDF/Document";
 import { Response } from "carbonldp/HTTP";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
@@ -23,7 +23,7 @@ export class DocumentExplorerComponent {
 	selectedDocumentURI:string = "";
 	loadingDocument:boolean = false;
 	savingDocument:boolean = false;
-	inspectingDocument:RDFDocument.Class;
+	inspectingDocument:RDFDocument;
 	documentsResolverService:DocumentsResolverService;
 	messages:Message[] = [];
 
@@ -53,7 +53,7 @@ export class DocumentExplorerComponent {
 		this.zone.run( () => {this.loadingDocument = true;} );
 		this.documentsResolverService.get( uri ).catch( ( error ) => {
 			this.handleExternalError( error );
-		} ).then( ( document:RDFDocument.Class ) => {
+		} ).then( ( document:RDFDocument ) => {
 			this.zone.run( () => {
 				this.inspectingDocument = document;
 				this.loadingDocument = false;
