@@ -103,7 +103,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		} );
 	}
 
-	ngOnChanges( changes:{ [propName:string]:SimpleChange } ):void {
+	ngOnChanges( changes:{ [ propName:string ]:SimpleChange } ):void {
 
 		// In case the DocumentViewer is used by passing a URI, it can make the call to resolve the URI by itself
 		if( changes[ "uri" ] && ! ! changes[ "uri" ].currentValue && changes[ "uri" ].currentValue !== changes[ "uri" ].previousValue ) {
@@ -130,7 +130,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	}
 
 	setRoot():void {
-		this.rootNode = RDFDocument.Util.getDocumentResources( this.document )[ 0 ];
+		this.rootNode = RDFDocument.getDocumentResources( this.document )[ 0 ];
 	}
 
 	getDocument( uri:string ):Promise<RDFDocument | void> {
@@ -140,14 +140,14 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	}
 
 	generateFragments():void {
-		this.bNodes = RDFDocument.Util.getBNodeResources( this.document ).map(
+		this.bNodes = RDFDocument.getBNodeResources( this.document ).map(
 			( bNode:RDFNode ) => {
 				return {
 					id: bNode[ "@id" ],
 					copy: bNode
 				}
 			} );
-		this.namedFragments = RDFDocument.Util.getFragmentResources( this.document ).map( ( namedFragment:RDFNode ) => {
+		this.namedFragments = RDFDocument.getNamedFragmentResources( this.document ).map( ( namedFragment:RDFNode ) => {
 			return {
 				id: namedFragment[ "@id" ],
 				name: namedFragment[ "@id" ],
@@ -257,7 +257,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	saveDocument():void {
 		this.savingDocument = true;
 		let backupDocument:RDFDocument = JSON.parse( JSON.stringify( this.document ) );
-		let backupRootNode:RDFNode = RDFDocument.Util.getDocumentResources( backupDocument )[ 0 ];
+		let backupRootNode:RDFNode = RDFDocument.getDocumentResources( backupDocument )[ 0 ];
 		this.modifyRootNodeWithChanges( backupRootNode );
 		this.modifyBNodesWithChanges( backupDocument );
 		this.modifyNamedFragmentsWithChanges( backupDocument );

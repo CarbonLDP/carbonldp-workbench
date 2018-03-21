@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { CarbonLDP } from "carbonldp";
 import { Request, Response } from "carbonldp/HTTP";
 import { LDP } from "carbonldp/Vocabularies";
-import { RDFDocument } from "carbonldp/RDF/Document";
+import { RDFDocument, RDFDocumentParser } from "carbonldp/RDF/Document";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
 import * as AccessPoint from "carbonldp/AccessPoint";
 import * as SPARQL from "carbonldp/SPARQL";
@@ -14,7 +14,7 @@ export class DocumentsResolverService {
 	carbonldp:CarbonLDP;
 
 	documents:Map<string, { document:RDFDocument, ETag:string }> = new Map<string, { document:RDFDocument, ETag:string }>();
-	private parser:RDFDocument.Parser = new RDFDocument.Parser();
+	private parser:RDFDocumentParser = new RDFDocumentParser();
 
 	constructor( carbonldp:CarbonLDP ) {
 		this.carbonldp = carbonldp;
