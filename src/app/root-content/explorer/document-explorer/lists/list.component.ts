@@ -2,7 +2,7 @@ import { ElementRef, Component, Input, Output, EventEmitter } from "@angular/cor
 
 import "semantic-ui/semantic";
 
-import * as SDKLiteral from "carbonldp/RDF/Literal";
+import { RDFLiteral } from "carbonldp/RDF/Literal";
 import { RDFNode } from "carbonldp/RDF/Node"
 import { ObjectUtils } from "carbonldp/Utils";
 
@@ -60,7 +60,7 @@ export class ListComponent {
 	}
 
 	isLiteral( item:any ):boolean {
-		return SDKLiteral.Factory.is( item[ ! ! item.copy ? (! ! item.modified ? "modified" : "copy") : "added" ] );
+		return RDFLiteral.is( item[ ! ! item.copy ? (! ! item.modified ? "modified" : "copy") : "added" ] );
 	}
 
 	isPointer( item:any ):boolean {

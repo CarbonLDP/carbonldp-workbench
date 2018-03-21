@@ -1,6 +1,6 @@
 import { XSD } from "carbonldp/Vocabularies";
 import { isDate, isString, isInteger, isNumber } from "carbonldp/Utils";
-import * as SDKLiteral from "carbonldp/RDF/Literal";
+import { RDFLiteral } from "carbonldp/RDF/Literal";
 import * as URI from "carbonldp/RDF/URI";
 
 import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
@@ -22,7 +22,7 @@ export class PropertyNameValidator implements Validator, OnChanges {
 		this.control.control.updateValueAndValidity( false, true );
 	}
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 
 		if( ! ! control ) {
 			if( typeof control.value === "undefined" || control.value === null || ! control.value ) return null;
@@ -53,7 +53,7 @@ export class IdValidator implements Validator, OnChanges {
 		this.control.control.updateValueAndValidity( false, true );
 	}
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 
 		if( ! ! control ) {
 			if( typeof control.value === "undefined" || control.value === null || ! control.value ) return null;
@@ -79,7 +79,7 @@ export class LiteralValueValidator implements Validator, OnChanges {
 		this.control.control.updateValueAndValidity( false, true );
 	}
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		let valid:boolean;
 		switch( this.type ) {
 			// Boolean
@@ -100,7 +100,7 @@ export class LiteralValueValidator implements Validator, OnChanges {
 			// Numbers
 			case XSD.int :
 			case XSD.integer :
-				valid = ! isNaN( control.value ) && ! isNaN( SDKLiteral.Factory.parse( control.value, this.type ) ) && isInteger( SDKLiteral.Factory.parse( control.value, this.type ) );
+				valid = ! isNaN( control.value ) && ! isNaN( RDFLiteral.parse( control.value, this.type ) ) && isInteger( RDFLiteral.parse( control.value, this.type ) );
 				break;
 
 			case XSD.byte :
@@ -117,18 +117,18 @@ export class LiteralValueValidator implements Validator, OnChanges {
 			case XSD.unsignedByte :
 			case XSD.double :
 			case XSD.float :
-				valid = ! isNaN( control.value ) && ! isNaN( SDKLiteral.Factory.parse( control.value, this.type ) ) && isNumber( SDKLiteral.Factory.parse( control.value, this.type ) );
+				valid = ! isNaN( control.value ) && ! isNaN( RDFLiteral.parse( control.value, this.type ) ) && isNumber( RDFLiteral.parse( control.value, this.type ) );
 				break;
 
 			// Dates
 			case XSD.date:
 			case XSD.dateTime:
 			case XSD.time:
-				valid = isDate( SDKLiteral.Factory.parse( control.value, this.type ) );
+				valid = isDate( RDFLiteral.parse( control.value, this.type ) );
 				break;
 
 			case XSD.string:
-				valid = isString( SDKLiteral.Factory.parse( control.value, this.type ) );
+				valid = isString( RDFLiteral.parse( control.value, this.type ) );
 				break;
 
 			default:
@@ -151,7 +151,7 @@ export class PointerValidator implements Validator {
 	@Input() documentURI;
 	url = new RegExp( "(\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]" );
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		if( ! ! control && typeof control.value === "undefined" ) {
 			return { "emptyControl": true };
 		}
