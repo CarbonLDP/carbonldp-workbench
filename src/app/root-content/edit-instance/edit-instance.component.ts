@@ -83,7 +83,7 @@ export class EditInstanceComponent implements OnInit {
 		if( name ) this.instance.name = name;
 		if( description ) this.instance.description = description;
 		if( allowsAllOrigins ) {
-			this.instance.allowsOrigins = [ Pointer.Factory.create( CS.AllOrigins ) ];
+			this.instance.allowsOrigins = [ Pointer.create( CS.AllOrigins ) ];
 		} else {
 			this.instance.allowsOrigins = allowedDomains.length > 0 ? allowedDomains : this.instance.allowsOrigins;
 		}

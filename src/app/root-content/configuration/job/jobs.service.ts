@@ -4,7 +4,7 @@ import { CarbonLDP } from "carbonldp";
 import { Response }  from "carbonldp/HTTP";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
 import * as Utils from "carbonldp/Utils";
-import * as Pointer from "carbonldp/Pointer";
+import { Pointer } from "carbonldp/Pointer";
 
 import * as Job from "./job"
 
@@ -50,7 +50,7 @@ export class JobsService {
 			( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
 				let tempJob:any = {};
 				tempJob[ "types" ] = [ Job.Type.EXPORT_BACKUP ];
-				this.carbonldp.documents.createChild( this.jobsUri, tempJob ).then( ( [ pointer, response ]:[ Pointer.Class, Response.Response ] ) => {
+				this.carbonldp.documents.createChild( this.jobsUri, tempJob ).then( ( [ pointer, response ]:[ Pointer, Response.Response ] ) => {
 					pointer.resolve().then( ( [ importJob, response ]:[ PersistedDocument, Response.Response ] ) => {
 						resolve( importJob );
 						this.jobs.set( importJob.id, importJob );
@@ -66,7 +66,7 @@ export class JobsService {
 		tempJob[ "types" ] = [ Job.Type.IMPORT_BACKUP ];
 		tempJob[ Job.namespace + "backup" ] = this.carbonldp.documents.getPointer( backupURI );
 
-		return this.carbonldp.documents.createChild( this.jobsUri, tempJob ).then( ( [ pointer, response ]:[ Pointer.Class, Response.Response ] ) => {
+		return this.carbonldp.documents.createChild( this.jobsUri, tempJob ).then( ( [ pointer, response ]:[ Pointer, Response.Response ] ) => {
 			return pointer.resolve();
 		} ).then( ( [ importJob, response ]:[ PersistedDocument, Response.Response ] ) => {
 			this.jobs.set( importJob.id, importJob );
@@ -77,7 +77,7 @@ export class JobsService {
 	runJob( job:PersistedDocument ):Promise<PersistedDocument> {
 		let tempJob:any = {};
 		tempJob[ "types" ] = [ Job.namespace + "Execution" ];
-		return this.carbonldp.documents.createChild( job.id, tempJob ).then( ( [ pointer, response ]:[ Pointer.Class, Response.Response ] ) => {
+		return this.carbonldp.documents.createChild( job.id, tempJob ).then( ( [ pointer, response ]:[ Pointer, Response.Response ] ) => {
 			return pointer.resolve();
 		} ).then( ( [ importJob, response ]:[ PersistedDocument, Response.Response ] ) => {
 			return importJob;

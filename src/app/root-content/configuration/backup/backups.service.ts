@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { CarbonLDP } from "carbonldp";
 import { Response } from "carbonldp/HTTP";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
-import * as Pointer from "carbonldp/Pointer";
+import { Pointer } from "carbonldp/Pointer";
 import { LDP } from "carbonldp/Vocabularies";
 
 @Injectable()
@@ -18,8 +18,8 @@ export class BackupsService {
 		this.extendSchemasForBackups();
 	}
 
-	upload( file:Blob ):Promise<[ Pointer.Class, Response.Response ]> {
-		return this.carbonldp.documents.upload( this.BACKUPS_URI, file ).then( ( [ uploadedBackupPointer, uploadResponse ]:[ Pointer.Class, Response.Response ] ):any => {
+	upload( file:Blob ):Promise<[ Pointer, Response.Response ]> {
+		return this.carbonldp.documents.upload( this.BACKUPS_URI, file ).then( ( [ uploadedBackupPointer, uploadResponse ]:[ Pointer, Response.Response ] ):any => {
 			return this.convertToNonRDFSource( uploadedBackupPointer ).then( () => {
 				return [ uploadedBackupPointer, uploadResponse ];
 			} )
@@ -40,9 +40,9 @@ export class BackupsService {
 		return this.carbonldp.documents.delete( uri );
 	}
 
-	private convertToNonRDFSource( backupPointer:Pointer.Class ):Promise<[ PersistedDocument, Response.Response ]> {
+	private convertToNonRDFSource( backupPointer:Pointer ):Promise<[ PersistedDocument, Response.Response ]> {
 		return backupPointer.resolve().then( ( [ backupDocument, response ]:[ PersistedDocument, Response.Response ] ) => {
-			backupDocument.defaultInteractionModel = Pointer.Factory.create( LDP.NonRDFSource );
+			backupDocument.defaultInteractionModel = Pointer.create( LDP.NonRDFSource );
 			return backupDocument.save();
 		} );
 	}

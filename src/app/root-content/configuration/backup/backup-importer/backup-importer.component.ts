@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, OnInit, OnDestroy } from "@angular/core";
 import { CarbonLDP } from "carbonldp";
 import * as Response from "carbonldp/HTTP/Response";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
-import * as Pointer from "carbonldp/Pointer";
+import { Pointer } from "carbonldp/Pointer";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { BackupsService } from "../backups.service";
@@ -164,7 +164,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 	uploadBackup( file:Blob ):void {
 		this.uploading.start();
 		this.backupsService.upload( file ).then(
-			( [ pointer, response ]:[ Pointer.Class, Response.Response ] ) => {
+			( [ pointer, response ]:[ Pointer, Response.Response ] ) => {
 				this.uploading.success();
 				this.createBackupImport( pointer.id );
 			}

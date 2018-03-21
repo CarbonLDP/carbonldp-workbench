@@ -5,7 +5,7 @@ import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 import * as PersistedUser from "carbonldp/Auth/PersistedUser";
 import { Response } from "carbonldp/HTTP";
 import { CS } from "carbonldp/Vocabularies";
-import * as Pointer from "carbonldp/Pointer";
+import { Pointer } from "carbonldp/Pointer";
 
 import { RolesService } from "./../roles.service";
 import { DocumentExplorerLibrary } from "app/root-content/explorer/document-explorer/document-explorer-library";
@@ -157,7 +157,7 @@ export class RoleDetailsComponent {
 			users:PersistedUser.Class[] = [];
 		if( typeof role.users === "undefined" ) return Promise.resolve( users );
 
-		(<any>role.users).forEach( ( userPointer:Pointer.Class ) => {
+		(<any>role.users).forEach( ( userPointer:Pointer ) => {
 			promises.push( userPointer.resolve() );
 		} );
 		return Promise.all( promises ).then( ( resolvedUsers:[ PersistedUser.Class, Response.Response ][] ) => {

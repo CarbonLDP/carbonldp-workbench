@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import * as Pointer from "carbonldp/Pointer";
+import { Pointer } from "carbonldp/Pointer";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
 import { Response, Errors } from "carbonldp/HTTP";
 import * as URI from "carbonldp/RDF/URI";
@@ -190,7 +190,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 				nodes:JSTreeNode[] = [];
 
 			results.bindings.forEach(
-				( binding:{ p:Pointer.Class, o:Pointer.Class, p2:Pointer.Class, o2:Pointer.Class, isRequiredSystemDocument:boolean } ) => {
+				( binding:{ p:Pointer, o:Pointer, p2:Pointer, o2:Pointer, isRequiredSystemDocument:boolean } ) => {
 
 					// Do not include any node that is /users/me
 					if( ! ! binding.o2 && binding.o2.id.indexOf( "/users/me/" ) !== - 1 ) return;
@@ -224,8 +224,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.jsTree.refresh_node( this.selectedURI );
 	}
 
-	getSlug( pointer:Pointer.Class | string ):string {
-		if( typeof pointer !== "string" ) return (<Pointer.Class>pointer).id;
+	getSlug( pointer:Pointer | string ):string {
+		if( typeof pointer !== "string" ) return (<Pointer>pointer).id;
 		return URI.Util.getSlug( <string>pointer );
 	}
 
@@ -241,7 +241,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.onShowDeleteChildForm.emit( true );
 	}
 
-	private convertBindingToNode( collection:Map<string, PreJSTreeNode>, binding:{ p:Pointer.Class, o:Pointer.Class, p2:Pointer.Class, o2:Pointer.Class, isRequiredSystemDocument:boolean } ):void {
+	private convertBindingToNode( collection:Map<string, PreJSTreeNode>, binding:{ p:Pointer, o:Pointer, p2:Pointer, o2:Pointer, isRequiredSystemDocument:boolean } ):void {
 
 		if( binding.o.isResolved() ) {
 			binding.isRequiredSystemDocument = (<PersistedDocument>binding.o).types.indexOf( "https://carbonldp.com/ns/v1/platform#RequiredSystemDocument" ) !== - 1;
