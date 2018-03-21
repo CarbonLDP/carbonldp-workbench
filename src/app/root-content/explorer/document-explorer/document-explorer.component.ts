@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter, NgZone } from "@angular/core";
 import { CarbonLDP } from "carbonldp";
 import * as RDFDocument from "carbonldp/RDF/Document";
 import * as Response from "carbonldp/HTTP/Response";
-import { Error as HTTPError } from "carbonldp/HTTP/Errors";
+import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "./documents-resolver.service";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
@@ -91,8 +91,8 @@ export class DocumentExplorerComponent {
 		this.onRefreshNode.emit( $event );
 	}
 
-	public handleExternalError( error:HTTPError | Response.Class ):void {
-		if( error instanceof Response.Class ) {
+	public handleExternalError( error:HTTPError | Response.Response ):void {
+		if( error instanceof Response.Response ) {
 			this.carbonldp.documents._parseErrorResponse( error ).catch( ( parsedError:HTTPError ) => {
 				this.messages.push( ErrorMessageGenerator.getErrorMessage( parsedError ) );
 			} );

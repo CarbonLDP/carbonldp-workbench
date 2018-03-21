@@ -4,7 +4,7 @@ import { CarbonLDP } from "carbonldp";
 import * as Response from "carbonldp/HTTP/Response";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
 import * as Pointer from "carbonldp/Pointer";
-import { Error as HTTPError } from "carbonldp/HTTP/Errors";
+import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { BackupsService } from "../backups.service";
 import { JobsService } from "../../job/jobs.service";
@@ -57,7 +57,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 
 
 	getBackups():void {
-		this.backupsService.getAll().then( ( [ backups, response ]:[ PersistedDocument[], Response.Class ] ) => {
+		this.backupsService.getAll().then( ( [ backups, response ]:[ PersistedDocument[], Response ] ) => {
 			this.backups = backups.sort( ( a:any, b:any ) => b.modified < a.modified ? - 1 : b.modified > a.modified ? 1 : 0 );
 		} )
 	}
@@ -164,7 +164,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 	uploadBackup( file:Blob ):void {
 		this.uploading.start();
 		this.backupsService.upload( file ).then(
-			( [ pointer, response ]:[ Pointer.Class, Response.Class ] ) => {
+			( [ pointer, response ]:[ Pointer.Class, Response ] ) => {
 				this.uploading.success();
 				this.createBackupImport( pointer.id );
 			}

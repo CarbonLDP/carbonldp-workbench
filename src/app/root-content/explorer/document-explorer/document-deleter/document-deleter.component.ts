@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { Error as HTTPError } from "carbonldp/HTTP/Errors";
+import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "../documents-resolver.service"
 import { Message } from "app/shared/messages-area/message.component";

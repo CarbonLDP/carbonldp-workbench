@@ -4,7 +4,7 @@ import { CarbonLDP } from "carbonldp";
 import * as RDFNode from "carbonldp/RDF/Node";
 import * as RDFDocument from "carbonldp/RDF/Document";
 import * as JSONLDParser from "carbonldp/JSONLD/Parser";
-import { Error as HTTPError } from "carbonldp/HTTP/Errors";
+import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "../documents-resolver.service";
 import { RootRecords } from "../document-resource/document-resource.component";
