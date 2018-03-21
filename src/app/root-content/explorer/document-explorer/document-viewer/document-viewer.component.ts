@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, ViewChild, AfterViewInit, OnChanges } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import * as RDFNode from "carbonldp/RDF/Node";
+import { RDFNode } from "carbonldp/RDF/Node"
 import * as RDFDocument from "carbonldp/RDF/Document";
 import * as JSONLDParser from "carbonldp/JSONLD/Parser";
 import { HTTPError } from "carbonldp/HTTP/Errors";
@@ -31,7 +31,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	successMessageContent:string = "";
 
 	sections:string[] = [ "bNodes", "namedFragments", "documentResource" ];
-	rootNode:RDFNode.Class;
+	rootNode:RDFNode;
 	bNodes:BlankNodeRow[] = [];
 	namedFragments:NamedFragmentRow[] = [];
 	documentURI:string = "";
@@ -141,13 +141,13 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 
 	generateFragments():void {
 		this.bNodes = RDFDocument.Util.getBNodeResources( this.document ).map(
-			( bNode:RDFNode.Class ) => {
+			( bNode:RDFNode ) => {
 				return {
 					id: bNode[ "@id" ],
 					copy: bNode
 				}
 			} );
-		this.namedFragments = RDFDocument.Util.getFragmentResources( this.document ).map( ( namedFragment:RDFNode.Class ) => {
+		this.namedFragments = RDFDocument.Util.getFragmentResources( this.document ).map( ( namedFragment:RDFNode ) => {
 			return {
 				id: namedFragment[ "@id" ],
 				name: namedFragment[ "@id" ],
@@ -191,7 +191,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		this.namedFragmentsHaveChanged = namedFragmentsChanges.changes.size > 0 || namedFragmentsChanges.additions.size > 0 || namedFragmentsChanges.deletions.size > 0;
 	}
 
-	modifyRootNodeWithChanges( rootNode:RDFNode.Class ):void {
+	modifyRootNodeWithChanges( rootNode:RDFNode ):void {
 		if( ! ! this.rootNodeRecords ) {
 			this.rootNodeRecords.deletions.forEach( ( property, key ) => {
 				delete rootNode[ key ];
@@ -257,7 +257,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	saveDocument():void {
 		this.savingDocument = true;
 		let backupDocument:RDFDocument.Class = JSON.parse( JSON.stringify( this.document ) );
-		let backupRootNode:RDFNode.Class = RDFDocument.Util.getDocumentResources( backupDocument )[ 0 ];
+		let backupRootNode:RDFNode = RDFDocument.Util.getDocumentResources( backupDocument )[ 0 ];
 		this.modifyRootNodeWithChanges( backupRootNode );
 		this.modifyBNodesWithChanges( backupDocument );
 		this.modifyNamedFragmentsWithChanges( backupDocument );

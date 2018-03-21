@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 
-import * as RDFNode from "carbonldp/RDF/Node";
+import { RDFNode } from "carbonldp/RDF/Node"
 
 import { Modes } from "../property/property.component";
 import { List, ListRow } from "./list.component";
@@ -21,8 +21,8 @@ export class ListsComponent implements OnInit {
 	@Input() documentURI:string = "";
 	@Input() lists:ListRow[] = [];
 	@Input() onAddNewList:EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Input() blankNodes:RDFNode.Class[] = [];
-	@Input() namedFragments:RDFNode.Class[] = [];
+	@Input() blankNodes:RDFNode[] = [];
+	@Input() namedFragments:RDFNode[] = [];
 	@Input() canEdit:boolean = true;
 
 	@Output() onListsChanges:EventEmitter<ListRow[]> = new EventEmitter<ListRow[]>();

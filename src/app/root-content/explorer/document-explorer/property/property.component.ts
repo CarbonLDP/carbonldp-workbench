@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit, OnIn
 import * as SDKLiteral from "carbonldp/RDF/Literal";
 import * as SDKList from "carbonldp/RDF/List";
 import * as URI from "carbonldp/RDF/URI";
-import * as RDFNode from "carbonldp/RDF/Node";
+import { RDFNode } from "carbonldp/RDF/Node"
 import { isArray } from "carbonldp/Utils";
 
 import { Literal, LiteralRow } from "../literals/literal.component";
@@ -51,7 +51,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 
 	@Input() mode:string = Modes.READ;
 	@Input() documentURI:string = "";
-	@Input() bNodes:RDFNode.Class[] = [];
+	@Input() bNodes:RDFNode[] = [];
 	@Input() namedFragments:NamedFragmentRow[] = [];
 	@Input() isPartOfNamedFragment:boolean = false;
 	@Input() canEdit:boolean = true;
@@ -263,7 +263,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 			this.tempPointers = this.property.modifiedPointers;
 		} else {
 			this.property[ this.copyOrAdded ].value.forEach( ( literalOrRDFNode ) => {
-				if( RDFNode.Factory.is( literalOrRDFNode ) ) {
+				if( RDFNode.is( literalOrRDFNode ) ) {
 					this.pointers.push( <PointerRow>{ copy: literalOrRDFNode } );
 					this.tempPointers.push( <PointerRow>{ copy: literalOrRDFNode } );
 				}

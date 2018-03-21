@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 
-import * as RDFNode from "carbonldp/RDF/Node";
+import { RDFNode } from "carbonldp/RDF/Node"
 
 import { Modes } from "../property/property.component";
 import { Pointer, PointerRow } from "./pointer.component";
@@ -25,8 +25,8 @@ export class PointersComponent implements OnInit {
 	@Input() documentURI:string = "";
 	@Input() pointers:PointerRow[] = [];
 	@Input() onAddNewPointer:EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Input() bNodes:RDFNode.Class[] = [];
-	@Input() namedFragments:RDFNode.Class[] = [];
+	@Input() bNodes:RDFNode[] = [];
+	@Input() namedFragments:RDFNode[] = [];
 	@Input() canEdit:boolean = true;
 
 	@Output() onPointersChanges:EventEmitter<PointerRow[]> = new EventEmitter<PointerRow[]>();

@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
-import * as RDFNode from "carbonldp/RDF/Node";
+import { RDFNode } from "carbonldp/RDF/Node"
 
 import { Property, PropertyRow, Modes } from "../property/property.component";
 
@@ -23,7 +23,7 @@ export class BlankNodeComponent implements AfterViewInit {
 	copyOrAdded:string = "";
 	tempPropertiesNames:string[] = [];
 
-	rootNode:RDFNode.Class;
+	rootNode:RDFNode;
 	properties:PropertyRow[];
 	existingPropertiesNames:string[] = [];
 
@@ -45,7 +45,7 @@ export class BlankNodeComponent implements AfterViewInit {
 	}
 
 	@Input() blankNodes:BlankNodeRow[] = [];
-	@Input() namedFragments:RDFNode.Class[] = [];
+	@Input() namedFragments:RDFNode[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
 
@@ -143,7 +143,7 @@ export class BlankNodeComponent implements AfterViewInit {
 
 	canEditProperty( property:PropertyRow ):boolean {
 		let copyOrAdded:string = ! ! property.added ? "added" : "copy";
-		return ( this.nonEditableProperties.indexOf( property[ copyOrAdded ].name ) === - 1 ) && this.canEdit;
+		return (this.nonEditableProperties.indexOf( property[ copyOrAdded ].name ) === - 1) && this.canEdit;
 	}
 
 	getProperties():void {
@@ -187,8 +187,8 @@ export class BlankNodeComponent implements AfterViewInit {
 		this.bNodeHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
-	getRawVersion():RDFNode.Class {
-		let rawNode:RDFNode.Class = Object.assign( {}, this.blankNode.added ? this.blankNode.added : this.blankNode.copy );
+	getRawVersion():RDFNode {
+		let rawNode:RDFNode = Object.assign( {}, this.blankNode.added ? this.blankNode.added : this.blankNode.copy );
 		this.records.deletions.forEach( ( property, key ) => {
 			delete rawNode[ key ];
 		} );
@@ -227,10 +227,10 @@ export class BlankNodeComponent implements AfterViewInit {
 export interface BlankNodeRow {
 	id?:string;
 
-	copy?:RDFNode.Class;
-	added?:RDFNode.Class;
-	modified?:RDFNode.Class;
-	deleted?:RDFNode.Class;
+	copy?:RDFNode;
+	added?:RDFNode;
+	modified?:RDFNode;
+	deleted?:RDFNode;
 
 	records?:BlankNodeRecords;
 }
