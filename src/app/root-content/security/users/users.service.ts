@@ -9,7 +9,7 @@ import { ArrayUtils } from "carbonldp/Utils";
 import { URI } from "carbonldp/RDF/URI";
 import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { CS } from "carbonldp/Vocabularies";
-import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument";
+import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument/QueryDocumentsBuilder";
 
 @Injectable()
 export class UsersService {
@@ -49,7 +49,7 @@ export class UsersService {
 
 		let property:string = orderBy ? orderBy : "name";
 
-		return this.carbonldp.documents.getMembers<PersistedUser.Class>( uri, ( _:QueryDocumentsBuilder.Class ) => {
+		return this.carbonldp.documents.getMembers<PersistedUser.Class>( uri, ( _:QueryDocumentsBuilder ) => {
 			let func = _.properties( {
 				"name": _.inherit,
 				"email": _.inherit,

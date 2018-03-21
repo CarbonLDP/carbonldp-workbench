@@ -9,7 +9,7 @@ import { ArrayUtils } from "carbonldp/Utils";
 import { URI } from "carbonldp/RDF/URI";
 import { CS } from "carbonldp/Vocabularies";
 import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
-import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument";
+import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument/QueryDocumentsBuilder";
 
 @Injectable()
 export class RolesService {
@@ -38,8 +38,8 @@ export class RolesService {
 
 		let property:string = orderBy ? orderBy : "name";
 
-		return this.carbonldp.documents.getChildren<PersistedRole.Class>( uri, ( _:QueryDocumentsBuilder.Class ) => {
-			let func:QueryDocumentsBuilder.Class = _.properties( {
+		return this.carbonldp.documents.getChildren<PersistedRole.Class>( uri, ( _:QueryDocumentsBuilder ) => {
+			let func:QueryDocumentsBuilder = _.properties( {
 				"name": _.inherit,
 				"email": _.inherit,
 				"created": _.inherit,
