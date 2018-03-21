@@ -1,5 +1,5 @@
 import { Errors } from "carbonldp/HTTP";
-import * as JSONLDParser from "carbonldp/JSONLD/Parser";
+import { JSONLDParser } from "carbonldp/JSONLD/Parser";
 import { C } from "carbonldp/Vocabularies";
 
 import { Message, ValidationResult, ValidationDetails, ValidationError, Types } from "../message.component";
@@ -38,7 +38,7 @@ export class ErrorMessageGenerator {
 	}
 
 	private static getErrors( error:Errors.HTTPError ):Promise<any[]> {
-		let parser:JSONLDParser.Class = new JSONLDParser.Class();
+		let parser:JSONLDParser = new JSONLDParser();
 		let errors:any[] = [];
 		return parser.parse( error.response.data ).then( ( errorResponse ) => {
 

@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, ViewC
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node"
 import { RDFDocument } from "carbonldp/RDF/Document";
-import * as JSONLDParser from "carbonldp/JSONLD/Parser";
+import { JSONLDParser } from "carbonldp/JSONLD/Parser";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "../documents-resolver.service";
@@ -278,7 +278,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	}
 
 	getErrors( error:HTTPError ):Promise<any[]> {
-		let parser:JSONLDParser.Class = new JSONLDParser.Class();
+		let parser:JSONLDParser = new JSONLDParser();
 		let mainError = {};
 		let errors:any[] = [];
 		return parser.parse( error.response.data ).then( ( mainErrors ) => {
