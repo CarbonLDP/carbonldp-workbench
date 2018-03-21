@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit, OnInit, ViewChild } from "@angular/core";
 
 import { RDFLiteral } from "carbonldp/RDF/Literal";
-import * as SDKList from "carbonldp/RDF/List";
+import { RDFList } from "carbonldp/RDF/List";
 import { URI } from "carbonldp/RDF/URI";
 import { RDFNode } from "carbonldp/RDF/Node"
 import { isArray } from "carbonldp/Utils";
@@ -274,7 +274,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 			this.tempLists = this.property.modifiedLists;
 		} else {
 			this.property[ this.copyOrAdded ].value.forEach( ( literalOrRDFNodeOrList ) => {
-				if( SDKList.Factory.is( literalOrRDFNodeOrList ) ) {
+				if( RDFList.is( literalOrRDFNodeOrList ) ) {
 					this.lists.push( <ListRow>{ copy: literalOrRDFNodeOrList[ "@list" ].map( ( item ) => { return { copy: item } } ) } );
 					this.tempLists.push( <ListRow>{ copy: literalOrRDFNodeOrList } );
 				}
