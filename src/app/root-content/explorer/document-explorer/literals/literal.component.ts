@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, Output, AfterViewChecked, EventEmitter, V
 
 import { XSD } from "carbonldp/Vocabularies";
 import { forEachOwnProperty } from "carbonldp/Utils";
-import * as URI from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF/URI";
 
 import { Modes } from "../property/property.component"
 
@@ -987,7 +987,7 @@ export class LiteralComponent implements AfterViewChecked {
 	private getXSDDataTypes():any[] {
 		let xsdDataTypes:any[] = [];
 		forEachOwnProperty( XSD, ( key:string, value:any ):void => {
-			if( URI.Util.isAbsolute( key ) ) {
+			if( URI.isAbsolute( key ) ) {
 				xsdDataTypes.push( {
 					title: value,
 					description: XSD[ value ],

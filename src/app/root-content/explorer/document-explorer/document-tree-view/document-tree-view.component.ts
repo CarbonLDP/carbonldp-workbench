@@ -4,7 +4,7 @@ import { CarbonLDP } from "carbonldp";
 import { Pointer } from "carbonldp/Pointer";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
 import { Response, Errors } from "carbonldp/HTTP";
-import * as URI from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF/URI";
 import * as SPARQL from "carbonldp/SPARQL";
 import { C, LDP } from "carbonldp/Vocabularies";
 
@@ -226,7 +226,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 	getSlug( pointer:Pointer | string ):string {
 		if( typeof pointer !== "string" ) return (<Pointer>pointer).id;
-		return URI.Util.getSlug( <string>pointer );
+		return URI.getSlug( <string>pointer );
 	}
 
 	showCreateChildForm():void {

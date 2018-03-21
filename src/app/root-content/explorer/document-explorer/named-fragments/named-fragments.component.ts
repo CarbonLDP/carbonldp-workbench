@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, OnChanges, AfterViewInit } from "@angular/core";
 
-import * as URI from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF/URI";
 
 import { NamedFragmentRow } from "./named-fragment.component";
 import { BlankNodeRow } from "../blank-nodes/blank-node.component";
@@ -93,7 +93,7 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 	}
 
 	getSlug( uri:string ) {
-		return URI.Util.getSlug( uri );
+		return URI.getSlug( uri );
 	}
 
 	changeNamedFragment( namedFragmentRow:NamedFragmentRow, index?:number ):void {

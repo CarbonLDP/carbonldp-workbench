@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit, OnIn
 
 import { RDFLiteral } from "carbonldp/RDF/Literal";
 import * as SDKList from "carbonldp/RDF/List";
-import * as URI from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF/URI";
 import { RDFNode } from "carbonldp/RDF/Node"
 import { isArray } from "carbonldp/Utils";
 
@@ -116,8 +116,8 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 
 	getDisplayName( uri:string ):string {
 		if( this.commonToken.indexOf( uri ) > - 1 ) return uri;
-		if( URI.Util.hasFragment( uri ) ) return this.unescape( this.getFragment( uri ) );
-		return this.unescape( URI.Util.getSlug( uri ) );
+		if( URI.hasFragment( uri ) ) return this.unescape( this.getFragment( uri ) );
+		return this.unescape( URI.getSlug( uri ) );
 	}
 
 	getParentURI( uri:string ):string {
@@ -126,13 +126,13 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 	}
 
 	getSlug( uri:string ) {
-		return URI.Util.getSlug( uri );
+		return URI.getSlug( uri );
 	}
 
 	getFragment( uri:string ):string {
 		let parts:string[] = uri.split( "#" );
 		uri = "".concat( parts[ 0 ] ).concat( "#" + parts[ 1 ] );
-		return URI.Util.getFragment( uri );
+		return URI.getFragment( uri );
 	}
 
 	isArray( property:any ):boolean {

@@ -1,6 +1,6 @@
 import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { AbstractControl, Validator, NG_VALIDATORS } from "@angular/forms";
-import * as URI from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF/URI";
 
 @Directive( {
 	selector: "[cw-email]",
@@ -105,9 +105,9 @@ export class FragmentValidator implements Validator {
 	validate( control:AbstractControl ):{ [key:string]:any; } {
 		if( ! control.value ) return null;
 		if( ! control.value.match( /^(ftp|https?):\/\/(\w+:{0,1}\w*@)?((?![^\/]+\/(?:ftp|https?):)\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/ ) ) return { "invalidURIAddress": true };
-		if( ! URI.Util.hasFragment( control.value ) ) return { "missingFragment": true };
+		if( ! URI.hasFragment( control.value ) ) return { "missingFragment": true };
 		if( control.value.split( "#" ).length > 2 ) return { "multipleFragment": true };
-		if( URI.Util.getFragment( control.value ).trim().length === 0 ) return { "missingFragment": true };
+		if( URI.getFragment( control.value ).trim().length === 0 ) return { "missingFragment": true };
 
 		return null;
 	}
@@ -122,9 +122,9 @@ export class URIFragmentValidator implements Validator {
 	validate( control:AbstractControl ):{ [key:string]:any; } {
 		if( ! control.value ) return null;
 		if( ! control.value.match( /^(ftp|https?):\/\/(\w+:{0,1}\w*@)?((?![^\/]+\/(?:ftp|https?):)\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/ ) ) return { "invalidURIAddress": true };
-		if( ! URI.Util.hasFragment( control.value ) ) return;
+		if( ! URI.hasFragment( control.value ) ) return;
 		if( control.value.split( "#" ).length > 2 ) return { "multipleFragment": true };
-		if( URI.Util.getFragment( control.value ).trim().length === 0 ) return { "missingFragment": true };
+		if( URI.getFragment( control.value ).trim().length === 0 ) return { "missingFragment": true };
 
 		return null;
 	}

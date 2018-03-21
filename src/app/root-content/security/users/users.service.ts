@@ -6,7 +6,7 @@ import * as Users from "carbonldp/Auth/Users";
 import * as PersistedUser from "carbonldp/Auth/PersistedUser";
 import { Response } from "carbonldp/HTTP";
 import { ArrayUtils } from "carbonldp/Utils";
-import * as URI from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF/URI";
 import * as SPARQL from "carbonldp/SPARQL";
 import { CS } from "carbonldp/Vocabularies";
 import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument";
@@ -35,7 +35,7 @@ export class UsersService {
 
 	public get( slugOrURI:string ):Promise<PersistedUser.Class> {
 		let uri:string = this.carbonldp.baseURI + `users/${slugOrURI}/`;
-		if( URI.Util.isAbsolute( slugOrURI ) ) uri = slugOrURI;
+		if( URI.isAbsolute( slugOrURI ) ) uri = slugOrURI;
 		this.users = typeof this.users === "undefined" ? new Map<string, PersistedUser.Class>() : this.users;
 		return this.carbonldp.documents.get<PersistedUser.Class>( uri ).then( ( user:PersistedUser.Class ) => {
 			this.users.set( user.id, user );

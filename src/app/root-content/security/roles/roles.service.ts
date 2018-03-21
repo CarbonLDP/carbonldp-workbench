@@ -6,7 +6,7 @@ import * as Role from "carbonldp/Auth/Role";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 import { Response } from "carbonldp/HTTP";
 import { ArrayUtils } from "carbonldp/Utils";
-import * as URI from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF/URI";
 import { CS } from "carbonldp/Vocabularies";
 import * as SPARQL from "carbonldp/SPARQL";
 import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument";
@@ -24,7 +24,7 @@ export class RolesService {
 
 	public get( slugOrURI:string ):Promise<PersistedRole.Class> {
 		let uri:string = this.carbonldp.baseURI + `.system/roles/${slugOrURI}/`;
-		if( URI.Util.isAbsolute( slugOrURI ) ) uri = slugOrURI;
+		if( URI.isAbsolute( slugOrURI ) ) uri = slugOrURI;
 		this.roles = typeof this.roles === "undefined" ? new Map<string, PersistedRole.Class>() : this.roles;
 		return this.carbonldp.documents.get<PersistedRole.Class>( uri ).then( ( role:PersistedRole.Class ) => {
 			this.roles.set( role.id, role );

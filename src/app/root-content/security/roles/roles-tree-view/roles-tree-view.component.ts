@@ -3,7 +3,7 @@ import { Component, Input, Output, ElementRef, AfterViewInit, OnInit, EventEmitt
 import { CarbonLDP } from "carbonldp";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 import { Errors } from "carbonldp/HTTP";
-import * as URI from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF/URI";
 
 import { RolesService } from "../roles.service";
 
@@ -103,7 +103,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 
 	private getChildren( roleID?:string ):Promise<JSTreeNode[]> {
 		let nodes:JSTreeNode[] = [];
-		! ! roleID && URI.Util.isAbsolute( roleID ) ? roleID = roleID : roleID = null;
+		! ! roleID && URI.isAbsolute( roleID ) ? roleID = roleID : roleID = null;
 		return this.rolesService.getChildren( roleID ).then( ( roles:PersistedRole.Class[] ) => {
 			roles.forEach( ( role:PersistedRole.Class ) => {
 				let node:JSTreeNode = this.buildNode( role.id, role.name, null, role[ "hasChildren" ] );
@@ -209,7 +209,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 
 	private onChange( parentId:string, node:any, position:string ):void {
 		this.onBeforeOpenNode( parentId, node, position ).then( () => {
-			if( ! ! node.id && ! URI.Util.isAbsolute( node.id ) ) node = this.jsTree.get_node( node.children[ 0 ] );
+			if( ! ! node.id && ! URI.isAbsolute( node.id ) ) node = this.jsTree.get_node( node.children[ 0 ] );
 			if( ! this.jsTree.is_open( node ) ) {
 				this.jsTree.open_node( node );
 			}

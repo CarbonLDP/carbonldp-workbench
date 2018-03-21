@@ -1,7 +1,7 @@
 import { XSD } from "carbonldp/Vocabularies";
 import { isDate, isString, isInteger, isNumber } from "carbonldp/Utils";
 import { RDFLiteral } from "carbonldp/RDF/Literal";
-import * as URI from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF/URI";
 
 import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { AbstractControl, Validator, NG_VALIDATORS } from "@angular/forms";
@@ -156,7 +156,7 @@ export class PointerValidator implements Validator {
 			return { "emptyControl": true };
 		}
 		if( ! ! control.value ) {
-			if( URI.Util.isBNodeID( control.value ) || this.url.test( control.value ) ) return null;
+			if( URI.isBNodeID( control.value ) || this.url.test( control.value ) ) return null;
 			return { "invalidId": true };
 		}
 		return null;
