@@ -2,7 +2,7 @@ import { Component, Input, Output, ElementRef, AfterViewInit, OnInit, EventEmitt
 
 import { CarbonLDP } from "carbonldp";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
-import * as HTTP from "carbonldp/HTTP";
+import { Errors } from "carbonldp/HTTP";
 import * as URI from "carbonldp/RDF/URI";
 
 import { RolesService } from "../roles.service";
@@ -41,7 +41,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 	@Input() openNode:EventEmitter<string> = new EventEmitter<string>();
 	@Input() deletedNode:EventEmitter<string> = new EventEmitter<string>();
 
-	@Output() onError:EventEmitter<HTTP.Errors.Error> = new EventEmitter<HTTP.Errors.Error>();
+	@Output() onError:EventEmitter<Errors.HTTPError> = new EventEmitter<Errors.HTTPError>();
 	@Output() onLoading:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSelectRole:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onDoubleClickRole:EventEmitter<string> = new EventEmitter<string>();
@@ -95,7 +95,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 		return this.getChildren().then( ( nodes:JSTreeNode[] ) => {
 			this.renderTree( nodes );
 			return nodes;
-		} ).catch( ( error:HTTP.Errors.Error ) => {
+		} ).catch( ( error:Errors.HTTPError ) => {
 			console.error( error );
 			this.onError.emit( error );
 		} );
@@ -199,7 +199,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 			if( children.length > 0 ) {
 				children.forEach( ( childNode:any ) => this.addChild( parentId, childNode, position ) );
 			}
-		} ).catch( ( error:HTTP.Errors.Error ) => {
+		} ).catch( ( error:Errors.HTTPError ) => {
 			console.error( error );
 			this.onError.emit( error );
 		} ).then( () => {

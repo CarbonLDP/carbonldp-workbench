@@ -1,11 +1,12 @@
 import { Component, Input, OnInit } from "@angular/core";
 
-import { CarbonLDP } from "carbonldp";
-import * as HTTP from "carbonldp/HTTP";
+import { Errors } from "carbonldp/HTTP";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
+import { Pointer } from "carbonldp/Pointer";
 import { CS } from "carbonldp/Vocabularies";
 
-import { Class as InstanceMetadata } from "carbonldp/System/InstanceMetadata";
+// TOOD: import InstanceMetadata when available
+// import { PlatformMetadata } from "carbonldp/System/InstanceMetadata";
 import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
 
@@ -32,7 +33,7 @@ export class EditInstanceComponent implements OnInit {
 
 	allowedDomains:string[] = [];
 	// Inputs and Outputs
-	@Input() instance:InstanceMetadata;
+	@Input() instance:any;
 
 
 	constructor() {
@@ -82,12 +83,12 @@ export class EditInstanceComponent implements OnInit {
 		if( name ) this.instance.name = name;
 		if( description ) this.instance.description = description;
 		if( allowsAllOrigins ) {
-			this.instance.allowsOrigins = [ Carbon.Pointer.Factory.create( CS.AllOrigins ) ];
+			this.instance.allowsOrigins = [ Pointer.Factory.create( CS.AllOrigins ) ];
 		} else {
 			this.instance.allowsOrigins = allowedDomains.length > 0 ? allowedDomains : this.instance.allowsOrigins;
 		}
 
-		this.instance.saveAndRefresh().then( ( [ updatedInstance, response ]:[ PersistedDocument.Class, [ HTTP.Response.Class, HTTP.Response.Class ] ] ) => {
+		this.instance.saveAndRefresh().then( ( [ updatedInstance, response ]:[ PersistedDocument.Class, [ Response, Response ] ] ) => {
 			this.displaySuccessMessage = true;
 			return updatedInstance;
 		} ).catch( ( error:HTTP.Errors.Error ):void => {
@@ -98,34 +99,34 @@ export class EditInstanceComponent implements OnInit {
 		} );
 	}
 
-	getErrorMessage( error:HTTP.Errors.Error ):string {
+	getErrorMessage( error:Errors.HTTPError ):string {
 		let tempMessage:string = "";
 		switch( true ) {
-			case error instanceof HTTP.Errors.BadRequestError:
+			case error instanceof Errors.BadRequestError:
 				tempMessage = "";
 				break;
-			case error instanceof HTTP.Errors.ConflictError:
+			case error instanceof Errors.ConflictError:
 				tempMessage = "There's already a resource with that slug. Error:" + error.response.status;
 				break;
-			case error instanceof HTTP.Errors.ForbiddenError:
+			case error instanceof Errors.ForbiddenError:
 				tempMessage = "Forbidden Action.";
 				break;
-			case error instanceof HTTP.Errors.NotFoundError:
+			case error instanceof Errors.NotFoundError:
 				tempMessage = "Couldn't found the requested URL.";
 				break;
-			case error instanceof HTTP.Errors.RequestEntityTooLargeError:
+			case error instanceof Errors.RequestEntityTooLargeError:
 				tempMessage = "Request entity too large.";
 				break;
-			case error instanceof HTTP.Errors.UnauthorizedError:
+			case error instanceof Errors.UnauthorizedError:
 				tempMessage = "Unauthorized operation.";
 				break;
-			case error instanceof HTTP.Errors.InternalServerErrorError:
+			case error instanceof Errors.InternalServerErrorError:
 				tempMessage = "An internal error occurred while trying to update the instance. Please try again later. Error: " + error.response.status;
 				break;
-			case error instanceof HTTP.Errors.ServiceUnavailableError:
+			case error instanceof Errors.ServiceUnavailableError:
 				tempMessage = "Service currently unavailable.";
 				break;
-			case error instanceof HTTP.Errors.UnknownError:
+			case error instanceof Errors.UnknownError:
 				tempMessage = "An error occurred while trying to update the instance. Please try again later. Error: " + error.response.status;
 				break;
 			default:

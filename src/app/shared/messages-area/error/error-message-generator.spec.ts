@@ -1,6 +1,6 @@
 import { Service } from "carbonldp/HTTP/Request";
 
-import * as HTTPError from "carbonldp/HTTP/Errors/HTTPError";
+import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { ErrorMessageGenerator } from "./error-message-generator";
 import { Message, Types } from "../message.component";
@@ -9,7 +9,7 @@ export function errorMessageGeneratorSpecs() {
 
 	describe( "ErrorMessageGenerator", () => {
 
-		let notFoundError:HTTPError.Class, internalError:HTTPError.Class;
+		let notFoundError:HTTPError, internalError:HTTPError;
 		const testsResponses = {
 			success: {
 				status: 200,
@@ -33,11 +33,11 @@ export function errorMessageGeneratorSpecs() {
 			jasmine.Ajax.stubRequest( "http://example.com/500", null ).andReturn( testsResponses.internal );
 
 			Service.send( "GET", "http://example.com/404" ).then( ( _response ) => {
-			} ).catch( ( exception:HTTPError.Class ) => {
+			} ).catch( ( exception:HTTPError ) => {
 				notFoundError = exception;
 			} );
 			Service.send( "GET", "http://example.com/500" ).then( ( _response ) => {
-			} ).catch( ( exception:HTTPError.Class ) => {
+			} ).catch( ( exception:HTTPError ) => {
 				internalError = exception;
 			} );
 		} );

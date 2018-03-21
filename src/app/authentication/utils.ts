@@ -4,7 +4,7 @@ import * as Cookies from "js-cookie";
 
 import { CarbonLDP } from "carbonldp";
 import * as Errors from "carbonldp/Errors";
-import * as HTTP from "carbonldp/HTTP";
+import { Errors as HTTPErrors } from "carbonldp/HTTP";
 import { Method, Token } from "carbonldp/Auth";
 
 
@@ -58,7 +58,7 @@ export function authenticateWithCookie( carbonldp:CarbonLDP ):Promise<any> {
 	}
 	// TODO: change the "TOKEN" string to Method.TOKEN
 	return carbonldp.auth.authenticateUsing( "TOKEN", token ).catch( ( error ) => {
-		if( error instanceof Errors.IllegalArgumentError || error instanceof HTTP.Errors.UnauthorizedError ) {
+		if( error instanceof Errors.IllegalArgumentError || error instanceof HTTPErrors.UnauthorizedError ) {
 			// Invalid token
 			Cookies.remove( AUTH_COOKIE );
 		} else return Promise.reject( error );

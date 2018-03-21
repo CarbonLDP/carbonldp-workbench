@@ -3,7 +3,7 @@ import { Injectable, EventEmitter } from "@angular/core";
 import * as Cookies from "js-cookie";
 
 import { CarbonLDP } from "carbonldp";
-import * as HTTP from "carbonldp/HTTP";
+import { Response } from "carbonldp/HTTP";
 import * as PersistedUser from "carbonldp/Auth/PersistedUser";
 import * as Token from "carbonldp/Auth/Token";
 
@@ -58,7 +58,7 @@ export class CarbonLDPAuthService implements AuthService.Class {
 	register( name:string, username:string, password:string ):Promise<any>;
 	register( name:string, username:string, password:string, enabled:boolean ):Promise<any>;
 	register( name:string, username:string, password:string, enabled?:boolean ):Promise<any> {
-		return this.carbonldp.auth.users.register( username, password, enabled ).then( ( [ persistedUser, responses ]:[ PersistedUser.Class, HTTP.Response.Class ] ) => {
+		return this.carbonldp.auth.users.register( username, password, enabled ).then( ( [ persistedUser, responses ]:[ PersistedUser.Class, Response.Class ] ) => {
 			persistedUser.name = name;
 			return persistedUser.saveAndRefresh();
 		} );

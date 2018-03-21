@@ -1,6 +1,6 @@
 import { Component, ElementRef, Output, Inject, EventEmitter, OnInit } from "@angular/core";
 
-import * as HTTP from "carbonldp/HTTP";
+import { Errors } from "carbonldp/HTTP";
 
 import { AuthService } from "app/authentication/services";
 
@@ -79,31 +79,31 @@ export class RegisterComponent implements OnInit {
 		} );
 	}
 
-	setErrorMessage( error:HTTP.Errors.Error ):void {
+	setErrorMessage( error:Errors.HTTPError ):void {
 		if( typeof error.message !== "undefined" ) this.errorMessage = error.message;
 		else switch( true ) {
-			case error instanceof HTTP.Errors.ConflictError:
+			case error instanceof Errors.ConflictError:
 				this.errorMessage = "That email is already in use";
 				break;
-			case error instanceof HTTP.Errors.ForbiddenError:
+			case error instanceof Errors.ForbiddenError:
 				this.errorMessage = "Denied Access";
 				break;
-			case error instanceof HTTP.Errors.UnauthorizedError:
+			case error instanceof Errors.UnauthorizedError:
 				this.errorMessage = "Wrong credentials";
 				break;
-			case error instanceof HTTP.Errors.BadGatewayError:
+			case error instanceof Errors.BadGatewayError:
 				this.errorMessage = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
 				break;
-			case error instanceof HTTP.Errors.GatewayTimeoutError:
+			case error instanceof Errors.GatewayTimeoutError:
 				this.errorMessage = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
 				break;
-			case error instanceof HTTP.Errors.InternalServerErrorError:
+			case error instanceof Errors.InternalServerErrorError:
 				this.errorMessage = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
 				break;
-			case error instanceof HTTP.Errors.UnknownError:
+			case error instanceof Errors.UnknownError:
 				this.errorMessage = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
 				break;
-			case error instanceof HTTP.Errors.ServiceUnavailableError:
+			case error instanceof Errors.ServiceUnavailableError:
 				this.errorMessage = "Service currently unavailable";
 				break;
 			default:

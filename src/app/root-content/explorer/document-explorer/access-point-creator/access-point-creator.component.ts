@@ -2,10 +2,9 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } fro
 import { NgForm } from "@angular/forms";
 
 import { CarbonLDP } from "carbonldp";
-import * as HTTP from "carbonldp/HTTP";
+import { Response, Errors } from "carbonldp/HTTP";
 import * as PersistedDocument from "carbonldp/PersistedDocument";
 import * as AccessPoint from "carbonldp/AccessPoint";
-import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "../documents-resolver.service"
 import { Message } from "app/shared/messages-area/message.component";
@@ -60,13 +59,13 @@ export class AccessPointCreatorComponent implements AfterViewInit {
 		};
 		if( ! ! data.isMemberOfRelation ) accessPoint.isMemberOfRelation = data.isMemberOfRelation;
 
-		this.carbonldp.documents.get( this.parentURI ).then( ( [ document, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+		this.carbonldp.documents.get( this.parentURI ).then( ( [ document, response ]:[ PersistedDocument.Class, Response ] ) => {
 			return this.documentsResolverService.createAccessPoint( document, accessPoint, slug );
 		} ).then( ( document:PersistedDocument.Class ) => {
 			this.onSuccess.emit( document );
 			form.resetForm();
 			this.hide();
-		} ).catch( ( error:HTTPError ) => {
+		} ).catch( ( error:Errors.HTTPError ) => {
 			this.onError.emit( error );
 			this.errorMessage = ErrorMessageGenerator.getErrorMessage( error );
 		} );

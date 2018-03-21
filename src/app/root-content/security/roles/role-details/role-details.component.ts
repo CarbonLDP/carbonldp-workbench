@@ -3,7 +3,7 @@ import { Component, Input, Output, ElementRef, SimpleChange, EventEmitter } from
 import * as Role from "carbonldp/Auth/Role";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 import * as PersistedUser from "carbonldp/Auth/PersistedUser";
-import * as HTTP from "carbonldp/HTTP";
+import { Response } from "carbonldp/HTTP";
 import { CS } from "carbonldp/Vocabularies";
 import * as Pointer from "carbonldp/Pointer";
 
@@ -62,7 +62,7 @@ export class RoleDetailsComponent {
 
 	ngAfterViewInit():void { }
 
-	ngOnChanges( changes:{ [propName:string]:SimpleChange } ):void {
+	ngOnChanges( changes:{ [ propName:string ]:SimpleChange } ):void {
 		if( changes[ "role" ] && ! ! changes[ "role" ].currentValue && changes[ "role" ].currentValue !== changes[ "role" ].previousValue ) {
 			this.changeRole( this.role );
 		}
@@ -108,7 +108,7 @@ export class RoleDetailsComponent {
 	private editRole( role:PersistedRole.Class, roleData:RoleFormModel ):void {
 		role.name = roleData.name;
 		role[ CS.description ] = roleData.description;
-		this.rolesService.saveAndRefresh( role ).then( ( [ updatedRole, [ saveResponse, refreshResponse ] ]:[ PersistedRole.Class, [ HTTP.Response.Class, HTTP.Response.Class ] ] ) => {
+		this.rolesService.saveAndRefresh( role ).then( ( [ updatedRole, [ saveResponse, refreshResponse ] ]:[ PersistedRole.Class, [ Response, Response ] ] ) => {
 			return this.editRoleUsers( role, roleData.users );
 		} ).then( () => {
 			if( role.id.endsWith( "roles/admin/" ) )
@@ -160,8 +160,8 @@ export class RoleDetailsComponent {
 		(<any>role.users).forEach( ( userPointer:Pointer.Class ) => {
 			promises.push( userPointer.resolve() );
 		} );
-		return Promise.all( promises ).then( ( resolvedUsers:[ PersistedUser.Class, HTTP.Response.Class ][] ) => {
-			resolvedUsers.forEach( ( [ resolvedUser, response ]:[ PersistedUser.Class, HTTP.Response.Class ] ) => {
+		return Promise.all( promises ).then( ( resolvedUsers:[ PersistedUser.Class, Response ][] ) => {
+			resolvedUsers.forEach( ( [ resolvedUser, response ]:[ PersistedUser.Class, Response ] ) => {
 				users.push( resolvedUser );
 			} );
 			return users;
@@ -199,11 +199,11 @@ export class RoleDetailsComponent {
 		} );
 	}
 
-	private registerUserToRole( userID:string, roleID:string ):Promise<HTTP.Response.Class> {
+	private registerUserToRole( userID:string, roleID:string ):Promise<Response> {
 		return this.rolesService.registerUser( userID, roleID );
 	}
 
-	private removeUserFromRole( userID:string, roleID:string ):Promise<HTTP.Response.Class> {
+	private removeUserFromRole( userID:string, roleID:string ):Promise<Response> {
 		return this.rolesService.removeUser( userID, roleID );
 	}
 
