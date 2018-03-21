@@ -4,7 +4,7 @@ import "semantic-ui/semantic";
 
 import * as SDKLiteral from "carbonldp/RDF/Literal";
 import * as RDFNode from "carbonldp/RDF/Node";
-import * as Utils from "carbonldp/Utils";
+import { ObjectUtils } from "carbonldp/Utils";
 
 import { Literal, LiteralRow } from "../literals/literal.component";
 import { Pointer, PointerRow } from "../pointers/pointer.component";
@@ -126,7 +126,7 @@ export class ListComponent {
 	}
 
 	areEquals( original:Array<LiteralRow|PointerRow>, modified:Array<ListRow|PointerRow> ):boolean {
-		return Utils.O.areEqual( original, modified, { arrays: true, objects: true } );
+		return ObjectUtils.areEqual( original, modified, { arrays: true, objects: true } );
 	}
 
 	updateTempList():void {

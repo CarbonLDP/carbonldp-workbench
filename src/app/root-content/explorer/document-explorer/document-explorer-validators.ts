@@ -1,5 +1,5 @@
 import { XSD } from "carbonldp/Vocabularies";
-import * as Utils from "carbonldp/Utils";
+import { isDate, isString, isInteger, isNumber } from "carbonldp/Utils";
 import * as SDKLiteral from "carbonldp/RDF/Literal";
 import * as URI from "carbonldp/RDF/URI";
 
@@ -100,7 +100,7 @@ export class LiteralValueValidator implements Validator, OnChanges {
 			// Numbers
 			case XSD.int :
 			case XSD.integer :
-				valid = ! isNaN( control.value ) && ! isNaN( SDKLiteral.Factory.parse( control.value, this.type ) ) && Utils.isInteger( SDKLiteral.Factory.parse( control.value, this.type ) );
+				valid = ! isNaN( control.value ) && ! isNaN( SDKLiteral.Factory.parse( control.value, this.type ) ) && isInteger( SDKLiteral.Factory.parse( control.value, this.type ) );
 				break;
 
 			case XSD.byte :
@@ -117,22 +117,22 @@ export class LiteralValueValidator implements Validator, OnChanges {
 			case XSD.unsignedByte :
 			case XSD.double :
 			case XSD.float :
-				valid = ! isNaN( control.value ) && ! isNaN( SDKLiteral.Factory.parse( control.value, this.type ) ) && Utils.isNumber( SDKLiteral.Factory.parse( control.value, this.type ) );
+				valid = ! isNaN( control.value ) && ! isNaN( SDKLiteral.Factory.parse( control.value, this.type ) ) && isNumber( SDKLiteral.Factory.parse( control.value, this.type ) );
 				break;
 
 			// Dates
 			case XSD.date:
 			case XSD.dateTime:
 			case XSD.time:
-				valid = Utils.isDate( SDKLiteral.Factory.parse( control.value, this.type ) );
+				valid = isDate( SDKLiteral.Factory.parse( control.value, this.type ) );
 				break;
 
 			case XSD.string:
-				valid = Utils.isString( SDKLiteral.Factory.parse( control.value, this.type ) );
+				valid = isString( SDKLiteral.Factory.parse( control.value, this.type ) );
 				break;
 
 			default:
-				valid = Utils.isString( control.value );
+				valid = isString( control.value );
 				break;
 		}
 		if( ! valid ) {

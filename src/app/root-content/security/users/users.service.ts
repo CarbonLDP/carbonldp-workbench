@@ -5,7 +5,7 @@ import * as User from "carbonldp/Auth/User";
 import * as Users from "carbonldp/Auth/Users";
 import * as PersistedUser from "carbonldp/Auth/PersistedUser";
 import { Response } from "carbonldp/HTTP";
-import * as Utils from "carbonldp/Utils";
+import { ArrayUtils } from "carbonldp/Utils";
 import * as URI from "carbonldp/RDF/URI";
 import * as SPARQL from "carbonldp/SPARQL";
 import { CS } from "carbonldp/Vocabularies";
@@ -64,7 +64,7 @@ export class UsersService {
 		} ).then( ( [ users, response ]:[ PersistedUser.Class[], Response.Response ] ) => {
 			users.forEach( ( user:PersistedUser.Class ) => this.users.set( user.id, user ) );
 
-			let usersArray:PersistedUser.Class[] = Utils.A.from( this.users.values() );
+			let usersArray:PersistedUser.Class[] = ArrayUtils.from( this.users.values() );
 			if( orderBy ) usersArray = this.getSortedUsers( usersArray, orderBy, ascending );
 
 			return usersArray;

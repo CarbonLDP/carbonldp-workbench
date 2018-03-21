@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { Response }  from "carbonldp/HTTP";
+import { Response } from "carbonldp/HTTP";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
-import * as Utils from "carbonldp/Utils";
+import { ArrayUtils } from "carbonldp/Utils";
 import { Pointer } from "carbonldp/Pointer";
 
 import * as Job from "./job"
@@ -25,13 +25,13 @@ export class JobsService {
 	getJobOfType( type:string ):Promise<PersistedDocument> {
 		if( ! type ) return <any> Promise.reject( new Error( "Provide a job type." ) );
 
-		let jobsArray:PersistedDocument[] = Utils.A.from( this.jobs.values() );
+		let jobsArray:PersistedDocument[] = ArrayUtils.from( this.jobs.values() );
 		let job:PersistedDocument = jobsArray.find( ( job:PersistedDocument ) => job.types.indexOf( type ) !== - 1 );
 		if( ! ! job ) return Promise.resolve( job );
 
 		return this.getAll().then(
 			( jobs:PersistedDocument[] ) => {
-				let jobsArray:PersistedDocument[] = Utils.A.from( jobs.values() );
+				let jobsArray:PersistedDocument[] = ArrayUtils.from( jobs.values() );
 				return jobsArray.find( ( job:PersistedDocument ) => job.types.indexOf( type ) !== - 1 );
 			}
 		);
@@ -41,7 +41,7 @@ export class JobsService {
 		return this.carbonldp.documents.getChildren( this.jobsUri ).then( ( [ existingJobs, response ]:[ PersistedDocument[], Response.Response ] ) => {
 			existingJobs.filter( ( job:PersistedDocument ) => ! this.jobs.has( job.id ) )
 				.forEach( ( job:PersistedDocument ) => this.jobs.set( job.id, job ) );
-			return Utils.A.from( this.jobs.values() );
+			return ArrayUtils.from( this.jobs.values() );
 		} );
 	}
 

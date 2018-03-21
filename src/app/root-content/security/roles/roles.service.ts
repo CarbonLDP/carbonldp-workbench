@@ -5,7 +5,7 @@ import * as Roles from "carbonldp/Auth/Roles";
 import * as Role from "carbonldp/Auth/Role";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 import { Response } from "carbonldp/HTTP";
-import * as Utils from "carbonldp/Utils";
+import { ArrayUtils } from "carbonldp/Utils";
 import * as URI from "carbonldp/RDF/URI";
 import { CS } from "carbonldp/Vocabularies";
 import * as SPARQL from "carbonldp/SPARQL";
@@ -54,7 +54,7 @@ export class RolesService {
 			roles.filter( ( role:PersistedRole.Class ) => ! this.roles.has( role.id ) )
 				.forEach( ( role:PersistedRole.Class ) => this.roles.set( role.id, role ) );
 
-			let rolesArray:PersistedRole.Class[] = Utils.A.from( this.roles.values() );
+			let rolesArray:PersistedRole.Class[] = ArrayUtils.from( this.roles.values() );
 			if( orderBy ) rolesArray = this.getSortedRoles( rolesArray, orderBy, ascending );
 
 			return rolesArray;
