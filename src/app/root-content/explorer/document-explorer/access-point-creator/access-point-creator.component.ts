@@ -3,7 +3,7 @@ import { NgForm } from "@angular/forms";
 
 import { CarbonLDP } from "carbonldp";
 import { Response, Errors } from "carbonldp/HTTP";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
+import { PersistedDocument } from "carbonldp/PersistedDocument";
 import * as AccessPoint from "carbonldp/AccessPoint";
 
 import { DocumentsResolverService } from "../documents-resolver.service"
@@ -59,9 +59,9 @@ export class AccessPointCreatorComponent implements AfterViewInit {
 		};
 		if( ! ! data.isMemberOfRelation ) accessPoint.isMemberOfRelation = data.isMemberOfRelation;
 
-		this.carbonldp.documents.get( this.parentURI ).then( ( [ document, response ]:[ PersistedDocument.Class, Response ] ) => {
+		this.carbonldp.documents.get( this.parentURI ).then( ( [ document, response ]:[ PersistedDocument, Response ] ) => {
 			return this.documentsResolverService.createAccessPoint( document, accessPoint, slug );
-		} ).then( ( document:PersistedDocument.Class ) => {
+		} ).then( ( document:PersistedDocument ) => {
 			this.onSuccess.emit( document );
 			form.resetForm();
 			this.hide();

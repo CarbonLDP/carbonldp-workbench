@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
 		this.authService.login( username, password, rememberMe ).then( ( credentials:Credentials ) => {
 			this.sending = false;
 			this.onLogin.emit( credentials );
-		} ).catch( ( error:Errors.Error ) => {
+		} ).catch( ( error:Errors.HTTPError ) => {
 			this.sending = false;
 			this.setErrorMessage( error );
 			this.shakeForm();

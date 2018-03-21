@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } fro
 
 import { CarbonLDP } from "carbonldp";
 import * as Pointer from "carbonldp/Pointer";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
+import { PersistedDocument } from "carbonldp/PersistedDocument";
 import { Response, Errors } from "carbonldp/HTTP";
 import * as URI from "carbonldp/RDF/URI";
 import * as SPARQL from "carbonldp/SPARQL";
@@ -73,10 +73,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} );
 	}
 
-	getDocumentTree():Promise<PersistedDocument.Class | void> {
-		return this.carbonldp.documents.get( "" ).then( ( [ resolvedRoot, response ]:[ PersistedDocument.Class, Response ] ) => {
+	getDocumentTree():Promise<PersistedDocument | void> {
+		return this.carbonldp.documents.get( "" ).then( ( [ resolvedRoot, response ]:[ PersistedDocument, Response ] ) => {
 			return resolvedRoot.refresh();
-		} ).then( ( [ updatedRoot, updatedResponse ]:[ PersistedDocument.Class, Response ] ) => {
+		} ).then( ( [ updatedRoot, updatedResponse ]:[ PersistedDocument, Response ] ) => {
 
 			let isRequiredSystemDocument:boolean = updatedRoot.types.findIndex( ( type:string ) => type === `${C.namespace}RequiredSystemDocument` ) !== - 1;
 
@@ -244,7 +244,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	private convertBindingToNode( collection:Map<string, PreJSTreeNode>, binding:{ p:Pointer.Class, o:Pointer.Class, p2:Pointer.Class, o2:Pointer.Class, isRequiredSystemDocument:boolean } ):void {
 
 		if( binding.o.isResolved() ) {
-			binding.isRequiredSystemDocument = (<PersistedDocument.Class>binding.o).types.indexOf( "https://carbonldp.com/ns/v1/platform#RequiredSystemDocument" ) !== - 1;
+			binding.isRequiredSystemDocument = (<PersistedDocument>binding.o).types.indexOf( "https://carbonldp.com/ns/v1/platform#RequiredSystemDocument" ) !== - 1;
 		}
 		collection.set( binding.o.id, {
 			hasChildren: collection.get( binding.o.id ) ? true : ! ! binding.p2,

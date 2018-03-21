@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, OnInit, OnDestroy } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import * as Response from "carbonldp/HTTP/Response";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
+import { PersistedDocument } from "carbonldp/PersistedDocument";
 import * as Pointer from "carbonldp/Pointer";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
@@ -33,7 +33,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 	backupFileBlob:Blob;
 	backupFileArray:any[] = [];
 
-	backups:PersistedDocument.Class[] = [];
+	backups:PersistedDocument[] = [];
 	backupsService:BackupsService;
 	jobsService:JobsService;
 
@@ -57,7 +57,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 
 
 	getBackups():void {
-		this.backupsService.getAll().then( ( [ backups, response ]:[ PersistedDocument.Class[], Response.Class ] ) => {
+		this.backupsService.getAll().then( ( [ backups, response ]:[ PersistedDocument[], Response.Class ] ) => {
 			this.backups = backups.sort( ( a:any, b:any ) => b.modified < a.modified ? - 1 : b.modified > a.modified ? 1 : 0 );
 		} )
 	}
@@ -72,12 +72,12 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 		if( backupFile.valid ) this.uploadBackup( this.backupFileBlob );
 	}
 
-	executeImport( importJob:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
+	executeImport( importJob:PersistedDocument ):Promise<PersistedDocument> {
 		return this.jobsService.runJob( importJob );
 	}
 
-	monitorExecution( importJobExecution:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
-		return new Promise<PersistedDocument.Class>( ( resolve:( result:any ) => void, reject:( error:HTTPError | PersistedDocument.Class ) => void ) => {
+	monitorExecution( importJobExecution:PersistedDocument ):Promise<PersistedDocument> {
+		return new Promise<PersistedDocument>( ( resolve:( result:any ) => void, reject:( error:HTTPError | PersistedDocument ) => void ) => {
 			// Node typings are overriding setInterval, that's why we need to cast it to any before assigning it to a number variable
 			this.monitorExecutionInterval = <any>setInterval( () => {
 				this.checkImportJobExecution( importJobExecution ).then( () => {
@@ -94,7 +94,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 		if( typeof this.monitorExecutionInterval !== "undefined" ) clearInterval( this.monitorExecutionInterval );
 	}
 
-	private checkImportJobExecution( importJobExecution:PersistedDocument.Class ):Promise<any> {
+	private checkImportJobExecution( importJobExecution:PersistedDocument ):Promise<any> {
 		return this.jobsService.checkJobExecution( importJobExecution ).then( ( execution ) => {
 			if( ! execution[ Job.Execution.STATUS ] ) return Promise.reject( execution );
 			if( execution[ Job.Execution.STATUS ].id === Job.ExecutionStatus.FINISHED ) this.executing.success();
@@ -186,10 +186,10 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 
 	createBackupImport( backupURI:string ):Promise<any> {
 		this.creating.start();
-		return this.jobsService.createImportBackup( backupURI ).then( ( importJob:PersistedDocument.Class ) => {
+		return this.jobsService.createImportBackup( backupURI ).then( ( importJob:PersistedDocument ) => {
 			this.creating.success();
 			this.executing.start();
-			return this.executeImport( importJob ).then( ( importJobExecution:PersistedDocument.Class ) => {this.monitorExecution( importJobExecution );}
+			return this.executeImport( importJob ).then( ( importJobExecution:PersistedDocument ) => {this.monitorExecution( importJobExecution );}
 			).catch( ( error:HTTPError ) => {
 				console.error( error );
 				this.executing.fail();

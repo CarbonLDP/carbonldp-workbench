@@ -4,7 +4,7 @@ import { CarbonLDP } from "carbonldp";
 import { Request, Response } from "carbonldp/HTTP";
 import { LDP } from "carbonldp/Vocabularies";
 import * as RDFDocument from "carbonldp/RDF/Document";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
+import { PersistedDocument } from "carbonldp/PersistedDocument";
 import * as AccessPoint from "carbonldp/AccessPoint";
 import * as SPARQL from "carbonldp/SPARQL";
 
@@ -54,9 +54,9 @@ export class DocumentsResolverService {
 		} );
 	}
 
-	createChild( parentURI:string, content:any, childSlug?:string ):Promise<PersistedDocument.Class> {
+	createChild( parentURI:string, content:any, childSlug?:string ):Promise<PersistedDocument> {
 		return this.carbonldp.documents.createChild( parentURI, content, childSlug ).then(
-			( [ createdChild, response ]:[ PersistedDocument.Class, Response ] ) => {
+			( [ createdChild, response ]:[ PersistedDocument, Response ] ) => {
 				return createdChild;
 			}
 		).catch( ( error ) => {
@@ -64,9 +64,9 @@ export class DocumentsResolverService {
 		} );
 	}
 
-	createAccessPoint( document:PersistedDocument.Class, accessPoint:AccessPoint.Class, slug?:string ):Promise<PersistedDocument.Class> {
+	createAccessPoint( document:PersistedDocument, accessPoint:AccessPoint.Class, slug?:string ):Promise<PersistedDocument> {
 		return document.createAccessPoint( accessPoint, slug ).then(
-			( [ createdChild, response ]:[ PersistedDocument.Class, Response ] ) => {
+			( [ createdChild, response ]:[ PersistedDocument, Response ] ) => {
 				return createdChild;
 			}
 		).catch( ( error ) => {

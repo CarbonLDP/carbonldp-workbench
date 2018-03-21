@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, EventEmitter, SimpleChange, AfterViewInit
 
 import { CarbonLDP } from "carbonldp";
 import * as Response from "carbonldp/HTTP/Response";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
+import { PersistedDocument } from "carbonldp/PersistedDocument";
 import { StatusCode as HTTPStatusCode } from "carbonldp/HTTP";
 import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
@@ -36,7 +36,7 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 	deleteMessages:Message[] = [];
 	failedDownloadMessage:Message;
 
-	@Input() backupJob:PersistedDocument.Class;
+	@Input() backupJob:PersistedDocument;
 	fetchBackupsList:EventEmitter<boolean> = new EventEmitter<boolean>();
 
 	constructor( element:ElementRef, carbonldp:CarbonLDP, backupsService:BackupsService ) {
@@ -45,7 +45,7 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 		this.backupsService = backupsService;
 		this.fetchBackupsList.subscribe( ( doFetch ) => {
 			if( ! doFetch ) return;
-			this.getBackups().then( ( backups:PersistedDocument.Class[] ) => {
+			this.getBackups().then( ( backups:PersistedDocument[] ) => {
 				clearInterval( this.fetchBackupsListInterval );
 				this.monitorBackups();
 			} );
@@ -61,7 +61,7 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 	ngOnChanges( changes:{ [propName:string]:SimpleChange } ):void {
 		if( changes[ "backupJob" ] && ! ! changes[ "backupJob" ].currentValue && changes[ "backupJob" ].currentValue !== changes[ "backupJob" ].previousValue ) {
 			this.loadingBackups = true;
-			this.getBackups().then( ( backups:PersistedDocument.Class[] ) => {
+			this.getBackups().then( ( backups:PersistedDocument[] ) => {
 				this.loadingBackups = false;
 			} ).catch( () => this.loadingBackups = false );
 			this.monitorBackups();
@@ -85,10 +85,10 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 		this.fetchBackupsListInterval = <any>setInterval( () => this.getBackups(), this.refreshPeriod );
 	}
 
-	getBackups():Promise<PersistedDocument.Class[] | HTTPError> {
+	getBackups():Promise<PersistedDocument[] | HTTPError> {
 		this.errorMessages = [];
 		return this.backupsService.getAll().then(
-			( [ backups, response ]:[ PersistedDocument.Class[], Response.Class ] ) => {
+			( [ backups, response ]:[ PersistedDocument[], Response.Class ] ) => {
 				backups = backups.sort( ( a:any, b:any ) => b.modified < a.modified ? - 1 : b.modified > a.modified ? 1 : 0 );
 				this.backups = backups;
 				return backups;
@@ -130,12 +130,12 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 		this.failedDownloadMessage = null;
 	}
 
-	askToDeleteBackup( askingBackupToRemove:PersistedDocument.Class ):void {
+	askToDeleteBackup( askingBackupToRemove:PersistedDocument ):void {
 		this.askingBackupToRemove = askingBackupToRemove;
 		this.$deleteBackupConfirmationModal.modal( "show" );
 	}
 
-	deleteBackup( backup:PersistedDocument.Class ):Promise<Response.Class> {
+	deleteBackup( backup:PersistedDocument ):Promise<Response.Class> {
 		this.deletingBackup = true;
 		return this.backupsService.delete( backup.id ).then( ( response:Response.Class ):Response.Class => {
 			if( response.status !== HTTPStatusCode.OK ) return <any>Promise.reject( response );
@@ -172,7 +172,7 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 
 	refreshList():void {
 		this.loadingBackups = true;
-		this.getBackups().then( ( backups:PersistedDocument.Class[] ) => {
+		this.getBackups().then( ( backups:PersistedDocument[] ) => {
 			this.loadingBackups = false;
 		} ).catch( () => this.loadingBackups = false );
 		clearInterval( this.fetchBackupsListInterval );
@@ -189,7 +189,7 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 
 }
 
-export interface MockBackup extends PersistedDocument.Class {
+export interface MockBackup extends PersistedDocument {
 	fileIdentifier?:string;
 }
 

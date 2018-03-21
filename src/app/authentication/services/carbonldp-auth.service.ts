@@ -58,7 +58,7 @@ export class CarbonLDPAuthService implements AuthService.Class {
 	register( name:string, username:string, password:string ):Promise<any>;
 	register( name:string, username:string, password:string, enabled:boolean ):Promise<any>;
 	register( name:string, username:string, password:string, enabled?:boolean ):Promise<any> {
-		return this.carbonldp.auth.users.register( username, password, enabled ).then( ( [ persistedUser, responses ]:[ PersistedUser.Class, Response.Class ] ) => {
+		return this.carbonldp.auth.users.register( username, password, enabled ).then( ( [ persistedUser, responses ]:[ PersistedUser.Class, Response ] ) => {
 			persistedUser.name = name;
 			return persistedUser.saveAndRefresh();
 		} );
