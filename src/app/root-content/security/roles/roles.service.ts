@@ -4,11 +4,10 @@ import { CarbonLDP } from "carbonldp";
 import * as Roles from "carbonldp/Auth/Roles";
 import * as Role from "carbonldp/Auth/Role";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
-import { Response } from "carbonldp/HTTP";
 import { ArrayUtils } from "carbonldp/Utils";
 import { URI } from "carbonldp/RDF/URI";
 import { CS } from "carbonldp/Vocabularies";
-import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
+import { SPARQLSelectResults, SPARQLBindingObject } from "carbonldp/SPARQL/SelectResults";
 import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument/QueryDocumentsBuilder";
 
 @Injectable()
@@ -70,7 +69,7 @@ export class RolesService {
 		} );
 	}
 
-	public delete( roleID:string ):Promise<Response.Response> {
+	public delete( roleID:string ):Promise<void> {
 		class MockedRoles extends Roles.Class {}
 
 		let roles:Roles.Class = new MockedRoles( this.carbonldp );
@@ -81,14 +80,14 @@ export class RolesService {
 		return role.saveAndRefresh();
 	}
 
-	public registerUser( userID:string, roleID:string ):Promise<Response.Response> {
+	public registerUser( userID:string, roleID:string ):Promise<void> {
 		class MockedRoles extends Roles.Class {}
 
 		let roles:Roles.Class = new MockedRoles( this.carbonldp );
 		return roles.addUser( roleID, userID )
 	}
 
-	public removeUser( userID:string, roleID:string ):Promise<Response.Response> {
+	public removeUser( userID:string, roleID:string ):Promise<void> {
 		class MockedRoles extends Roles.Class {}
 
 		let roles:Roles.Class = new MockedRoles( this.carbonldp );
@@ -120,7 +119,7 @@ export class RolesService {
 
 		return this.carbonldp.documents.executeSELECTQuery( rolesURI, query ).then( ( results:SPARQLSelectResults ) => {
 			let roles:PersistedRole.Class[] = [];
-			results.bindings.forEach( ( rolePointer:SPARQL.SELECTResults.BindingObject ) => {
+			results.bindings.forEach( ( rolePointer:SPARQLBindingObject ) => {
 				let role:Role.Class = Role.Factory.createFrom( { id: rolePointer[ "childRole" ][ "id" ] }, <string>rolePointer[ "name" ] );
 				role[ "parentRole" ] = rolePointer[ "parentRole" ];
 				roles.push( <Role.Class & PersistedRole.Class>role );
@@ -137,7 +136,7 @@ export class RolesService {
 				WHERE{
 				  GRAPH ?role { 
 				    ?role a <${CS.Role}> .
-					?role <${CS.namae}> ?name .
+					?role <${CS.name}> ?name .
 					OPTIONAL { ?role <${CS.parentRole}> ?parentRole } .
 				  }
 				  BIND( EXISTS { GRAPH ?role { ?role <${CS.childRole}> ?childRole } } as ?childRole)
@@ -145,7 +144,7 @@ export class RolesService {
 				}`;
 		return this.carbonldp.documents.executeSELECTQuery( rolesURI, query ).then( ( results:SPARQLSelectResults ) => {
 			let roles:PersistedRole.Class[] = [];
-			results.bindings.forEach( ( rolePointer:SPARQL.SELECTResults.BindingObject ) => {
+			results.bindings.forEach( ( rolePointer:SPARQLBindingObject ) => {
 				let role:Role.Class = Role.Factory.createFrom( { id: rolePointer[ "role" ][ "id" ] }, <string>rolePointer[ "name" ] );
 				role[ "hasChildren" ] = rolePointer[ "childRole" ];
 				roles.push( <Role.Class & PersistedRole.Class>role );
