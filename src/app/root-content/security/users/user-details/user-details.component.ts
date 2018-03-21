@@ -247,11 +247,11 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 		} );
 	}
 
-	private registerUserToRole( userID:string, roleID:string ):Promise<Response.Response> {
+	private registerUserToRole( userID:string, roleID:string ):Promise<void> {
 		return this.rolesService.registerUser( userID, roleID );
 	}
 
-	private removeUserFromRole( userID:string, roleID:string ):Promise<Response.Response> {
+	private removeUserFromRole( userID:string, roleID:string ):Promise<void> {
 		return this.rolesService.removeUser( userID, roleID );
 	}
 

@@ -56,7 +56,7 @@ export class RoleDeleterComponent implements AfterViewInit {
 				} );
 				return Promise.all( promises );
 			},
-			( error:HTTP.Errors.Error ) => {
+			( error:Errors.HTTPError ) => {
 				let retrievalError:Message = ErrorMessageGenerator.getErrorMessage( error );
 				retrievalError.title = retrievalError.title + " - An error occurred while trying to delete the descendants of the role.";
 				this.errorMessages.push( retrievalError );
@@ -72,7 +72,7 @@ export class RoleDeleterComponent implements AfterViewInit {
 		} );
 	}
 
-	private deleteRole( roleID:string ):Promise<Response.Response> {
+	private deleteRole( roleID:string ):Promise<void> {
 		return this.rolesService.delete( roleID ).catch( ( error:Errors.HTTPError ) => {
 			this.errorMessages.push( ErrorMessageGenerator.getErrorMessage( error ) );
 			throw error;
