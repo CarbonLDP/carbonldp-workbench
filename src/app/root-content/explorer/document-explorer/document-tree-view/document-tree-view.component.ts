@@ -5,7 +5,7 @@ import { Pointer } from "carbonldp/Pointer";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
 import { Response, Errors } from "carbonldp/HTTP";
 import { URI } from "carbonldp/RDF/URI";
-import * as SPARQL from "carbonldp/SPARQL";
+import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { C, LDP } from "carbonldp/Vocabularies";
 
 import * as $ from "jquery";
@@ -184,7 +184,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			    }
 			}
 		`;
-		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( results:SPARQL.SELECTResults.Class ) => {
+		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
 			let accessPoints:Map<string, PreJSTreeNode> = new Map<string, PreJSTreeNode>(),
 				children:Map<string, PreJSTreeNode> = new Map<string, PreJSTreeNode>(),
 				nodes:JSTreeNode[] = [];

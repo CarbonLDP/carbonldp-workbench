@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, Output, EventEmitter, OnInit, AfterViewInit } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import * as SPARQL from "carbonldp/SPARQL";
+import { SPARQLRawResults } from "carbonldp/SPARQL/RawResults";
 import { Response, Header, Errors } from "carbonldp/HTTP";
 
 import { SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from "./response/response.component";
@@ -420,7 +420,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	executeSELECT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = (new Date()).valueOf();
 		return this.carbonldp.documents.executeRawSELECTQuery( query.endpoint, query.content ).then(
-			( result:SPARQL.RawResults.Class ):SPARQLClientResponse => {
+			( result:SPARQLRawResults ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
@@ -458,7 +458,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	executeASK( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = (new Date()).valueOf();
 		return this.carbonldp.documents.executeRawASKQuery( query.endpoint, query.content ).then(
-			( result:SPARQL.RawResults.Class ):SPARQLClientResponse => {
+			( result:SPARQLRawResults ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
@@ -687,7 +687,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	buildResponse( duration:number, resultset:SPARQL.RawResults.Class | string | Message, responseType:string, query:SPARQLQuery ):SPARQLClientResponse {
+	buildResponse( duration:number, resultset:SPARQLRawResults | string | Message, responseType:string, query:SPARQLQuery ):SPARQLClientResponse {
 		let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
 		clientResponse.duration = duration;
 		clientResponse.resultset = resultset;

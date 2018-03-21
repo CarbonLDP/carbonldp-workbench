@@ -6,7 +6,7 @@ import { LDP } from "carbonldp/Vocabularies";
 import { RDFDocument, RDFDocumentParser } from "carbonldp/RDF/Document";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
 import * as AccessPoint from "carbonldp/AccessPoint";
-import * as SPARQL from "carbonldp/SPARQL";
+import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 
 @Injectable()
 export class DocumentsResolverService {
@@ -81,7 +81,7 @@ export class DocumentsResolverService {
 						      ?accessPointURI <${LDP.membershipResource}> <${documentURI}>.
 					          ?accessPointURI <${LDP.hasMemberRelation}> ?propertyName
 			            }`
-		).then( ( results:SPARQL.SELECTResults.Class ) => {
+		).then( ( results:SPARQLSelectResults ) => {
 
 			return results.bindings.map( ( value:{ accessPointURI:any, propertyName:any } ) => value.propertyName.id );
 		} ).catch( ( error ) => {

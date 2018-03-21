@@ -2,8 +2,7 @@ import { Injectable } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { Class as PlatformMetadata } from "carbonldp/System/PlatformMetadata";
-import { Response } from "carbonldp/HTTP";
-import * as SPARQL from "carbonldp/SPARQL";
+import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 
 @Injectable()
 export class WidgetsService {
@@ -23,7 +22,7 @@ export class WidgetsService {
 				}
 			`;
 
-		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( results:SPARQL.SELECTResults.Class ) => {
+		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( results:SPARQLSelectResults ) => {
 			results.bindings.forEach( ( binding ) => {
 				count = binding[ "count" ];
 			} );
@@ -42,7 +41,7 @@ export class WidgetsService {
 				}
 			`;
 
-		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( results:SPARQL.SELECTResults.Class ) => {
+		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( results:SPARQLSelectResults ) => {
 			results.bindings.forEach( ( binding ) => {
 				count = binding[ "count" ];
 			} );

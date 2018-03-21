@@ -8,7 +8,7 @@ import { Response } from "carbonldp/HTTP";
 import { ArrayUtils } from "carbonldp/Utils";
 import { URI } from "carbonldp/RDF/URI";
 import { CS } from "carbonldp/Vocabularies";
-import * as SPARQL from "carbonldp/SPARQL";
+import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument";
 
 @Injectable()
@@ -100,7 +100,7 @@ export class RolesService {
 			query:string = `SELECT DISTINCT (COUNT(?role) AS ?count) WHERE {
 			?role a <${CS.Role}> . 
 		}`;
-		return this.carbonldp.documents.executeSELECTQuery( usersURI, query ).then( ( results:SPARQL.SELECTResults.Class ) => {
+		return this.carbonldp.documents.executeSELECTQuery( usersURI, query ).then( ( results:SPARQLSelectResults ) => {
 			if( typeof results.bindings[ 0 ] === "undefined" ) return 0;
 			return <number>results.bindings[ 0 ][ "count" ];
 		} );
@@ -118,7 +118,7 @@ export class RolesService {
 				}
 			`;
 
-		return this.carbonldp.documents.executeSELECTQuery( rolesURI, query ).then( ( results:SPARQL.SELECTResults.Class ) => {
+		return this.carbonldp.documents.executeSELECTQuery( rolesURI, query ).then( ( results:SPARQLSelectResults ) => {
 			let roles:PersistedRole.Class[] = [];
 			results.bindings.forEach( ( rolePointer:SPARQL.SELECTResults.BindingObject ) => {
 				let role:Role.Class = Role.Factory.createFrom( { id: rolePointer[ "childRole" ][ "id" ] }, <string>rolePointer[ "name" ] );
@@ -143,7 +143,7 @@ export class RolesService {
 				  BIND( EXISTS { GRAPH ?role { ?role <${CS.childRole}> ?childRole } } as ?childRole)
 				  FILTER( ${filter} )
 				}`;
-		return this.carbonldp.documents.executeSELECTQuery( rolesURI, query ).then( ( results:SPARQL.SELECTResults.Class ) => {
+		return this.carbonldp.documents.executeSELECTQuery( rolesURI, query ).then( ( results:SPARQLSelectResults ) => {
 			let roles:PersistedRole.Class[] = [];
 			results.bindings.forEach( ( rolePointer:SPARQL.SELECTResults.BindingObject ) => {
 				let role:Role.Class = Role.Factory.createFrom( { id: rolePointer[ "role" ][ "id" ] }, <string>rolePointer[ "name" ] );

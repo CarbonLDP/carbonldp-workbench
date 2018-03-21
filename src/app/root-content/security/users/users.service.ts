@@ -7,7 +7,7 @@ import * as PersistedUser from "carbonldp/Auth/PersistedUser";
 import { Response } from "carbonldp/HTTP";
 import { ArrayUtils } from "carbonldp/Utils";
 import { URI } from "carbonldp/RDF/URI";
-import * as SPARQL from "carbonldp/SPARQL";
+import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { CS } from "carbonldp/Vocabularies";
 import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument";
 
@@ -76,7 +76,7 @@ export class UsersService {
 			query:string = `SELECT DISTINCT (COUNT(?user) AS ?count) WHERE {
 			?user a <${CS.User}> . 
 		}`;
-		return this.carbonldp.documents.executeSELECTQuery( usersURI, query ).then( ( results:SPARQL.SELECTResults.Class ) => {
+		return this.carbonldp.documents.executeSELECTQuery( usersURI, query ).then( ( results:SPARQLSelectResults ) => {
 			if( typeof results.bindings[ 0 ] === "undefined" ) return 0;
 			return <number>results.bindings[ 0 ][ "count" ];
 		} );
