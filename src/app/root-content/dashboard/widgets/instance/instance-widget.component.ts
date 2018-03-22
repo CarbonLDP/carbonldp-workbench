@@ -2,6 +2,7 @@ import { Component, ElementRef, Output, EventEmitter } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { C } from "carbonldp/Vocabularies";
+import { PlatformMetadata } from "carbonldp/System/PlatformMetadata";
 
 import { WidgetsService } from "../widgets.service";
 import { Message } from "app/shared/messages-area/message.component";
@@ -22,7 +23,7 @@ export class InstanceWidgetComponent {
 	carbonldpURL:string;
 	carbonldpBuildDate:Date;
 	hide:boolean = false;
-	platformMetadata;
+	platformMetadata:PlatformMetadata;
 
 	errorMessage:Message;
 
@@ -46,7 +47,7 @@ export class InstanceWidgetComponent {
 		}
 	}
 
-	public refreshWidget( event?:MouseEvent ): Promise<any> {
+	public refreshWidget( event?:MouseEvent ):Promise<any> {
 		if( event ) event.stopImmediatePropagation();
 		this.errorMessage = null;
 		this.carbonldpBuildDate = null;
@@ -55,10 +56,10 @@ export class InstanceWidgetComponent {
 		if( ! this.platformMetadata ) return this.getPlatformMetadata();
 
 
-		return this.widgetsService.refreshPlatformMetadata( this.platformMetadata ).then( ( platformMetadata ) => {
+		return this.widgetsService.refreshPlatformMetadata( this.platformMetadata ).then( ( platformMetadata:any ) => {
 			this.platformMetadata = platformMetadata;
-			this.carbonldpBuildDate = platformMetadata[ "buildDate" ];
-			this.carbonldpVersion = platformMetadata[ "version" ];
+			this.carbonldpBuildDate = platformMetadata.instance.buildDate;
+			this.carbonldpVersion = platformMetadata.instance.version;
 			this.element.nativeElement.classList.remove( "error" );
 		} ).catch( ( error:any ) => {
 			this.errorWidget( error );
