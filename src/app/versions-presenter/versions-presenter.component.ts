@@ -1,6 +1,6 @@
 import { Component, ElementRef } from "@angular/core";
 import { CarbonLDP } from "carbonldp";
-import { Class as PlatformMetadata } from "carbonldp/System/PlatformMetadata";
+import { PlatformMetadata } from "carbonldp/System/PlatformMetadata";
 import { C } from "carbonldp/Vocabularies";
 import * as $ from "jquery";
 

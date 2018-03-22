@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { Class as PlatformMetadata } from "carbonldp/System/PlatformMetadata";
+import { PlatformMetadata } from "carbonldp/System/PlatformMetadata";
 import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 
 @Injectable()
