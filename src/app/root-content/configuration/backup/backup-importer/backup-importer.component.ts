@@ -163,25 +163,6 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 
 	uploadBackup( file:Blob ):void {
 		this.uploading.start();
-		this.backupsService.upload( file ).then(
-			( [ pointer, response ]:[ Pointer, Response.Response ] ) => {
-				this.uploading.success();
-				this.createBackupImport( pointer.id );
-			}
-		).catch( ( error:HTTPError ) => {
-			console.error( error );
-			this.uploading.fail();
-			let errorMessage:Message;
-			if( error.response ) errorMessage = this.getHTTPErrorMessage( error, "Couldn't upload the file." );
-			else {
-				errorMessage = <Message>{
-					title: error.name,
-					type: Types.ERROR,
-					content: JSON.stringify( error )
-				};
-			}
-			this.errorMessages.push( errorMessage );
-		} );
 	}
 
 	createBackupImport( backupURI:string ):Promise<any> {

@@ -18,12 +18,8 @@ export class BackupsService {
 		this.extendSchemasForBackups();
 	}
 
-	upload( file:Blob ):Promise<[ Pointer, Response.Response ]> {
-		return this.carbonldp.documents.upload( this.BACKUPS_URI, file ).then( ( [ uploadedBackupPointer, uploadResponse ]:[ Pointer, Response.Response ] ):any => {
-			return this.convertToNonRDFSource( uploadedBackupPointer ).then( () => {
-				return [ uploadedBackupPointer, uploadResponse ];
-			} )
-		} );
+	upload( file:Blob ):Promise<void> {
+		return Promise.resolve();
 	}
 
 	getAll():Promise<PersistedDocument[]> {
