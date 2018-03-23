@@ -57,7 +57,7 @@ export class WorkbenchView {
 	private populateHeader():void {
 		this.headerService.clear();
 		this.headerService.logo = {
-			image: "assets/images/carbon-ldp-logo-lg.png",
+			image: "assets/images/carbonldp-inverted-logo-small.png",
 			route: [ "" ]
 		};
 
