@@ -12,7 +12,7 @@ import { SidebarService } from "./sidebar.service"
 	templateUrl: "./sidebar.component.html",
 	styleUrls: [ "./sidebar.component.scss" ],
 	host: {
-		class: "ui inverted vertical menu accordion"
+		class: "ui inverted vertical labeled icon menu accordion"
 	}
 } )
 export class SidebarComponent {
@@ -40,13 +40,26 @@ export class SidebarComponent {
 
 	toggle():void {
 		if( this.$element.is( ":visible" ) ) {
-			this.$element.animate( { "width": "0" }, 400, () => {
-				this.$element.hide();
-				this.sidebarService.toggledEmitter.emit( false );
+			this.$element.animate( {
+				"width": "0",
+				"opacity": 0.25,
+			}, {
+				duration: 400,
+				specialEasing: {
+					width: "linear",
+					height: "easeOutBounce"
+				},
+				complete: () => {
+					this.$element.hide();
+					this.sidebarService.toggledEmitter.emit( false );
+				}
 			} );
 		} else {
 			this.$element.show();
-			this.$element.animate( { "width": "300px" }, 400 );
+			this.$element.animate( {
+				"width": "182px",
+				"opacity": 1,
+			}, 400 );
 			this.sidebarService.toggledEmitter.emit( true );
 		}
 	}
