@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@angular/compiler-cli": "^5.2.4",
-    "@ngtools/webpack": "^1.9.8",
+    "@ngtools/webpack": "1.10.0",
     "@types/codemirror": "^0.0.55",
     "@types/jasmine": "^2.8.6",
     "@types/jasmine-ajax": "^3.1.37",
