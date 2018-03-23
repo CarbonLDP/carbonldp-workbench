@@ -1,4 +1,4 @@
-<form class="ui delete document basic modal form" #deleteDocumentModal #deleteDocumentForm="ngForm" (submit)="onSubmitDeleteDocument(deleteDocumentFormModel.value, $event)">
+<form class="ui delete document basic modal error form" #deleteDocumentModal #deleteDocumentForm="ngForm" (submit)="onSubmitDeleteDocument(deleteDocumentFormModel.value, $event)">
 	<div class="header">
 		<h2 class="ui inverted header"><i class="trash outline red icon"></i> Are you sure?</h2>
 	</div>
@@ -12,7 +12,14 @@
 		<cw-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage($event)" *ngIf="!!errorMessage"></cw-message>
 	</div>
 	<div class="actions">
-		<div class="ui button" title="Cancel deletion" (click)="hideDeleteDocumentForm()">No</div>
-		<div class="ui red button" title="Confirm deletion" (click)="onSubmitDeleteDocument(deleteDocumentForm.value, $event)">Yes</div>
+		<div class="ui button" title="Cancel deletion"
+		     [ngClass]="{disabled:isDeleting}"
+		     [attr.disabled]="isDeleting"
+		     (click)="hideDeleteDocumentForm()">No
+		</div>
+		<div class="ui red button" title="Confirm deletion"
+		     [ngClass]="{loading:isDeleting}"
+		     (click)="onSubmitDeleteDocument(deleteDocumentForm.value, $event); clearErrorMessage()">Yes
+		</div>
 	</div>
 </form>

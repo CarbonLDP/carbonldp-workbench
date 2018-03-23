@@ -20,14 +20,16 @@ export class DocumentDeleterComponent implements AfterViewInit {
 
 	private carbon:Carbon;
 	private element:ElementRef;
+	private documentsResolverService:DocumentsResolverService;
 	private $element:JQuery;
 
+
 	$deleteDocumentModal:JQuery;
+	errorMessage:Message;
+	deleteDocumentFormModel:{ value?:any } = {};
+	isDeleting:boolean = false;
 
-	private documentsResolverService:DocumentsResolverService;
-	public errorMessage:Message;
 
-	public deleteDocumentFormModel:{ value?:any } = {};
 	@Input() documentURI:string = "";
 	@Output() onSuccess:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
@@ -45,16 +47,19 @@ export class DocumentDeleterComponent implements AfterViewInit {
 	}
 
 	public onSubmitDeleteDocument( data:{}, $event:any ):void {
+		this.isDeleting = true;
 		this.documentsResolverService.delete( this.documentURI ).then( ( result ) => {
 			this.onSuccess.emit( DocumentExplorerLibrary.getParentURI( this.documentURI ) );
 			this.hide();
 		} ).catch( ( error:HTTPError ) => {
 			this.onError.emit( error );
 			this.errorMessage = ErrorMessageGenerator.getErrorMessage( error );
+		} ).then( () => {
+			this.isDeleting = false;
 		} );
 	}
 
-	private clearErrorMessage():void {
+	public clearErrorMessage():void {
 		this.errorMessage = null;
 	}
 
