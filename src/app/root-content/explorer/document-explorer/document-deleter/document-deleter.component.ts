@@ -59,7 +59,7 @@ export class DocumentDeleterComponent implements AfterViewInit {
 		} );
 	}
 
-	private clearErrorMessage():void {
+	public clearErrorMessage():void {
 		this.errorMessage = null;
 	}
 
