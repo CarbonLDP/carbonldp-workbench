@@ -139,7 +139,7 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 		return this.backupsService.delete( backup.id ).then( () => {
 			this.closeDeleteModal();
 			return this.getBackups();
-		} ).catch( ( errorOrResponse:HTTPError | Response.Response ) => {
+		} ).catch( ( errorOrResponse:HTTPError | Response ) => {
 			let deleteMessage:Message;
 			if( errorOrResponse.hasOwnProperty( "response" ) ) {
 				deleteMessage = <Message>{
@@ -152,12 +152,12 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 				};
 			} else {
 				deleteMessage = <Message>{
-					title: (<XMLHttpRequest>(<Response.Response>errorOrResponse).request).statusText,
+					title: (<XMLHttpRequest>(<Response>errorOrResponse).request).statusText,
 					type: Types.ERROR,
 					content: "Couldn't delete the backup.",
-					endpoint: (<XMLHttpRequest>(<Response.Response>errorOrResponse).request).responseURL,
-					statusCode: "" + (<Response.Response>errorOrResponse).status,
-					statusMessage: (<XMLHttpRequest>(<Response.Response>errorOrResponse).request).statusText
+					endpoint: (<XMLHttpRequest>(<Response>errorOrResponse).request).responseURL,
+					statusCode: "" + (<Response>errorOrResponse).status,
+					statusMessage: (<XMLHttpRequest>(<Response>errorOrResponse).request).statusText
 				};
 			}
 			this.deleteMessages.push( deleteMessage );

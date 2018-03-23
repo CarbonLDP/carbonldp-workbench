@@ -82,7 +82,7 @@ export class UsersService {
 		} );
 	}
 
-	public saveUser( user:PersistedUser.Class ):Promise<[ PersistedUser.Class, Response.Response ]> {
+	public saveUser( user:PersistedUser.Class ):Promise<[ PersistedUser.Class, Response ]> {
 		return user.save();
 	}
 

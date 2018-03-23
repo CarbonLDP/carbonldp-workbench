@@ -161,8 +161,8 @@ export class RoleDetailsComponent {
 		(<any>role.users).forEach( ( userPointer:Pointer ) => {
 			promises.push( userPointer.resolve() );
 		} );
-		return Promise.all( promises ).then( ( resolvedUsers:[ PersistedUser.Class, Response.Response ][] ) => {
-			resolvedUsers.forEach( ( [ resolvedUser, response ]:[ PersistedUser.Class, Response.Response ] ) => {
+		return Promise.all( promises ).then( ( resolvedUsers:[ PersistedUser.Class, Response ][] ) => {
+			resolvedUsers.forEach( ( [ resolvedUser, response ]:[ PersistedUser.Class, Response ] ) => {
 				users.push( resolvedUser );
 			} );
 			return users;

@@ -91,8 +91,8 @@ export class DocumentExplorerComponent {
 		this.onRefreshNode.emit( $event );
 	}
 
-	public handleExternalError( error:HTTPError | Response.Response ):void {
-		if( error instanceof Response.Response ) {
+	public handleExternalError( error:HTTPError | Response ):void {
+		if( error instanceof Response ) {
 			this.carbonldp.documents._parseErrorResponse( error ).catch( ( parsedError:HTTPError ) => {
 				this.messages.push( ErrorMessageGenerator.getErrorMessage( parsedError ) );
 			} );
