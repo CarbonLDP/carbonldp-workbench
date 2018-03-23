@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { Request, Response } from "carbonldp/HTTP";
+import { RequestService, RequestUtils, RequestOptions, Response } from "carbonldp/HTTP";
 import { LDP } from "carbonldp/Vocabularies";
 import { RDFDocument, RDFDocumentParser } from "carbonldp/RDF/Document";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
@@ -22,15 +22,15 @@ export class DocumentsResolverService {
 
 	get( uri:string ):Promise<RDFDocument | null> {
 		if( ! uri ) return <any> Promise.reject( new Error( "Provide the uri" ) );
-		let requestOptions:Request.RequestOptions = { sendCredentialsOnCORS: true, };
+		let requestOptions:RequestOptions = { sendCredentialsOnCORS: true, };
 		if( this.carbonldp.auth.isAuthenticated() ) this.carbonldp.auth.addAuthentication( requestOptions );
 
-		Request.RequestUtils.setAcceptHeader( "application/ld+json", requestOptions );
-		Request.RequestUtils.setPreferredInteractionModel( LDP.RDFSource, requestOptions );
+		RequestUtils.setAcceptHeader( "application/ld+json", requestOptions );
+		RequestUtils.setPreferredInteractionModel( LDP.RDFSource, requestOptions );
 
 		let eTag:string;
 
-		return Request.RequestService.get( uri, requestOptions ).then( ( response:Response.Response ) => {
+		return RequestService.get( uri, requestOptions ).then( ( response:Response ) => {
 			eTag = response.getETag();
 			return this.parser.parse( response.data );
 		} ).then( ( parsedDocuments:any ) => {
@@ -56,7 +56,7 @@ export class DocumentsResolverService {
 
 	createChild( parentURI:string, content:any, childSlug?:string ):Promise<PersistedDocument> {
 		return this.carbonldp.documents.createChild( parentURI, content, childSlug ).then(
-			( [ createdChild, response ]:[ PersistedDocument, Response.Response ] ) => {
+			( [ createdChild, response ]:[ PersistedDocument, Response ] ) => {
 				return createdChild;
 			}
 		).catch( ( error ) => {
@@ -103,13 +103,13 @@ export class DocumentsResolverService {
 	}
 
 	private callUpdate( uri:string, body:string, eTag:string ):Promise<RDFDocument> {
-		let requestOptions:Request.RequestOptions = { sendCredentialsOnCORS: true, };
+		let requestOptions:RequestOptions = { sendCredentialsOnCORS: true, };
 		if( this.carbonldp.auth.isAuthenticated() ) this.carbonldp.auth.addAuthentication( requestOptions );
-		Request.RequestUtils.setAcceptHeader( "application/ld+json", requestOptions );
-		Request.RequestUtils.setContentTypeHeader( "application/ld+json", requestOptions );
-		Request.RequestUtils.setIfMatchHeader( eTag, requestOptions );
-		Request.RequestUtils.setPreferredInteractionModel( LDP.RDFSource, requestOptions );
-		return Request.RequestService.put( uri, body, requestOptions ).then( ( response:Response.Response ) => {
+		RequestUtils.setAcceptHeader( "application/ld+json", requestOptions );
+		RequestUtils.setContentTypeHeader( "application/ld+json", requestOptions );
+		RequestUtils.setIfMatchHeader( eTag, requestOptions );
+		RequestUtils.setPreferredInteractionModel( LDP.RDFSource, requestOptions );
+		return RequestService.put( uri, body, requestOptions ).then( ( response:Response ) => {
 			return this.get( uri );
 		} ).then( ( parsedDocument:RDFDocument ) => {
 			if( ! parsedDocument ) return null;
