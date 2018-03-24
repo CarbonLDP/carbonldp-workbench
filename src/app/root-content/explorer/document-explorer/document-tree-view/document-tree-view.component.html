@@ -1,8 +1,8 @@
-<div class="ui basic segment treeview__options">
+<div class="ui basic segment treeview-options">
 
 	<!-- Create Document/AccessPoint button -->
 	<div title="Create a Document or Access Point"
-	     class="ui top left pointing dropdown mini basic black button"
+	     class="ui top left pointing dropdown mini basic black button treeview-optionsButton"
 	     [ngClass]="{'disabled':nodeChildren.length===0}">
 		<i class="plus icon"></i>
 		<span class="text">New</span>
@@ -21,13 +21,13 @@
 	</div>
 
 	<!-- Refresh Button-->
-	<button class="ui mini basic black right aligned icon button" title="Refresh - Or double click a node to refresh it"
+	<button class="ui mini basic black right aligned icon button treeview-refreshButton" title="Refresh - Or double click a node to refresh it"
 	        (click)="refreshSelectedNode()">
 		<i class="refresh icon"></i>
 	</button>
 
 	<!-- Delete Button -->
-	<button class="ui mini basic red right aligned icon button" title="Delete document"
+	<button class="ui mini basic red right aligned icon button treeview-deleteButton" title="Delete document"
 	        [ngClass]="{disabled: (nodeChildren.length===0 || !canDelete) }"
 	        [disabled]="nodeChildren.length===0 || !canDelete"
 	        (click)="showDeleteChildForm()">
@@ -35,6 +35,6 @@
 	</button>
 </div>
 
-<div class="treeview__content">
+<div class="treeview-content">
 	<ul></ul>
 </div>
