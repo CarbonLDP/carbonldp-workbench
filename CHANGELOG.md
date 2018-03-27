@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.0.0-alpha.3 (2018/03/27)
+
+- Resolved #87 - Use SDK's refactored version
+- Resolved #85 - Change sidebar size
+- Resolved #80 - Change logo
+- Resolved #62 - Disable delete option for system managed documents
+- Resolved #63 - Provide immediate feedback when deleting a document
+- Resolved #75 - Remove package `angular-carbonldp`
+
+### Fixed
+
+- Resolved #74 - Inverted success message on Documents and Access Points creation
+- Resolved #72 - CONSTRUCT and SELECT combination serve wrong output formats of CONSTRUCTS
+- Resolved #71 - The SPARQL client set disabled execute button on empty endpoint
+- Resolved #84 - Fix version displayer
+
+### Breaking changes
+
+None
+
 ## 1.0.0-alpha.2 (2017/09/28)
 
 ### Added
