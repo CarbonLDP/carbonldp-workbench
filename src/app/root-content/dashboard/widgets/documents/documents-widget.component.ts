@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 
 import { Widget } from "../widgets.component";
 import { WidgetsService } from "../widgets.service";
@@ -16,7 +16,7 @@ import "semantic-ui/semantic";
 } )
 
 export class DocumentsWidgetComponent {
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 	element:ElementRef;
 	errorMessage:Message;
 	widgetsService:WidgetsService;
@@ -28,10 +28,10 @@ export class DocumentsWidgetComponent {
 	@Output() onErrorOccurs:EventEmitter<any> = new EventEmitter();
 	@Output() onClose:EventEmitter<Widget> = new EventEmitter<Widget>();
 
-	constructor( element:ElementRef, carbon:Carbon, widgetsService:WidgetsService ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP, widgetsService:WidgetsService ) {
 		this.element = element;
 		this.widgetsService = widgetsService;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 	}
 
 	ngDoCheck() {

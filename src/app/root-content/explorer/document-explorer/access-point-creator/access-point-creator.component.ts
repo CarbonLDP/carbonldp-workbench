@@ -1,11 +1,10 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 import { NgForm } from "@angular/forms";
 
-import { Class as Carbon } from "carbonldp/Carbon";
-import * as HTTP from "carbonldp/HTTP";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
-import * as AccessPoint from "carbonldp/AccessPoint";
-import { Error as HTTPError } from "carbonldp/HTTP/Errors";
+import { CarbonLDP } from "carbonldp";
+import { Response, Errors } from "carbonldp/HTTP";
+import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { AccessPointBase } from "carbonldp/AccessPoint";
 
 import { DocumentsResolverService } from "../documents-resolver.service"
 import { Message } from "app/shared/messages-area/message.component";
@@ -21,7 +20,7 @@ import "semantic-ui/semantic";
 
 export class AccessPointCreatorComponent implements AfterViewInit {
 
-	private carbon:Carbon;
+	private carbonldp:CarbonLDP;
 	private element:ElementRef;
 	private $element:JQuery;
 	private $createAccessPointModal:JQuery;
@@ -41,9 +40,9 @@ export class AccessPointCreatorComponent implements AfterViewInit {
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
 
 
-	constructor( element:ElementRef, carbon:Carbon, documentsResolverService:DocumentsResolverService ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.documentsResolverService = documentsResolverService;
 	}
 
@@ -55,18 +54,18 @@ export class AccessPointCreatorComponent implements AfterViewInit {
 	private onSubmitAccessPoint( data:{ slug:string, hasMemberRelation:string, isMemberOfRelation:string }, $event:any, form:NgForm ):void {
 		$event.preventDefault();
 		let slug:string = data.slug;
-		let accessPoint:AccessPoint.Class = {
+		let accessPoint:AccessPointBase = {
 			hasMemberRelation: data.hasMemberRelation
 		};
 		if( ! ! data.isMemberOfRelation ) accessPoint.isMemberOfRelation = data.isMemberOfRelation;
 
-		this.carbon.documents.get( this.parentURI ).then( ( [ document, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+		this.carbonldp.documents.get( this.parentURI ).then( ( document:PersistedDocument ) => {
 			return this.documentsResolverService.createAccessPoint( document, accessPoint, slug );
-		} ).then( ( document:PersistedDocument.Class ) => {
+		} ).then( ( document:PersistedDocument ) => {
 			this.onSuccess.emit( document );
 			form.resetForm();
 			this.hide();
-		} ).catch( ( error:HTTPError ) => {
+		} ).catch( ( error:Errors.HTTPError ) => {
 			this.onError.emit( error );
 			this.errorMessage = ErrorMessageGenerator.getErrorMessage( error );
 		} );

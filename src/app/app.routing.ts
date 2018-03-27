@@ -3,7 +3,7 @@ import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
 
 // Guards
 import { AuthenticatedGuard, NotAuthenticatedGuard } from "app/authentication/guards";
-import { CarbonProviderResolver } from "app/resolvers";
+import { CarbonLDPProviderResolver } from "app/resolvers";
 
 // Components
 import { LoginView } from "./login/login.view";
@@ -59,7 +59,7 @@ const appRoutes:Routes = [
 
 
 export const appRoutingProviders:any[] = [
-	CarbonProviderResolver,
+	CarbonLDPProviderResolver,
 	AuthenticatedGuard,
 	NotAuthenticatedGuard,
 ];

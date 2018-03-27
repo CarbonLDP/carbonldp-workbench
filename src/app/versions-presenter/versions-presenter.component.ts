@@ -1,7 +1,7 @@
 import { Component, ElementRef } from "@angular/core";
-import { Class as Carbon } from "carbonldp/Carbon";
-import { Class as PlatformMetadata } from "carbonldp/System/PlatformMetadata";
-import * as NS from "carbonldp/NS";
+import { CarbonLDP } from "carbonldp";
+import { PlatformMetadata } from "carbonldp/System/PlatformMetadata";
+import { C } from "carbonldp/Vocabularies";
 import * as $ from "jquery";
 
 @Component( {
@@ -12,46 +12,46 @@ import * as $ from "jquery";
 export class VersionsPresenterComponent {
 	private element:ElementRef;
 	private $element:JQuery;
-	private carbon:Carbon;
+	private carbonldp:CarbonLDP;
 
 	carbonldpSDK:string;
 	carbonldpWorkbench:string;
 	carbonldpPlatform:string;
 	carbonldpURL:string;
 
-	constructor( element:ElementRef, carbon:Carbon ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 	}
 
 	ngOnInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.carbonldpSDK = this.carbon.version;
+		this.carbonldpSDK = this.carbonldp.version;
 		this.carbonldpWorkbench = process.env.PACKAGES[ "carbonldp-workbench" ];
-		this.carbonldpURL = this.carbon.baseURI;
+		this.carbonldpURL = this.carbonldp.baseURI;
 		this.getPlatformVersion();
 	}
 
 	getPlatformVersion():Promise<PlatformMetadata> {
 
 		// TODO: Remove extendObjectSchema when SDK implements instance with its properties
-		this.carbon.extendObjectSchema( NS.C.namespace + "PlatformInstance", {
+		this.carbonldp.extendObjectSchema( C.namespace + "PlatformInstance", {
 			"version": {
-				"@id": NS.C.namespace + "version",
+				"@id": C.namespace + "version",
 				"@type": "string"
 			},
 			"buildDate": {
-				"@id": NS.C.namespace + "buildDate",
+				"@id": C.namespace + "buildDate",
 				"@type": "dateTime"
 			}
 		} );
-		this.carbon.extendObjectSchema( NS.C.namespace + "Platform", {
+		this.carbonldp.extendObjectSchema( C.namespace + "Platform", {
 			"instance": {
-				"@id": NS.C.namespace + "instance",
+				"@id": C.namespace + "instance",
 				"@type": "@id"
 			}
 		} );
-		return this.carbon.getPlatformMetadata().then( ( platformMetadata:any ) => {
+		return this.carbonldp.getPlatformMetadata().then( ( platformMetadata:any ) => {
 			this.carbonldpPlatform = platformMetadata.instance.version;
 			return platformMetadata;
 		} ).catch( ( error ) => {

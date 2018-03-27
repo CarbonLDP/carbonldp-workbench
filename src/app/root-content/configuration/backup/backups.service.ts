@@ -1,54 +1,50 @@
 import { Injectable } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
-import * as HTTP from "carbonldp/HTTP";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
-import * as Pointer from "carbonldp/Pointer";
-import * as NS from "carbonldp/NS";
+import { CarbonLDP } from "carbonldp";
+import { Response } from "carbonldp/HTTP";
+import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { Pointer } from "carbonldp/Pointer";
+import { LDP } from "carbonldp/Vocabularies";
 
 @Injectable()
 export class BackupsService {
 
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 	BACKUPS_URI:string = "";
 
-	constructor( carbon:Carbon ) {
-		this.carbon = carbon;
-		this.BACKUPS_URI = this.carbon.baseURI + ".system/backups/";
+	constructor( carbonldp:CarbonLDP ) {
+		this.carbonldp = carbonldp;
+		this.BACKUPS_URI = this.carbonldp.baseURI + ".system/backups/";
 		this.extendSchemasForBackups();
 	}
 
-	upload( file:Blob ):Promise<[ Pointer.Class, HTTP.Response.Class ]> {
-		return this.carbon.documents.upload( this.BACKUPS_URI, file ).then( ( [ uploadedBackupPointer, uploadResponse ]:[ Pointer.Class, HTTP.Response.Class ] ):any => {
-			return this.convertToNonRDFSource( uploadedBackupPointer ).then( () => {
-				return [ uploadedBackupPointer, uploadResponse ];
-			} )
-		} );
+	upload( file:Blob ):Promise<void> {
+		return Promise.resolve();
 	}
 
-	getAll():Promise<[ PersistedDocument.Class[], HTTP.Response.Class ]> {
-		return this.carbon.documents.getChildren( this.BACKUPS_URI );
+	getAll():Promise<PersistedDocument[]> {
+		return this.carbonldp.documents.getChildren( this.BACKUPS_URI );
 	}
 
 	getDownloadURL( documentURI:string ):Promise<string> {
-		return this.carbon.documents.getDownloadURL( documentURI ).then( ( documentDownloadURI:string ) => {
+		return this.carbonldp.documents.getDownloadURL( documentURI ).then( ( documentDownloadURI:string ) => {
 			return documentDownloadURI;
 		} );
 	}
 
-	delete( uri:string ):Promise<HTTP.Response.Class> {
-		return this.carbon.documents.delete( uri );
+	delete( uri:string ):Promise<void> {
+		return this.carbonldp.documents.delete( uri );
 	}
 
-	private convertToNonRDFSource( backupPointer:Pointer.Class ):Promise<[ PersistedDocument.Class, HTTP.Response.Class ]> {
-		return backupPointer.resolve().then( ( [ backupDocument, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
-			backupDocument.defaultInteractionModel = Pointer.Factory.create( NS.LDP.Class.NonRDFSource );
+	private convertToNonRDFSource( backupPointer:Pointer ):Promise<PersistedDocument> {
+		return backupPointer.resolve().then( ( backupDocument:PersistedDocument ) => {
+			backupDocument.defaultInteractionModel = Pointer.create( LDP.NonRDFSource );
 			return backupDocument.save();
 		} );
 	}
 
 	private extendSchemasForBackups():void {
-		this.carbon.extendObjectSchema( {
+		this.carbonldp.extendObjectSchema( {
 			"xsd": "http://www.w3.org/2001/XMLSchema#",
 			"fileIdentifier": {
 				"@id": "https://carbonldp.com/ns/v1/platform#fileIdentifier",

@@ -1,9 +1,9 @@
 import { Component, Input, Output, ElementRef, AfterViewInit, OnInit, EventEmitter } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
-import * as HTTP from "carbonldp/HTTP";
-import * as URI from "carbonldp/RDF/URI";
+import { Errors } from "carbonldp/HTTP";
+import { URI } from "carbonldp/RDF/URI";
 
 import { RolesService } from "../roles.service";
 
@@ -19,7 +19,7 @@ import "jstree/dist/jstree.min";
 } )
 export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 
-	private carbon:Carbon;
+	private carbonldp:CarbonLDP;
 	private element:ElementRef;
 	private $element:JQuery;
 	private jsTree:JSTree;
@@ -41,16 +41,16 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 	@Input() openNode:EventEmitter<string> = new EventEmitter<string>();
 	@Input() deletedNode:EventEmitter<string> = new EventEmitter<string>();
 
-	@Output() onError:EventEmitter<HTTP.Errors.Error> = new EventEmitter<HTTP.Errors.Error>();
+	@Output() onError:EventEmitter<Errors.HTTPError> = new EventEmitter<Errors.HTTPError>();
 	@Output() onLoading:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSelectRole:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onDoubleClickRole:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onShowCreateRoleForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onShowDeleteRoleForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	constructor( element:ElementRef, carbon:Carbon, rolesService:RolesService ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP, rolesService:RolesService ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.rolesService = rolesService;
 	}
 
@@ -74,7 +74,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 		} );
 		this.refreshNode.subscribe( ( nodeId:string ) => {
 			let node:JSTreeNode = this.jsTree.get_node( nodeId );
-			if( node[ "parent" ] === "#" ) this.jsTree.move_node( node, this.carbon.baseURI + ".system/roles/admin/" );
+			if( node[ "parent" ] === "#" ) this.jsTree.move_node( node, this.carbonldp.baseURI + ".system/roles/admin/" );
 			this.jsTree.close_node( node[ "parent" ] );
 			this.jsTree.open_node( node[ "parent" ] );
 			this.loadNode( node );
@@ -95,7 +95,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 		return this.getChildren().then( ( nodes:JSTreeNode[] ) => {
 			this.renderTree( nodes );
 			return nodes;
-		} ).catch( ( error:HTTP.Errors.Error ) => {
+		} ).catch( ( error:Errors.HTTPError ) => {
 			console.error( error );
 			this.onError.emit( error );
 		} );
@@ -103,7 +103,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 
 	private getChildren( roleID?:string ):Promise<JSTreeNode[]> {
 		let nodes:JSTreeNode[] = [];
-		! ! roleID && URI.Util.isAbsolute( roleID ) ? roleID = roleID : roleID = null;
+		! ! roleID && URI.isAbsolute( roleID ) ? roleID = roleID : roleID = null;
 		return this.rolesService.getChildren( roleID ).then( ( roles:PersistedRole.Class[] ) => {
 			roles.forEach( ( role:PersistedRole.Class ) => {
 				let node:JSTreeNode = this.buildNode( role.id, role.name, null, role[ "hasChildren" ] );
@@ -199,7 +199,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 			if( children.length > 0 ) {
 				children.forEach( ( childNode:any ) => this.addChild( parentId, childNode, position ) );
 			}
-		} ).catch( ( error:HTTP.Errors.Error ) => {
+		} ).catch( ( error:Errors.HTTPError ) => {
 			console.error( error );
 			this.onError.emit( error );
 		} ).then( () => {
@@ -209,7 +209,7 @@ export class RolesTreeViewComponent implements AfterViewInit, OnInit {
 
 	private onChange( parentId:string, node:any, position:string ):void {
 		this.onBeforeOpenNode( parentId, node, position ).then( () => {
-			if( ! ! node.id && ! URI.Util.isAbsolute( node.id ) ) node = this.jsTree.get_node( node.children[ 0 ] );
+			if( ! ! node.id && ! URI.isAbsolute( node.id ) ) node = this.jsTree.get_node( node.children[ 0 ] );
 			if( ! this.jsTree.is_open( node ) ) {
 				this.jsTree.open_node( node );
 			}

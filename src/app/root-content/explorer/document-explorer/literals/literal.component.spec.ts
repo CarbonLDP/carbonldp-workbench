@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { By } from '@angular/platform-browser';
 import { FormsModule } from "@angular/forms";
 
-import * as NS from "carbonldp/NS";
+import { XSD } from "carbonldp/Vocabularies";
 
 import { Modes } from "../property/property.component"
 import { Literal, LiteralComponent, LiteralRow } from "./literal.component";
@@ -67,13 +67,13 @@ export function literalSpecs() {
 
 			it( "Should display @type", () => {
 
-				let literal:Literal = { "@value": 42, "@type": NS.XSD.DataType.int };
+				let literal:Literal = { "@value": 42, "@type": XSD.int };
 				let literalRow:LiteralRow = { copy: literal };
 				comp.literalRow = literalRow;
 				fixture.detectChanges();
 
 				let typeLabel:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".type .read-mode p.value" );
-				expect( typeLabel.innerText ).toEqual( NS.XSD.DataType.int );
+				expect( typeLabel.innerText ).toEqual( XSD.int );
 			} );
 
 			it( "Should display @type as string if not present", () => {
@@ -84,7 +84,7 @@ export function literalSpecs() {
 				fixture.detectChanges();
 
 				let typeLabel:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".type .read-mode p.value" );
-				expect( typeLabel.innerText ).toEqual( NS.XSD.DataType.string );
+				expect( typeLabel.innerText ).toEqual( XSD.string );
 			} );
 
 			it( "Should display @language if present", () => {
@@ -259,14 +259,14 @@ export function literalSpecs() {
 				fixture.detectChanges();
 
 				let type:string = comp.literalCmp.searchDropdown.val();
-				expect( type ).toEqual( NS.XSD.DataType.string );
+				expect( type ).toEqual( XSD.string );
 			} );
 
 			it( "Should show `invalid value type` when entering wrong value types", () => {
 
 				let literal:Literal = {
 					"@value": 42,
-					"@type": NS.XSD.DataType.int,
+					"@type": XSD.int,
 				};
 				let literalRow:LiteralRow = { copy: literal };
 				comp.literalRow = literalRow;
@@ -284,7 +284,7 @@ export function literalSpecs() {
 
 				let errorMessage:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".error.message" );
 				expect( errorMessage ).not.toBeNull();
-				expect( errorMessage.innerText ).toContain( `Invalid value type, please enter a valid ${NS.XSD.DataType.int}.` );
+				expect( errorMessage.innerText ).toContain( `Invalid value type, please enter a valid ${XSD.int}.` );
 
 
 				valueInput.value = "4";
@@ -299,7 +299,7 @@ export function literalSpecs() {
 
 				let literal:Literal = {
 					"@value": "my value",
-					"@type": NS.XSD.DataType.string,
+					"@type": XSD.string,
 					"@language": "en"
 				};
 				let literalRow:LiteralRow = {
@@ -333,7 +333,7 @@ export function literalSpecs() {
 
 					let literal:Literal = {
 						"@value": 42,
-						"@type": NS.XSD.DataType.int,
+						"@type": XSD.int,
 					};
 					let literalRow:LiteralRow = {
 						copy: literal
@@ -363,7 +363,7 @@ export function literalSpecs() {
 
 					let literal:Literal = {
 						"@value": 42,
-						"@type": NS.XSD.DataType.int,
+						"@type": XSD.int,
 					};
 					let literalRow:LiteralRow = {
 						copy: literal
@@ -376,7 +376,7 @@ export function literalSpecs() {
 					fixture.detectChanges();
 					comp.literalCmp.ngAfterViewChecked();
 
-					comp.literalCmp.searchDropdown.dropdown( "set selected", NS.XSD.DataType.decimal );
+					comp.literalCmp.searchDropdown.dropdown( "set selected", XSD.decimal );
 					fixture.detectChanges();
 
 					let cancelButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Cancel']" );
@@ -384,7 +384,7 @@ export function literalSpecs() {
 					fixture.detectChanges();
 
 					let typeLabel:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".type .read-mode p.value" );
-					expect( typeLabel.innerText ).toEqual( NS.XSD.DataType.int );
+					expect( typeLabel.innerText ).toEqual( XSD.int );
 				} );
 
 				it( "Should change mode to read", () => {

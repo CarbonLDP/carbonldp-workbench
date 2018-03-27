@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, AfterViewInit, OnChanges } from "@angular/core";
 
-import * as RDFNode from "carbonldp/RDF/Node";
+import { RDFNode } from "carbonldp/RDF/Node"
 
 import { BlankNodeRow } from "./blank-node.component"
 
@@ -24,7 +24,7 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 	askingDeletionBlankNode:BlankNodeRow;
 
 	@Input() blankNodes:BlankNodeRow[] = [];
-	@Input() namedFragments:RDFNode.Class[] = [];
+	@Input() namedFragments:RDFNode[] = [];
 	@Input() documentURI:string = "";
 
 	@Output() onChanges:EventEmitter<BlankNodesRecords> = new EventEmitter<BlankNodesRecords>();

@@ -1,9 +1,9 @@
 import { Component, Input, Output, EventEmitter, NgZone } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
-import * as RDFDocument from "carbonldp/RDF/Document";
-import * as Response from "carbonldp/HTTP/Response";
-import { Error as HTTPError } from "carbonldp/HTTP/Errors";
+import { CarbonLDP } from "carbonldp";
+import { RDFDocument } from "carbonldp/RDF/Document";
+import { Response } from "carbonldp/HTTP";
+import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "./documents-resolver.service";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
@@ -23,22 +23,22 @@ export class DocumentExplorerComponent {
 	selectedDocumentURI:string = "";
 	loadingDocument:boolean = false;
 	savingDocument:boolean = false;
-	inspectingDocument:RDFDocument.Class;
+	inspectingDocument:RDFDocument;
 	documentsResolverService:DocumentsResolverService;
 	messages:Message[] = [];
 
 
-	@Input() carbon:Carbon;
+	@Input() carbonldp:CarbonLDP;
 	@Output() onRefreshNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onDisplaySuccessMessage:EventEmitter<string> = new EventEmitter<string>();
 
 	private zone:NgZone;
 
-	constructor( documentsResolverService:DocumentsResolverService, zone:NgZone, carbon:Carbon ) {
+	constructor( documentsResolverService:DocumentsResolverService, zone:NgZone, carbonldp:CarbonLDP ) {
 		this.documentsResolverService = documentsResolverService;
 		this.zone = zone;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 	}
 
 	onLoadingDocument( loadingDocument:boolean ):void {
@@ -53,7 +53,7 @@ export class DocumentExplorerComponent {
 		this.zone.run( () => {this.loadingDocument = true;} );
 		this.documentsResolverService.get( uri ).catch( ( error ) => {
 			this.handleExternalError( error );
-		} ).then( ( document:RDFDocument.Class ) => {
+		} ).then( ( document:RDFDocument ) => {
 			this.zone.run( () => {
 				this.inspectingDocument = document;
 				this.loadingDocument = false;
@@ -91,9 +91,9 @@ export class DocumentExplorerComponent {
 		this.onRefreshNode.emit( $event );
 	}
 
-	public handleExternalError( error:HTTPError | Response.Class ):void {
-		if( error instanceof Response.Class ) {
-			this.carbon.documents._parseErrorResponse( error ).catch( ( parsedError:HTTPError ) => {
+	public handleExternalError( error:HTTPError | Response ):void {
+		if( error instanceof Response ) {
+			this.carbonldp.documents._parseErrorResponse( error ).catch( ( parsedError:HTTPError ) => {
 				this.messages.push( ErrorMessageGenerator.getErrorMessage( parsedError ) );
 			} );
 		} else {

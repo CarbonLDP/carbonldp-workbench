@@ -1,8 +1,8 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
-import { Error as HTTPError } from "carbonldp/HTTP/Errors";
+import { CarbonLDP } from "carbonldp";
+import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "../documents-resolver.service"
 import { Message } from "app/shared/messages-area/message.component";
@@ -18,7 +18,7 @@ import "semantic-ui/semantic";
 
 export class DocumentCreatorComponent implements AfterViewInit {
 
-	private carbon:Carbon;
+	private carbonldp:CarbonLDP;
 	private element:ElementRef;
 	private $element:JQuery;
 
@@ -39,9 +39,9 @@ export class DocumentCreatorComponent implements AfterViewInit {
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
 
 
-	constructor( element:ElementRef, carbon:Carbon, documentsResolverService:DocumentsResolverService ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.documentsResolverService = documentsResolverService;
 	}
 
@@ -60,7 +60,7 @@ export class DocumentCreatorComponent implements AfterViewInit {
 			hasMemberRelation: data.advancedOptions.hasMemberRelation
 		};
 		if( ! ! data.advancedOptions.isMemberOfRelation ) childContent[ "isMemberOfRelation" ] = data.advancedOptions.isMemberOfRelation;
-		this.documentsResolverService.createChild( this.parentURI, childContent, childSlug ).then( ( createdChild:PersistedDocument.Class ) => {
+		this.documentsResolverService.createChild( this.parentURI, childContent, childSlug ).then( ( createdChild:PersistedDocument ) => {
 			this.onSuccess.emit( createdChild );
 			this.hide();
 		} ).catch( ( error:HTTPError ) => {

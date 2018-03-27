@@ -1,14 +1,13 @@
-import * as HTTP from "carbonldp/HTTP";
-import * as JSONLDParser from "carbonldp/JSONLD/Parser";
-import { C } from "carbonldp/NS";
+import { Errors } from "carbonldp/HTTP";
+import { JSONLDParser } from "carbonldp/JSONLD/Parser";
+import { C } from "carbonldp/Vocabularies";
 
 import { Message, ValidationResult, ValidationDetails, ValidationError, Types } from "../message.component";
-import { Error as HTTPError } from "carbonldp/HTTP/Errors";
 
 
 export class ErrorMessageGenerator {
 
-	public static getErrorMessage( error:HTTPError ):Message {
+	public static getErrorMessage( error:Errors.HTTPError ):Message {
 		let errorMessage:Message = {
 			title: "",
 			content: "",
@@ -25,9 +24,9 @@ export class ErrorMessageGenerator {
 		if( error.hasOwnProperty( "statusCode" ) ) {
 			errorMessage.content = errorMessage.content === "" ? this.getFriendlyHTTPMessage( error ) : errorMessage.content;
 			errorMessage.statusCode = error.hasOwnProperty( "message" ) ? "" + error.statusCode : "";
-			errorMessage.statusMessage = ( <XMLHttpRequest>error.response.request ).statusText;
+			errorMessage.statusMessage = (<XMLHttpRequest>error.response.request).statusText;
 			errorMessage.title = errorMessage.statusMessage;
-			errorMessage.endpoint = ( <any>error.response.request ).responseURL;
+			errorMessage.endpoint = (<any>error.response.request).responseURL;
 			if( ! ! error.response.data )
 				this.getErrors( error ).then( ( errors ) => { errorMessage[ "errors" ] = errors; } );
 		} else if( error.hasOwnProperty( "stack" ) ) {
@@ -38,8 +37,8 @@ export class ErrorMessageGenerator {
 		return errorMessage;
 	}
 
-	private static getErrors( error:HTTPError ):Promise<any[]> {
-		let parser:JSONLDParser.Class = new JSONLDParser.Class();
+	private static getErrors( error:Errors.HTTPError ):Promise<any[]> {
+		let parser:JSONLDParser = new JSONLDParser();
 		let errors:any[] = [];
 		return parser.parse( error.response.data ).then( ( errorResponse ) => {
 
@@ -88,25 +87,25 @@ export class ErrorMessageGenerator {
 		};
 	}
 
-	private static getFriendlyHTTPMessage( error:HTTPError ):string {
+	private static getFriendlyHTTPMessage( error:Errors.HTTPError ):string {
 		let tempMessage:string = "";
 		switch( true ) {
-			case error instanceof HTTP.Errors.ForbiddenError:
+			case error instanceof Errors.ForbiddenError:
 				tempMessage = "Forbidden Action.";
 				break;
-			case error instanceof HTTP.Errors.NotFoundError:
+			case error instanceof Errors.NotFoundError:
 				tempMessage = "Couldn't found the requested resource.";
 				break;
-			case error instanceof HTTP.Errors.UnauthorizedError:
+			case error instanceof Errors.UnauthorizedError:
 				tempMessage = "Unauthorized operation.";
 				break;
-			case error instanceof HTTP.Errors.InternalServerErrorError:
+			case error instanceof Errors.InternalServerErrorError:
 				tempMessage = "An internal error occurred while trying to fetch the resource. Please try again later. Error: " + error.response.status;
 				break;
-			case error instanceof HTTP.Errors.ServiceUnavailableError:
+			case error instanceof Errors.ServiceUnavailableError:
 				tempMessage = "Service currently unavailable.";
 				break;
-			case error instanceof HTTP.Errors.UnknownError:
+			case error instanceof Errors.UnknownError:
 				// TODO: Check if the UnknownError is due to a bad CORS configuration.
 				tempMessage = "An error occurred while trying to fetch the resource content. This could be caused by a missing allowed domain. Please, make sure this is not the case and try again later.";
 				break;

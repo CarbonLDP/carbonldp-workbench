@@ -1,30 +1,29 @@
 import { Injectable } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
-import { Class as PlatformMetadata } from "carbonldp/System/PlatformMetadata";
-import * as HTTP from "carbonldp/HTTP";
-import * as SPARQL from "carbonldp/SPARQL";
+import { CarbonLDP } from "carbonldp";
+import { PlatformMetadata } from "carbonldp/System/PlatformMetadata";
+import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 
 @Injectable()
 export class WidgetsService {
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 
-	constructor( carbon:Carbon ) {
-		this.carbon = carbon;
+	constructor( carbonldp:CarbonLDP ) {
+		this.carbonldp = carbonldp;
 	}
 
 	getDocumentsTotalCount():Promise<number> {
 		let count;
 		let query:string = `
-				SELECT ( COUNT (?document) as ?count)
-				WHERE{ GRAPH ?document {
-						?document a <https://carbonldp.com/ns/v1/platform#Document>
-					}
+			SELECT ( COUNT (?document) as ?count)
+			WHERE{ GRAPH ?document {
+					?document a <https://carbonldp.com/ns/v1/platform#Document>
 				}
-			`;
+			}
+		`;
 
-		return this.carbon.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
-			results.bindings.forEach( ( binding )=> {
+		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( results:SPARQLSelectResults ) => {
+			results.bindings.forEach( ( binding ) => {
 				count = binding[ "count" ];
 			} );
 			return count;
@@ -35,15 +34,15 @@ export class WidgetsService {
 	getTriplesTotalCount():Promise<number> {
 		let count;
 		let query:string = `
-				PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-				SELECT ( COUNT (?s) as ?count)
-				WHERE{ 
-					?s ?p ?o .
-				}
-			`;
+			PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+			SELECT ( COUNT (?s) as ?count)
+			WHERE{ 
+				?s ?p ?o .
+			}
+		`;
 
-		return this.carbon.documents.executeSELECTQuery( '', query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
-			results.bindings.forEach( ( binding )=> {
+		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( results:SPARQLSelectResults ) => {
+			results.bindings.forEach( ( binding ) => {
 				count = binding[ "count" ];
 			} );
 			return count;
@@ -52,13 +51,11 @@ export class WidgetsService {
 	}
 
 	getPlatformMetadata():Promise<any> {
-		return this.carbon.getPlatformMetadata();
+		return this.carbonldp.getPlatformMetadata();
 	}
 
-	refreshPlatformMetadata( platformMetadata:any ):Promise<any> {
-		return platformMetadata.refresh().then( ( [platformMetadata]:[PlatformMetadata] ) => {
-			return platformMetadata;
-		} );
+	refreshPlatformMetadata( platformMetadata:PlatformMetadata ):Promise<any> {
+		return platformMetadata.refresh();
 	}
 
 }

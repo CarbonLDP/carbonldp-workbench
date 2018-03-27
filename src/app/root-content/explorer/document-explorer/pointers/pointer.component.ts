@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, OnChanges } from "@angular/core";
 
-import * as URI from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF/URI";
 
 import { Modes } from "../property/property.component";
 import { BlankNodeRow } from "../blank-nodes/blank-node.component";
@@ -110,8 +110,8 @@ export class PointerComponent implements OnChanges {
 	checkForChangesOnPointers():void {
 		if( typeof this.id === "undefined" ) return;
 		let idx:number = this.bNodes.concat( this.namedFragments ).findIndex( ( nfOrBN ) => {return nfOrBN[ "name" ] === this.id || nfOrBN[ "id" ] === this.id;} );
-		this.isBNode = URI.Util.isBNodeID( <string>this.id );
-		this.isNamedFragment = URI.Util.isFragmentOf( this.id, this.documentURI );
+		this.isBNode = URI.isBNodeID( <string>this.id );
+		this.isNamedFragment = URI.isFragmentOf( this.id, this.documentURI );
 		this.existsOnPointers = idx !== - 1;
 	}
 
@@ -168,8 +168,8 @@ export class PointerComponent implements OnChanges {
 	}
 
 	getFriendlyName( uri:string ):string {
-		if( URI.Util.hasFragment( uri ) )return URI.Util.getFragment( uri );
-		return URI.Util.getSlug( uri );
+		if( URI.hasFragment( uri ) )return URI.getFragment( uri );
+		return URI.getSlug( uri );
 	}
 
 	goToBNode( id:string ):void {

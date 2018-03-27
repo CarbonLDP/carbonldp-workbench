@@ -1,10 +1,9 @@
 import { Component, ElementRef, Input, EventEmitter, SimpleChange, AfterViewInit, OnChanges, OnDestroy } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
-import * as Response from "carbonldp/HTTP/Response";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
-import { StatusCode as HTTPStatusCode } from "carbonldp/HTTP";
-import { Error as HTTPError } from "carbonldp/HTTP/Errors";
+import { CarbonLDP } from "carbonldp";
+import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { StatusCode, Response } from "carbonldp/HTTP";
+import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { BackupsService } from "../backups.service";
 import { Message, Types } from "app/shared/messages-area/message.component";
@@ -20,7 +19,7 @@ import "semantic-ui/semantic";
 
 export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy {
 
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 	element:ElementRef;
 	$element:JQuery;
 	$deleteBackupConfirmationModal:JQuery;
@@ -36,16 +35,16 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 	deleteMessages:Message[] = [];
 	failedDownloadMessage:Message;
 
-	@Input() backupJob:PersistedDocument.Class;
+	@Input() backupJob:PersistedDocument;
 	fetchBackupsList:EventEmitter<boolean> = new EventEmitter<boolean>();
 
-	constructor( element:ElementRef, carbon:Carbon, backupsService:BackupsService ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP, backupsService:BackupsService ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.backupsService = backupsService;
 		this.fetchBackupsList.subscribe( ( doFetch ) => {
 			if( ! doFetch ) return;
-			this.getBackups().then( ( backups:PersistedDocument.Class[] ) => {
+			this.getBackups().then( ( backups:PersistedDocument[] ) => {
 				clearInterval( this.fetchBackupsListInterval );
 				this.monitorBackups();
 			} );
@@ -58,10 +57,10 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 		this.initializeModals();
 	}
 
-	ngOnChanges( changes:{ [propName:string]:SimpleChange } ):void {
+	ngOnChanges( changes:{ [ propName:string ]:SimpleChange } ):void {
 		if( changes[ "backupJob" ] && ! ! changes[ "backupJob" ].currentValue && changes[ "backupJob" ].currentValue !== changes[ "backupJob" ].previousValue ) {
 			this.loadingBackups = true;
-			this.getBackups().then( ( backups:PersistedDocument.Class[] ) => {
+			this.getBackups().then( ( backups:PersistedDocument[] ) => {
 				this.loadingBackups = false;
 			} ).catch( () => this.loadingBackups = false );
 			this.monitorBackups();
@@ -85,10 +84,10 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 		this.fetchBackupsListInterval = <any>setInterval( () => this.getBackups(), this.refreshPeriod );
 	}
 
-	getBackups():Promise<PersistedDocument.Class[] | HTTPError> {
+	getBackups():Promise<PersistedDocument[] | HTTPError> {
 		this.errorMessages = [];
 		return this.backupsService.getAll().then(
-			( [ backups, response ]:[ PersistedDocument.Class[], Response.Class ] ) => {
+			( backups:PersistedDocument[] ) => {
 				backups = backups.sort( ( a:any, b:any ) => b.modified < a.modified ? - 1 : b.modified > a.modified ? 1 : 0 );
 				this.backups = backups;
 				return backups;
@@ -130,49 +129,46 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 		this.failedDownloadMessage = null;
 	}
 
-	askToDeleteBackup( askingBackupToRemove:PersistedDocument.Class ):void {
+	askToDeleteBackup( askingBackupToRemove:PersistedDocument ):void {
 		this.askingBackupToRemove = askingBackupToRemove;
 		this.$deleteBackupConfirmationModal.modal( "show" );
 	}
 
-	deleteBackup( backup:PersistedDocument.Class ):Promise<Response.Class> {
+	deleteBackup( backup:PersistedDocument ):Promise<void> {
 		this.deletingBackup = true;
-		return this.backupsService.delete( backup.id ).then( ( response:Response.Class ):Response.Class => {
-			if( response.status !== HTTPStatusCode.OK ) return <any>Promise.reject( response );
-			this.getBackups();
+		return this.backupsService.delete( backup.id ).then( () => {
 			this.closeDeleteModal();
-			return response;
-		} ).catch( ( errorOrResponse:HTTPError | Response.Class ) => {
+			return this.getBackups();
+		} ).catch( ( errorOrResponse:HTTPError | Response ) => {
 			let deleteMessage:Message;
 			if( errorOrResponse.hasOwnProperty( "response" ) ) {
 				deleteMessage = <Message>{
 					title: (<HTTPError>errorOrResponse).name,
 					type: Types.ERROR,
 					content: "Couldn't delete the backup.",
-					endpoint: (<any>(<HTTPError>errorOrResponse).response.request).responseURL,
+					endpoint: (<XMLHttpRequest>(<HTTPError>errorOrResponse).response.request).responseURL,
 					statusCode: "" + (<XMLHttpRequest>(<HTTPError>errorOrResponse).response.request).status,
 					statusMessage: (<XMLHttpRequest>(<HTTPError>errorOrResponse).response.request).statusText
 				};
 			} else {
 				deleteMessage = <Message>{
-					title: (<XMLHttpRequest>(<Response.Class>errorOrResponse).request).statusText,
+					title: (<XMLHttpRequest>(<Response>errorOrResponse).request).statusText,
 					type: Types.ERROR,
 					content: "Couldn't delete the backup.",
-					endpoint: (<any>(<Response.Class>errorOrResponse).request).responseURL,
-					statusCode: "" + (<Response.Class>errorOrResponse).status,
-					statusMessage: (<XMLHttpRequest>(<Response.Class>errorOrResponse).request).statusText
+					endpoint: (<XMLHttpRequest>(<Response>errorOrResponse).request).responseURL,
+					statusCode: "" + (<Response>errorOrResponse).status,
+					statusMessage: (<XMLHttpRequest>(<Response>errorOrResponse).request).statusText
 				};
 			}
 			this.deleteMessages.push( deleteMessage );
-		} ).then( ( response:Response.Class ) => {
+		} ).then( () => {
 			this.deletingBackup = false;
-			return response;
 		} );
 	}
 
 	refreshList():void {
 		this.loadingBackups = true;
-		this.getBackups().then( ( backups:PersistedDocument.Class[] ) => {
+		this.getBackups().then( ( backups:PersistedDocument[] ) => {
 			this.loadingBackups = false;
 		} ).catch( () => this.loadingBackups = false );
 		clearInterval( this.fetchBackupsListInterval );
@@ -189,7 +185,7 @@ export class BackupsListComponent implements AfterViewInit, OnChanges, OnDestroy
 
 }
 
-export interface MockBackup extends PersistedDocument.Class {
+export interface MockBackup extends PersistedDocument {
 	fileIdentifier?:string;
 }
 

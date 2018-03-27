@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
-import * as RDFNode from "carbonldp/RDF/Node";
+import { RDFNode } from "carbonldp/RDF/Node"
 
 import { BlankNodeRow } from "../blank-nodes/blank-node.component";
 import { Property, PropertyRow, Modes } from "../property/property.component";
@@ -23,7 +23,7 @@ export class NamedFragmentComponent implements AfterViewInit {
 	copyOrAdded:string = "";
 	tempPropertiesNames:string[] = [];
 
-	rootNode:RDFNode.Class;
+	rootNode:RDFNode;
 	properties:PropertyRow[];
 	existingPropertiesNames:string[] = [];
 
@@ -183,8 +183,8 @@ export class NamedFragmentComponent implements AfterViewInit {
 		this.namedFragmentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
-	getRawVersion():RDFNode.Class {
-		let rawNode:RDFNode.Class = Object.assign( {}, this.namedFragment.added ? this.namedFragment.added : this.namedFragment.copy );
+	getRawVersion():RDFNode {
+		let rawNode:RDFNode = Object.assign( {}, this.namedFragment.added ? this.namedFragment.added : this.namedFragment.copy );
 		this.records.deletions.forEach( ( property, key ) => {
 			delete rawNode[ key ];
 		} );
@@ -209,10 +209,10 @@ export interface NamedFragmentRow {
 	id?:string;
 	name?:string;
 
-	copy?:RDFNode.Class;
-	added?:RDFNode.Class;
-	modified?:RDFNode.Class;
-	deleted?:RDFNode.Class;
+	copy?:RDFNode;
+	added?:RDFNode;
+	modified?:RDFNode;
+	deleted?:RDFNode;
 
 	records?:NamedFragmentRecords;
 }

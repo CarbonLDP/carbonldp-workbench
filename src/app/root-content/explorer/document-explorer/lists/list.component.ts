@@ -2,9 +2,9 @@ import { ElementRef, Component, Input, Output, EventEmitter } from "@angular/cor
 
 import "semantic-ui/semantic";
 
-import * as SDKLiteral from "carbonldp/RDF/Literal";
-import * as RDFNode from "carbonldp/RDF/Node";
-import * as Utils from "carbonldp/Utils";
+import { RDFLiteral } from "carbonldp/RDF/Literal";
+import { RDFNode } from "carbonldp/RDF/Node"
+import { ObjectUtils } from "carbonldp/Utils";
 
 import { Literal, LiteralRow } from "../literals/literal.component";
 import { Pointer, PointerRow } from "../pointers/pointer.component";
@@ -13,7 +13,7 @@ import { Pointer, PointerRow } from "../pointers/pointer.component";
 @Component( {
 	selector: "cw-list",
 	templateUrl: "./list.component.html",
-	styleUrls: [  "./list.component.scss"  ],
+	styleUrls: [ "./list.component.scss" ],
 	host: { "[class.modified]": "list.modified", "[class.deleted]": "list.deleted", "[class.added]": "list.added" },
 } )
 
@@ -34,14 +34,14 @@ export class ListComponent {
 		this.copyOrAddedOrModified = ! ! list.copy ? (! ! list.modified ? "modified" : "copy") : "added";
 		this._list = list;
 		list[ this.copyOrAddedOrModified ].forEach( ( literalOrPointer ) => {
-			( <Array<any>>this.tempList ).push( Object.assign( {}, literalOrPointer ) );
+			(<Array<any>>this.tempList).push( Object.assign( {}, literalOrPointer ) );
 		} );
 	}
 
 	@Input() documentURI:string = "";
 	@Input() pointers:PointerRow[] = [];
-	@Input() blankNodes:RDFNode.Class[] = [];
-	@Input() namedFragments:RDFNode.Class[] = [];
+	@Input() blankNodes:RDFNode[] = [];
+	@Input() namedFragments:RDFNode[] = [];
 
 	@Output() onSave:EventEmitter<ListRow> = new EventEmitter<ListRow>();
 	@Output() onDeleteList:EventEmitter<ListRow> = new EventEmitter<ListRow>();
@@ -60,11 +60,11 @@ export class ListComponent {
 	}
 
 	isLiteral( item:any ):boolean {
-		return SDKLiteral.Factory.is( item[ ! ! item.copy ? (! ! item.modified ? "modified" : "copy") : "added" ] );
+		return RDFLiteral.is( item[ ! ! item.copy ? (! ! item.modified ? "modified" : "copy") : "added" ] );
 	}
 
 	isPointer( item:any ):boolean {
-		return RDFNode.Factory.is( item[ ! ! item.copy ? (! ! item.modified ? "modified" : "copy") : "added" ] );
+		return RDFNode.is( item[ ! ! item.copy ? (! ! item.modified ? "modified" : "copy") : "added" ] );
 	}
 
 	moveUp( pointerOrLiteral:PointerRow | LiteralRow, index:number ):void {
@@ -104,29 +104,29 @@ export class ListComponent {
 		this.updateTempList();
 	}
 
-	deleteItem( deletingItem:PointerRow|LiteralRow, index:number ):void {
+	deleteItem( deletingItem:PointerRow | LiteralRow, index:number ):void {
 		if( typeof deletingItem.added !== "undefined" ) this.tempList.splice( index, 1 );
 		this.updateTempList();
 	}
 
-	getAddedItems():PointerRow[]|LiteralRow[] {
-		return this.tempList.filter( ( item:PointerRow|LiteralRow ) => typeof item.added !== "undefined" );
+	getAddedItems():PointerRow[] | LiteralRow[] {
+		return this.tempList.filter( ( item:PointerRow | LiteralRow ) => typeof item.added !== "undefined" );
 	}
 
-	getDeletedItems():PointerRow[]|LiteralRow[] {
-		return this.tempList.filter( ( item:PointerRow|LiteralRow ) => typeof item.deleted !== "undefined" );
+	getDeletedItems():PointerRow[] | LiteralRow[] {
+		return this.tempList.filter( ( item:PointerRow | LiteralRow ) => typeof item.deleted !== "undefined" );
 	}
 
-	getModifiedItems():PointerRow[]|LiteralRow[] {
-		return this.tempList.filter( ( item:PointerRow|LiteralRow ) => typeof item.modified !== "undefined" && typeof item.deleted === "undefined" );
+	getModifiedItems():PointerRow[] | LiteralRow[] {
+		return this.tempList.filter( ( item:PointerRow | LiteralRow ) => typeof item.modified !== "undefined" && typeof item.deleted === "undefined" );
 	}
 
-	getUntouchedItems():Array<PointerRow|LiteralRow> {
-		return this.tempList.filter( ( item:PointerRow|LiteralRow ) => typeof item.modified === "undefined" && typeof item.deleted === "undefined" );
+	getUntouchedItems():Array<PointerRow | LiteralRow> {
+		return this.tempList.filter( ( item:PointerRow | LiteralRow ) => typeof item.modified === "undefined" && typeof item.deleted === "undefined" );
 	}
 
-	areEquals( original:Array<LiteralRow|PointerRow>, modified:Array<ListRow|PointerRow> ):boolean {
-		return Utils.O.areEqual( original, modified, { arrays: true, objects: true } );
+	areEquals( original:Array<LiteralRow | PointerRow>, modified:Array<ListRow | PointerRow> ):boolean {
+		return ObjectUtils.areEqual( original, modified, { arrays: true, objects: true } );
 	}
 
 	updateTempList():void {
@@ -142,7 +142,7 @@ export class ListComponent {
 	}
 
 	hasBeenModified():boolean {
-		return this.orderHasChanged || (this.tempList.findIndex( ( item:PointerRow|LiteralRow ) => { return typeof item.modified !== "undefined" || typeof item.added !== "undefined" || typeof item.deleted !== "undefined"} ) !== - 1);
+		return this.orderHasChanged || (this.tempList.findIndex( ( item:PointerRow | LiteralRow ) => { return typeof item.modified !== "undefined" || typeof item.added !== "undefined" || typeof item.deleted !== "undefined"} ) !== - 1);
 	}
 
 	goToBlankNode( id:string ):void {

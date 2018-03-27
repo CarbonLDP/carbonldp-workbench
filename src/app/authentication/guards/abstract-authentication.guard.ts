@@ -3,7 +3,7 @@ import { Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivate } from
 
 import { inject } from "./../utils";
 import { AuthService } from "./../services";
-import { carbonProvider } from "app/providers";
+import { carbonldpProvider } from "app/providers";
 
 @Injectable()
 export abstract class AbstractAuthenticationGuard implements CanActivate {
@@ -12,7 +12,7 @@ export abstract class AbstractAuthenticationGuard implements CanActivate {
 	constructor( protected router:Router ) {}
 
 	canActivate( route:ActivatedRouteSnapshot, state:RouterStateSnapshot ):Promise<boolean> {
-		return carbonProvider.promise.then( () => {
+		return carbonldpProvider.promise.then( () => {
 			// AuthService needs to be injected here so we don't cause a premature initialization of AuthService
 			// If AuthService is injected in the constructor, the carbonProvider won't be ready and will cause an error
 			return inject( AuthService.Token );

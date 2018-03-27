@@ -1,8 +1,8 @@
 import { Component, OnInit, AfterViewInit } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { Class as Carbon } from "carbonldp/Carbon";
-import { carbonProvider } from "app/providers";
+import { CarbonLDP } from "carbonldp";
+import { carbonldpProvider } from "app/providers";
 
 
 @Component( {
@@ -13,16 +13,16 @@ import { carbonProvider } from "app/providers";
 export class ErrorView implements OnInit, AfterViewInit {
 	error:any;
 	errorType:string;
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 	sslEnabled:boolean = false;
 
-	constructor( private router:Router, carbon:Carbon ) {
-		this.carbon = carbon;
-		this.sslEnabled = this.carbon.baseURI.indexOf( "https" ) !== - 1;
+	constructor( private router:Router, carbonldp:CarbonLDP ) {
+		this.carbonldp = carbonldp;
+		this.sslEnabled = this.carbonldp.baseURI.indexOf( "https" ) !== - 1;
 	}
 
 	ngOnInit():void {
-		carbonProvider.promise.then( () => {
+		carbonldpProvider.promise.then( () => {
 			// The active context was successfully loaded, the user must have landed here by visiting the direct URL
 			// Let's redirect him to the home page
 			this.router.navigate( [ "/" ] );
@@ -30,7 +30,7 @@ export class ErrorView implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit():void {
-		carbonProvider.promise.catch( ( error ) => {
+		carbonldpProvider.promise.catch( ( error ) => {
 			this.error = error;
 			this.errorType = "requestID" in this.error ? this.error.name : null;
 

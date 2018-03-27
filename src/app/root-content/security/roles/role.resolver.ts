@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, Resolve, ActivatedRoute, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 
-import { Class as Carbon } from "carbonldp/Carbon";
+import { CarbonLDP } from "carbonldp";
 import * as Role from "carbonldp/Auth/Role";
-import * as NS from "carbonldp/NS";
+import { CS } from "carbonldp/Vocabularies";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 
 import { RolesService } from "./roles.service";
@@ -13,14 +13,14 @@ import { RolesService } from "./roles.service";
 export class RoleResolver implements Resolve<PersistedRole.Class | boolean> {
 
 	private router:Router;
-	private carbon:Carbon;
+	private carbonldp:CarbonLDP;
 	private activatedRoute:ActivatedRoute;
 	private rolesService:RolesService;
 
 
-	constructor( router:Router, carbon:Carbon, route:ActivatedRoute, rolesService:RolesService, private location:Location ) {
+	constructor( router:Router, carbonldp:CarbonLDP, route:ActivatedRoute, rolesService:RolesService, private location:Location ) {
 		this.router = router;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.activatedRoute = route;
 		this.rolesService = rolesService;
 	}
@@ -30,13 +30,13 @@ export class RoleResolver implements Resolve<PersistedRole.Class | boolean> {
 	resolve( route:ActivatedRouteSnapshot, state:RouterStateSnapshot ):Promise<PersistedRole.Class | boolean> {
 		let slug:string = route.params[ "role-slug" ];
 		// TODO: Remove extendObjectSchema when SDK implements description and childRole
-		this.carbon.extendObjectSchema( Role.RDF_CLASS, {
+		this.carbonldp.extendObjectSchema( Role.RDF_CLASS, {
 			"description": {
-				"@id": NS.CS.Predicate.description,
+				"@id": CS.description,
 				"@type": "string"
 			},
 			"childRole": {
-				"@id": NS.CS.Predicate.childRole,
+				"@id": CS.childRole,
 				"@container": "@set"
 			}
 		} );

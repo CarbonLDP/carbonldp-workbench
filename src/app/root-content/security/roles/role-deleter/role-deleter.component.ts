@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
-import * as HTTP from "carbonldp/HTTP";
+import { Response, Errors } from "carbonldp/HTTP";
 
 import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
@@ -56,7 +56,7 @@ export class RoleDeleterComponent implements AfterViewInit {
 				} );
 				return Promise.all( promises );
 			},
-			( error:HTTP.Errors.Error ) => {
+			( error:Errors.HTTPError ) => {
 				let retrievalError:Message = ErrorMessageGenerator.getErrorMessage( error );
 				retrievalError.title = retrievalError.title + " - An error occurred while trying to delete the descendants of the role.";
 				this.errorMessages.push( retrievalError );
@@ -65,15 +65,15 @@ export class RoleDeleterComponent implements AfterViewInit {
 		).then( () => {
 			this.onSuccess.emit( this.role );
 			this.hide();
-		} ).catch( ( error:HTTP.Errors.Error ) => {
+		} ).catch( ( error:Errors.HTTPError ) => {
 			this.onError.emit( error );
 		} ).then( () => {
 			this.deletingRole = false;
 		} );
 	}
 
-	private deleteRole( roleID:string ):Promise<HTTP.Response.Class> {
-		return this.rolesService.delete( roleID ).catch( ( error:HTTP.Errors.Error ) => {
+	private deleteRole( roleID:string ):Promise<void> {
+		return this.rolesService.delete( roleID ).catch( ( error:Errors.HTTPError ) => {
 			this.errorMessages.push( ErrorMessageGenerator.getErrorMessage( error ) );
 			throw error;
 		} );

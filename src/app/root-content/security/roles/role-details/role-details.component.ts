@@ -3,9 +3,9 @@ import { Component, Input, Output, ElementRef, SimpleChange, EventEmitter } from
 import * as Role from "carbonldp/Auth/Role";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
 import * as PersistedUser from "carbonldp/Auth/PersistedUser";
-import * as HTTP from "carbonldp/HTTP";
-import * as NS from "carbonldp/NS";
-import * as Pointer from "carbonldp/Pointer";
+import { Response } from "carbonldp/HTTP";
+import { CS } from "carbonldp/Vocabularies";
+import { Pointer } from "carbonldp/Pointer";
 
 import { RolesService } from "./../roles.service";
 import { DocumentExplorerLibrary } from "app/root-content/explorer/document-explorer/document-explorer-library";
@@ -62,7 +62,7 @@ export class RoleDetailsComponent {
 
 	ngAfterViewInit():void { }
 
-	ngOnChanges( changes:{ [propName:string]:SimpleChange } ):void {
+	ngOnChanges( changes:{ [ propName:string ]:SimpleChange } ):void {
 		if( changes[ "role" ] && ! ! changes[ "role" ].currentValue && changes[ "role" ].currentValue !== changes[ "role" ].previousValue ) {
 			this.changeRole( this.role );
 		}
@@ -74,7 +74,7 @@ export class RoleDetailsComponent {
 		this.errorMessage = null;
 		this.roleFormModel.slug = this.getSanitizedSlug( role.id );
 		this.roleFormModel.name = role.name;
-		this.roleFormModel.description = role[ NS.CS.Predicate.description ];
+		this.roleFormModel.description = role[ CS.description ];
 		this.roleFormModel.parentRole = ! ! role.parentRole ? role.parentRole.id : null;
 		this.mustAddParent = (! this.role.id.endsWith( "roles/admin/" ) && ! this.role.parentRole);
 		this.getUsers( this.role ).then( ( users ) => {
@@ -107,16 +107,17 @@ export class RoleDetailsComponent {
 
 	private editRole( role:PersistedRole.Class, roleData:RoleFormModel ):void {
 		role.name = roleData.name;
-		role[ NS.CS.Predicate.description ] = roleData.description;
-		this.rolesService.saveAndRefresh( role ).then( ( [ updatedRole, [ saveResponse, refreshResponse ] ]:[ PersistedRole.Class, [ HTTP.Response.Class, HTTP.Response.Class ] ] ) => {
+		role[ CS.description ] = roleData.description;
+		this.rolesService.saveAndRefresh( role ).then( ( updatedRole:PersistedRole.Class ) => {
 			return this.editRoleUsers( role, roleData.users );
-		} ).then( () => {
-			if( role.id.endsWith( "roles/admin/" ) )
-				return new Promise( ( resolve, reject ) => { resolve( role )} );
-			else if( ! role.parentRole )
+		} ).then( ():any => {
+			if( role.id.endsWith( "roles/admin/" ) ) {
+				return Promise.resolve( role );
+			} else if( ! role.parentRole ) {
 				return this.parentRole.addMember( role );
-			else
-				return new Promise( ( resolve, reject ) => { resolve( this.parentRole )} );
+			} else {
+				return Promise.resolve( this.parentRole );
+			}
 		} ).then( () => {
 			return role.refresh();
 		} ).then( () => {
@@ -132,10 +133,10 @@ export class RoleDetailsComponent {
 
 	private createRole( role:PersistedRole.Class, roleData:RoleFormModel ):void {
 		role.name = roleData.name;
-		role[ NS.CS.Predicate.description ] = roleData.description;
+		role[ CS.description ] = roleData.description;
 		this.rolesService.create( this.selectedRole, this.role, roleData.slug ).then( ( persistedRole:PersistedRole.Class ) => {
 			return this.editRoleUsers( persistedRole, roleData.users );
-		} ).then( ( persistedRole:PersistedRole.Class ) => {
+		} ).then( () => {
 			this.onSuccess.emit( this.role.id );
 			this.cancelForm();
 			let successMessage:Message = {
@@ -157,11 +158,11 @@ export class RoleDetailsComponent {
 			users:PersistedUser.Class[] = [];
 		if( typeof role.users === "undefined" ) return Promise.resolve( users );
 
-		(<any>role.users).forEach( ( userPointer:Pointer.Class ) => {
+		(<any>role.users).forEach( ( userPointer:Pointer ) => {
 			promises.push( userPointer.resolve() );
 		} );
-		return Promise.all( promises ).then( ( resolvedUsers:[ PersistedUser.Class, HTTP.Response.Class ][] ) => {
-			resolvedUsers.forEach( ( [ resolvedUser, response ]:[ PersistedUser.Class, HTTP.Response.Class ] ) => {
+		return Promise.all( promises ).then( ( resolvedUsers:[ PersistedUser.Class, Response ][] ) => {
+			resolvedUsers.forEach( ( [ resolvedUser, response ]:[ PersistedUser.Class, Response ] ) => {
 				users.push( resolvedUser );
 			} );
 			return users;
@@ -172,8 +173,8 @@ export class RoleDetailsComponent {
 		return this.rolesService.get( roleID );
 	}
 
-	private editRoleUsers( role:PersistedRole.Class, selectedUsers:PersistedUser.Class[] ):Promise<any> {
-		let promises:Promise<any>[] = [],
+	private editRoleUsers( role:PersistedRole.Class, selectedUsers:PersistedUser.Class[] ):Promise<void[]> {
+		let promises:Promise<void>[] = [],
 			removedUsers:PersistedUser.Class[] = this.getRemovedUsers( selectedUsers );
 
 		selectedUsers.forEach( ( user:PersistedUser.Class ) => {
@@ -199,11 +200,11 @@ export class RoleDetailsComponent {
 		} );
 	}
 
-	private registerUserToRole( userID:string, roleID:string ):Promise<HTTP.Response.Class> {
+	private registerUserToRole( userID:string, roleID:string ):Promise<void> {
 		return this.rolesService.registerUser( userID, roleID );
 	}
 
-	private removeUserFromRole( userID:string, roleID:string ):Promise<HTTP.Response.Class> {
+	private removeUserFromRole( userID:string, roleID:string ):Promise<void> {
 		return this.rolesService.removeUser( userID, roleID );
 	}
 

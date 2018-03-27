@@ -1,10 +1,10 @@
 import { Component, ElementRef, Input, OnInit, OnDestroy } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
-import * as Response from "carbonldp/HTTP/Response";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
-import * as Pointer from "carbonldp/Pointer";
-import { Error as HTTPError } from "carbonldp/HTTP/Errors";
+import { CarbonLDP } from "carbonldp";
+import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { Pointer } from "carbonldp/Pointer";
+import { Response } from "carbonldp/HTTP";
+import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { BackupsService } from "../backups.service";
 import { JobsService } from "../../job/jobs.service";
@@ -20,7 +20,7 @@ import "semantic-ui/semantic";
 } )
 
 export class BackupImporterComponent implements OnInit, OnDestroy {
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 
 	element:ElementRef;
 	monitorExecutionInterval:number;
@@ -33,7 +33,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 	backupFileBlob:Blob;
 	backupFileArray:any[] = [];
 
-	backups:PersistedDocument.Class[] = [];
+	backups:PersistedDocument[] = [];
 	backupsService:BackupsService;
 	jobsService:JobsService;
 
@@ -44,9 +44,9 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 	errorMessages:Message[] = [];
 	errorMessage:Message;
 
-	constructor( element:ElementRef, carbon:Carbon, backupsService:BackupsService, jobsService:JobsService ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP, backupsService:BackupsService, jobsService:JobsService ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.backupsService = backupsService;
 		this.jobsService = jobsService;
 	}
@@ -57,7 +57,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 
 
 	getBackups():void {
-		this.backupsService.getAll().then( ( [ backups, response ]:[ PersistedDocument.Class[], Response.Class ] ) => {
+		this.backupsService.getAll().then( ( backups:PersistedDocument[] ) => {
 			this.backups = backups.sort( ( a:any, b:any ) => b.modified < a.modified ? - 1 : b.modified > a.modified ? 1 : 0 );
 		} )
 	}
@@ -72,12 +72,12 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 		if( backupFile.valid ) this.uploadBackup( this.backupFileBlob );
 	}
 
-	executeImport( importJob:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
+	executeImport( importJob:PersistedDocument ):Promise<PersistedDocument> {
 		return this.jobsService.runJob( importJob );
 	}
 
-	monitorExecution( importJobExecution:PersistedDocument.Class ):Promise<PersistedDocument.Class> {
-		return new Promise<PersistedDocument.Class>( ( resolve:( result:any ) => void, reject:( error:HTTPError | PersistedDocument.Class ) => void ) => {
+	monitorExecution( importJobExecution:PersistedDocument ):Promise<PersistedDocument> {
+		return new Promise<PersistedDocument>( ( resolve:( result:any ) => void, reject:( error:HTTPError | PersistedDocument ) => void ) => {
 			// Node typings are overriding setInterval, that's why we need to cast it to any before assigning it to a number variable
 			this.monitorExecutionInterval = <any>setInterval( () => {
 				this.checkImportJobExecution( importJobExecution ).then( () => {
@@ -94,7 +94,7 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 		if( typeof this.monitorExecutionInterval !== "undefined" ) clearInterval( this.monitorExecutionInterval );
 	}
 
-	private checkImportJobExecution( importJobExecution:PersistedDocument.Class ):Promise<any> {
+	private checkImportJobExecution( importJobExecution:PersistedDocument ):Promise<any> {
 		return this.jobsService.checkJobExecution( importJobExecution ).then( ( execution ) => {
 			if( ! execution[ Job.Execution.STATUS ] ) return Promise.reject( execution );
 			if( execution[ Job.Execution.STATUS ].id === Job.ExecutionStatus.FINISHED ) this.executing.success();
@@ -163,33 +163,14 @@ export class BackupImporterComponent implements OnInit, OnDestroy {
 
 	uploadBackup( file:Blob ):void {
 		this.uploading.start();
-		this.backupsService.upload( file ).then(
-			( [ pointer, response ]:[ Pointer.Class, Response.Class ] ) => {
-				this.uploading.success();
-				this.createBackupImport( pointer.id );
-			}
-		).catch( ( error:HTTPError ) => {
-			console.error( error );
-			this.uploading.fail();
-			let errorMessage:Message;
-			if( error.response ) errorMessage = this.getHTTPErrorMessage( error, "Couldn't upload the file." );
-			else {
-				errorMessage = <Message>{
-					title: error.name,
-					type: Types.ERROR,
-					content: JSON.stringify( error )
-				};
-			}
-			this.errorMessages.push( errorMessage );
-		} );
 	}
 
 	createBackupImport( backupURI:string ):Promise<any> {
 		this.creating.start();
-		return this.jobsService.createImportBackup( backupURI ).then( ( importJob:PersistedDocument.Class ) => {
+		return this.jobsService.createImportBackup( backupURI ).then( ( importJob:PersistedDocument ) => {
 			this.creating.success();
 			this.executing.start();
-			return this.executeImport( importJob ).then( ( importJobExecution:PersistedDocument.Class ) => {this.monitorExecution( importJobExecution );}
+			return this.executeImport( importJob ).then( ( importJobExecution:PersistedDocument ) => {this.monitorExecution( importJobExecution );}
 			).catch( ( error:HTTPError ) => {
 				console.error( error );
 				this.executing.fail();

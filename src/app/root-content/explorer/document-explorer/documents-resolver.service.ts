@@ -1,42 +1,42 @@
 import { Injectable } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
-import * as HTTP from "carbonldp/HTTP";
-import * as NS from "carbonldp/NS";
-import * as RDFDocument from "carbonldp/RDF/Document";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
-import * as AccessPoint from "carbonldp/AccessPoint";
-import * as SPARQL from "carbonldp/SPARQL";
+import { CarbonLDP } from "carbonldp";
+import { RequestService, RequestUtils, RequestOptions, Response } from "carbonldp/HTTP";
+import { LDP } from "carbonldp/Vocabularies";
+import { RDFDocument, RDFDocumentParser } from "carbonldp/RDF/Document";
+import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { AccessPointBase } from "carbonldp/AccessPoint";
+import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 
 @Injectable()
 export class DocumentsResolverService {
 
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 
-	documents:Map<string, { document:RDFDocument.Class, ETag:string }> = new Map<string, { document:RDFDocument.Class, ETag:string }>();
-	private parser:RDFDocument.Parser = new RDFDocument.Parser();
+	documents:Map<string, { document:RDFDocument, ETag:string }> = new Map<string, { document:RDFDocument, ETag:string }>();
+	private parser:RDFDocumentParser = new RDFDocumentParser();
 
-	constructor( carbon:Carbon ) {
-		this.carbon = carbon;
+	constructor( carbonldp:CarbonLDP ) {
+		this.carbonldp = carbonldp;
 	}
 
-	get( uri:string ):Promise<RDFDocument.Class | null> {
+	get( uri:string ):Promise<RDFDocument | null> {
 		if( ! uri ) return <any> Promise.reject( new Error( "Provide the uri" ) );
-		let requestOptions:HTTP.Request.Options = { sendCredentialsOnCORS: true, };
-		if( this.carbon.auth.isAuthenticated() ) this.carbon.auth.addAuthentication( requestOptions );
+		let requestOptions:RequestOptions = { sendCredentialsOnCORS: true, };
+		if( this.carbonldp.auth.isAuthenticated() ) this.carbonldp.auth.addAuthentication( requestOptions );
 
-		HTTP.Request.Util.setAcceptHeader( "application/ld+json", requestOptions );
-		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.RDFSource, requestOptions );
+		RequestUtils.setAcceptHeader( "application/ld+json", requestOptions );
+		RequestUtils.setPreferredInteractionModel( LDP.RDFSource, requestOptions );
 
 		let eTag:string;
 
-		return HTTP.Request.Service.get( uri, requestOptions ).then( ( response:HTTP.Response.Class ) => {
-			eTag = HTTP.Response.Util.getETag( response );
+		return RequestService.get( uri, requestOptions ).then( ( response:Response ) => {
+			eTag = response.getETag();
 			return this.parser.parse( response.data );
 		} ).then( ( parsedDocuments:any ) => {
 			if( ! parsedDocuments[ 0 ] ) return null;
 
-			let parsedDocument:RDFDocument.Class = parsedDocuments[ 0 ];
+			let parsedDocument:RDFDocument = parsedDocuments[ 0 ];
 
 			this.documents.set( uri, { document: parsedDocument, ETag: eTag } );
 
@@ -46,17 +46,17 @@ export class DocumentsResolverService {
 		} );
 	}
 
-	getAll():Promise<RDFDocument.Class[]> {
-		return new Promise<RDFDocument.Class[]>( ( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
+	getAll():Promise<RDFDocument[]> {
+		return new Promise<RDFDocument[]>( ( resolve:( result:any ) => void, reject:( error:Error ) => void ) => {
 			let keys = Object.keys( this.documents );
 			let values = keys.map( ( v ) => { return this.documents[ v ].document; } );
 			resolve( values );
 		} );
 	}
 
-	createChild( parentURI:string, content:any, childSlug?:string ):Promise<PersistedDocument.Class> {
-		return this.carbon.documents.createChild( parentURI, content, childSlug ).then(
-			( [ createdChild, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+	createChild( parentURI:string, content:any, childSlug?:string ):Promise<PersistedDocument> {
+		return this.carbonldp.documents.createChild( parentURI, content, childSlug ).then(
+			( [ createdChild, response ]:[ PersistedDocument, Response ] ) => {
 				return createdChild;
 			}
 		).catch( ( error ) => {
@@ -64,9 +64,9 @@ export class DocumentsResolverService {
 		} );
 	}
 
-	createAccessPoint( document:PersistedDocument.Class, accessPoint:AccessPoint.Class, slug?:string ):Promise<PersistedDocument.Class> {
+	createAccessPoint( document:PersistedDocument, accessPoint:AccessPointBase, slug?:string ):Promise<PersistedDocument> {
 		return document.createAccessPoint( accessPoint, slug ).then(
-			( [ createdChild, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+			( createdChild:PersistedDocument ) => {
 				return createdChild;
 			}
 		).catch( ( error ) => {
@@ -75,13 +75,13 @@ export class DocumentsResolverService {
 	}
 
 	getAccessPointsHasMemberRelationProperties( documentURI:string ):Promise<string[]> {
-		return this.carbon.documents.executeSELECTQuery( documentURI,
+		return this.carbonldp.documents.executeSELECTQuery( documentURI,
 			`SELECT ?accessPointURI ?propertyName 
 						WHERE {
-						      ?accessPointURI <${NS.LDP.Predicate.membershipResource}> <${documentURI}>.
-					          ?accessPointURI <${NS.LDP.Predicate.hasMemberRelation}> ?propertyName
+						      ?accessPointURI <${LDP.membershipResource}> <${documentURI}>.
+					          ?accessPointURI <${LDP.hasMemberRelation}> ?propertyName
 			            }`
-		).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
+		).then( ( results:SPARQLSelectResults ) => {
 
 			return results.bindings.map( ( value:{ accessPointURI:any, propertyName:any } ) => value.propertyName.id );
 		} ).catch( ( error ) => {
@@ -89,29 +89,29 @@ export class DocumentsResolverService {
 		} );
 	}
 
-	delete( documentURI:string ):Promise<HTTP.Response.Class> {
-		return this.carbon.documents.delete( documentURI ).catch( ( error ) => {
+	delete( documentURI:string ):Promise<void> {
+		return this.carbonldp.documents.delete( documentURI ).catch( ( error ) => {
 			return Promise.reject( error );
 		} );
 	}
 
-	update( uri:string, body:string ):Promise<RDFDocument.Class> {
+	update( uri:string, body:string ):Promise<RDFDocument> {
 		if( ! uri || ! body ) return <any> Promise.reject( new Error( "Provide the required parameters" ) );
 		//Refresh document ETag
 		let eTag:string = this.documents.get( uri ).ETag;
 		return this.callUpdate( uri, body, eTag );
 	}
 
-	private callUpdate( uri:string, body:string, eTag:string ):Promise<RDFDocument.Class> {
-		let requestOptions:HTTP.Request.Options = { sendCredentialsOnCORS: true, };
-		if( this.carbon.auth.isAuthenticated() ) this.carbon.auth.addAuthentication( requestOptions );
-		HTTP.Request.Util.setAcceptHeader( "application/ld+json", requestOptions );
-		HTTP.Request.Util.setContentTypeHeader( "application/ld+json", requestOptions );
-		HTTP.Request.Util.setIfMatchHeader( eTag, requestOptions );
-		HTTP.Request.Util.setPreferredInteractionModel( NS.LDP.Class.RDFSource, requestOptions );
-		return HTTP.Request.Service.put( uri, body, requestOptions ).then( ( response:HTTP.Response.Class ) => {
+	private callUpdate( uri:string, body:string, eTag:string ):Promise<RDFDocument> {
+		let requestOptions:RequestOptions = { sendCredentialsOnCORS: true, };
+		if( this.carbonldp.auth.isAuthenticated() ) this.carbonldp.auth.addAuthentication( requestOptions );
+		RequestUtils.setAcceptHeader( "application/ld+json", requestOptions );
+		RequestUtils.setContentTypeHeader( "application/ld+json", requestOptions );
+		RequestUtils.setIfMatchHeader( eTag, requestOptions );
+		RequestUtils.setPreferredInteractionModel( LDP.RDFSource, requestOptions );
+		return RequestService.put( uri, body, requestOptions ).then( ( response:Response ) => {
 			return this.get( uri );
-		} ).then( ( parsedDocument:RDFDocument.Class ) => {
+		} ).then( ( parsedDocument:RDFDocument ) => {
 			if( ! parsedDocument ) return null;
 			return parsedDocument;
 		} ).catch( ( error ) => {

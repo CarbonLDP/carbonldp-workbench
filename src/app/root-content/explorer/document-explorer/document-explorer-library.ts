@@ -1,4 +1,4 @@
-import * as URI from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF/URI";
 
 export class DocumentExplorerLibrary {
 
@@ -15,7 +15,7 @@ export class DocumentExplorerLibrary {
 	}
 
 	public static getParentURI( documentURI:string ):string {
-		let slug:string = URI.Util.getSlug( documentURI ),
+		let slug:string = URI.getSlug( documentURI ),
 			slugIdx:number = documentURI.indexOf( slug );
 		return documentURI.substr( 0, slugIdx );
 	}

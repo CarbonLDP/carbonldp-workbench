@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from "@angular/core";
 
-import * as URI from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF/URI";
 
 @Pipe( { name: "prefix" } )
 export class PrefixURIPipe implements PipeTransform {
@@ -12,9 +12,9 @@ export class PrefixURIPipe implements PipeTransform {
 			if( ! prefixes.hasOwnProperty( prefix ) ) continue;
 			let prefixURI:string = prefixes[ prefix ];
 
-			if( ! URI.Util.isBaseOf( prefixURI, value ) ) continue;
+			if( ! URI.isBaseOf( prefixURI, value ) ) continue;
 
-			return URI.Util.prefix( value, prefix, prefixURI );
+			return URI.prefix( value, prefix, prefixURI );
 		}
 
 		return `<${ value }>`;

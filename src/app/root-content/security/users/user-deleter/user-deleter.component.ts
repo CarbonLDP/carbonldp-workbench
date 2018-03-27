@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
 import * as User from "carbonldp/Auth/User";
-import { Error as HTTPError } from "carbonldp/HTTP/Errors";
+import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";

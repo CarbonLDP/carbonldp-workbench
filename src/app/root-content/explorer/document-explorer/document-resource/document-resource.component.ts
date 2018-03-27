@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
-import * as RDFNode from "carbonldp/RDF/Node";
+import { RDFNode } from "carbonldp/RDF/Node"
 
 import { DocumentsResolverService } from "app/root-content/explorer/document-explorer/documents-resolver.service";
 import { Property, PropertyRow, Modes } from "../property/property.component";
@@ -37,13 +37,13 @@ export class DocumentResourceComponent implements AfterViewInit {
 
 	@Input() displayOnly:string[] = [];
 	@Input() hiddenProperties:string[] = [];
-	@Input() blankNodes:RDFNode.Class[] = [];
-	@Input() namedFragments:RDFNode.Class[] = [];
+	@Input() blankNodes:RDFNode[] = [];
+	@Input() namedFragments:RDFNode[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
-	private _rootNode:RDFNode.Class;
+	private _rootNode:RDFNode;
 	@Input()
-	set rootNode( value:RDFNode.Class ) {
+	set rootNode( value:RDFNode ) {
 		this._rootNode = value;
 		this.records = new RootRecords();
 		this.getProperties();

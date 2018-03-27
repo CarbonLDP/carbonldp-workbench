@@ -1,7 +1,8 @@
 import { Component, ElementRef, Output, EventEmitter } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
-import * as NS from "carbonldp/NS";
+import { CarbonLDP } from "carbonldp";
+import { C } from "carbonldp/Vocabularies";
+import { PlatformMetadata } from "carbonldp/System/PlatformMetadata";
 
 import { WidgetsService } from "../widgets.service";
 import { Message } from "app/shared/messages-area/message.component";
@@ -15,22 +16,22 @@ import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-mess
 
 export class InstanceWidgetComponent {
 	private element:ElementRef;
-	private carbon:Carbon;
+	private carbonldp:CarbonLDP;
 	private widgetsService:WidgetsService;
 
 	carbonldpVersion:string;
 	carbonldpURL:string;
 	carbonldpBuildDate:Date;
 	hide:boolean = false;
-	platformMetadata;
+	platformMetadata:PlatformMetadata;
 
 	errorMessage:Message;
 
 	@Output() onErrorOccurs:EventEmitter<any> = new EventEmitter();
 
-	constructor( element:ElementRef, carbon:Carbon, widgetsService:WidgetsService ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP, widgetsService:WidgetsService ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 		this.widgetsService = widgetsService;
 	}
 
@@ -46,7 +47,7 @@ export class InstanceWidgetComponent {
 		}
 	}
 
-	public refreshWidget( event?:MouseEvent ): Promise<any> {
+	public refreshWidget( event?:MouseEvent ):Promise<any> {
 		if( event ) event.stopImmediatePropagation();
 		this.errorMessage = null;
 		this.carbonldpBuildDate = null;
@@ -55,10 +56,10 @@ export class InstanceWidgetComponent {
 		if( ! this.platformMetadata ) return this.getPlatformMetadata();
 
 
-		return this.widgetsService.refreshPlatformMetadata( this.platformMetadata ).then( ( platformMetadata ) => {
+		return this.widgetsService.refreshPlatformMetadata( this.platformMetadata ).then( ( platformMetadata:any ) => {
 			this.platformMetadata = platformMetadata;
-			this.carbonldpBuildDate = platformMetadata[ "buildDate" ];
-			this.carbonldpVersion = platformMetadata[ "version" ];
+			this.carbonldpBuildDate = platformMetadata.instance.buildDate;
+			this.carbonldpVersion = platformMetadata.instance.version;
 			this.element.nativeElement.classList.remove( "error" );
 		} ).catch( ( error:any ) => {
 			this.errorWidget( error );
@@ -67,26 +68,26 @@ export class InstanceWidgetComponent {
 
 	private getPlatformMetadata():Promise<any> {
 		// TODO: Remove extendObjectSchema when SDK implements instance with its properties
-		this.carbon.extendObjectSchema( NS.C.namespace + "PlatformInstance", {
+		this.carbonldp.extendObjectSchema( C.namespace + "PlatformInstance", {
 			"version": {
-				"@id": NS.C.namespace + "version",
+				"@id": C.namespace + "version",
 				"@type": "string"
 			},
 			"buildDate": {
-				"@id": NS.C.namespace + "buildDate",
+				"@id": C.namespace + "buildDate",
 				"@type": "dateTime"
 			}
 		} );
-		this.carbon.extendObjectSchema( NS.C.namespace + "Platform", {
+		this.carbonldp.extendObjectSchema( C.namespace + "Platform", {
 			"instance": {
-				"@id": NS.C.namespace + "instance",
+				"@id": C.namespace + "instance",
 				"@type": "@id"
 			}
 		} );
 
 		return this.widgetsService.getPlatformMetadata().then( ( platformMetadata:any ) => {
 			this.platformMetadata = platformMetadata;
-			this.carbonldpURL = this.carbon.baseURI;
+			this.carbonldpURL = this.carbonldp.baseURI;
 			this.carbonldpBuildDate = platformMetadata.instance.buildDate;
 			this.carbonldpVersion = platformMetadata.instance.version;
 			this.element.nativeElement.classList.remove( "error" );

@@ -1,7 +1,7 @@
-import * as NS from "carbonldp/NS";
-import * as Utils from "carbonldp/Utils";
-import * as SDKLiteral from "carbonldp/RDF/Literal";
-import * as URI from "carbonldp/RDF/URI";
+import { XSD } from "carbonldp/Vocabularies";
+import { isDate, isString, isInteger, isNumber } from "carbonldp/Utils";
+import { RDFLiteral } from "carbonldp/RDF/Literal";
+import { URI } from "carbonldp/RDF/URI";
 
 import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { AbstractControl, Validator, NG_VALIDATORS } from "@angular/forms";
@@ -22,7 +22,7 @@ export class PropertyNameValidator implements Validator, OnChanges {
 		this.control.control.updateValueAndValidity( false, true );
 	}
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 
 		if( ! ! control ) {
 			if( typeof control.value === "undefined" || control.value === null || ! control.value ) return null;
@@ -53,7 +53,7 @@ export class IdValidator implements Validator, OnChanges {
 		this.control.control.updateValueAndValidity( false, true );
 	}
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 
 		if( ! ! control ) {
 			if( typeof control.value === "undefined" || control.value === null || ! control.value ) return null;
@@ -79,11 +79,11 @@ export class LiteralValueValidator implements Validator, OnChanges {
 		this.control.control.updateValueAndValidity( false, true );
 	}
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		let valid:boolean;
 		switch( this.type ) {
 			// Boolean
-			case NS.XSD.DataType.boolean:
+			case XSD.boolean:
 				switch( control.value ) {
 					case "true":
 					case "yes":
@@ -98,41 +98,41 @@ export class LiteralValueValidator implements Validator, OnChanges {
 				break;
 
 			// Numbers
-			case NS.XSD.DataType.int :
-			case NS.XSD.DataType.integer :
-				valid = ! isNaN( control.value ) && ! isNaN( SDKLiteral.Factory.parse( control.value, this.type ) ) && Utils.isInteger( SDKLiteral.Factory.parse( control.value, this.type ) );
+			case XSD.int :
+			case XSD.integer :
+				valid = ! isNaN( control.value ) && ! isNaN( RDFLiteral.parse( control.value, this.type ) ) && isInteger( RDFLiteral.parse( control.value, this.type ) );
 				break;
 
-			case NS.XSD.DataType.byte :
-			case NS.XSD.DataType.decimal :
-			case NS.XSD.DataType.long :
-			case NS.XSD.DataType.negativeInteger :
-			case NS.XSD.DataType.nonNegativeInteger :
-			case NS.XSD.DataType.nonPositiveInteger :
-			case NS.XSD.DataType.positiveInteger :
-			case NS.XSD.DataType.short :
-			case NS.XSD.DataType.unsignedLong :
-			case NS.XSD.DataType.unsignedInt :
-			case NS.XSD.DataType.unsignedShort :
-			case NS.XSD.DataType.unsignedByte :
-			case NS.XSD.DataType.double :
-			case NS.XSD.DataType.float :
-				valid = ! isNaN( control.value ) && ! isNaN( SDKLiteral.Factory.parse( control.value, this.type ) ) && Utils.isNumber( SDKLiteral.Factory.parse( control.value, this.type ) );
+			case XSD.byte :
+			case XSD.decimal :
+			case XSD.long :
+			case XSD.negativeInteger :
+			case XSD.nonNegativeInteger :
+			case XSD.nonPositiveInteger :
+			case XSD.positiveInteger :
+			case XSD.short :
+			case XSD.unsignedLong :
+			case XSD.unsignedInt :
+			case XSD.unsignedShort :
+			case XSD.unsignedByte :
+			case XSD.double :
+			case XSD.float :
+				valid = ! isNaN( control.value ) && ! isNaN( RDFLiteral.parse( control.value, this.type ) ) && isNumber( RDFLiteral.parse( control.value, this.type ) );
 				break;
 
 			// Dates
-			case NS.XSD.DataType.date:
-			case NS.XSD.DataType.dateTime:
-			case NS.XSD.DataType.time:
-				valid = Utils.isDate( SDKLiteral.Factory.parse( control.value, this.type ) );
+			case XSD.date:
+			case XSD.dateTime:
+			case XSD.time:
+				valid = isDate( RDFLiteral.parse( control.value, this.type ) );
 				break;
 
-			case NS.XSD.DataType.string:
-				valid = Utils.isString( SDKLiteral.Factory.parse( control.value, this.type ) );
+			case XSD.string:
+				valid = isString( RDFLiteral.parse( control.value, this.type ) );
 				break;
 
 			default:
-				valid = Utils.isString( control.value );
+				valid = isString( control.value );
 				break;
 		}
 		if( ! valid ) {
@@ -151,12 +151,12 @@ export class PointerValidator implements Validator {
 	@Input() documentURI;
 	url = new RegExp( "(\b(https?|ftp|file)://)?[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]" );
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		if( ! ! control && typeof control.value === "undefined" ) {
 			return { "emptyControl": true };
 		}
 		if( ! ! control.value ) {
-			if( URI.Util.isBNodeID( control.value ) || this.url.test( control.value ) ) return null;
+			if( URI.isBNodeID( control.value ) || this.url.test( control.value ) ) return null;
 			return { "invalidId": true };
 		}
 		return null;

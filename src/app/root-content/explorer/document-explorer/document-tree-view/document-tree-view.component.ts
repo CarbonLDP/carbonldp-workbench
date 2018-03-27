@@ -1,12 +1,12 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
-import { Class as Carbon } from "carbonldp/Carbon";
-import * as Pointer from "carbonldp/Pointer";
-import * as PersistedDocument from "carbonldp/PersistedDocument";
-import * as HTTP from "carbonldp/HTTP";
-import * as URI from "carbonldp/RDF/URI";
-import * as SPARQL from "carbonldp/SPARQL";
-import { C, LDP } from "carbonldp/NS";
+import { CarbonLDP } from "carbonldp";
+import { Pointer } from "carbonldp/Pointer";
+import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { Response, Errors } from "carbonldp/HTTP";
+import { URI } from "carbonldp/RDF/URI";
+import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
+import { C, LDP } from "carbonldp/Vocabularies";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
@@ -23,7 +23,7 @@ import "!style-loader!css-loader!jstree/dist/themes/default/style.min.css";
 export class DocumentTreeViewComponent implements AfterViewInit {
 	element:ElementRef;
 	$element:JQuery;
-	carbon:Carbon;
+	carbonldp:CarbonLDP;
 
 	jsTree:JSTree;
 	$tree:JQuery;
@@ -44,16 +44,16 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	@Input() refreshNode:EventEmitter<string> = new EventEmitter<string>();
 	@Input() openNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onResolveUri:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onError:EventEmitter<HTTP.Errors.Error> = new EventEmitter<HTTP.Errors.Error>();
+	@Output() onError:EventEmitter<Errors.HTTPError> = new EventEmitter<Errors.HTTPError>();
 	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onShowCreateChildForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onShowDeleteChildForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onShowCreateAccessPointForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSelectDocument:EventEmitter<string> = new EventEmitter<string>();
 
-	constructor( element:ElementRef, carbon:Carbon ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
 		this.element = element;
-		this.carbon = carbon;
+		this.carbonldp = carbonldp;
 	}
 
 	ngAfterViewInit():void {
@@ -73,19 +73,19 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} );
 	}
 
-	getDocumentTree():Promise<PersistedDocument.Class | void> {
-		return this.carbon.documents.get( "" ).then( ( [ resolvedRoot, response ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+	getDocumentTree():Promise<PersistedDocument | void> {
+		return this.carbonldp.documents.get( "" ).then( ( resolvedRoot:PersistedDocument ) => {
 			return resolvedRoot.refresh();
-		} ).then( ( [ updatedRoot, updatedResponse ]:[ PersistedDocument.Class, HTTP.Response.Class ] ) => {
+		} ).then( ( updatedRoot:PersistedDocument ) => {
 
 			let isRequiredSystemDocument:boolean = updatedRoot.types.findIndex( ( type:string ) => type === `${C.namespace}RequiredSystemDocument` ) !== - 1;
 
-			this.nodeChildren.push( this.buildNode( this.carbon.baseURI, "default", true, isRequiredSystemDocument ) );
+			this.nodeChildren.push( this.buildNode( this.carbonldp.baseURI, "default", true, isRequiredSystemDocument ) );
 
 			this.renderTree();
 
 			return updatedRoot;
-		} ).catch( ( error:HTTP.Errors.Error ) => {
+		} ).catch( ( error:Errors.HTTPError ) => {
 			this.onError.emit( error );
 		} );
 	}
@@ -184,23 +184,23 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			    }
 			}
 		`;
-		return this.carbon.documents.executeSELECTQuery( uri, query ).then( ( [ results, response ]:[ SPARQL.SELECTResults.Class, HTTP.Response.Class ] ) => {
+		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
 			let accessPoints:Map<string, PreJSTreeNode> = new Map<string, PreJSTreeNode>(),
 				children:Map<string, PreJSTreeNode> = new Map<string, PreJSTreeNode>(),
 				nodes:JSTreeNode[] = [];
 
 			results.bindings.forEach(
-				( binding:{ p:Pointer.Class, o:Pointer.Class, p2:Pointer.Class, o2:Pointer.Class, isRequiredSystemDocument:boolean } ) => {
+				( binding:{ p:Pointer, o:Pointer, p2:Pointer, o2:Pointer, isRequiredSystemDocument:boolean } ) => {
 
 					// Do not include any node that is /users/me
 					if( ! ! binding.o2 && binding.o2.id.indexOf( "/users/me/" ) !== - 1 ) return;
 
 					switch( binding.p.id ) {
-						case LDP.Predicate.contains:
+						case LDP.contains:
 
 							this.convertBindingToNode( children, binding );
 							break;
-						case C.Predicate.accessPoint:
+						case C.accessPoint:
 
 							this.convertBindingToNode( accessPoints, binding );
 							break;
@@ -224,9 +224,9 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.jsTree.refresh_node( this.selectedURI );
 	}
 
-	getSlug( pointer:Pointer.Class | string ):string {
-		if( typeof pointer !== "string" ) return (<Pointer.Class>pointer).id;
-		return URI.Util.getSlug( <string>pointer );
+	getSlug( pointer:Pointer | string ):string {
+		if( typeof pointer !== "string" ) return (<Pointer>pointer).id;
+		return URI.getSlug( <string>pointer );
 	}
 
 	showCreateChildForm():void {
@@ -241,10 +241,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.onShowDeleteChildForm.emit( true );
 	}
 
-	private convertBindingToNode( collection:Map<string, PreJSTreeNode>, binding:{ p:Pointer.Class, o:Pointer.Class, p2:Pointer.Class, o2:Pointer.Class, isRequiredSystemDocument:boolean } ):void {
+	private convertBindingToNode( collection:Map<string, PreJSTreeNode>, binding:{ p:Pointer, o:Pointer, p2:Pointer, o2:Pointer, isRequiredSystemDocument:boolean } ):void {
 
 		if( binding.o.isResolved() ) {
-			binding.isRequiredSystemDocument = (<PersistedDocument.Class>binding.o).types.indexOf( "https://carbonldp.com/ns/v1/platform#RequiredSystemDocument" ) !== - 1;
+			binding.isRequiredSystemDocument = (<PersistedDocument>binding.o).types.indexOf( "https://carbonldp.com/ns/v1/platform#RequiredSystemDocument" ) !== - 1;
 		}
 		collection.set( binding.o.id, {
 			hasChildren: collection.get( binding.o.id ) ? true : ! ! binding.p2,

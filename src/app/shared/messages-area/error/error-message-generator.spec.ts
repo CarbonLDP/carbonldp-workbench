@@ -1,6 +1,6 @@
-import { Service } from "carbonldp/HTTP/Request";
+import { RequestService } from "carbonldp/HTTP/Request";
 
-import * as HTTPError from "carbonldp/HTTP/Errors/HTTPError";
+import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { ErrorMessageGenerator } from "./error-message-generator";
 import { Message, Types } from "../message.component";
@@ -9,7 +9,7 @@ export function errorMessageGeneratorSpecs() {
 
 	describe( "ErrorMessageGenerator", () => {
 
-		let notFoundError:HTTPError.Class, internalError:HTTPError.Class;
+		let notFoundError:HTTPError, internalError:HTTPError;
 		const testsResponses = {
 			success: {
 				status: 200,
@@ -27,17 +27,17 @@ export function errorMessageGeneratorSpecs() {
 		};
 
 		beforeAll( () => {
-			// let carbon:Carbon = new Carbon( "http://example.com" );
+			// let carbonldp:CarbonLDP = new Carbon( "http://example.com" );
 			jasmine.Ajax.install();
 			jasmine.Ajax.stubRequest( "http://example.com/404", null ).andReturn( testsResponses.notFound );
 			jasmine.Ajax.stubRequest( "http://example.com/500", null ).andReturn( testsResponses.internal );
 
-			Service.send( "GET", "http://example.com/404" ).then( ( _response ) => {
-			} ).catch( ( exception:HTTPError.Class ) => {
+			RequestService.send( "GET", "http://example.com/404" ).then( ( _response ) => {
+			} ).catch( ( exception:HTTPError ) => {
 				notFoundError = exception;
 			} );
-			Service.send( "GET", "http://example.com/500" ).then( ( _response ) => {
-			} ).catch( ( exception:HTTPError.Class ) => {
+			RequestService.send( "GET", "http://example.com/500" ).then( ( _response ) => {
+			} ).catch( ( exception:HTTPError ) => {
 				internalError = exception;
 			} );
 		} );

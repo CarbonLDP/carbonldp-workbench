@@ -1,10 +1,10 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit, OnInit, ViewChild } from "@angular/core";
 
-import * as SDKLiteral from "carbonldp/RDF/Literal";
-import * as SDKList from "carbonldp/RDF/List";
-import * as URI from "carbonldp/RDF/URI";
-import * as RDFNode from "carbonldp/RDF/Node";
-import * as Utils from "carbonldp/Utils";
+import { RDFLiteral } from "carbonldp/RDF/Literal";
+import { RDFList } from "carbonldp/RDF/List";
+import { URI } from "carbonldp/RDF/URI";
+import { RDFNode } from "carbonldp/RDF/Node"
+import { isArray } from "carbonldp/Utils";
 
 import { Literal, LiteralRow } from "../literals/literal.component";
 import { Pointer, PointerRow } from "../pointers/pointer.component";
@@ -51,7 +51,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 
 	@Input() mode:string = Modes.READ;
 	@Input() documentURI:string = "";
-	@Input() bNodes:RDFNode.Class[] = [];
+	@Input() bNodes:RDFNode[] = [];
 	@Input() namedFragments:NamedFragmentRow[] = [];
 	@Input() isPartOfNamedFragment:boolean = false;
 	@Input() canEdit:boolean = true;
@@ -70,7 +70,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 		this.name = prop[ this.copyOrAdded ].name;
 		this.tempProperty.name = prop[ this.copyOrAdded ].name;
 		this.originalName = this.name;
-		if( Utils.isArray( prop[ this.copyOrAdded ].value ) ) {
+		if( isArray( prop[ this.copyOrAdded ].value ) ) {
 			this.value = [];
 			prop[ this.copyOrAdded ].value.forEach( ( literalOrRDFNode ) => { (<Array<any>>this.value).push( Object.assign( literalOrRDFNode ) ) } )
 		} else {
@@ -96,7 +96,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 
 	get propertyHasChanged():boolean { return this.nameHasChanged || this.valueHasChanged || this.literalsHaveChanged || this.pointersHaveChanged || this.listsHaveChanged; }
 
-	get isAccessPointHasMemberRelationProperty():boolean { return this.accessPointsHasMemberRelationProperties.indexOf( this.id ) !== -1; }
+	get isAccessPointHasMemberRelationProperty():boolean { return this.accessPointsHasMemberRelationProperties.indexOf( this.id ) !== - 1; }
 
 	// TODO: Add @lists and @sets support
 	constructor( element:ElementRef ) {
@@ -104,7 +104,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 	}
 
 	ngOnInit():void {
-		if( Utils.isArray( this.value ) ) this.fillLiteralsAndPointers();
+		if( isArray( this.value ) ) this.fillLiteralsAndPointers();
 	}
 
 	ngAfterViewInit():void {
@@ -116,8 +116,8 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 
 	getDisplayName( uri:string ):string {
 		if( this.commonToken.indexOf( uri ) > - 1 ) return uri;
-		if( URI.Util.hasFragment( uri ) ) return this.unescape( this.getFragment( uri ) );
-		return this.unescape( URI.Util.getSlug( uri ) );
+		if( URI.hasFragment( uri ) ) return this.unescape( this.getFragment( uri ) );
+		return this.unescape( URI.getSlug( uri ) );
 	}
 
 	getParentURI( uri:string ):string {
@@ -126,17 +126,17 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 	}
 
 	getSlug( uri:string ) {
-		return URI.Util.getSlug( uri );
+		return URI.getSlug( uri );
 	}
 
 	getFragment( uri:string ):string {
 		let parts:string[] = uri.split( "#" );
 		uri = "".concat( parts[ 0 ] ).concat( "#" + parts[ 1 ] );
-		return URI.Util.getFragment( uri );
+		return URI.getFragment( uri );
 	}
 
 	isArray( property:any ):boolean {
-		return Utils.isArray( property );
+		return isArray( property );
 	}
 
 	isUrl( uri:string ):boolean {
@@ -252,7 +252,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 			this.tempLiterals = this.property.modifiedLiterals;
 		} else {
 			this.property[ this.copyOrAdded ].value.forEach( ( literalOrRDFNode ) => {
-				if( SDKLiteral.Factory.is( literalOrRDFNode ) ) {
+				if( RDFLiteral.is( literalOrRDFNode ) ) {
 					this.literals.push( <LiteralRow>{ copy: literalOrRDFNode } );
 					this.tempLiterals.push( <LiteralRow>{ copy: literalOrRDFNode } );
 				}
@@ -263,7 +263,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 			this.tempPointers = this.property.modifiedPointers;
 		} else {
 			this.property[ this.copyOrAdded ].value.forEach( ( literalOrRDFNode ) => {
-				if( RDFNode.Factory.is( literalOrRDFNode ) ) {
+				if( RDFNode.is( literalOrRDFNode ) ) {
 					this.pointers.push( <PointerRow>{ copy: literalOrRDFNode } );
 					this.tempPointers.push( <PointerRow>{ copy: literalOrRDFNode } );
 				}
@@ -274,7 +274,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 			this.tempLists = this.property.modifiedLists;
 		} else {
 			this.property[ this.copyOrAdded ].value.forEach( ( literalOrRDFNodeOrList ) => {
-				if( SDKList.Factory.is( literalOrRDFNodeOrList ) ) {
+				if( RDFList.is( literalOrRDFNodeOrList ) ) {
 					this.lists.push( <ListRow>{ copy: literalOrRDFNodeOrList[ "@list" ].map( ( item ) => { return { copy: item } } ) } );
 					this.tempLists.push( <ListRow>{ copy: literalOrRDFNodeOrList } );
 				}
@@ -299,7 +299,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 
 	checkForChangesOnName( newName:string ):void {
 		this.name = newName;
-		if( typeof this.name !== "undefined" && (this.name !== this.property[ this.copyOrAdded ].name || this.name !== this.tempProperty.name ) ) {
+		if( typeof this.name !== "undefined" && (this.name !== this.property[ this.copyOrAdded ].name || this.name !== this.tempProperty.name) ) {
 			this.tempProperty.name = this.name;
 			this.changePropertyContent();
 		}
@@ -307,7 +307,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 
 	checkForChangesOnId( newId:string ):void {
 		this.value = newId;
-		if( typeof this.value !== "undefined" && (this.value !== this.property[ this.copyOrAdded ].value || this.value !== this.tempProperty.value ) ) {
+		if( typeof this.value !== "undefined" && (this.value !== this.property[ this.copyOrAdded ].value || this.value !== this.tempProperty.value) ) {
 			this.tempProperty.value = this.value;
 			this.changePropertyContent();
 		}
@@ -369,14 +369,14 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 
 		// Change name
 		if( (! ! this.property.copy) ) {
-			if( (this.tempProperty.name !== this.property.copy.name ) ) {
+			if( (this.tempProperty.name !== this.property.copy.name) ) {
 				this.property.modified = this.tempProperty;
 				this.nameHasChanged = true;
 			} else { this.nameHasChanged = false; }
 		}
 
 		// Change literals and pointers
-		if( Utils.isArray( this.value ) ) {
+		if( isArray( this.value ) ) {
 			this.tempProperty.value = [];
 			let tempLists:any[] = this.convertToListRow( this.tempLists );
 			[].concat( this.tempLiterals ).concat( this.tempPointers ).concat( tempLists ).forEach( ( literalOrPointerOrListRow ) => {
@@ -400,7 +400,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 
 			// Change value because it is a single string
 			if( (! ! this.property.copy) ) {
-				if( (this.tempProperty.value !== this.property.copy.value ) ) {
+				if( (this.tempProperty.value !== this.property.copy.value) ) {
 					this.property.modified = this.tempProperty;
 					this.valueHasChanged = true;
 				} else { this.valueHasChanged = false; }
@@ -414,7 +414,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 			else delete this.property.modified;
 			this.onChangeProperty.emit( this.tempProperty );
 		} else if( ! ! this.property.added ) {
-			if( (this.tempProperty.name !== this.property.added.name ) ) {
+			if( (this.tempProperty.name !== this.property.added.name) ) {
 				this.id = this.name;
 			}
 			this.property.added = this.tempProperty;

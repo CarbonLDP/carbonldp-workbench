@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, Output, Inject, EventEmitter, OnInit } fr
 import { AuthService } from "app/authentication/services";
 
 import { Class as Credentials } from "carbonldp/Auth/Credentials";
-import * as HTTP from "carbonldp/HTTP";
+import { Errors } from "carbonldp/HTTP";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
@@ -14,7 +14,7 @@ import "semantic-ui/semantic";
 	styles: [ ":host { display:block; } " ],
 } )
 export class LoginComponent implements OnInit {
-	@Input( "container" ) container:string|JQuery;
+	@Input( "container" ) container:string | JQuery;
 	@Output( "onLogin" ) onLogin:EventEmitter<Credentials> = new EventEmitter<Credentials>();
 
 	element:ElementRef;
@@ -57,7 +57,7 @@ export class LoginComponent implements OnInit {
 		this.authService.login( username, password, rememberMe ).then( ( credentials:Credentials ) => {
 			this.sending = false;
 			this.onLogin.emit( credentials );
-		} ).catch( ( error:HTTP.Errors.Error ) => {
+		} ).catch( ( error:Errors.HTTPError ) => {
 			this.sending = false;
 			this.setErrorMessage( error );
 			this.shakeForm();
@@ -72,27 +72,27 @@ export class LoginComponent implements OnInit {
 		return Math.floor( (utc2 - utc1) / msPerDay );
 	}
 
-	setErrorMessage( error:HTTP.Errors.Error ):void {
+	setErrorMessage( error:Errors.HTTPError ):void {
 		switch( true ) {
-			case error instanceof HTTP.Errors.ForbiddenError:
+			case error instanceof Errors.ForbiddenError:
 				this.errorMessage = "Denied Access.";
 				break;
-			case error instanceof HTTP.Errors.UnauthorizedError:
+			case error instanceof Errors.UnauthorizedError:
 				this.errorMessage = "Wrong credentials.";
 				break;
-			case error instanceof HTTP.Errors.BadGatewayError:
+			case error instanceof Errors.BadGatewayError:
 				this.errorMessage = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
 				break;
-			case error instanceof HTTP.Errors.GatewayTimeoutError:
+			case error instanceof Errors.GatewayTimeoutError:
 				this.errorMessage = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
 				break;
-			case error instanceof HTTP.Errors.InternalServerErrorError:
+			case error instanceof Errors.InternalServerErrorError:
 				this.errorMessage = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
 				break;
-			case error instanceof HTTP.Errors.UnknownError:
+			case error instanceof Errors.UnknownError:
 				this.errorMessage = "An error occurred while trying to login. Please try again later. Error: " + error.response.status;
 				break;
-			case error instanceof HTTP.Errors.ServiceUnavailableError:
+			case error instanceof Errors.ServiceUnavailableError:
 				this.errorMessage = "Service currently unavailable.";
 				break;
 			default:
