@@ -12,7 +12,7 @@ import { SidebarService } from "./sidebar.service"
 	templateUrl: "./sidebar.component.html",
 	styleUrls: [ "./sidebar.component.scss" ],
 	host: {
-		class: "ui inverted vertical menu accordion"
+		class: "ui inverted vertical labeled icon menu accordion"
 	}
 } )
 export class SidebarComponent {
@@ -46,7 +46,7 @@ export class SidebarComponent {
 			} );
 		} else {
 			this.$element.show();
-			this.$element.animate( { "width": "300px" }, 400 );
+			this.$element.animate( { "width": "182px" }, 400 );
 			this.sidebarService.toggledEmitter.emit( true );
 		}
 	}
