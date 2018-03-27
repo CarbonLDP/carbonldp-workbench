@@ -234,6 +234,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 
 	ngOnInit():void {
 		this.isCarbonContext = true;
+		this.currentQuery.endpoint = this.carbon.baseURI;
 	}
 
 	ngAfterViewInit():void {
@@ -296,26 +297,31 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	 * @returns      String. The name of the main SPARQL Query Operation.
 	 */
 	getSPARQLOperation( query:string ):string {
+
+		let queryForms:string[] = query.match( /\bCONSTRUCT\b|\bASK\b|\bSELECT\b|\bDESCRIBE\b|\bINSERT\b|\bDELETE\b|\bCLEAR\b|\bCREATE\b|\bDROP\b|\bLOAD\b/gi );
+
+		if( ! queryForms ) return null;
+
 		switch( true ) {
-			case (this.regExpSelect.test( query )):
-				return this.sparqlQueryOperations.select.name;
-			case (this.regExpConstruct.test( query )):
+			case (this.regExpConstruct.test( queryForms[ 0 ] )):
 				return this.sparqlQueryOperations.construct.name;
-			case (this.regExpAsk.test( query )):
+			case (this.regExpAsk.test( queryForms[ 0 ] )):
 				return this.sparqlQueryOperations.ask.name;
-			case (this.regExpDescribe.test( query )):
+			case (this.regExpSelect.test( queryForms[ 0 ] )):
+				return this.sparqlQueryOperations.select.name;
+			case (this.regExpDescribe.test( queryForms[ 0 ] )):
 				return this.sparqlQueryOperations.describe.name;
-			case (this.regExpInsert.test( query )):
+			case (this.regExpInsert.test( queryForms[ 0 ] )):
 				return this.sparqlQueryOperations.insert.name;
-			case (this.regExpDelete.test( query )):
+			case (this.regExpDelete.test( queryForms[ 0 ] )):
 				return this.sparqlQueryOperations.delete.name;
-			case (this.regExpClear.test( query )):
+			case (this.regExpClear.test( queryForms[ 0 ] )):
 				return this.sparqlQueryOperations.clear.name;
-			case (this.regExpCreate.test( query )):
+			case (this.regExpCreate.test( queryForms[ 0 ] )):
 				return this.sparqlQueryOperations.create.name;
-			case (this.regExpDrop.test( query )):
+			case (this.regExpDrop.test( queryForms[ 0 ] )):
 				return this.sparqlQueryOperations.drop.name;
-			case (this.regExpLoad.test( query )):
+			case (this.regExpLoad.test( queryForms[ 0 ] )):
 				return this.sparqlQueryOperations.load.name;
 			default:
 				return null;
@@ -417,7 +423,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	}
 
 	executeSELECT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		let beforeTimestamp:number = ( new Date() ).valueOf();
+		let beforeTimestamp:number = (new Date()).valueOf();
 		return this.carbon.documents.executeRawSELECTQuery( query.endpoint, query.content ).then(
 			( [ result, response ]:[ SPARQL.RawResults.Class, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
@@ -429,7 +435,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	}
 
 	executeDESCRIBE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		let beforeTimestamp:number = ( new Date() ).valueOf();
+		let beforeTimestamp:number = (new Date()).valueOf();
 		let requestOptions:HTTP.Request.Options = { headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) ) };
 		return this.carbon.documents.executeRawDESCRIBEQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
@@ -442,7 +448,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	}
 
 	executeCONSTRUCT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		let beforeTimestamp:number = ( new Date() ).valueOf();
+		let beforeTimestamp:number = (new Date()).valueOf();
 		let requestOptions:HTTP.Request.Options = { headers: new Map().set( "Accept", new HTTP.Header.Class( query.format ) ) };
 		return this.carbon.documents.executeRawCONSTRUCTQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ string, HTTP.Response.Class ] ):SPARQLClientResponse => {
@@ -455,7 +461,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	}
 
 	executeASK( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		let beforeTimestamp:number = ( new Date() ).valueOf();
+		let beforeTimestamp:number = (new Date()).valueOf();
 		return this.carbon.documents.executeRawASKQuery( query.endpoint, query.content ).then(
 			( [ result, response ]:[ SPARQL.RawResults.Class, HTTP.Response.Class ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
@@ -468,7 +474,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 
 	executeUPDATE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		this.isSending = true;
-		let beforeTimestamp:number = ( new Date() ).valueOf();
+		let beforeTimestamp:number = (new Date()).valueOf();
 		return this.carbon.documents.executeUPDATE( query.endpoint, query.content ).then(
 			( result:HTTP.Response.Class ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
@@ -480,15 +486,15 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	}
 
 	canExecute():boolean {
-		return ! ! (this.currentQuery.endpoint && this.currentQuery.type && this.currentQuery.content && this.currentQuery.operation && this.currentQuery.format);
+		return ! ! (this.currentQuery.type && this.currentQuery.content && this.currentQuery.operation && this.currentQuery.format);
 	}
 
 	canSaveQuery():boolean {
-		return ! ! (this.currentQuery.endpoint && this.currentQuery.type && this.currentQuery.content && this.currentQuery.operation && this.currentQuery.format && this.currentQuery.name);
+		return ! ! (this.currentQuery.type && this.currentQuery.content && this.currentQuery.operation && this.currentQuery.format && this.currentQuery.name);
 	}
 
 	canErase():boolean {
-		return ( ! ! this.endpoint || ! ! this.sparql);
+		return (! ! this.endpoint || ! ! this.sparql);
 	}
 
 	onEmptyStack():void {
