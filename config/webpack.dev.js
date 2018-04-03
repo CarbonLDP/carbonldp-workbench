@@ -12,6 +12,7 @@ const workbench = require( "../package.json" );
 const DefinePlugin = require( "webpack/lib/DefinePlugin" );
 const ContextReplacementPlugin = require( "webpack/lib/ContextReplacementPlugin" );
 const HtmlWebpackPlugin = require( "html-webpack-plugin" );
+const AngularCompilerPlugin = require( "@ngtools/webpack" ).AngularCompilerPlugin;
 
 
 // Webpack Constants
@@ -19,7 +20,7 @@ const ENV = process.env.ENV = process.env.NODE_ENV = "development";
 const PROTOCOL = process.env.PROTOCOL || "http";
 const HOST = process.env.HOST || "localhost";
 const PORT = process.env.PORT || 8080;
-const METADATA = webpackMerge( commonConfig( { env: ENV } ).metadata, {
+const METADATA = {
 	baseUrl: config.url.base,
 	protocol: PROTOCOL,
 	host: HOST,
@@ -30,20 +31,13 @@ const METADATA = webpackMerge( commonConfig( { env: ENV } ).metadata, {
 		protocol: carbonConfig.protocol,
 		domain: carbonConfig.domain,
 	}
-} );
+};
 
-module.exports = function( options ) {
-	return webpackMerge( commonConfig( { env: ENV } ), {
+module.exports = webpackMerge( commonConfig, {
 		devtool: "source-map",
 
-		module: {
-			rules: [
-				{
-					test: /\.ts$/,
-					use: [ "awesome-typescript-loader", "angular2-template-loader", "angular-router-loader" ]
-				}
-			]
-		},
+		mode: "development",
+		// TODO: Use [ "awesome-typescript-loader", "angular2-template-loader", "angular-router-loader" ] when ATL provides compatibility with Webpack 4
 
 		output: {
 			path: helpers.root( "dist" ),
@@ -76,11 +70,13 @@ module.exports = function( options ) {
 				}
 			} ),
 
-			// Webpack inject scripts and links for us with the HtmlWebpackPlugin
+
+			// Webpack inject scripts and links for us with the HtmlWebpackPlugin and also
+			// defines the order of the chunks: polyfills -> vendor -> app
 			new HtmlWebpackPlugin( {
-				filename: "index.html",
-				template: "src/index.html",
-				chunksSortMode: "dependency",
+				template: "./src/index.html",
+				chunks: [ "polyfills", "vendor", "styles", "app" ],
+				chunksSortMode: "manual",
 				metadata: METADATA
 			} )
 		],
@@ -98,4 +94,3 @@ module.exports = function( options ) {
 		},
 
 	} );
-};
