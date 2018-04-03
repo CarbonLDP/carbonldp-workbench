@@ -1,20 +1,19 @@
 const helpers = require( "./webpack.helpers" );
-const headImports = require( "./head.config" );
 
 // Plugins
-const CommonsChunkPlugin = require( "webpack/lib/optimize/CommonsChunkPlugin" );
+const SplitChunksPlugin = require( "webpack/lib/optimize/SplitChunksPlugin" );
 const ProvidePlugin = require( "webpack/lib/ProvidePlugin" );
 const CopyWebpackPlugin = require( "copy-webpack-plugin" );
-const HtmlElementsWebpackPlugin = require( "html-elements-webpack-plugin" );
+const AngularCompilerPlugin = require( "@ngtools/webpack" ).AngularCompilerPlugin;
 
 
-module.exports = function( options ) {
-	isProd = options.env === "production";
-	return {
+module.exports = {
 		entry: {
-			"polyfills": "./src/polyfills.ts",
-			"app": "./src/main.ts"
+			app: "./src/main.ts",
+			styles: "./src/styles.ts",
+			polyfills: "./src/polyfills.ts"
 		},
+		target: "web",
 
 		resolve: {
 			extensions: [ ".ts", ".js" ],
@@ -23,11 +22,25 @@ module.exports = function( options ) {
 				"jquery": "jquery/src/jquery",
 				"semantic-ui": helpers.root( "src/semantic/dist" ),
 			},
-			modules: [ helpers.root( "node_modules" ) ]
+			modules: [
+				helpers.root("src"),
+				helpers.root( "node_modules" )
+			]
 		},
 
 		module: {
 			rules: [
+				{
+					test: /.js$/,
+					parser: {
+						system: true
+					}
+				},
+				{
+					test: /\.ts$/,
+					exclude: /node_modules/,
+					use: [ "@ngtools/webpack" ]
+				},
 				{
 					test: /\.html$/,
 					use: "html-loader",
@@ -39,16 +52,29 @@ module.exports = function( options ) {
 				},
 				{
 					test: /\.s?css$/,
-					use: [ "raw-loader", "sass-loader" ]
+					use: [ "raw-loader", "sass-loader" ],
+					include: [ helpers.root( "src/app" ) ]
+				},
+				{
+					test: /\.css$/,
+					use: [ "style-loader", "css-loader" ],
+					exclude: [ helpers.root( "src/app" ) ]
 				},
 			]
 		},
 
 		plugins: [
 
-			// It identifies the hierarchy among three chunks: app -> vendor -> polyfills
-			new CommonsChunkPlugin( {
-				name: [ "app", "polyfills" ]
+			// Sends all imports from node_modules to vendor.ts
+			new SplitChunksPlugin( {
+				cacheGroups: {
+					"vendor": {
+						test: /[\\/]node_modules[\\/]/,
+						name: 'vendor',
+						chunks: 'all',
+						enforce: true
+					}
+				}
 			} ),
 
 			// Provide global variables
@@ -60,15 +86,23 @@ module.exports = function( options ) {
 
 			// Copy assets into assets
 			new CopyWebpackPlugin( [
-				{ from: "src/assets", to: "assets" },
-				{ from: "src/semantic", to: "semantic" },
+				{
+					from: "src/assets",
+					to: "assets",
+					toType: "dir",
+				},
+				{
+					from: "src/semantic",
+					to: "semantic",
+					toType: "dir",
+				},
 			] ),
 
-			// Inject styles headers when creating index file
-			new HtmlElementsWebpackPlugin( {
-				headTags: headImports,
+			new AngularCompilerPlugin( {
+				tsConfigPath: helpers.root( "tsconfig.json" ),
+				entryModule: helpers.root( "src/app/app.module#AppModule" ),
+				mainPath: helpers.root( "src/main.ts" ),
+				sourceMap: true,
 			} ),
-
 		],
 	};
-};
