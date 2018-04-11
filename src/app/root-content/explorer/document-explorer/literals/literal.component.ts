@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, AfterViewChecked, EventEmitter, ViewChild, ChangeDetectorRef } from "@angular/core";
 
-import { XSD } from "carbonldp/Vocabularies";
+import { XSD } from "carbonldp/Vocabularies/XSD";
 import { forEachOwnProperty } from "carbonldp/Utils";
 import { URI } from "carbonldp/RDF/URI";
 
@@ -987,11 +987,11 @@ export class LiteralComponent implements AfterViewChecked {
 	private getXSDDataTypes():any[] {
 		let xsdDataTypes:any[] = [];
 		forEachOwnProperty( XSD, ( key:string, value:any ):void => {
-			if( URI.isAbsolute( key ) ) {
+			if( URI.isAbsolute( value ) && key !== "namespace" ) {
 				xsdDataTypes.push( {
-					title: value,
-					description: XSD[ value ],
-					value: XSD[ value ],
+					title: key,
+					description: XSD[ key ],
+					value: XSD[ key ],
 				} );
 			}
 		} );
