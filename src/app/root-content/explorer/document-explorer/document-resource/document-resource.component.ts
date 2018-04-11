@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
+import { CarbonLDP } from "carbonldp"
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { DocumentsResolverService } from "app/root-content/explorer/document-explorer/documents-resolver.service";
@@ -19,6 +20,7 @@ export class DocumentResourceComponent implements AfterViewInit {
 	element:ElementRef;
 	$element:JQuery;
 	documentsResolverService:DocumentsResolverService;
+	carbonldp:CarbonLDP;
 
 	modes:Modes = Modes;
 	properties:PropertyRow[] = [];
@@ -58,9 +60,10 @@ export class DocumentResourceComponent implements AfterViewInit {
 	@Output() onChanges:EventEmitter<RootRecords> = new EventEmitter<RootRecords>();
 
 
-	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService ) {
+	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService, carbonldp:CarbonLDP ) {
 		this.element = element;
 		this.documentsResolverService = documentsResolverService;
+		this.carbonldp = carbonldp;
 	}
 
 	ngAfterViewInit():void {
@@ -127,7 +130,7 @@ export class DocumentResourceComponent implements AfterViewInit {
 		let newProperty:PropertyRow = <PropertyRow>{
 			added: <Property>{
 				id: "",
-				name: "http://www.example.com#New Property " + numberOfProperty,
+				name: `${this.carbonldp.baseURI}vocabularies/main/#New Property ${numberOfProperty}`,
 				value: []
 			},
 			isBeingCreated: true,
@@ -165,7 +168,7 @@ export class DocumentResourceComponent implements AfterViewInit {
 				copy: {
 					id: propName,
 					name: propName,
-					value: typeof this.rootNode[ propName ] !== "undefined"? this.rootNode[ propName ] : []
+					value: typeof this.rootNode[ propName ] !== "undefined" ? this.rootNode[ propName ] : []
 				}
 			} );
 		} );
