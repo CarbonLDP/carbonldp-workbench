@@ -3,9 +3,8 @@ import { Injectable, EventEmitter } from "@angular/core";
 import * as Cookies from "js-cookie";
 
 import { CarbonLDP } from "carbonldp";
-import { Response } from "carbonldp/HTTP";
-import * as PersistedUser from "carbonldp/Auth/PersistedUser";
-import * as Token from "carbonldp/Auth/Token";
+import { PersistedUser } from "carbonldp/Auth";
+import { TokenCredentials } from "carbonldp/Auth";
 
 import { AUTH_COOKIE } from "./../utils";
 
@@ -39,10 +38,10 @@ export class CarbonLDPAuthService implements AuthService.Class {
 	}
 
 	login( username:string, password:string, rememberMe:boolean ):Promise<any> {
-		return this.carbonldp.auth.authenticate( username, password ).then( ( token:Token.Class ) => {
+		return this.carbonldp.auth.authenticate( username, password ).then( ( token:TokenCredentials ) => {
 			if( rememberMe ) Cookies.set( AUTH_COOKIE, JSON.stringify( {
-				expirationTime: token.expirationTime,
-				key: token.key
+				expirationTime: token.expires,
+				key: token.token
 			} ) );
 			this.loggedInEmitter.emit( null );
 			return token;
