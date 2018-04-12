@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { Response } from "carbonldp/HTTP";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
 import { Pointer } from "carbonldp/Pointer";
 import { LDP } from "carbonldp/Vocabularies";
@@ -19,6 +18,7 @@ export class BackupsService {
 	}
 
 	upload( file:Blob ):Promise<void> {
+		// TODO: implement when SDK provides the upload method
 		return Promise.resolve();
 	}
 
@@ -27,9 +27,8 @@ export class BackupsService {
 	}
 
 	getDownloadURL( documentURI:string ):Promise<string> {
-		return this.carbonldp.documents.getDownloadURL( documentURI ).then( ( documentDownloadURI:string ) => {
-			return documentDownloadURI;
-		} );
+		// TODO: implement when SDK provides the getDownloadURL method
+		return Promise.resolve( "empty" );
 	}
 
 	delete( uri:string ):Promise<void> {
