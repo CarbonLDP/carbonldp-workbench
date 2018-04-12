@@ -3,9 +3,9 @@ import { Injector } from "@angular/core";
 import * as Cookies from "js-cookie";
 
 import { CarbonLDP } from "carbonldp";
-import * as Errors from "carbonldp/Errors";
+import { IllegalArgumentError } from "carbonldp/Errors";
 import { Errors as HTTPErrors } from "carbonldp/HTTP";
-import { Method, Token } from "carbonldp/Auth";
+import { AuthMethod, TokenCredentials } from "carbonldp/Auth";
 
 
 /**
@@ -50,15 +50,15 @@ export function authenticationCookieIsPresent():boolean {
 }
 
 export function authenticateWithCookie( carbonldp:CarbonLDP ):Promise<any> {
-	let token:Token.Class;
+	let token:TokenCredentials;
 	try {
 		token = <any>Cookies.getJSON( AUTH_COOKIE );
 	} catch( error ) {
 		return Promise.reject( error );
 	}
 	// TODO: change the "TOKEN" string to Method.TOKEN
-	return carbonldp.auth.authenticateUsing( "TOKEN", token ).catch( ( error ) => {
-		if( error instanceof Errors.IllegalArgumentError || error instanceof HTTPErrors.UnauthorizedError ) {
+	return carbonldp.auth.authenticateUsing( AuthMethod.TOKEN, token ).catch( ( error ) => {
+		if( error instanceof IllegalArgumentError || error instanceof HTTPErrors.UnauthorizedError ) {
 			// Invalid token
 			Cookies.remove( AUTH_COOKIE );
 		} else return Promise.reject( error );
