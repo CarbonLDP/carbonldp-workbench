@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## 1.0.0-alpha.4 (2018/04/12)
+
+- [#93](https://github.com/CarbonLDP/carbonldp-workbench/issues/93) - Property types dropdown is empty
+- Changed `http://example.com` to Carbon.baseURI +`vocabularies/main/` when creating new properties on a property name
+
 ## 1.0.0-alpha.3 (2018/03/27)
 
 - Resolved #87 - Use SDK's refactored version
