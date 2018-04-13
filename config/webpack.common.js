@@ -6,7 +6,6 @@ const workbench = require( "../package.json" );
 
 
 // Plugins
-const ContextReplacementPlugin = require( "webpack/lib/ContextReplacementPlugin" );
 const SplitChunksPlugin = require( "webpack/lib/optimize/SplitChunksPlugin" );
 const ProvidePlugin = require( "webpack/lib/ProvidePlugin" );
 const DefinePlugin = require( "webpack/lib/DefinePlugin" );
@@ -73,14 +72,6 @@ module.exports = function( metadata ) {
 		},
 
 		plugins: [
-
-			// Workaround for angular/angular#11580
-			new ContextReplacementPlugin(
-				// The (\\|\/) piece accounts for path separators in *nix and Windows
-				/\@angular(\\|\/)core(\\|\/)esm5/,
-				helpers.root( "./src" ), // location of your src
-				{} // a map of your routes
-			),
 
 			// Sends all imports from node_modules to vendor.ts
 			new SplitChunksPlugin( {
