@@ -1,13 +1,22 @@
 const helpers = require( "./webpack.helpers" );
 
+
+// carbonldp's projects versions
+const workbench = require( "../package.json" );
+
+
 // Plugins
+const ContextReplacementPlugin = require( "webpack/lib/ContextReplacementPlugin" );
 const SplitChunksPlugin = require( "webpack/lib/optimize/SplitChunksPlugin" );
 const ProvidePlugin = require( "webpack/lib/ProvidePlugin" );
+const DefinePlugin = require( "webpack/lib/DefinePlugin" );
 const CopyWebpackPlugin = require( "copy-webpack-plugin" );
+const HtmlWebpackPlugin = require( "html-webpack-plugin" );
 const AngularCompilerPlugin = require( "@ngtools/webpack" ).AngularCompilerPlugin;
 
 
-module.exports = {
+module.exports = function( metadata ) {
+	return {
 		entry: {
 			app: "./src/main.ts",
 			styles: "./src/styles.ts",
@@ -23,7 +32,7 @@ module.exports = {
 				"semantic-ui": helpers.root( "src/semantic/dist" ),
 			},
 			modules: [
-				helpers.root("src"),
+				helpers.root( "src" ),
 				helpers.root( "node_modules" )
 			]
 		},
@@ -65,6 +74,14 @@ module.exports = {
 
 		plugins: [
 
+			// Workaround for angular/angular#11580
+			new ContextReplacementPlugin(
+				// The (\\|\/) piece accounts for path separators in *nix and Windows
+				/\@angular(\\|\/)core(\\|\/)esm5/,
+				helpers.root( "./src" ), // location of your src
+				{} // a map of your routes
+			),
+
 			// Sends all imports from node_modules to vendor.ts
 			new SplitChunksPlugin( {
 				cacheGroups: {
@@ -98,6 +115,34 @@ module.exports = {
 				},
 			] ),
 
+			// Webpack inject scripts and links for us with the HtmlWebpackPlugin and also
+			// defines the order of the chunks: polyfills -> vendor -> app
+			new HtmlWebpackPlugin( {
+				filename: "index.html",
+				template: "src/index.html",
+				chunks: [ "polyfills", "vendor", "styles", "app" ],
+				chunksSortMode: "manual",
+				metadata: metadata
+			} ),
+
+			// Plugins that defines the following object when using process.SOMETHING
+			new DefinePlugin( {
+				"ENV": JSON.stringify( metadata.ENV ),
+				"process.env": {
+					"baseUrl": JSON.stringify( metadata.baseUrl ),
+					"ENV": JSON.stringify( metadata.ENV ),
+					"NODE_ENV": JSON.stringify( metadata.ENV ),
+					"CARBON": {
+						"protocol": JSON.stringify( metadata.CARBON.protocol ),
+						"domain": JSON.stringify( metadata.CARBON.domain ),
+					},
+					"PACKAGES": {
+						"carbonldp-workbench": JSON.stringify( workbench.version ),
+					},
+				}
+			} ),
+
+			// The instructions for the Typescript transpiler
 			new AngularCompilerPlugin( {
 				tsConfigPath: helpers.root( "tsconfig.json" ),
 				entryModule: helpers.root( "src/app/app.module#AppModule" ),
@@ -105,4 +150,5 @@ module.exports = {
 				sourceMap: true,
 			} ),
 		],
-	};
+	}
+};
