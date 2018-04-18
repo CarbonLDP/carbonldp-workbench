@@ -35,6 +35,10 @@ export class CarbonLDPAuthService implements AuthService.Class {
 		return this.carbonldp.auth.isAuthenticated();
 	}
 
+	getAuthenticatedUser():Promise<PersistedUser> {
+		return this.carbonldp.auth.authenticatedUser.resolve();
+	}
+
 	login( username:string, password:string, rememberMe:boolean ):Promise<any> {
 		return this.carbonldp.auth.authenticate( username, password ).then( ( token:TokenCredentials ) => {
 			if( rememberMe ) {
