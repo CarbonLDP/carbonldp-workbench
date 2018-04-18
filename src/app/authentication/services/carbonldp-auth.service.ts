@@ -3,11 +3,9 @@ import { Injectable, EventEmitter } from "@angular/core";
 import * as Cookies from "js-cookie";
 
 import { CarbonLDP } from "carbonldp";
-import { PersistedUser } from "carbonldp/Auth";
-import { TokenCredentials } from "carbonldp/Auth";
+import { User, PersistedUser, TokenCredentials, UsernameAndPasswordCredentials } from "carbonldp/Auth";
 
 import { AUTH_COOKIE } from "./../utils";
-
 import * as AuthService from "./auth.service";
 
 @Injectable()
@@ -54,12 +52,18 @@ export class CarbonLDPAuthService implements AuthService.Class {
 		this.loggedOutEmitter.emit( null );
 	}
 
-	register( name:string, username:string, password:string ):Promise<any>;
-	register( name:string, username:string, password:string, enabled:boolean ):Promise<any>;
-	register( name:string, username:string, password:string, enabled?:boolean ):Promise<any> {
-		return this.carbonldp.auth.users.register( username, password, enabled ).then( ( persistedUser:PersistedUser.Class ) => {
-			persistedUser.name = name;
-			return persistedUser.saveAndRefresh();
+	register( name:string, username:string, password:string ):Promise<PersistedUser>;
+	register( name:string, username:string, password:string, enabled:boolean ):Promise<PersistedUser>;
+	register( name:string, username:string, password:string, enabled?:boolean ):Promise<PersistedUser> {
+
+		let newUser:User = User.create( {
+			name: name,
+			credentials: UsernameAndPasswordCredentials.create( {
+				username: username,
+				password: password
+			} )
 		} );
+
+		return this.carbonldp.auth.users.createChild( newUser );
 	}
 }
