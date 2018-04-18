@@ -68,25 +68,24 @@ export class WorkbenchView {
 		} );
 
 		let name:string = (this.carbonldp.auth.authenticatedUser && this.carbonldp.auth.authenticatedUser.name) ? this.carbonldp.auth.authenticatedUser.name : "User";
-		// TODO: Remove any to use HeaderItem instead
-		this.headerService.addItems( <any>[
+		this.headerService.addItems( [
 			{
 				name: "Dashboard",
 				route: [ "" ],
 				index: 0,
 			},
-			// {
-			// 	name: name,
-			// 	children: [
-			// 		{
-			// 			icon: "sign out icon",
-			// 			name: "Log Out",
-			// 			onClick: onLogout,
-			// 			index: 100,
-			// 		}
-			// 	],
-			// 	index: 100,
-			// }
+			{
+				name: name,
+				children: [
+					{
+						icon: "sign out icon",
+						name: "Log Out",
+						onClick: onLogout,
+						index: 100,
+					}
+				],
+				index: 100,
+			}
 		] );
 	}
 
@@ -112,12 +111,12 @@ export class WorkbenchView {
 				icon: "terminal icon",
 				route: [ this.base, "sparql-client" ],
 			},
-			// {
-			// 	type: "link",
-			// 	name: "Security",
-			// 	icon: "lock icon",
-			// 	route: [ this.base, "security", "users" ],
-			// },
+			{
+				type: "link",
+				name: "Security",
+				icon: "lock icon",
+				route: [ this.base, "security", "users" ],
+			},
 			// {
 			// 	type: "link",
 			// 	name: "Configuration",
