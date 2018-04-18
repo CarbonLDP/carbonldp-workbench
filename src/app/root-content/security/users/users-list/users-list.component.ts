@@ -2,8 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute, NavigationExtras } from "@angular/router";
 
 import { CarbonLDP } from "carbonldp";
-import * as User from "carbonldp/Auth/User";
-import * as PersistedUser from "carbonldp/Auth/PersistedUser";
+import { User, PersistedUser } from "carbonldp/Auth";
 import { URI } from "carbonldp/RDF/URI";
 
 import { UsersService } from "../users.service";
@@ -33,9 +32,9 @@ export class UsersListComponent implements OnInit {
 	private ascending:boolean = false;
 
 	public errorMessage:Message;
-	public users:PersistedUser.Class[] = [];
+	public users:PersistedUser[] = [];
 	public loading:boolean = false;
-	public deletingUser:User.Class;
+	public deletingUser:User;
 
 
 	constructor( router:Router, carbonldp:CarbonLDP, route:ActivatedRoute, usersService:UsersService ) {
@@ -54,7 +53,7 @@ export class UsersListComponent implements OnInit {
 		this.getNumberOfUsers().then( ( amount:number ) => {
 			this.totalUsers = amount;
 			return this.getUsers();
-		} ).then( ( users:PersistedUser.Class[] ) => {
+		} ).then( ( users:PersistedUser[] ) => {
 			this.users = users;
 		} ).catch( ( error ) => {
 			console.error( error );
@@ -64,23 +63,23 @@ export class UsersListComponent implements OnInit {
 		} );
 	}
 
-	private getUsers():Promise<PersistedUser.Class[]> {
-		return this.usersService.getAll( this.usersPerPage, this.activePage, this.sortedColumn, this.ascending ).then( ( users:PersistedUser.Class[] ) => {
-			return users.filter( ( user:PersistedUser.Class ) => { return user.id.indexOf( "/users/me/" ) === - 1 } );
+	private getUsers():Promise<PersistedUser[]> {
+		return this.usersService.getAll( this.usersPerPage, this.activePage, this.sortedColumn, this.ascending ).then( ( users:PersistedUser[] ) => {
+			return users.filter( ( user:PersistedUser ) => { return user.id.indexOf( "/users/me/" ) === - 1 } );
 		} );
 	}
 
-	private openUser( event:Event, user:PersistedUser.Class ):void {
+	private openUser( event:Event, user:PersistedUser ):void {
 		event.stopPropagation();
 		this.goToUser( user );
 	}
 
-	private onClickEditUser( event:Event, user:PersistedUser.Class ):void {
+	private onClickEditUser( event:Event, user:PersistedUser ):void {
 		event.stopPropagation();
 		this.goToUser( user, true );
 	}
 
-	private goToUser( user:PersistedUser.Class, edit?:boolean ):void {
+	private goToUser( user:PersistedUser, edit?:boolean ):void {
 		let slug:string = URI.getSlug( user.id );
 		let extras:NavigationExtras = { relativeTo: this.route };
 		if( edit ) extras.queryParams = { mode: UserDetailsModes.EDIT };
@@ -91,7 +90,7 @@ export class UsersListComponent implements OnInit {
 		this.loadUsers();
 	}
 
-	private onClickDeleteUser( event:Event, user:User.Class ):void {
+	private onClickDeleteUser( event:Event, user:User ):void {
 		event.stopPropagation();
 		this.deletingUser = user;
 	}
