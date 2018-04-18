@@ -2,6 +2,7 @@ import { Component, Inject, EventEmitter } from "@angular/core";
 import { Router, Event, NavigationEnd } from "@angular/router";
 
 import { CarbonLDP } from "carbonldp";
+import { PersistedUser } from "carbonldp/Auth";
 
 import { AuthService } from "app/authentication/services";
 import { HeaderService } from "app/header/header.service";
@@ -46,12 +47,20 @@ export class WorkbenchView {
 
 
 	ngOnInit():void {
-		this.populateHeader();
+		this.getAuthenticatedUser()
+			.catch( error => console.error( error ) )
+			.then( () => {
+				this.populateHeader();
+			} );
 		this.populateSidebar();
 	}
 
 	toggleSidebar():void {
 		this.sidebarService.toggle();
+	}
+
+	private getAuthenticatedUser():Promise<PersistedUser> {
+		return this.carbonldp.auth.authenticatedUser.resolve();
 	}
 
 	private populateHeader():void {
@@ -67,7 +76,7 @@ export class WorkbenchView {
 			this.router.navigate( [ "/login" ] );
 		} );
 
-		let name:string = (this.carbonldp.auth.authenticatedUser && this.carbonldp.auth.authenticatedUser.name) ? this.carbonldp.auth.authenticatedUser.name : "User";
+		let name:string = ! ! this.carbonldp.auth.authenticatedUser.name ? this.carbonldp.auth.authenticatedUser.name : "User";
 		this.headerService.addItems( [
 			{
 				name: "Dashboard",
