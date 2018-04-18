@@ -37,11 +37,10 @@ export class CarbonLDPAuthService implements AuthService.Class {
 
 	login( username:string, password:string, rememberMe:boolean ):Promise<any> {
 		return this.carbonldp.auth.authenticate( username, password ).then( ( token:TokenCredentials ) => {
-			if( rememberMe ) Cookies.set( AUTH_COOKIE, JSON.stringify( {
-				expirationTime: token.expires,
-				key: token.token
-			} ) );
-			this.loggedInEmitter.emit( null );
+			if( rememberMe ) {
+				Cookies.set( AUTH_COOKIE, JSON.stringify( token ) );
+			}
+			this.loggedInEmitter.emit( token );
 			return token;
 		} );
 	}
