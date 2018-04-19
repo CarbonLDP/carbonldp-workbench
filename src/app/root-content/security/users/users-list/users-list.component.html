@@ -1,3 +1,4 @@
+<!-- START: Users menu -->
 <div class="ui equal width grid">
 	<div class="column">
 		<button class="ui icon basic inverted button" title="Refresh my users"
@@ -9,6 +10,10 @@
 		</button>
 	</div>
 </div>
+<!-- END: Users menu-->
+
+
+<!-- START: Users list -->
 <div class="ui active centered large inline text inverted loader" *ngIf="loading">Loading</div>
 <div class="users list" [hidden]="loading">
 	<table class="ui selectable sortable celled small very compact table" *ngIf="users.length > 0">
@@ -28,7 +33,7 @@
 				<td>
 					<span>{{user.name}}</span>
 					<br>
-					<span>{{user.id}}</span>
+					<span class="user-id">{{user.id}}</span>
 				</td>
 				<td>
 					{{user.created | date:"MMM dd, yyyy - hh:mm a"}}
@@ -76,9 +81,14 @@
 		</tfoot>
 	</table>
 	<div class="ui warning message" *ngIf="users.length===0 && !errorMessage">
-		<i class="attention icon"></i> There are no <strong>Users</strong> to display
+		<i class="attention icon"></i> There are no <strong>users</strong> to display
 	</div>
 	<cw-message [message]="errorMessage" [type]="'error'" *ngIf="!!errorMessage"></cw-message>
 </div>
+<!-- END: Users list -->
+
+
+<!-- START: User deleter -->
 <!--Ask for user deletion-->
 <cw-user-deleter #userDeleter [user]="deletingUser" (onSuccess)="refreshUsers()"></cw-user-deleter>
+<!-- END: User deleter -->

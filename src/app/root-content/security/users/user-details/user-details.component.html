@@ -1,4 +1,8 @@
+<!-- START: User details form -->
 <form class="ui error form" #userForm="ngForm" (submit)="onSubmit(userForm.value, $event)">
+
+
+	<!-- START: User name -->
 	<div class="ui top attached title segment">
 		<button class="ui icon right floated circular basic mini button" title="Close" type="button"
 		        *ngIf="canClose"
@@ -10,6 +14,10 @@
 			<span class="sub header">{{user?.id}}</span>
 		</h3>
 	</div>
+	<!-- END: User name -->
+
+
+	<!-- START: User options buttons -->
 	<div class="ui attached segment" *ngIf="mode !== Modes.CREATE">
 		<button *ngIf="mode === Modes.READ"
 		        class="ui mini basic icon button"
@@ -21,10 +29,18 @@
 			Editing...
 		</div>
 	</div>
+	<!-- END: User options buttons -->
+
+
+	<!-- START: User details -->
 	<div class="ui attached segment">
 		<div class="ui two column divided grid">
 			<div class="stretched row">
+
+				<!-- START: Left side -->
 				<div class="column">
+
+					<!-- START: Name input -->
 					<div class="field"
 					     [ngClass]="{error: !name.valid}">
 						<label>Name:</label>
@@ -41,6 +57,10 @@
 							<span *ngIf="name.control.hasError('required')">Please enter a name</span>
 						</cw-error-label>
 					</div>
+					<!-- END: Name input -->
+
+
+					<!-- START: Slug input -->
 					<div class="field"
 					     [ngClass]="{error: !slug.valid}"
 					     *ngIf="mode === Modes.CREATE">
@@ -58,6 +78,10 @@
 							<span *ngIf="slug.control.hasError('invalidSlug')">Please, provide a valid slug/id for the user. (Only numbers and letters with dashes)</span>
 						</cw-error-label>
 					</div>
+					<!-- END: Slug input -->
+
+
+					<!-- START: Email input -->
 					<div class="field"
 					     [ngClass]="{error: !email.valid}">
 						<label>Email:</label>
@@ -75,6 +99,10 @@
 						</cw-error-label>
 					</div>
 					<div class="ui divider" *ngIf="mode !== Modes.READ"></div>
+					<!-- END: Email input -->
+
+
+					<!-- START: Password input -->
 					<div class="field"
 					     [ngClass]="{ error: !password.valid }">
 						<label>Password:</label>
@@ -92,6 +120,10 @@
 							<span *ngIf="password.control.hasError('requiredIf')">Please enter a password</span>
 						</cw-error-label>
 					</div>
+					<!-- END: Password input -->
+
+
+					<!-- START: Password confirm input -->
 					<div class="field"
 					     [ngClass]="{ error: !repeatPassword.valid }">
 						<label>Password Confirmation:</label>
@@ -113,8 +145,16 @@
 							<span *ngIf="repeatPassword.control.hasError('matchError')">The password confirmation doesn't match the password</span>
 						</cw-error-label>
 					</div>
+					<!-- END: Password confirm input -->
+
 				</div>
+				<!-- END: Left side -->
+
+
+				<!-- START: Right side -->
 				<div class="column">
+
+					<!-- START: Roles input -->
 					<div class="field">
 						<label>Roles: <span cw-grayed-out>(Optional)</span></label>
 						<div class="ui fluid roles input">
@@ -145,7 +185,13 @@
 							                  (onChangeSelection)="changeRoles($event)"></cw-roles-chooser>
 						</div>
 					</div>
+					<!-- END: Roles input -->
+
+
 					<div class="ui divider" *ngIf="mode !== Modes.READ"></div>
+
+
+					<!-- START: User enabled or disabled input -->
 					<div class="field">
 						<div class="ui enabled checkbox">
 							<input type="checkbox" name="enabled"
@@ -155,10 +201,17 @@
 							<label>Active User</label>
 						</div>
 					</div>
+					<!-- END: User enabled or disabled input -->
+
 				</div>
+				<!-- END: Right side -->
 			</div>
 		</div>
 	</div>
+	<!-- END: User details -->
+
+
+	<!-- START: User options buttons -->
 	<cw-message class="ui attached segment" [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="closeError($event)" *ngIf="!!errorMessage"></cw-message>
 	<div class="ui bottom attached segment" *ngIf="mode !== Modes.READ">
 		<button class="ui mini basic right floated button" type="submit"
@@ -173,6 +226,10 @@
 		<button class="ui mini basic button" type="button" title="Cancel" (click)="cancelForm($event)">Cancel</button>
 	</div>
 </form>
+<!-- END: User details form -->
+
+
+<!-- START: Success Message -->
 <div class="ui success message transition" #message *ngIf="!!displaySuccessMessage">
 	<i class="close icon" (click)="closeSuccessMessage($event, message)"></i>
 	<div class="header" [ngSwitch]="mode">
@@ -183,3 +240,4 @@
 	</p>
 	<p *ngIf="timer>0">You will be redirected to your users list in <strong class="timer">{{timer}}</strong> seconds.</p>
 </div>
+<!-- END: Success Message -->
