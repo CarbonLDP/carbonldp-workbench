@@ -42,7 +42,7 @@
 @googleFontName    : @fontName;
 @googleProtocol    : 'https://';
 @googleFontRequest : '@{googleFontName}:@{googleFontSizes}&subset=@{googleSubset}';
-@importGoogleFonts : true;
+@importGoogleFonts : false;
 
 /*-------------------
       Site Colors

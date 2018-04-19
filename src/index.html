@@ -11,10 +11,6 @@
 	<meta name="theme-color" content="#ffffff">
 
 	<title>Carbon LDP</title>
-	<% if (webpackConfig.htmlElements.headTags) { %>
-	<!-- Configured Head Tags  -->
-	<%= webpackConfig.htmlElements.headTags %>
-	<% } %>
 
 	<% if (htmlWebpackPlugin.options.metadata.isDevServer) { %>
 	<base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
