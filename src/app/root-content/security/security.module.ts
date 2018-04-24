@@ -36,6 +36,7 @@ import { UsersService } from "./users/users.service";
 import { RolesService } from "./roles/roles.service";
 import { UserResolver } from "./users/user.resolver";
 import { RoleResolver } from "./roles/role.resolver";
+import { CredentialsService } from "./credentials/credentials.service";
 
 
 @NgModule( {
@@ -72,6 +73,7 @@ import { RoleResolver } from "./roles/role.resolver";
 		RolesService,
 		UserResolver,
 		RoleResolver,
+		CredentialsService,
 	],
 } )
 export class SecurityModule {
