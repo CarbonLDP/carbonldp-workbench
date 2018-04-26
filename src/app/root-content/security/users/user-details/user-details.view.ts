@@ -30,7 +30,7 @@ export class UserDetailsView {
 			this.user = data.user;
 		} );
 		this.activatedRoute.queryParams.subscribe( ( params ) => {
-			this.mode = params[ "mode" ] ? params[ "mode" ] : Modes.READ;
+			this.mode = params[ "mode" ] ? params[ "mode" ] : Modes.EDIT;
 		} );
 	}
 
