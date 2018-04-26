@@ -34,179 +34,176 @@
 
 	<!-- START: User details -->
 	<div class="ui attached segment">
-		<div class="ui two column divided grid">
-			<div class="stretched row">
 
-				<!-- START: Left side -->
-				<div class="column">
-
-					<!-- START: Name input -->
-					<div class="field"
-					     [ngClass]="{error: !name.valid}">
-						<label>Name:</label>
-						<div class="ui fluid input">
-							<input type="text" name="name"
-							       placeholder="E.g: User Name"
-							       #name="cwValidation" cwValidation required
-							       [(ngModel)]="userFormModel.name"
-							       [disabled]="mode === Modes.READ"
-							       (input)="userFormModel.slug = (mode === Modes.CREATE)? getSanitizedSlug($event.srcElement.value) : userFormModel.slug"
-							       (blur)="userFormModel.slug = getSanitizedSlug($event.srcElement.value)">
-						</div>
-						<cw-error-label *ngIf="!name.valid">
-							<span *ngIf="name.control.hasError('required')">Please enter a name</span>
-						</cw-error-label>
-					</div>
-					<!-- END: Name input -->
-
-
-					<!-- START: Slug input -->
-					<div class="field"
-					     [ngClass]="{error: !slug.valid}"
-					     *ngIf="mode === Modes.CREATE">
-						<label>Slug: <span cw-grayed-out>(Optional)</span></label>
-						<div class="ui fluid input">
-							<input type="text" name="slug"
-							       placeholder="E.g: my-user-slug/"
-							       #slug="cwValidation" cwValidation cw-slug
-							       [ngModel]="userFormModel.slug"
-							       [disabled]="mode === Modes.READ"
-							       (ngModelChange)="userFormModel.slug = getSanitizedSlug($event)"
-							       (blur)="slugLostFocus($event)">
-						</div>
-						<cw-error-label *ngIf="!slug.valid">
-							<span *ngIf="slug.control.hasError('invalidSlug')">Please, provide a valid slug/id for the user. (Only numbers and letters with dashes)</span>
-						</cw-error-label>
-					</div>
-					<!-- END: Slug input -->
-
-
-					<!-- START: Email input -->
-					<div class="field"
-					     [ngClass]="{error: !email.valid}">
-						<label>Email:</label>
-						<div class="ui left icon fluid input">
-							<i class="mail icon"></i>
-							<input type="text" name="email"
-							       placeholder="E.g: user@example.com"
-							       #email="cwValidation" cwValidation required cw-email
-							       [(ngModel)]="userFormModel.email"
-							       [disabled]="mode === Modes.READ">
-						</div>
-						<cw-error-label *ngIf="!email.valid">
-							<span *ngIf="email.control.hasError('required')">Please enter an email</span>
-							<span *ngIf="email.control.hasError('invalidEmailAddress')">Please enter a valid email address</span>
-						</cw-error-label>
-					</div>
-					<div class="ui divider" *ngIf="mode !== Modes.READ"></div>
-					<!-- END: Email input -->
-
-
-					<!-- START: Password input -->
-					<div class="field"
-					     [ngClass]="{ error: !password.valid }">
-						<label>Password:</label>
-						<div class="ui left icon input">
-							<i class="lock icon"></i>
-							<input type="password" name="password"
-							       class="field password"
-							       placeholder="Password"
-							       #password="cwValidation" cwValidation
-							       cw-required-if [condition]="mode===Modes.CREATE"
-							       [(ngModel)]="userFormModel.password"
-							       [disabled]="mode === Modes.READ">
-						</div>
-						<cw-error-label *ngIf="!password.valid">
-							<span *ngIf="password.control.hasError('requiredIf')">Please enter a password</span>
-						</cw-error-label>
-					</div>
-					<!-- END: Password input -->
-
-
-					<!-- START: Password confirm input -->
-					<div class="field"
-					     [ngClass]="{ error: !repeatPassword.valid }">
-						<label>Password Confirmation:</label>
-						<div class="ui left icon input">
-							<i class="lock icon"></i>
-							<input type="password" name="repeatPassword"
-							       class="field repeatPassword"
-							       placeholder="Repeat password"
-							       #repeatPassword="cwValidation" cwValidation
-							       cw-required-if [condition]="mode===Modes.CREATE"
-							       cw-match [matchTo]="userFormModel.password"
-							       [(ngModel)]="userFormModel.repeatPassword"
-							       [control]="repeatPasswordControl"
-							       #repeatPasswordControl="ngModel"
-							       [disabled]="mode === Modes.READ">
-						</div>
-						<cw-error-label *ngIf="!repeatPassword.valid">
-							<span *ngIf="repeatPassword.control.hasError('requiredIf')">Please enter the password confirmation</span>
-							<span *ngIf="repeatPassword.control.hasError('matchError')">The password confirmation doesn't match the password</span>
-						</cw-error-label>
-					</div>
-					<!-- END: Password confirm input -->
-
-				</div>
-				<!-- END: Left side -->
-
-
-				<!-- START: Right side -->
-				<div class="column">
-
-					<!-- START: Roles input -->
-					<div class="field">
-						<label>Roles: <span cw-grayed-out>(Optional)</span></label>
-						<div class="ui fluid roles input">
-							<select multiple name="roles"
-							        class="roles hidden"
-							        [(ngModel)]="userFormModel.roles">
-								<option value="">Please Select</option>
-								<option *ngFor="let role of userFormModel.roles" [ngValue]="country">{{role}}</option>
-							</select>
-							<table class="ui very compact very basic small celled striped roles table" *ngIf="mode === Modes.READ">
-								<tbody>
-									<tr class="bottom aligned role" *ngFor="let role of userRoles; let i = index;">
-										<td>
-											{{role.name}}<br>
-											{{role.id}}
-										</td>
-									</tr>
-									<tr class="warning" *ngIf="userRoles.length===0">
-										<td>
-											<i class="attention icon"></i>User without Roles.
-										</td>
-									</tr>
-								</tbody>
-							</table>
-							<cw-roles-chooser *ngIf="mode !== Modes.READ"
-							                  [selectedRoles]="userRoles"
-							                  [bordered]="false"
-							                  (onChangeSelection)="changeRoles($event)"></cw-roles-chooser>
-						</div>
-					</div>
-					<!-- END: Roles input -->
-
-
-					<div class="ui divider" *ngIf="mode !== Modes.READ"></div>
-
-
-					<!-- START: User enabled or disabled input -->
-					<div class="field">
-						<div class="ui enabled checkbox">
-							<input type="checkbox" name="enabled"
-							       #enabled="cwValidation" cwValidation required
-							       [(ngModel)]="userFormModel.enabled"
-							       [disabled]="mode === Modes.READ">
-							<label>Active User</label>
-						</div>
-					</div>
-					<!-- END: User enabled or disabled input -->
-
-				</div>
-				<!-- END: Right side -->
-			</div>
+		<!-- START: Tabs -->
+		<div class="ui top attached tabular menu">
+			<a class="active item" data-tab="credentials">Credentials</a>
 		</div>
+		<!-- END: Tabs -->
+
+
+		<!-- START: Credentials Tab -->
+		<div class="ui bottom attached active tab segment credentialsTab" data-tab="credentials">
+
+			<div class="ui segments">
+				<div class="ui segment credentialsTab-description">
+					<p>This user currently authenticates using Basic credentials (Username and Password).</p>
+				</div>
+				<div class="ui segment credentialsTab-credentials">
+					<div class="ui grid">
+
+						<div class="two wide column credentials-types">
+
+							<!-- START: credentials-types menu-->
+							<div class="ui vertical fluid tabular menu">
+								<a class="active item" data-tab="credentials-basic">
+									Basic
+								</a>
+							</div>
+							<!-- END: credentials-types menu-->
+
+						</div>
+
+						<div class="fourteen wide stretched column credentials-content">
+
+							<!-- START: credentials-types -->
+							<div class="ui active tab" data-tab="credentials-basic">
+								<!-- START: Slug input -->
+								<div class="field credentialsTab-slug"
+								     [ngClass]="{error: !slug.valid}"
+								     *ngIf="mode === Modes.CREATE">
+									<label>Slug: <span cw-grayed-out>(Optional)</span></label>
+									<div class="ui fluid input">
+										<input type="text" name="slug"
+										       placeholder="E.g: my-user-slug/"
+										       #slug="cwValidation" cwValidation cw-slug
+										       [ngModel]="userFormModel.slug"
+										       [disabled]="mode === Modes.READ"
+										       (ngModelChange)="userFormModel.slug = getSanitizedSlug($event)"
+										       (blur)="slugLostFocus($event)">
+									</div>
+									<cw-error-label *ngIf="!slug.valid">
+										<span *ngIf="slug.control.hasError('invalidSlug')">Please, provide a valid slug/id for the user. (Only numbers and letters with dashes)</span>
+									</cw-error-label>
+								</div>
+								<!-- END: Slug input -->
+
+
+								<!-- START: Username input -->
+								<div class="field credentialsTab-username"
+								     [ngClass]="{error: !username.valid}">
+									<label>Username:</label>
+									<div class="ui left icon fluid input">
+										<i class="user icon"></i>
+										<input type="text" name="username"
+										       placeholder="E.g: john-doe"
+										       #username="cwValidation" cwValidation required
+										       [(ngModel)]="userFormModel.username"
+										       [disabled]="mode === Modes.READ">
+									</div>
+									<cw-error-label *ngIf="!username.valid">
+										<span *ngIf="username.control.hasError('required')">Please enter a username</span>
+									</cw-error-label>
+								</div>
+								<!--<div class="ui divider" *ngIf="mode !== Modes.READ"></div>-->
+								<!-- END: Username input -->
+
+
+								<!-- START: Password input -->
+								<div class="field credentialsTab-password"
+								     [ngClass]="{ error: !password.valid }">
+									<label>Password:</label>
+									<div class="ui left icon input">
+										<i class="lock icon"></i>
+										<input type="password" name="password"
+										       class="field password"
+										       placeholder="Password"
+										       #password="cwValidation" cwValidation
+										       cw-required-if [condition]="mode===Modes.CREATE"
+										       [(ngModel)]="userFormModel.password"
+										       [disabled]="mode === Modes.READ">
+									</div>
+									<cw-error-label *ngIf="!password.valid">
+										<span *ngIf="password.control.hasError('requiredIf')">Please enter a password</span>
+									</cw-error-label>
+								</div>
+								<!-- END: Password input -->
+
+
+								<!-- START: Password confirm input -->
+								<div class="field credentialsTab-repeatPassword"
+								     [ngClass]="{ error: !repeatPassword.valid }">
+									<label>Password Confirmation:</label>
+									<div class="ui left icon input">
+										<i class="lock icon"></i>
+										<input type="password" name="repeatPassword"
+										       class="field repeatPassword"
+										       placeholder="Repeat password"
+										       #repeatPassword="cwValidation" cwValidation
+										       cw-required-if [condition]="mode===Modes.CREATE"
+										       cw-match [matchTo]="userFormModel.password"
+										       [(ngModel)]="userFormModel.repeatPassword"
+										       [control]="repeatPasswordControl"
+										       #repeatPasswordControl="ngModel"
+										       [disabled]="mode === Modes.READ">
+									</div>
+									<cw-error-label *ngIf="!repeatPassword.valid">
+										<span *ngIf="repeatPassword.control.hasError('requiredIf')">Please enter the password confirmation</span>
+										<span *ngIf="repeatPassword.control.hasError('matchError')">The password confirmation doesn't match the password</span>
+									</cw-error-label>
+								</div>
+								<!-- END: Password confirm input -->
+							</div>
+							<!-- END: credentials-types -->
+
+						</div>
+
+					</div>
+				</div>
+			</div>
+
+
+		</div>
+		<!-- END: Credentials Tab -->
+
+
+		<!-- START: Roles Tab -->
+		<div class="ui bottom attached tab segment" data-tab="roles">
+			<!-- START: Roles input -->
+			<div class="field">
+				<label>Roles: <span cw-grayed-out>(Optional)</span></label>
+				<div class="ui fluid roles input">
+					<select multiple name="roles"
+					        class="roles hidden"
+					        [(ngModel)]="userFormModel.roles">
+						<option value="">Please Select</option>
+						<option *ngFor="let role of userFormModel.roles" [ngValue]="country">{{role}}</option>
+					</select>
+					<table class="ui very compact very basic small celled striped roles table" *ngIf="mode === Modes.READ">
+						<tbody>
+							<tr class="bottom aligned role" *ngFor="let role of userRoles; let i = index;">
+								<td>
+									{{role.name}}<br>
+									{{role.id}}
+								</td>
+							</tr>
+							<tr class="warning" *ngIf="userRoles.length===0">
+								<td>
+									<i class="attention icon"></i>User without Roles.
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<cw-roles-chooser *ngIf="mode !== Modes.READ && false"
+					                  [selectedRoles]="userRoles"
+					                  [bordered]="false"
+					                  (onChangeSelection)="changeRoles($event)"></cw-roles-chooser>
+				</div>
+			</div>
+			<!-- END: Roles input -->
+		</div>
+		<!-- END: Roles Tab -->
+
 	</div>
 	<!-- END: User details -->
 
