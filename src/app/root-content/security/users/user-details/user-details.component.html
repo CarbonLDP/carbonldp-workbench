@@ -17,21 +17,6 @@
 	<!-- END: User name -->
 
 
-	<!-- START: User options buttons -->
-	<div class="ui attached segment" *ngIf="mode !== Modes.CREATE">
-		<button *ngIf="mode === Modes.READ"
-		        class="ui mini basic icon button"
-		        (click)="changeMode(Modes.EDIT)">
-			<i class="edit icon"></i>
-			Edit
-		</button>
-		<div class="ui basic label" *ngIf="mode === Modes.EDIT">
-			Editing...
-		</div>
-	</div>
-	<!-- END: User options buttons -->
-
-
 	<!-- START: User details -->
 	<div class="ui attached segment">
 
@@ -44,29 +29,36 @@
 
 		<!-- START: Credentials Tab -->
 		<div class="ui bottom attached active tab segment credentialsTab" data-tab="credentials">
-
 			<div class="ui segments">
+
+
+				<!-- START: credentials description -->
 				<div class="ui segment credentialsTab-description">
 					<p>This user currently authenticates using Basic credentials (Username and Password).</p>
 				</div>
+				<!-- END: credentials description -->
+
+
+				<!-- START: credentials contents -->
 				<div class="ui segment credentialsTab-credentials">
 					<div class="ui grid">
 
-						<div class="two wide column credentials-types">
 
-							<!-- START: credentials-types menu-->
+						<!-- START: credentials-types tabs menu-->
+						<div class="two wide column credentials-types">
 							<div class="ui vertical fluid tabular menu">
 								<a class="active item" data-tab="credentials-basic">
 									Basic
 								</a>
 							</div>
-							<!-- END: credentials-types menu-->
-
 						</div>
+						<!-- END: credentials-types tabs menu-->
 
+
+						<!-- START: credentials-types -->
 						<div class="fourteen wide stretched column credentials-content">
 
-							<!-- START: credentials-types -->
+							<!-- START: credentials-type basic -->
 							<div class="ui active tab" data-tab="credentials-basic">
 								<!-- START: Slug input -->
 								<div class="field credentialsTab-slug"
@@ -105,7 +97,6 @@
 										<span *ngIf="username.control.hasError('required')">Please enter a username</span>
 									</cw-error-label>
 								</div>
-								<!--<div class="ui divider" *ngIf="mode !== Modes.READ"></div>-->
 								<!-- END: Username input -->
 
 
@@ -154,15 +145,14 @@
 								</div>
 								<!-- END: Password confirm input -->
 							</div>
-							<!-- END: credentials-types -->
-
+							<!-- END: credentials-type basic -->
 						</div>
-
+						<!-- END: credentials-types -->
 					</div>
 				</div>
+				<!-- END: credentials contents -->
+
 			</div>
-
-
 		</div>
 		<!-- END: Credentials Tab -->
 
