@@ -157,7 +157,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 		$event.preventDefault();
 		switch( this.mode ) {
 			case Modes.EDIT:
-				this.editUser( this.user, data );
+				this.editUser( this.user, this.credentials, data );
 				break;
 			case Modes.CREATE:
 				this.createUser( data );
@@ -165,22 +165,32 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 		}
 	}
 
-	private editUser( user:PersistedUser, userData:UserFormModel ):void {
-		// user.name = userData.name;
-		// user.credentials.username = userData.email;
-		// user.credentials.password = userData.password.trim().length > 0 ? userData.password : user.credentials.password;
-		// // TODO: set user enabled when functionality is added to platform
-		// user.saveAndRefresh().then( ( updatedUser:PersistedUser ) => {
-		// 	return this.editUserRoles( user, userData.roles );
-		// } ).then( () => {
-		// 	this.displaySuccessMessage = true;
-		// 	this.onSuccess.emit( true );
-		// 	this.cancelForm();
-		// } ).catch( ( error ) => {
-		// 	this.errorMessage = ErrorMessageGenerator.getErrorMessage( error );
-		// 	if( typeof error.name !== "undefined" ) this.errorMessage.title = error.name;
-		// 	this.onError.emit( true );
-		// } );
+	private editUser( user:PersistedUser, credentials:UsernameAndPasswordCredentials | LDAPCredentials, userFormData:UserFormModel ):void {
+		credentials = credentials as UsernameAndPasswordCredentials;
+
+		let changedCredentials:BasicCredentialsFormModel = userFormData.basicCredentialsFormModel,
+			usernameHasChanged:boolean = credentials.username !== changedCredentials.username,
+			passwordHasChanged:boolean = ! ! changedCredentials.password && changedCredentials.password.trim().length > 0;
+
+		if( usernameHasChanged || passwordHasChanged ) {
+			user.credentials = UsernameAndPasswordCredentials.create( {
+				username: usernameHasChanged ? changedCredentials.username : null,
+				password: passwordHasChanged ? changedCredentials.password : null
+			} );
+		}
+
+		this.usersService.saveAndRefreshUser( user ).then( ( updatedUser:PersistedUser ) => {
+			// TODO: set user roles
+			this.displaySuccessMessage = true;
+			this.onSuccess.emit( true );
+			this.changeUser( updatedUser );
+		} ).catch( ( error ) => {
+			this.errorMessage = ErrorMessageGenerator.getErrorMessage( error );
+			if( typeof error.name !== "undefined" ) {
+				this.errorMessage.title = error.name;
+			}
+			this.onError.emit( true );
+		} );
 	}
 
 	private createUser( userFormData:UserFormModel ):void {
@@ -189,6 +199,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 
 		this.usersService.createUser( credential, userFormData.slug ).then( ( createdUser:PersistedUser ) => {
 			this.user = createdUser;
+			this.credentials = createdUser.credentials;
 			// TODO: Add roles after persisting the user
 			let successMessage:Message = {
 				title: "User Created",

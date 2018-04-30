@@ -2,7 +2,6 @@ import { Injectable, EventEmitter } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { User, PersistedUser, UsernameAndPasswordCredentials, LDAPCredentials } from "carbonldp/Auth";
-import { Response } from "carbonldp/HTTP";
 import { ArrayUtils } from "carbonldp/Utils";
 import { URI } from "carbonldp/RDF/URI";
 import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
@@ -80,11 +79,11 @@ export class UsersService {
 		} );
 	}
 
-	public saveUser( user:PersistedUser ):Promise<[ PersistedUser, Response ]> {
+	public saveUser( user:PersistedUser ):Promise<PersistedUser> {
 		return user.save();
 	}
 
-	public saveAndRefreshUser( user:PersistedUser ):Promise<[ PersistedUser, Response [] ]> {
+	public saveAndRefreshUser( user:PersistedUser ):Promise<PersistedUser> {
 		return user.saveAndRefresh();
 	}
 
