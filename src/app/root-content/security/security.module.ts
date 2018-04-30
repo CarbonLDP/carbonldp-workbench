@@ -27,6 +27,7 @@ import { RoleDetailsComponent } from "./roles/role-details/role-details.componen
 import { RoleDeleterComponent } from "./roles/role-deleter/role-deleter.component";
 import { RolesChooserComponent } from "./roles/roles-chooser/roles-chooser.component";
 
+import { BasicCredentialsComponent } from "./credentials/basic-credentials.component";
 
 // Modules
 import { SharedModule } from "app/shared/shared.module";
@@ -67,6 +68,8 @@ import { CredentialsService } from "./credentials/credentials.service";
 		RoleDetailsComponent,
 		RoleDeleterComponent,
 		RolesChooserComponent,
+
+		BasicCredentialsComponent,
 	],
 	providers: [
 		UsersService,
