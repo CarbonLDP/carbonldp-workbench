@@ -134,7 +134,7 @@ export class URIFragmentValidator implements Validator {
 	selector: '[cw-required-if]',
 	providers: [ { provide: NG_VALIDATORS, useExisting: RequiredIfValidator, multi: true } ]
 } )
-export class RequiredIfValidator {
+export class RequiredIfValidator implements Validator {
 	@Input() condition:boolean;
 
 	validate( control:AbstractControl ):{ [key:string]:any } {
