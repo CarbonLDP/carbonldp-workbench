@@ -9,9 +9,9 @@
 		        (click)="close()">
 			<i class="icon remove"></i>
 		</button>
-		<h3 class="ui header">
-			{{user?.name}}
-			<span class="sub header">{{user?.id}}</span>
+		<h3 class="ui header" [ngSwitch]="mode">
+			<span *ngSwitchCase="Modes.CREATE">Creating a user...</span>
+			<span *ngSwitchDefault class="sub header">{{user?.id}}</span>
 		</h3>
 	</div>
 	<!-- END: User name -->
