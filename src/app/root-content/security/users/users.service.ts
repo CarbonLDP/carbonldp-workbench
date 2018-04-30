@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { User, PersistedUser, UsernameAndPasswordCredentials } from "carbonldp/Auth";
+import { User, PersistedUser, UsernameAndPasswordCredentials, LDAPCredentials } from "carbonldp/Auth";
 import { Response } from "carbonldp/HTTP";
 import { ArrayUtils } from "carbonldp/Utils";
 import { URI } from "carbonldp/RDF/URI";
@@ -88,19 +88,11 @@ export class UsersService {
 		return user.saveAndRefresh();
 	}
 
-	public createUser( email:string, password:string, enabled:boolean ):Promise<PersistedUser> {
-		let newUser:User = User.create( {
-			name: name,
-			credentials: UsernameAndPasswordCredentials.create( {
-				username: email,
-				password: password
-			} )
-		} );
+	public createUser( credentials:UsernameAndPasswordCredentials | LDAPCredentials, slug?:string ):Promise<PersistedUser> {
 
-		return this.carbonldp.auth.users.createChild( newUser ).then( ( persistedUser:PersistedUser ) => {
-			persistedUser.name = name;
-			return persistedUser.saveAndRefresh();
-		} );
+		let newUser:User = User.create( { credentials: credentials } );
+
+		return this.carbonldp.auth.users.createChild( newUser, slug );
 	}
 
 	public deleteUser( user:User, slug?:string ):Promise<void> {
