@@ -1,7 +1,7 @@
 import { ElementRef, Component, Input, Output, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
 
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
-import { User, PersistedUser, CredentialsSet, UsernameAndPasswordCredentials } from "carbonldp/Auth";
+import { User, PersistedUser, CredentialsSet, UsernameAndPasswordCredentials, LDAPCredentials } from "carbonldp/Auth";
 
 import { UsersService } from "../users.service";
 import { RolesService } from "../../roles/roles.service";
@@ -10,6 +10,7 @@ import { Message, Types } from "app/shared/messages-area/message.component";
 import { MessagesAreaService } from "app/shared/messages-area/messages-area.service";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
 import { CredentialsService } from "app/root-content/security/credentials/credentials.service";
+import { BasicCredentialsFormModel } from "app/root-content/security/credentials/basic-credentials.component";
 
 @Component( {
 	selector: "cw-user-details",
@@ -22,24 +23,26 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 	private element:ElementRef;
 	private $element:JQuery;
 	private messagesAreaService:MessagesAreaService;
-
-	private timer:number;
-	private userRoles:PersistedRole.Class[] = [];
-	private availableRoles:string[] = [];
-	public errorMessage:Message;
-	public displaySuccessMessage:boolean = false;
-
 	private usersService:UsersService;
 	private rolesService:RolesService;
 	private credentialsService:CredentialsService;
 
+	private timer:number;
+	private userRoles:PersistedRole.Class[] = [];
+	private availableRoles:string[] = [];
+	private credentials:UsernameAndPasswordCredentials | LDAPCredentials;
+	public errorMessage:Message;
+	public displaySuccessMessage:boolean = false;
+
 	public Modes:typeof Modes = Modes;
 	public userFormModel:UserFormModel = {
 		slug: "",
-		username: "",
 		roles: [],
-		password: "",
-		repeatPassword: "",
+		basicCredentialsFormModel: {
+			username: "",
+			password: "",
+			repeatPassword: "",
+		}
 	};
 
 	@Input() mode:string = Modes.EDIT;
@@ -53,10 +56,10 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 	constructor( element:ElementRef, usersService:UsersService, rolesService:RolesService, credentialsService:CredentialsService, messagesAreaService:MessagesAreaService ) {
 		this.element = element;
 		this.$element = $( element.nativeElement );
+		this.messagesAreaService = messagesAreaService;
 		this.usersService = usersService;
 		this.rolesService = rolesService;
 		this.credentialsService = credentialsService;
-		this.messagesAreaService = messagesAreaService;
 	}
 
 	ngAfterViewInit():void {
@@ -88,11 +91,11 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 
 				if( ! credentialSet ) return;
 
-				this.user.credentials = <any>credentialSet.credentials;
+				this.credentials = <any>credentialSet.credentials;
 
 				this.updateFormModel(
-					this.user.credentials.username,
-					this.user.credentials.password,
+					(<UsernameAndPasswordCredentials>this.credentials).username,
+					(<UsernameAndPasswordCredentials>this.credentials).password,
 					[]
 				);
 			} );
@@ -107,10 +110,12 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 	}
 
 	private updateFormModel( username:string, password:string, roles:Array<any> ):void {
-		this.userFormModel.username = username;
-		this.userFormModel.password = password;
-		this.userFormModel.repeatPassword = "";
 		this.userFormModel.roles = roles;
+		this.userFormModel.basicCredentialsFormModel = {
+			username: username,
+			password: password,
+			repeatPassword: ""
+		}
 	}
 
 	private getCredentialsSet( userURI:string ):Promise<CredentialsSet> {
@@ -178,27 +183,35 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 		// } );
 	}
 
-	private createUser( userData:UserFormModel ):void {
-		// this.usersService.createUser( userData.email, userData.password, userData.enabled ).then( ( createdUser:PersistedUser ) => {
-		// 	createdUser.name = userData.name;
-		// 	return createdUser.saveAndRefresh();
-		// } ).then( ( createdUser:PersistedUser ) => {
-		// 	this.user = createdUser;
-		// 	return this.editUserRoles( this.user, userData.roles );
-		// } ).then( () => {
-		// 	let successMessage:Message = {
-		// 		title: "User Created",
-		// 		content: "The user was created successfully.",
-		// 		type: Types.SUCCESS,
-		// 		duration: 4000,
-		// 	};
-		// 	this.messagesAreaService.addMessage( successMessage );
-		// 	this.onSuccess.emit( true );
-		// } ).catch( ( error ) => {
-		// 	this.errorMessage = ErrorMessageGenerator.getErrorMessage( error );
-		// 	if( typeof error.name !== "undefined" ) this.errorMessage.title = error.name;
-		// 	this.onError.emit( true );
-		// } );
+	private createUser( userFormData:UserFormModel ):void {
+
+		let credential:UsernameAndPasswordCredentials = this.createCredential( userFormData );
+
+		this.usersService.createUser( credential, userFormData.slug ).then( ( createdUser:PersistedUser ) => {
+			this.user = createdUser;
+			// TODO: Add roles after persisting the user
+			let successMessage:Message = {
+				title: "User Created",
+				content: "The user was created successfully.",
+				type: Types.SUCCESS,
+				duration: 4000,
+			};
+			this.messagesAreaService.addMessage( successMessage );
+			this.onSuccess.emit( true );
+		} ).catch( ( error ) => {
+			this.errorMessage = ErrorMessageGenerator.getErrorMessage( error );
+			if( typeof error.name !== "undefined" ) this.errorMessage.title = error.name;
+			this.onError.emit( true );
+		} );
+	}
+
+	private createCredential( userFormData:UserFormModel ):UsernameAndPasswordCredentials {
+
+		// TODO: Add condition to identify other credential types if the FormModel and return that type of credential
+		return UsernameAndPasswordCredentials.create( {
+			username: userFormData.basicCredentialsFormModel.username,
+			password: userFormData.basicCredentialsFormModel.password
+		} );
 	}
 
 	private emitOnSuccessAfter( seconds:number ):void {
@@ -283,8 +296,6 @@ export class Modes {
 
 export interface UserFormModel {
 	slug:string;
-	username:string;
 	roles:string[];
-	password:string;
-	repeatPassword:string;
+	basicCredentialsFormModel:BasicCredentialsFormModel;
 }
