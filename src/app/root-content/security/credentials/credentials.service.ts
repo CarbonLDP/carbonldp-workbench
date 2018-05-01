@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { CredentialsSet } from "carbonldp/Auth";
-import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { CS } from "carbonldp/Vocabularies";
 
 
 @Injectable()
@@ -20,14 +20,14 @@ export class CredentialsService {
 		let credentialsEndpoint:string = `${this.carbonldp.baseURI}.system/security/credentials/`;
 
 		return this.carbonldp.documents.getChildren<CredentialsSet>( credentialsEndpoint, _ => _
-			.withType( "https://carbonldp.com/ns/v1/security#CredentialSet" )
+			.withType( `${CS.namespace}CredentialSet` )
 			.properties( {
 				"user": {
-					"@id": "https://carbonldp.com/ns/v1/security#user"
+					"@id": CS.user
 				},
 				"credentials": {
 					"query": _ => _
-						.withType( "https://carbonldp.com/ns/v1/security#UsernameAndPasswordCredentials" )
+						.withType( CS.UsernameAndPasswordCredentials )
 						.properties( {
 							"username": {
 								"@type": "string"
