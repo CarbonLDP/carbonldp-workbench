@@ -90,7 +90,6 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 			this.getCredentialsSet( this.user.id ).then( ( credentialSet:CredentialsSet ) => {
 
 				if( ! credentialSet ) return;
-
 				this.credentials = <any>credentialSet.credentials;
 
 				this.updateFormModel(
@@ -100,7 +99,6 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 				);
 			} );
 		}
-
 		// this.getRoles( this.user ).then( ( roles:PersistedRole.Class[] ) => {
 		// 	roles.forEach( ( role:PersistedRole.Class ) => {
 		// 		this.userFormModel.roles.push( role.id );
@@ -218,7 +216,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 
 	private createCredential( userFormData:UserFormModel ):UsernameAndPasswordCredentials {
 
-		// TODO: Add condition to identify other credential types if the FormModel and return that type of credential
+		// TODO: Add condition to identify other credential types of the FormModel and return that type of credential
 		return UsernameAndPasswordCredentials.create( {
 			username: userFormData.basicCredentialsFormModel.username,
 			password: userFormData.basicCredentialsFormModel.password

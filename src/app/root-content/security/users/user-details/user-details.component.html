@@ -89,7 +89,8 @@
 
 
 								<!-- START: Basic Credentials From group-->
-								<basic-credentials [basicCredentialsFormModel]="userFormModel.basicCredentialsFormModel"></basic-credentials>
+								<basic-credentials [mode]="mode"
+								                   [basicCredentialsFormModel]="userFormModel.basicCredentialsFormModel"></basic-credentials>
 								<!-- END: Basic Credentials From group-->
 
 							</div>
@@ -155,7 +156,6 @@
 		        [disabled]="!userForm.valid"
 		        [ngSwitch]="mode">
 			<span *ngSwitchCase="Modes.CREATE">Create</span>
-			<span *ngSwitchCase="Modes.EDIT">Save</span>
 			<span *ngSwitchDefault>Save</span>
 		</button>
 		<a class="ui mini basic button" type="button" title="Cancel" [routerLink]="['../']">Cancel</a>
