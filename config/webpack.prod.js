@@ -4,151 +4,96 @@ const config = require( "./prod.config.json" );
 const commonConfig = require( "./webpack.common.js" );
 const carbonConfig = config.carbon;
 
-// carbonldp's projects versions
-const workbench = require( "../package.json" );
 
 // Plugins
-const DefinePlugin = require( "webpack/lib/DefinePlugin" );
 const LoaderOptionsPlugin = require( "webpack/lib/LoaderOptionsPlugin" );
 const NoEmitOnErrorsPlugin = require( "webpack/lib/NoEmitOnErrorsPlugin" );
-const UglifyJsPlugin = require( "webpack/lib/optimize/UglifyJsPlugin" );
+const UglifyJsPlugin = require( "uglifyjs-webpack-plugin" );
 const OccurenceOrderPlugin = require( "webpack/lib/optimize/OccurrenceOrderPlugin" );
-const BundleAnalyzerPlugin = require( "webpack-bundle-analyzer" ).BundleAnalyzerPlugin;
-const HtmlWebpackPlugin = require( "html-webpack-plugin" );
-const AngularCompilerPlugin = require( "@ngtools/webpack" ).AngularCompilerPlugin;
 
 
 // Webpack Constants
-const ENV = process.env.NODE_ENV = process.env.ENV = "production";
-const PROTOCOL = process.env.PROTOCOL || "http";
-const HOST = process.env.HOST || "127.0.0.1";
-const PORT = process.env.PORT || 8080;
-const METADATA = webpackMerge( commonConfig( { env: ENV } ).metadata, {
+const METADATA = {
 	baseUrl: config.url.base,
-	protocol: PROTOCOL,
-	host: HOST,
-	port: PORT,
-	ENV: ENV,
-	isDevServer: helpers.isWebpackDevServer(),
+	ENV: "production",
+	isDevServer: false,
 	CARBON: {
 		protocol: carbonConfig.protocol,
 		domain: carbonConfig.domain,
 	}
-} );
+};
 
 
-module.exports = function( env ) {
-	return webpackMerge( commonConfig( {
-		env: ENV
-	} ), {
-		devtool: "source-map",
+module.exports = webpackMerge( commonConfig( METADATA ), {
+	devtool: "source-map",
 
-		output: {
-			path: helpers.root( "dist" ),
-			publicPath: "/",
-			filename: "[name].[chunkhash].js",
-			sourceMapFilename: "[name].[chunkhash].map",
-			chunkFilename: "[id].[chunkhash].chunk.js"
-		},
+	mode: "production",
 
-		module: {
-			rules: [
-				{
-					test: /\.ts$/,
-					use: [ "@ngtools/webpack" ]
-				}
-			]
-		},
+	output: {
+		path: helpers.root( "dist" ),
+		publicPath: "/",
+		filename: "[name].[chunkhash].js",
+		sourceMapFilename: "[name].[chunkhash].map",
+		chunkFilename: "[id].[chunkhash].chunk.js"
+	},
 
-		plugins: [
-
-			// Webpack gives IDs to identify your modules. With this plugin, Webpack will analyze and prioritize often used modules assigning them the smallest ids.
-			new OccurenceOrderPlugin(),
-
-			// Stops the build if there is any error.
-			new NoEmitOnErrorsPlugin(),
-
-			// Allows you to create global constants which can be configured at compile time.
-			new DefinePlugin( {
-				"ENV": JSON.stringify( METADATA.ENV ),
-				"process.env": {
-					"baseUrl": JSON.stringify( METADATA.baseUrl ),
-					"ENV": JSON.stringify( METADATA.ENV ),
-					"NODE_ENV": JSON.stringify( METADATA.ENV ),
-					"CARBON": {
-						"protocol": JSON.stringify( carbonConfig.protocol ),
-						"domain": JSON.stringify( carbonConfig.domain ),
+	optimization: {
+		minimizer: [
+			// Minifies the bundle
+			new UglifyJsPlugin( {
+				sourceMap: false,
+				uglifyOptions: {
+					ie8: true,
+					output: {
+						comments: false,
+						beautify: false,
 					},
-					"PACKAGES": {
-						"carbonldp-workbench": JSON.stringify( workbench.version ),
+					mangle: {
+						keep_fnames: true
+					},
+					compress: {
+						warnings: false,
+						conditionals: true,
+						unused: true,
+						comparisons: true,
+						sequences: true,
+						dead_code: true,
+						evaluate: true,
+						if_return: true,
+						join_vars: true,
+						negate_iife: false
 					}
 				}
 			} ),
+		]
+	},
 
-			// Minifies the bundles. https://github.com/angular/angular/issues/10618
-			new UglifyJsPlugin( {
-				beautify: false, //prod
-				output: {
-					comments: false
-				}, //prod
-				mangle: {
-					keep_fnames: true,
-					screw_ie8: true
-				}, //prod
-				compress: {
-					screw_ie8: true,
-					warnings: false,
-					conditionals: true,
-					unused: true,
-					comparisons: true,
-					sequences: true,
-					dead_code: true,
-					evaluate: true,
-					if_return: true,
-					join_vars: true,
-					negate_iife: false // we need this for lazy v8
+	plugins: [
+
+		// Webpack gives IDs to identify your modules. With this plugin, Webpack will analyze and prioritize often used modules assigning them the smallest ids.
+		new OccurenceOrderPlugin(),
+
+		// Stops the build if there is any error.
+		new NoEmitOnErrorsPlugin(),
+
+		// Set options for loaders
+		new LoaderOptionsPlugin( {
+			minimize: true,
+			debug: false,
+			options: {
+				htmlLoader: {
+					//minimize: false // workaround for ng2
+					minimize: false,
+					removeAttributeQuotes: false,
+					caseSensitive: true,
+					customAttrSurround: [
+						[ /#/, /(?:)/ ],
+						[ /\*/, /(?:)/ ],
+						[ /\[?\(?/, /(?:)/ ]
+					],
+					customAttrAssign: [ /\)?\]?=/ ]
 				},
-				sourceMap: false
-			} ),
-
-			// Set options for loaders
-			new LoaderOptionsPlugin( {
-				minimize: true,
-				debug: false,
-				options: {
-					htmlLoader: {
-						//minimize: false // workaround for ng2
-						minimize: false,
-						removeAttributeQuotes: false,
-						caseSensitive: true,
-						customAttrSurround: [
-							[ /#/, /(?:)/ ],
-							[ /\*/, /(?:)/ ],
-							[ /\[?\(?/, /(?:)/ ]
-						],
-						customAttrAssign: [ /\)?\]?=/ ]
-					},
-				}
-			} ),
-
-			// new BundleAnalyzerPlugin(),
-			new AngularCompilerPlugin( {
-				tsConfigPath: helpers.root( "tsconfig.json" ),
-				entryModule: helpers.root( "src/app/app.module#AppModule" ),
-				mainPath: helpers.root( "src/main.ts" ),
-				sourceMap: true,
-				genDir: "compiled",
-				skipMetadataEmit: true,
-				typeChecking: true
-			} ),
-
-			// Webpack inject scripts and links for us with the HtmlWebpackPlugin
-			new HtmlWebpackPlugin( {
-				filename: "index.html",
-				template: "src/index.html",
-				chunksSortMode: "dependency",
-				metadata: METADATA
-			} )
-		],
-	} );
-};
+			}
+		} ),
+	],
+} );
