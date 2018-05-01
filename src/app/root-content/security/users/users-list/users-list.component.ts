@@ -27,8 +27,8 @@ export class UsersListComponent implements OnInit {
 	private activePage:number = 0;
 	private totalUsers:number = 0;
 	private usersPerPage:number = 5;
-	private headers:Header[] = [ { name: "Name", value: "name" }, { name: "Created", value: "created" }, { name: "Modified", value: "modified" } ];
-	private sortedColumn:string = "name";
+	private headers:Header[] = [ { name: "User", value: "username" }, { name: "Created", value: "created" }, { name: "Modified", value: "modified" } ];
+	private sortedColumn:string = "username";
 	private ascending:boolean = false;
 
 	public errorMessage:Message;
