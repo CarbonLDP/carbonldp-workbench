@@ -68,7 +68,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 		// 		this.availableRoles.push( role.id );
 		// 	} );
 		// } );
-		this.$element.find( ".enabled.checkbox" ).checkbox();
+		this.initializeCredentialsTabs();
 	}
 
 	ngOnChanges( changes:SimpleChanges ):void {
@@ -80,6 +80,10 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 			// }
 			this.changeUser( this.user );
 		}
+	}
+
+	private initializeCredentialsTabs():void {
+		this.$element.find( ".credentials-types .tabular.menu .item" ).tab();
 	}
 
 	private changeUser( newUser:PersistedUser ):void {
