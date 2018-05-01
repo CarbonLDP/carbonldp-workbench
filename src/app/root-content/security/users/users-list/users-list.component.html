@@ -31,7 +31,7 @@
 		<tbody>
 			<tr *ngFor="let user of users; let i = index;" (click)="openUser($event, user)">
 				<td>
-					<span>{{user.name}}</span>
+					<span>{{user.username}}</span>
 					<br>
 					<span class="user-id">{{user.id}}</span>
 				</td>
