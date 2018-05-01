@@ -2,11 +2,13 @@ import { Injectable, EventEmitter } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { User, PersistedUser, UsernameAndPasswordCredentials, LDAPCredentials } from "carbonldp/Auth";
-import { ArrayUtils } from "carbonldp/Utils";
 import { URI } from "carbonldp/RDF/URI";
 import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { CS } from "carbonldp/Vocabularies";
 import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument/QueryDocumentsBuilder";
+import { CredentialsSet } from "carbonldp/Auth";
+import { PersistedDocument } from "carbonldp/PersistedDocument";
+
 
 @Injectable()
 export class UsersService {
@@ -33,38 +35,59 @@ export class UsersService {
 	public get( slugOrURI:string ):Promise<PersistedUser> {
 		let uri:string = this.carbonldp.baseURI + `users/${slugOrURI}/`;
 		if( URI.isAbsolute( slugOrURI ) ) uri = slugOrURI;
-		this.users = typeof this.users === "undefined" ? new Map<string, PersistedUser>() : this.users;
 		return this.carbonldp.documents.get<PersistedUser>( uri ).then( ( user:PersistedUser ) => {
+			// TODO: Remove this when SDK resolves preference of Full document instead of partial document. issue:#264
+			delete user._partialMetadata;
 			this.users.set( user.id, user );
 			return user;
 		} );
 	}
 
 	public getAll( limit?:number, page?:number, orderBy?:string, ascending:boolean = true ):Promise<PersistedUser[]> {
-		let uri:string = this.carbonldp.baseURI + "users/";
-		this.users = typeof this.users === "undefined" ? new Map<string, PersistedUser>() : this.users;
 
 		let property:string = orderBy ? orderBy : "name";
 
-		return this.carbonldp.documents.getMembers<PersistedUser>( uri, ( _:QueryDocumentsBuilder ) => {
+		let credentialsEndpoint:string = `${this.carbonldp.baseURI}.system/security/credentials/`;
+
+		return this.carbonldp.documents.getChildren<CredentialsSet>( credentialsEndpoint, ( _:QueryDocumentsBuilder ) => {
 			let func = _.properties( {
-				"name": _.inherit,
-				"email": _.inherit,
-				"created": _.inherit,
-				"modified": _.inherit,
+				"user": {
+					"query": _ => _
+						.withType( CS.User )
+						.properties( {
+							"created": _.inherit,
+							"modified": _.inherit,
+						} )
+				},
+				"credentials": {
+					"query": _ => _
+						.withType( CS.UsernameAndPasswordCredentials )
+						.properties( {
+							"username": {
+								"@type": "string"
+							}
+						} )
+				}
 			} );
 			if( ! orderBy ) func.orderBy( property, ascending ? "ASC" : "DESC" );
 			if( typeof limit !== "undefined" ) func.limit( limit );
 			if( typeof page !== "undefined" ) func.offset( page * limit );
+
 			return func;
+		} ).then( ( credentialsSet:CredentialsSet[] ) => {
 
-		} ).then( ( users:PersistedUser[] ) => {
-			users.forEach( ( user:PersistedUser ) => this.users.set( user.id, user ) );
+			let users:any[] = credentialsSet.map(
+				( credentialSet:CredentialsSet ) => {
+					this.users.set( credentialSet.user.id, <any>credentialSet.user );
+					return {
+						id: credentialSet.user.id,
+						created: (<User & PersistedDocument>credentialSet.user).created,
+						modified: (<User & PersistedDocument>credentialSet.user).modified,
+						username: (<any>credentialSet.credentials).username
+					};
+				} );
 
-			let usersArray:PersistedUser[] = ArrayUtils.from( this.users.values() );
-			if( orderBy ) usersArray = this.getSortedUsers( usersArray, orderBy, ascending );
-
-			return usersArray;
+			return orderBy ? this.getSortedUsers( users, orderBy, ascending ) : users;
 		} );
 	}
 
