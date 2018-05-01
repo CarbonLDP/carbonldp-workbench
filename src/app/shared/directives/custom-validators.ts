@@ -1,4 +1,4 @@
-import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { Directive, Input, OnChanges, ChangeDetectorRef, SimpleChanges } from "@angular/core";
 import { AbstractControl, Validator, NG_VALIDATORS } from "@angular/forms";
 import { URI } from "carbonldp/RDF/URI";
 
@@ -40,22 +40,20 @@ export class SlugValidator implements Validator {
 	selector: "[cw-match]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: MatchValidator, multi: true } ]
 } )
-export class MatchValidator implements Validator,OnChanges {
+export class MatchValidator implements Validator, OnChanges {
 	@Input() matchTo;
 	@Input() control;
 
+	constructor(private cd: ChangeDetectorRef){}
+
 	ngOnChanges( changes:SimpleChanges ) {
-		this.control.control.updateValueAndValidity( false, true );
+		this.control.updateValueAndValidity( false, true );
+		this.cd.detectChanges();
 	}
 
 	validate( control:AbstractControl ):{ [ key:string ]:any; } {
-		if( control.value ) {
-			if( control.value === this.matchTo )
-				return null;
-			else {
-				return { "matchError": true };
-			}
-		}
+		if( !control.value ) return;
+		return (control.value === this.matchTo)? null : { "matchError": true };
 	}
 }
 
