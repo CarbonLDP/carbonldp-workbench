@@ -1,5 +1,5 @@
-import { Directive, Input, OnChanges, ChangeDetectorRef, SimpleChanges } from "@angular/core";
-import { AbstractControl, Validator, NG_VALIDATORS } from "@angular/forms";
+import { Directive, Input, OnChanges, SimpleChanges, Injector } from "@angular/core";
+import { AbstractControl, Validator, NgModel, NG_VALIDATORS, NgControl, FormControl } from "@angular/forms";
 import { URI } from "carbonldp/RDF/URI";
 
 @Directive( {
@@ -41,19 +41,29 @@ export class SlugValidator implements Validator {
 	providers: [ { provide: NG_VALIDATORS, useExisting: MatchValidator, multi: true } ]
 } )
 export class MatchValidator implements Validator, OnChanges {
-	@Input() matchTo;
-	@Input() control;
+	@Input() matchTo:any;
 
-	constructor(private cd: ChangeDetectorRef){}
+	private injector:Injector;
+	private ngModel:NgModel;
+	private control:FormControl;
+
+	constructor( injector:Injector ) {
+		this.injector = injector;
+	}
+
+	ngOnInit() {
+		this.ngModel = this.injector.get( NgControl );
+		this.control = this.ngModel.control;
+	}
 
 	ngOnChanges( changes:SimpleChanges ) {
-		this.control.updateValueAndValidity( false, true );
-		this.cd.detectChanges();
+		if( ! this.control || ! changes.hasOwnProperty( "matchTo" ) ) return;
+		setTimeout( this.control.updateValueAndValidity( { onlySelf: false, emitEvent: false } ), 0 );
 	}
 
 	validate( control:AbstractControl ):{ [ key:string ]:any; } {
-		if( !control.value ) return;
-		return (control.value === this.matchTo)? null : { "matchError": true };
+		if( ! control.value ) return;
+		return (control.value === this.matchTo) ? null : { "matchError": true };
 	}
 }
 

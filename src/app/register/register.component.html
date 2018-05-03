@@ -56,7 +56,7 @@
 			       [(ngModel)]="register.repeatPassword"
 			       cwValidation
 			       required
-			       cw-match [matchTo]="register.password" [control]="repeatPassword.control"
+			       cw-match [matchTo]="register.password"
 			       #repeatPassword="cwValidation">
 		</div>
 		<cw-error-label *ngIf="!repeatPassword.valid">
