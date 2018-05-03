@@ -1,24 +1,43 @@
+<!-- START: User deleter modal -->
 <form class="ui delete user modal error form" #deleteUserForm="ngForm" (submit)="onSubmitDeleteUser()">
+
+
+	<!-- START: Modal Header -->
 	<div class="header">
 		<h2 class="ui header"><i class="trash outline red icon"></i> Are you sure?</h2>
 	</div>
+	<!-- END: Modal Header -->
+
+
+	<!-- START: Modal Content -->
 	<div class="content">
 		<div class="ui description">
 			<p>You are about to delete the following User:</p>
-			<br>
+			<table class="ui celled basic compact table">
+				<tbody>
+					<tr>
+						<td>Username:</td>
+						<td>{{user?.username}}</td>
+					</tr>
+					<tr>
+						<td>IRI:</td>
+						<td>{{user?.id}}</td>
+					</tr>
+				</tbody>
+			</table>
 			<p>
-				Name: <span *ngIf="!!user">'{{user.name}}'</span><br>
-				Email: <span *ngIf="!!user">'{{user.email}}'</span><br>
-				ID: <span *ngIf="!!user">'{{user.id}}'</span>
+				If you delete it, every reference made to this user will also be deleted.
 			</p>
-			<br>
 			<p>
-				<span>If you delete it, every reference made to this user will also be deleted.</span><br>
-				<span>Do you really want to proceed?</span>
+				Do you really want to proceed?
 			</p>
 			<cw-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage()" *ngIf="!!errorMessage"></cw-message>
 		</div>
 	</div>
+	<!-- END: Modal Content -->
+
+
+	<!-- START: Modal Actions -->
 	<div class="actions">
 		<button class="ui black deny button" title="Cancel deletion" type="button"
 		        [disabled]="deletingUser"
@@ -29,4 +48,6 @@
 		        [disabled]="deletingUser">Yes
 		</button>
 	</div>
+	<!-- END: Modal Actions -->
 </form>
+<!-- END: User deleter modal -->
