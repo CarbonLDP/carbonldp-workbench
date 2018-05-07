@@ -6,8 +6,6 @@ import { URI } from "carbonldp/RDF/URI";
 import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { CS } from "carbonldp/Vocabularies";
 import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument/QueryDocumentsBuilder";
-import { CredentialsSet } from "carbonldp/Auth";
-import { PersistedDocument } from "carbonldp/PersistedDocument";
 
 
 @Injectable()
@@ -45,47 +43,20 @@ export class UsersService {
 
 	public getAll( limit?:number, page?:number, orderBy?:string, ascending:boolean = true ):Promise<PersistedUser[]> {
 
-		let property:string = orderBy ? orderBy : "name";
+		let property:string = orderBy ? orderBy : "id";
 
-		let credentialsEndpoint:string = `${this.carbonldp.baseURI}.system/security/credentials/`;
-
-		return this.carbonldp.documents.getChildren<CredentialsSet>( credentialsEndpoint, ( _:QueryDocumentsBuilder ) => {
-			let func = _.properties( {
-				"user": {
-					"query": _ => _
-						.withType( CS.User )
-						.properties( {
-							"created": _.inherit,
-							"modified": _.inherit,
-						} )
-				},
-				"credentials": {
-					"query": _ => _
-						.withType( CS.UsernameAndPasswordCredentials )
-						.properties( {
-							"username": {
-								"@type": "string"
-							}
-						} )
-				}
-			} );
+		return this.carbonldp.auth.users.getChildren<PersistedUser>( ( _:QueryDocumentsBuilder ) => {
+			let func = _.withType( CS.User )
+				.properties( {
+					"created": _.inherit,
+					"modified": _.inherit,
+				} );
 			if( ! orderBy ) func.orderBy( property, ascending ? "ASC" : "DESC" );
 			if( typeof limit !== "undefined" ) func.limit( limit );
 			if( typeof page !== "undefined" ) func.offset( page * limit );
 
 			return func;
-		} ).then( ( credentialsSet:CredentialsSet[] ) => {
-
-			let users:any[] = credentialsSet.map(
-				( credentialSet:CredentialsSet ) => {
-					this.users.set( credentialSet.user.id, <any>credentialSet.user );
-					return {
-						id: credentialSet.user.id,
-						created: (<User & PersistedDocument>credentialSet.user).created,
-						modified: (<User & PersistedDocument>credentialSet.user).modified,
-						username: (<any>credentialSet.credentials).username
-					};
-				} );
+		} ).then( ( users:PersistedUser[] ) => {
 
 			return orderBy ? this.getSortedUsers( users, orderBy, ascending ) : users;
 		} );
