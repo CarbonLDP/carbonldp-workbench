@@ -80,7 +80,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 			let isRequiredSystemDocument:boolean = updatedRoot.types.findIndex( ( type:string ) => type === `${C.namespace}RequiredSystemDocument` ) !== - 1;
 
-			this.nodeChildren.push( this.buildNode( this.carbonldp.baseURI, "default", true, isRequiredSystemDocument ) );
+			this.nodeChildren.push( this.buildNode( this.carbonldp.baseURI, JSTreeNodeType.DEFAULT, true, isRequiredSystemDocument ) );
 
 			this.renderTree();
 
@@ -90,7 +90,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} );
 	}
 
-	buildNode( uri:string, nodeType?:string, hasChildren?:boolean, isRequiredSystemDocument?:boolean ):JSTreeNode {
+	buildNode( uri:string, nodeType?:string, hasChildren?:boolean, isRequiredSystemDocument?:boolean, created?:Date, modified?:Date ):JSTreeNode {
 		let node:JSTreeNode = {
 			id: uri,
 			text: this.getSlug( uri ),
@@ -98,8 +98,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			children: hasChildren,
 			data: {},
 		};
-		if( nodeType === "accesspoint" ) node.type = "accesspoint";
+		node.type = (nodeType === JSTreeNodeType.ACCESS_POINT) ? JSTreeNodeType.ACCESS_POINT : JSTreeNodeType.DEFAULT;
 		node.data.isRequiredSystemDocument = ! ! isRequiredSystemDocument;
+		node.data.created = created;
+		node.data.modified = modified;
 		return node;
 	}
 
@@ -164,57 +166,40 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 	getNodeChildren( uri:string ):Promise<JSTreeNode[]> {
 		let query:string = `
-			PREFIX c:<https://carbonldp.com/ns/v1/platform#>
-			PREFIX ldp:<http://www.w3.org/ns/ldp#>
+			PREFIX c:<${C.namespace}>
+			PREFIX ldp:<${LDP.namespace}>
 			
-			SELECT ?p ?o ?p2 ?o2 ?isRequiredSystemDocument
-			WHERE{
-			    <${uri}> ?p ?o 
+			SELECT (STR(?p) AS ?parentPredicate) (STR(?s) AS ?subject) (STR(?p2) AS ?predicate) ?object ?isRequiredSystemDocument
+			WHERE {
+			    <${uri}> ?p ?s 
 			    VALUES (?p) {
 			        (ldp:contains)
 			        (c:accessPoint)
+			        (c:created)
+			        (c:modified)
 			    }
 			    OPTIONAL {
-			        ?o ?p2 ?o2    
+			        ?s ?p2 ?object    
 			        VALUES (?p2) {
 			            (ldp:contains)
 			            (c:accessPoint)
+				        (c:created)
+				        (c:modified)
 			        }
-			        BIND( EXISTS{ ?o a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
+			        BIND( EXISTS{ ?value a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
 			    }
 			}
 		`;
 		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
-			let accessPoints:Map<string, PreJSTreeNode> = new Map<string, PreJSTreeNode>(),
-				children:Map<string, PreJSTreeNode> = new Map<string, PreJSTreeNode>(),
-				nodes:JSTreeNode[] = [];
+			let nodes:Map<string, JSTreeNode> = new Map<string, JSTreeNode>();
 
 			results.bindings.forEach(
-				( binding:{ p:Pointer, o:Pointer, p2:Pointer, o2:Pointer, isRequiredSystemDocument:boolean } ) => {
+				( binding:{ parentPredicate:string, subject:string, predicate:string, object:Pointer | Date, isRequiredSystemDocument:boolean } ) => {
 
-					// Do not include any node that is /users/me
-					if( ! ! binding.o2 && binding.o2.id.indexOf( "/users/me/" ) !== - 1 ) return;
-
-					switch( binding.p.id ) {
-						case LDP.contains:
-
-							this.convertBindingToNode( children, binding );
-							break;
-						case C.accessPoint:
-
-							this.convertBindingToNode( accessPoints, binding );
-							break;
-					}
+					this.addBindingToNodes( nodes, binding );
 				} );
 
-			children.forEach( ( child:PreJSTreeNode, id:string ) => {
-				nodes.push( this.buildNode( id, "default", child.hasChildren, child.isRequiredSystemDocument ) );
-			} );
-			accessPoints.forEach( ( accessPoint:PreJSTreeNode, id:string ) => {
-				nodes.push( this.buildNode( id, "accesspoint", accessPoint.hasChildren, accessPoint.isRequiredSystemDocument ) );
-			} );
-
-			return nodes;
+			return Array.from( nodes.values() );
 		} ).catch( ( error ) => {
 			return Promise.reject( error );
 		} );
@@ -241,28 +226,64 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.onShowDeleteChildForm.emit( true );
 	}
 
-	private convertBindingToNode( collection:Map<string, PreJSTreeNode>, binding:{ p:Pointer, o:Pointer, p2:Pointer, o2:Pointer, isRequiredSystemDocument:boolean } ):void {
+	private addBindingToNodes( nodes:Map<string, JSTreeNode>, binding:{ parentPredicate:string, subject:string, predicate:string, object:Pointer | Date, isRequiredSystemDocument:boolean } ):void {
 
-		if( binding.o.isResolved() ) {
-			binding.isRequiredSystemDocument = (<PersistedDocument>binding.o).types.indexOf( "https://carbonldp.com/ns/v1/platform#RequiredSystemDocument" ) !== - 1;
+		if( ! binding.hasOwnProperty( "subject" ) ||
+			! binding.hasOwnProperty( "predicate" ) ||
+			binding.subject.indexOf( "/users/me/" ) !== - 1 ) return;
+
+		let node:JSTreeNode,
+			created:Date,
+			modified:Date,
+			type:JSTreeNodeType.DEFAULT | JSTreeNodeType.ACCESS_POINT,
+			hasChildren:boolean = (binding.predicate === LDP.contains && ! ! binding.object),
+			isRequiredSystemDocument:boolean = binding.isRequiredSystemDocument;
+
+		switch( binding.predicate ) {
+			case C.created:
+				created = <Date>binding.object;
+				break;
+			case C.modified:
+				modified = <Date>binding.object;
+				break;
 		}
-		collection.set( binding.o.id, {
-			hasChildren: collection.get( binding.o.id ) ? true : ! ! binding.p2,
-			isRequiredSystemDocument: ! ! binding.isRequiredSystemDocument
-		} );
+
+		// The parentPredicate indicates if the node is an Access Point or a regular node
+		switch( binding.parentPredicate ) {
+			case C.accessPoint:
+				type = JSTreeNodeType.ACCESS_POINT;
+				break;
+			case LDP.contains:
+				type = JSTreeNodeType.DEFAULT;
+				break;
+		}
+
+		if( nodes.has( binding.subject ) ) {
+
+			node = nodes.get( binding.subject );
+			node.type = type;
+			node.data.created = created;
+			node.data.modified = modified;
+			node.data.hasChildren = hasChildren;
+			node.data.isRequiredSystemDocument = isRequiredSystemDocument;
+		} else {
+
+			node = this.buildNode( binding.subject, type, hasChildren, isRequiredSystemDocument, created, modified );
+		}
+		nodes.set( binding.subject, node );
 	}
 }
 
-interface PreJSTreeNode {
-	hasChildren:boolean,
-	isRequiredSystemDocument:boolean
+enum JSTreeNodeType {
+	DEFAULT = "default",
+	ACCESS_POINT = "accesspoint"
 }
 
 export interface JSTreeNode {
-	id:string,
-	text:any,
-	state:any,
-	children:any,
-	data:any,
-	type?:any
+	id:string;
+	text:any;
+	state:any;
+	children:any;
+	data:any;
+	type?:any;
 }
