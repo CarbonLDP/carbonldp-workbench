@@ -3,9 +3,9 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } fro
 import { CarbonLDP } from "carbonldp";
 import { Pointer } from "carbonldp/Pointer";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
-import { Response, Errors } from "carbonldp/HTTP";
+import { Errors } from "carbonldp/HTTP";
 import { URI } from "carbonldp/RDF/URI";
-import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
+import { SPARQLSelectResults, SPARQLBindingObject } from "carbonldp/SPARQL/SelectResults";
 import { C, LDP } from "carbonldp/Vocabularies";
 
 import * as $ from "jquery";
@@ -113,13 +113,13 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 				"multiple": false,
 			},
 			"types": {
-				"default": {
-					"icon": "file outline icon",
-				},
 				"loading": {
 					"icon": "spinner loading icon",
 				},
-				"accesspoint": {
+				[ JSTreeNodeType.DEFAULT ]: {
+					"icon": "file outline icon",
+				},
+				[ JSTreeNodeType.ACCESS_POINT ]: {
 					"icon": "selected radio icon",
 					"a_attr": {
 						"class": "accesspoint",
@@ -193,11 +193,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
 			let nodes:Map<string, JSTreeNode> = new Map<string, JSTreeNode>();
 
-			results.bindings.forEach(
-				( binding:{ parentPredicate:string, subject:string, predicate:string, object:Pointer | Date, isRequiredSystemDocument:boolean } ) => {
-
-					this.addBindingToNodes( nodes, binding );
-				} );
+			results.bindings.forEach( ( binding:SPARQLBindingObject & BindingResult ) => this.addBindingToNodes( nodes, binding ) );
 
 			return Array.from( nodes.values() );
 		} ).catch( ( error ) => {
@@ -226,7 +222,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.onShowDeleteChildForm.emit( true );
 	}
 
-	private addBindingToNodes( nodes:Map<string, JSTreeNode>, binding:{ parentPredicate:string, subject:string, predicate:string, object:Pointer | Date, isRequiredSystemDocument:boolean } ):void {
+	private addBindingToNodes( nodes:Map<string, JSTreeNode>, binding:BindingResult ):void {
 
 		if( ! binding.hasOwnProperty( "subject" ) ||
 			! binding.hasOwnProperty( "predicate" ) ||
@@ -272,6 +268,14 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		}
 		nodes.set( binding.subject, node );
 	}
+}
+
+interface BindingResult {
+	parentPredicate:string,
+	subject:string,
+	predicate:string,
+	object:Pointer | Date,
+	isRequiredSystemDocument:boolean
 }
 
 enum JSTreeNodeType {
