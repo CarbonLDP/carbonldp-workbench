@@ -41,6 +41,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		return this._selectedURI;
 	}
 
+	public sortAscending:boolean = true;
+	public orderBy:OrderBy.CREATED | OrderBy.MODIFIED | OrderBy.SLUG = OrderBy.CREATED;
+	public orderOptions:typeof OrderBy = OrderBy;
+
 	@Input() refreshNode:EventEmitter<string> = new EventEmitter<string>();
 	@Input() openNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onResolveUri:EventEmitter<string> = new EventEmitter<string>();
@@ -59,7 +63,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.$tree = this.$element.find( ".treeview-content" );
-		this.$element.find( ".treeview-optionsButton" ).dropdown( { action: "hide" } );
+		this.initializeOptionsButton();
+		this.initalizeSortByButton();
 		this.onLoadingDocument.emit( true );
 		this.getDocumentTree().then( () => {
 			this.onLoadingDocument.emit( false );
@@ -99,6 +104,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			data: {},
 		};
 		node.type = (nodeType === JSTreeNodeType.ACCESS_POINT) ? JSTreeNodeType.ACCESS_POINT : JSTreeNodeType.DEFAULT;
+		node.data.id = uri;
 		node.data.isRequiredSystemDocument = ! ! isRequiredSystemDocument;
 		node.data.created = created;
 		node.data.modified = modified;
@@ -127,7 +133,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 					}
 				}
 			},
-			"plugins": [ "types", "wholerow" ],
+			"sort": this.sort.bind( this ),
+			"plugins": [ "types", "wholerow", "sort" ],
 		} ).jstree( true );
 		this.$tree.on( "select_node.jstree", ( e:Event, data:any ):void => {
 			let node:any = data.node;
@@ -222,6 +229,46 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.onShowDeleteChildForm.emit( true );
 	}
 
+	changeSort( ascending:boolean ):void {
+		this.sortAscending = ascending;
+		this.reorderBranch();
+	}
+
+	changeOrderBy( orderBy:OrderBy.CREATED | OrderBy.MODIFIED | OrderBy.SLUG ):void {
+		this.orderBy = orderBy;
+		this.reorderBranch();
+	}
+
+	reorderBranch():void {
+		let node:JSTreeNode = this.jsTree.get_node( this.selectedURI );
+
+		this.jsTree.sort( node, true );
+		this.jsTree.redraw_node( node, true, false, false );
+	}
+
+	private sort( nodeAId?:string, nodeBId?:string ):number {
+
+		let nodeA:JSTreeNode = this.jsTree.get_node( nodeAId ),
+			nodeB:JSTreeNode = this.jsTree.get_node( nodeBId );
+
+		if( typeof nodeA.data[ this.orderBy ] === "string" && typeof nodeB.data[ this.orderBy ] === "string" ) {
+			if( nodeA.data[ this.orderBy ].toLowerCase() > nodeB.data[ this.orderBy ].toLowerCase() ) return this.sortAscending ? 1 : - 1;
+			if( nodeA.data[ this.orderBy ].toLowerCase() < nodeB.data[ this.orderBy ].toLowerCase() ) return this.sortAscending ? - 1 : 1;
+		} else {
+			if( nodeA.data[ this.orderBy ] > nodeB.data[ this.orderBy ] ) return this.sortAscending ? 1 : - 1;
+			if( nodeA.data[ this.orderBy ] < nodeB.data[ this.orderBy ] ) return this.sortAscending ? - 1 : 1;
+		}
+		return 0;
+	}
+
+	private initializeOptionsButton():void {
+		this.$element.find( ".treeview-optionsButton" ).dropdown( { action: "hide" } );
+	}
+
+	private initalizeSortByButton():void {
+		this.$element.find( ".treeview-sortByButton" ).dropdown();
+	}
+
 	private addBindingToNodes( nodes:Map<string, JSTreeNode>, binding:BindingResult ):void {
 
 		if( ! binding.hasOwnProperty( "subject" ) ||
@@ -231,8 +278,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		let node:JSTreeNode,
 			created:Date,
 			modified:Date,
+			hasChildren:boolean,
 			type:JSTreeNodeType.DEFAULT | JSTreeNodeType.ACCESS_POINT,
-			hasChildren:boolean = (binding.predicate === LDP.contains && ! ! binding.object),
 			isRequiredSystemDocument:boolean = binding.isRequiredSystemDocument;
 
 		switch( binding.predicate ) {
@@ -241,6 +288,9 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 				break;
 			case C.modified:
 				modified = <Date>binding.object;
+				break;
+			case LDP.contains:
+				hasChildren = ! ! binding.object;
 				break;
 		}
 
@@ -257,9 +307,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		if( nodes.has( binding.subject ) ) {
 
 			node = nodes.get( binding.subject );
-			node.type = type;
-			node.data.created = created;
-			node.data.modified = modified;
+			node.type = type ? type : node.type;
+			node.data.id = node.id;
+			node.data.created = created ? created : node.data.created;
+			node.data.modified = modified ? modified : node.data.modified;
 			node.data.hasChildren = hasChildren;
 			node.data.isRequiredSystemDocument = isRequiredSystemDocument;
 		} else {
@@ -270,17 +321,23 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 }
 
+export enum OrderBy {
+	SLUG = "id",
+	CREATED = "created",
+	MODIFIED = "modified",
+}
+
+enum JSTreeNodeType {
+	DEFAULT = "default",
+	ACCESS_POINT = "accesspoint"
+}
+
 interface BindingResult {
 	parentPredicate:string,
 	subject:string,
 	predicate:string,
 	object:Pointer | Date,
 	isRequiredSystemDocument:boolean
-}
-
-enum JSTreeNodeType {
-	DEFAULT = "default",
-	ACCESS_POINT = "accesspoint"
 }
 
 export interface JSTreeNode {
