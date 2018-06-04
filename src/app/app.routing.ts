@@ -28,12 +28,6 @@ const appRoutes:Routes = [
 	{
 		path: "",
 		component: WorkbenchView,
-		canActivate: [ AuthenticatedGuard ],
-		data: {
-			// AuthenticatedGuard cases
-			onReject: [ "/login" ],
-			onError: [ "/error" ],
-		},
 		children: [
 			{
 				path: "",
