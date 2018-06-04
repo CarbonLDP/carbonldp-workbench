@@ -25,9 +25,9 @@ export class LoginComponent implements OnInit {
 	sending:boolean = false;
 	errorMessage:string = "";
 
-	login:{ email:string, password:string, rememberMe:boolean } =
+	login:{ username:string, password:string, rememberMe:boolean } =
 		{
-			email: "",
+			username: "",
 			password: "",
 			rememberMe: false
 		};
@@ -45,12 +45,12 @@ export class LoginComponent implements OnInit {
 		this.$loginForm.find( ".ui.checkbox" ).checkbox();
 	}
 
-	onSubmit( data:{ email:string, password:string, rememberMe:boolean }, $event:any ):void {
+	onSubmit( data:{ username:string, password:string, rememberMe:boolean }, $event:any ):void {
 		$event.preventDefault();
 		this.sending = true;
 		this.errorMessage = "";
 
-		let username:string = data.email;
+		let username:string = data.username;
 		let password:string = data.password;
 		let rememberMe:boolean = ! ! data.rememberMe;
 
