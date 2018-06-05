@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, Output, Inject, EventEmitter, OnInit } fr
 
 import { AuthService } from "app/authentication/services";
 
-import { Class as Credentials } from "carbonldp/Auth/Credentials";
+import { TokenCredentials } from "carbonldp/Auth";
 import { Errors } from "carbonldp/HTTP";
 
 import * as $ from "jquery";
@@ -15,7 +15,7 @@ import "semantic-ui/semantic";
 } )
 export class LoginComponent implements OnInit {
 	@Input( "container" ) container:string | JQuery;
-	@Output( "onLogin" ) onLogin:EventEmitter<Credentials> = new EventEmitter<Credentials>();
+	@Output( "onLogin" ) onLogin:EventEmitter<TokenCredentials> = new EventEmitter<TokenCredentials>();
 
 	element:ElementRef;
 
@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
 		let password:string = data.password;
 		let rememberMe:boolean = ! ! data.rememberMe;
 
-		this.authService.login( username, password, rememberMe ).then( ( credentials:Credentials ) => {
+		this.authService.login( username, password, rememberMe ).then( ( credentials:TokenCredentials ) => {
 			this.sending = false;
 			this.onLogin.emit( credentials );
 		} ).catch( ( error:Errors.HTTPError ) => {

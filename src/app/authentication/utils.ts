@@ -52,7 +52,7 @@ export function authenticationCookieIsPresent():boolean {
 export function authenticateWithCookie( carbonldp:CarbonLDP ):Promise<any> {
 	let token:TokenCredentials;
 	try {
-		token = <any>Cookies.getJSON( AUTH_COOKIE );
+		token = Cookies.getJSON( AUTH_COOKIE );
 	} catch( error ) {
 		return Promise.reject( error );
 	}

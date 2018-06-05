@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { Document } from "carbonldp/Document";
 import { Pointer } from "carbonldp/Pointer";
 import { LDP } from "carbonldp/Vocabularies";
 
@@ -22,7 +22,7 @@ export class BackupsService {
 		return Promise.resolve();
 	}
 
-	getAll():Promise<PersistedDocument[]> {
+	getAll():Promise<Document[]> {
 		return this.carbonldp.documents.getChildren( this.BACKUPS_URI );
 	}
 
@@ -35,9 +35,9 @@ export class BackupsService {
 		return this.carbonldp.documents.delete( uri );
 	}
 
-	private convertToNonRDFSource( backupPointer:Pointer ):Promise<PersistedDocument> {
-		return backupPointer.resolve().then( ( backupDocument:PersistedDocument ) => {
-			backupDocument.defaultInteractionModel = Pointer.create( LDP.NonRDFSource );
+	private convertToNonRDFSource( backupPointer:Pointer ):Promise<Document> {
+		return backupPointer.resolve().then( ( backupDocument:Document ) => {
+			backupDocument.defaultInteractionModel = Pointer.create( { id: LDP.NonRDFSource } );
 			return backupDocument.save();
 		} );
 	}

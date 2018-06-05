@@ -1,4 +1,5 @@
 :host {
+	color: black;
 	display: block;
 
 	.hidden {
@@ -22,5 +23,34 @@
 		max-height: 200px;
 		overflow-y: scroll;
 		border: 1px solid lightgray;
+	}
+
+	.credentialsTab {
+
+		padding: 0;
+
+		.ui.segments {
+			border: none;
+		}
+
+		.credentialsTab-credentials {
+
+			.credentials-types {
+
+				padding: 0;
+
+				.ui.tabular.menu {
+					height: 100%;
+
+					.active.item {
+
+						border-left: none;
+					}
+					.active.item:first-child {
+						border-top: none;
+					}
+				}
+			}
+		}
 	}
 }

@@ -1,73 +1,64 @@
 import { Injectable, EventEmitter } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import * as User from "carbonldp/Auth/User";
-import * as Users from "carbonldp/Auth/Users";
-import * as PersistedUser from "carbonldp/Auth/PersistedUser";
-import { Response } from "carbonldp/HTTP";
-import { ArrayUtils } from "carbonldp/Utils";
+import { User, TransientUser, UsernameAndPasswordCredentials, LDAPCredentials } from "carbonldp/Auth";
 import { URI } from "carbonldp/RDF/URI";
 import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { CS } from "carbonldp/Vocabularies";
 import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument/QueryDocumentsBuilder";
 
+
 @Injectable()
 export class UsersService {
 
 	private carbonldp:CarbonLDP;
-	public users:Map<string, PersistedUser.Class>;
-	private _activeUser:PersistedUser.Class;
-	public set activeUser( user:PersistedUser.Class ) {
+	public users:Map<string, User>;
+	private _activeUser:User;
+	public set activeUser( user:User ) {
 		this._activeUser = user;
 		this.onUserHasChanged.emit( this.activeUser );
 	}
 
-	public get activeUser():PersistedUser.Class {
+	public get activeUser():User {
 		return this._activeUser;
 	}
 
-	public onUserHasChanged:EventEmitter<PersistedUser.Class> = new EventEmitter<PersistedUser.Class>();
+	public onUserHasChanged:EventEmitter<User> = new EventEmitter<User>();
 
 	constructor( carbonldp:CarbonLDP ) {
 		this.carbonldp = carbonldp;
-		this.users = new Map<string, PersistedUser.Class>();
+		this.users = new Map<string, User>();
 	}
 
-	public get( slugOrURI:string ):Promise<PersistedUser.Class> {
+	public get( slugOrURI:string ):Promise<User> {
 		let uri:string = this.carbonldp.baseURI + `users/${slugOrURI}/`;
 		if( URI.isAbsolute( slugOrURI ) ) uri = slugOrURI;
-		this.users = typeof this.users === "undefined" ? new Map<string, PersistedUser.Class>() : this.users;
-		return this.carbonldp.documents.get<PersistedUser.Class>( uri ).then( ( user:PersistedUser.Class ) => {
+		return this.carbonldp.documents.get<User>( uri ).then( ( user:User ) => {
+			// TODO: Remove this when SDK resolves preference of Full document instead of partial document. issue:#264
+			delete user._partialMetadata;
 			this.users.set( user.id, user );
 			return user;
 		} );
 	}
 
-	public getAll( limit?:number, page?:number, orderBy?:string, ascending:boolean = true ):Promise<PersistedUser.Class[]> {
-		let uri:string = this.carbonldp.baseURI + "users/";
-		this.users = typeof this.users === "undefined" ? new Map<string, PersistedUser.Class>() : this.users;
+	public getAll( limit?:number, page?:number, orderBy?:string, ascending:boolean = true ):Promise<User[]> {
 
-		let property:string = orderBy ? orderBy : "name";
+		let property:string = orderBy ? orderBy : "id";
 
-		return this.carbonldp.documents.getMembers<PersistedUser.Class>( uri, ( _:QueryDocumentsBuilder ) => {
-			let func = _.properties( {
-				"name": _.inherit,
-				"email": _.inherit,
-				"created": _.inherit,
-				"modified": _.inherit,
-			} );
+		return this.carbonldp.auth.users.getChildren<User>( ( _:QueryDocumentsBuilder ) => {
+			let func = _.withType( CS.User )
+				.properties( {
+					"created": _.inherit,
+					"modified": _.inherit,
+				} );
 			if( ! orderBy ) func.orderBy( property, ascending ? "ASC" : "DESC" );
 			if( typeof limit !== "undefined" ) func.limit( limit );
 			if( typeof page !== "undefined" ) func.offset( page * limit );
+
 			return func;
+		} ).then( ( users:User[] ) => {
 
-		} ).then( ( users:PersistedUser.Class[] ) => {
-			users.forEach( ( user:PersistedUser.Class ) => this.users.set( user.id, user ) );
-
-			let usersArray:PersistedUser.Class[] = ArrayUtils.from( this.users.values() );
-			if( orderBy ) usersArray = this.getSortedUsers( usersArray, orderBy, ascending );
-
-			return usersArray;
+			return orderBy ? this.getSortedUsers( users, orderBy, ascending ) : users;
 		} );
 	}
 
@@ -82,24 +73,26 @@ export class UsersService {
 		} );
 	}
 
-	public saveUser( user:PersistedUser.Class ):Promise<[ PersistedUser.Class, Response ]> {
+	public saveUser( user:User ):Promise<User> {
 		return user.save();
 	}
 
-	public saveAndRefreshUser( user:PersistedUser.Class ):Promise<[ PersistedUser.Class, Response [] ]> {
+	public saveAndRefreshUser( user:User ):Promise<User> {
 		return user.saveAndRefresh();
 	}
 
-	public createUser( email:string, password:string, enabled:boolean ):Promise<PersistedUser.Class> {
-		return this.carbonldp.auth.users.register( email, password, enabled );
+	public createUser( credentials:UsernameAndPasswordCredentials | LDAPCredentials, slug?:string ):Promise<User> {
+
+		let newUser:TransientUser = User.create( { credentials: credentials } );
+
+		return this.carbonldp.auth.users.createChild( newUser, slug );
 	}
 
-	public deleteUser( user:User.Class, slug?:string ):Promise<void> {
-		let users:Users.Class = this.carbonldp.auth.users;
-		return users.delete( user.id );
+	public deleteUser( user:User, slug?:string ):Promise<void> {
+		return this.carbonldp.documents.delete( user.id );
 	}
 
-	private getSortedUsers( users:PersistedUser.Class[], orderBy:string, ascending:boolean ):PersistedUser.Class[] {
+	private getSortedUsers( users:User[], orderBy:string, ascending:boolean ):User[] {
 		return users.sort( ( userA, userB ) => {
 			if( typeof userA[ orderBy ] === "string" && typeof userB[ orderBy ] === "string" ) {
 				if( userA[ orderBy ].toLowerCase() > userB[ orderBy ].toLowerCase() ) return ascending ? - 1 : 1;

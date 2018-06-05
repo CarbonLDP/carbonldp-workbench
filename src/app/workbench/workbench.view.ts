@@ -2,6 +2,7 @@ import { Component, Inject, EventEmitter } from "@angular/core";
 import { Router, Event, NavigationEnd } from "@angular/router";
 
 import { CarbonLDP } from "carbonldp";
+import { User } from "carbonldp/Auth";
 
 import { AuthService } from "app/authentication/services";
 import { HeaderService } from "app/header/header.service";
@@ -46,12 +47,20 @@ export class WorkbenchView {
 
 
 	ngOnInit():void {
-		this.populateHeader();
+		this.getAuthenticatedUser()
+			.catch( error => console.error( error ) )
+			.then( () => {
+				this.populateHeader();
+			} );
 		this.populateSidebar();
 	}
 
 	toggleSidebar():void {
 		this.sidebarService.toggle();
+	}
+
+	private getAuthenticatedUser():Promise<User> {
+		return this.carbonldp.auth.authenticatedUser.resolve();
 	}
 
 	private populateHeader():void {
@@ -67,26 +76,25 @@ export class WorkbenchView {
 			this.router.navigate( [ "/login" ] );
 		} );
 
-		let name:string = (this.carbonldp.auth.authenticatedUser && this.carbonldp.auth.authenticatedUser.name) ? this.carbonldp.auth.authenticatedUser.name : "User";
-		// TODO: Remove any to use HeaderItem instead
-		this.headerService.addItems( <any>[
+		let name:string = ! ! this.carbonldp.auth.authenticatedUser.name ? this.carbonldp.auth.authenticatedUser.name : "User";
+		this.headerService.addItems( [
 			{
 				name: "Dashboard",
 				route: [ "" ],
 				index: 0,
 			},
-			// {
-			// 	name: name,
-			// 	children: [
-			// 		{
-			// 			icon: "sign out icon",
-			// 			name: "Log Out",
-			// 			onClick: onLogout,
-			// 			index: 100,
-			// 		}
-			// 	],
-			// 	index: 100,
-			// }
+			{
+				name: name,
+				children: [
+					{
+						icon: "sign out icon",
+						name: "Log Out",
+						onClick: onLogout,
+						index: 100,
+					}
+				],
+				index: 100,
+			}
 		] );
 	}
 
@@ -112,12 +120,12 @@ export class WorkbenchView {
 				icon: "terminal icon",
 				route: [ this.base, "sparql-client" ],
 			},
-			// {
-			// 	type: "link",
-			// 	name: "Security",
-			// 	icon: "lock icon",
-			// 	route: [ this.base, "security", "users" ],
-			// },
+			{
+				type: "link",
+				name: "Security",
+				icon: "lock icon",
+				route: [ this.base, "security", "users" ],
+			},
 			// {
 			// 	type: "link",
 			// 	name: "Configuration",

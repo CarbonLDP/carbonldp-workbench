@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { Document } from "carbonldp/Document";
 
 import { JobsService } from "../job/jobs.service";
 import * as Job from "../job/job";
@@ -19,7 +19,7 @@ import "semantic-ui/semantic";
 export class BackupsComponent implements OnInit {
 	carbonldp:CarbonLDP;
 	jobsService:JobsService;
-	backupJob:PersistedDocument;
+	backupJob:Document;
 
 	@ViewChild( BackupsListComponent ) backupsListComponent:BackupsListComponent;
 
@@ -29,9 +29,9 @@ export class BackupsComponent implements OnInit {
 	}
 
 	ngOnInit():void {
-		this.jobsService.getJobOfType( Job.Type.EXPORT_BACKUP ).then( ( job:PersistedDocument ) => {
+		this.jobsService.getJobOfType( Job.Type.EXPORT_BACKUP ).then( ( job:Document ) => {
 			if( ! ! job ) this.backupJob = job;
-			else this.jobsService.createExportBackup().then( ( exportBackupJob:PersistedDocument ) => {
+			else this.jobsService.createExportBackup().then( ( exportBackupJob:Document ) => {
 				this.backupJob = exportBackupJob;
 			} );
 		} );

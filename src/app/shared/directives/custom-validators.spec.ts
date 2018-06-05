@@ -1,4 +1,5 @@
-import { FormControl } from "@angular/forms";
+import { Injector } from "@angular/core";
+import { FormControl, NgControl } from "@angular/forms";
 import { EmailValidator, SlugValidator, MatchValidator, DomainValidator, URIValidator, FragmentValidator, URIFragmentValidator, RequiredIfValidator } from "./custom-validators";
 
 
@@ -59,21 +60,33 @@ export function customValidatorsSpecs() {
 
 		describe( "MatchValidator", () => {
 
-
 			it( "Should return matchError", () => {
 
-				let directive = new MatchValidator();
+				let control:FormControl = new FormControl(),
+					injector:Injector = Injector.create( {
+						providers: [ { provide: NgControl, useValue: control } ]
+					} );
+
+				let directive = new MatchValidator( injector );
 				directive.matchTo = "my value";
 
+				control.setValue( "my valu" );
 				expect( directive.validate( new FormControl( "my valu" ) ) ).toEqual( { "matchError": true } );
+				control.setValue( "my valuE" );
 				expect( directive.validate( new FormControl( "my valuE" ) ) ).toEqual( { "matchError": true } );
+				control.setValue( "MY VALUE" );
 				expect( directive.validate( new FormControl( "MY VALUE" ) ) ).toEqual( { "matchError": true } );
 
 			} );
 
 			it( "Should not return matchError", () => {
 
-				let directive = new MatchValidator();
+				let control:FormControl = new FormControl(),
+					injector:Injector = Injector.create( {
+						providers: [ { provide: NgControl, useValue: control } ]
+					} );
+
+				let directive = new MatchValidator( injector );
 				directive.matchTo = "my value";
 
 				expect( directive.validate( new FormControl( "my value" ) ) ).toBeNull();

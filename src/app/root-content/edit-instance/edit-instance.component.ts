@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from "@angular/core";
 
 import { Errors } from "carbonldp/HTTP";
-import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { Document } from "carbonldp/Document";
 import { Pointer } from "carbonldp/Pointer";
 import { CS } from "carbonldp/Vocabularies";
 
@@ -83,16 +83,16 @@ export class EditInstanceComponent implements OnInit {
 		if( name ) this.instance.name = name;
 		if( description ) this.instance.description = description;
 		if( allowsAllOrigins ) {
-			this.instance.allowsOrigins = [ Pointer.create( CS.AllOrigins ) ];
+			this.instance.allowsOrigins = [ Pointer.create( { id: CS.AllOrigins } ) ];
 		} else {
 			this.instance.allowsOrigins = allowedDomains.length > 0 ? allowedDomains : this.instance.allowsOrigins;
 		}
 
-		this.instance.saveAndRefresh().then( ( updatedInstance:PersistedDocument ) => {
+		this.instance.saveAndRefresh().then( ( updatedInstance:Document ) => {
 			this.displaySuccessMessage = true;
 			return updatedInstance;
 		} ).catch( ( error:Errors.HTTPError ):void => {
-			this.errorMessage = ErrorMessageGenerator.getErrorMessage( error )
+			this.errorMessage = ErrorMessageGenerator.getErrorMessage( error );
 			this.errorMessage.content = this.getErrorMessage( error );
 		} ).then( ():void => {
 			this.submitting = false;

@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router, Resolve, ActivatedRoute, ActivatedRouteSnapshot } from '@angular/router';
 
-import * as PersistedUser from "carbonldp/Auth/PersistedUser";
+import { User } from "carbonldp/Auth";
 
 import { UsersService } from "./users.service";
 
 @Injectable()
-export class UserResolver implements Resolve<PersistedUser.Class | boolean> {
+export class UserResolver implements Resolve<User | boolean> {
 
 	private router:Router;
 	private activatedRoute:ActivatedRoute;
@@ -22,9 +22,9 @@ export class UserResolver implements Resolve<PersistedUser.Class | boolean> {
 
 
 	// TODO: Change the use of location to the righ way of navigate with an activatedRoute, check if this 'bug' has been resolved on further angular versions
-	resolve( route:ActivatedRouteSnapshot ):Promise<PersistedUser.Class | boolean> | PersistedUser.Class {
+	resolve( route:ActivatedRouteSnapshot ):Promise<User | boolean> | User {
 		let slug:string = route.params[ "user-slug" ];
-		return this.usersService.get( slug ).then( ( user:PersistedUser.Class ) => {
+		return this.usersService.get( slug ).then( ( user:User ) => {
 			return user;
 		} ).catch( ( error:any ):boolean => {
 			let url:string = this.location.path(),

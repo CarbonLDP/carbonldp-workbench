@@ -4,8 +4,8 @@ import { CarbonLDP } from "carbonldp";
 import { RequestService, RequestUtils, RequestOptions, Response } from "carbonldp/HTTP";
 import { LDP } from "carbonldp/Vocabularies";
 import { RDFDocument, RDFDocumentParser } from "carbonldp/RDF/Document";
-import { PersistedDocument } from "carbonldp/PersistedDocument";
-import { AccessPointBase } from "carbonldp/AccessPoint";
+import { Document } from "carbonldp/Document";
+import { BaseAccessPoint } from "carbonldp/AccessPoint";
 import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 
 @Injectable()
@@ -54,9 +54,9 @@ export class DocumentsResolverService {
 		} );
 	}
 
-	createChild( parentURI:string, content:any, childSlug?:string ):Promise<PersistedDocument> {
+	createChild( parentURI:string, content:any, childSlug?:string ):Promise<Document> {
 		return this.carbonldp.documents.createChild( parentURI, content, childSlug ).then(
-			( [ createdChild, response ]:[ PersistedDocument, Response ] ) => {
+			( createdChild:Document ) => {
 				return createdChild;
 			}
 		).catch( ( error ) => {
@@ -64,9 +64,9 @@ export class DocumentsResolverService {
 		} );
 	}
 
-	createAccessPoint( document:PersistedDocument, accessPoint:AccessPointBase, slug?:string ):Promise<PersistedDocument> {
+	createAccessPoint( document:Document, accessPoint:BaseAccessPoint, slug?:string ):Promise<Document> {
 		return document.createAccessPoint( accessPoint, slug ).then(
-			( createdChild:PersistedDocument ) => {
+			( createdChild:Document ) => {
 				return createdChild;
 			}
 		).catch( ( error ) => {
