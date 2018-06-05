@@ -3,7 +3,7 @@ import { Injectable, EventEmitter } from "@angular/core";
 import * as Cookies from "js-cookie";
 
 import { CarbonLDP } from "carbonldp";
-import { User, PersistedUser, TokenCredentials, UsernameAndPasswordCredentials } from "carbonldp/Auth";
+import { User, TransientUser, TokenCredentials, UsernameAndPasswordCredentials } from "carbonldp/Auth";
 
 import { AUTH_COOKIE } from "./../utils";
 import * as AuthService from "./auth.service";
@@ -35,7 +35,7 @@ export class CarbonLDPAuthService implements AuthService.Class {
 		return this.carbonldp.auth.isAuthenticated();
 	}
 
-	getAuthenticatedUser():Promise<PersistedUser> {
+	getAuthenticatedUser():Promise<User> {
 		return this.carbonldp.auth.authenticatedUser.resolve();
 	}
 
@@ -55,11 +55,11 @@ export class CarbonLDPAuthService implements AuthService.Class {
 		this.loggedOutEmitter.emit( null );
 	}
 
-	register( name:string, username:string, password:string ):Promise<PersistedUser>;
-	register( name:string, username:string, password:string, enabled:boolean ):Promise<PersistedUser>;
-	register( name:string, username:string, password:string, enabled?:boolean ):Promise<PersistedUser> {
+	register( name:string, username:string, password:string ):Promise<User>;
+	register( name:string, username:string, password:string, enabled:boolean ):Promise<User>;
+	register( name:string, username:string, password:string, enabled?:boolean ):Promise<User> {
 
-		let newUser:User = User.create( {
+		let newUser:TransientUser = User.create( {
 			name: name,
 			credentials: UsernameAndPasswordCredentials.create( {
 				username: username,
