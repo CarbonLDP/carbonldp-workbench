@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
-import { PersistedUser } from "carbonldp/Auth";
+import { User } from "carbonldp/Auth";
 
 import { Modes } from "./user-details.component";
 
@@ -15,7 +15,7 @@ export class UserDetailsView {
 	private router:Router;
 	private activatedRoute:ActivatedRoute;
 
-	private user:PersistedUser;
+	private user:User;
 	private mode:string = Modes.READ;
 
 	public canDisplay:boolean = true;
@@ -26,7 +26,7 @@ export class UserDetailsView {
 	}
 
 	ngOnInit() {
-		this.activatedRoute.data.forEach( ( data:{ user:PersistedUser } ) => {
+		this.activatedRoute.data.forEach( ( data:{ user:User } ) => {
 			this.user = data.user;
 		} );
 		this.activatedRoute.queryParams.subscribe( ( params ) => {

@@ -1,7 +1,7 @@
 import { ElementRef, Component, Input, Output, EventEmitter, AfterViewInit, OnChanges, SimpleChanges } from "@angular/core";
 
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
-import { User, PersistedUser, CredentialsSet, UsernameAndPasswordCredentials, LDAPCredentials } from "carbonldp/Auth";
+import { User, CredentialsSet, UsernameAndPasswordCredentials, LDAPCredentials } from "carbonldp/Auth";
 
 import { UsersService } from "../users.service";
 import { RolesService } from "../../roles/roles.service";
@@ -46,7 +46,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 	};
 
 	@Input() mode:string = Modes.EDIT;
-	@Input() user:PersistedUser;
+	@Input() user:User;
 	@Input() canClose:boolean = true;
 
 	@Output() onClose:EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -76,7 +76,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 		// if( ! changes.user.currentValue && ! changes.user.previousValue ) return;
 		if( changes.user.currentValue !== changes.user.previousValue ) {
 			// if( this.mode === Modes.CREATE && ! this.user ) {
-			// 	this.user = <User & PersistedUser>User.create( "New User Name", "new-user@mail.com", "password" );
+			// 	this.user = <User & User>User.create( "New User Name", "new-user@mail.com", "password" );
 			// }
 			this.changeUser( this.user );
 		}
@@ -86,7 +86,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 		this.$element.find( ".credentials-types .tabular.menu .item" ).tab();
 	}
 
-	private changeUser( newUser:PersistedUser ):void {
+	private changeUser( newUser:User ):void {
 		this.user = newUser;
 		if( this.mode === Modes.CREATE ) {
 			this.updateFormModel( "new-user@mail.com", "password", [] );
@@ -125,7 +125,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 	}
 
 	private getRoles():Promise<PersistedRole.Class[]>;
-	private getRoles( user?:PersistedUser ):Promise<PersistedRole.Class[]>;
+	private getRoles( user?:User ):Promise<PersistedRole.Class[]>;
 	private getRoles( user?:any ):Promise<PersistedRole.Class[]> {
 		if( ! user ) return this.rolesService.getAll();
 		return this.rolesService.getAll().then( ( roles:PersistedRole.Class[] ) => {
@@ -167,7 +167,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 		}
 	}
 
-	private editUser( user:PersistedUser, credentials:UsernameAndPasswordCredentials | LDAPCredentials, userFormData:UserFormModel ):void {
+	private editUser( user:User, credentials:UsernameAndPasswordCredentials | LDAPCredentials, userFormData:UserFormModel ):void {
 		credentials = credentials as UsernameAndPasswordCredentials;
 
 		let changedCredentials:BasicCredentialsFormModel = userFormData.basicCredentialsFormModel,
@@ -181,7 +181,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 			} );
 		}
 
-		this.usersService.saveAndRefreshUser( user ).then( ( updatedUser:PersistedUser ) => {
+		this.usersService.saveAndRefreshUser( user ).then( ( updatedUser:User ) => {
 			// TODO: set user roles
 			this.displaySuccessMessage = true;
 			this.onSuccess.emit( true );
@@ -199,7 +199,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 
 		let credential:UsernameAndPasswordCredentials = this.createCredential( userFormData );
 
-		this.usersService.createUser( credential, userFormData.slug ).then( ( createdUser:PersistedUser ) => {
+		this.usersService.createUser( credential, userFormData.slug ).then( ( createdUser:User ) => {
 			this.user = createdUser;
 			this.credentials = createdUser.credentials;
 			// TODO: Add roles after persisting the user
@@ -248,7 +248,7 @@ export class UserDetailsComponent implements OnChanges, AfterViewInit {
 		evt.target.value = DocumentExplorerLibrary.getAppendedSlashSlug( evt.target.value );
 	}
 
-	private editUserRoles( user:PersistedUser, selectedRoles:string[] ):Promise<any> {
+	private editUserRoles( user:User, selectedRoles:string[] ):Promise<any> {
 		let removedRoles:string[] = this.getRemovedRoles( selectedRoles ),
 			promises:Promise<any>[] = [];
 

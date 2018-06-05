@@ -1,7 +1,7 @@
 import { Injectable, EventEmitter } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { User, PersistedUser, UsernameAndPasswordCredentials, LDAPCredentials } from "carbonldp/Auth";
+import { User, TransientUser, UsernameAndPasswordCredentials, LDAPCredentials } from "carbonldp/Auth";
 import { URI } from "carbonldp/RDF/URI";
 import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { CS } from "carbonldp/Vocabularies";
@@ -12,28 +12,28 @@ import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument/QueryDocum
 export class UsersService {
 
 	private carbonldp:CarbonLDP;
-	public users:Map<string, PersistedUser>;
-	private _activeUser:PersistedUser;
-	public set activeUser( user:PersistedUser ) {
+	public users:Map<string, User>;
+	private _activeUser:User;
+	public set activeUser( user:User ) {
 		this._activeUser = user;
 		this.onUserHasChanged.emit( this.activeUser );
 	}
 
-	public get activeUser():PersistedUser {
+	public get activeUser():User {
 		return this._activeUser;
 	}
 
-	public onUserHasChanged:EventEmitter<PersistedUser> = new EventEmitter<PersistedUser>();
+	public onUserHasChanged:EventEmitter<User> = new EventEmitter<User>();
 
 	constructor( carbonldp:CarbonLDP ) {
 		this.carbonldp = carbonldp;
-		this.users = new Map<string, PersistedUser>();
+		this.users = new Map<string, User>();
 	}
 
-	public get( slugOrURI:string ):Promise<PersistedUser> {
+	public get( slugOrURI:string ):Promise<User> {
 		let uri:string = this.carbonldp.baseURI + `users/${slugOrURI}/`;
 		if( URI.isAbsolute( slugOrURI ) ) uri = slugOrURI;
-		return this.carbonldp.documents.get<PersistedUser>( uri ).then( ( user:PersistedUser ) => {
+		return this.carbonldp.documents.get<User>( uri ).then( ( user:User ) => {
 			// TODO: Remove this when SDK resolves preference of Full document instead of partial document. issue:#264
 			delete user._partialMetadata;
 			this.users.set( user.id, user );
@@ -41,11 +41,11 @@ export class UsersService {
 		} );
 	}
 
-	public getAll( limit?:number, page?:number, orderBy?:string, ascending:boolean = true ):Promise<PersistedUser[]> {
+	public getAll( limit?:number, page?:number, orderBy?:string, ascending:boolean = true ):Promise<User[]> {
 
 		let property:string = orderBy ? orderBy : "id";
 
-		return this.carbonldp.auth.users.getChildren<PersistedUser>( ( _:QueryDocumentsBuilder ) => {
+		return this.carbonldp.auth.users.getChildren<User>( ( _:QueryDocumentsBuilder ) => {
 			let func = _.withType( CS.User )
 				.properties( {
 					"created": _.inherit,
@@ -56,7 +56,7 @@ export class UsersService {
 			if( typeof page !== "undefined" ) func.offset( page * limit );
 
 			return func;
-		} ).then( ( users:PersistedUser[] ) => {
+		} ).then( ( users:User[] ) => {
 
 			return orderBy ? this.getSortedUsers( users, orderBy, ascending ) : users;
 		} );
@@ -73,17 +73,17 @@ export class UsersService {
 		} );
 	}
 
-	public saveUser( user:PersistedUser ):Promise<PersistedUser> {
+	public saveUser( user:User ):Promise<User> {
 		return user.save();
 	}
 
-	public saveAndRefreshUser( user:PersistedUser ):Promise<PersistedUser> {
+	public saveAndRefreshUser( user:User ):Promise<User> {
 		return user.saveAndRefresh();
 	}
 
-	public createUser( credentials:UsernameAndPasswordCredentials | LDAPCredentials, slug?:string ):Promise<PersistedUser> {
+	public createUser( credentials:UsernameAndPasswordCredentials | LDAPCredentials, slug?:string ):Promise<User> {
 
-		let newUser:User = User.create( { credentials: credentials } );
+		let newUser:TransientUser = User.create( { credentials: credentials } );
 
 		return this.carbonldp.auth.users.createChild( newUser, slug );
 	}
@@ -92,7 +92,7 @@ export class UsersService {
 		return this.carbonldp.documents.delete( user.id );
 	}
 
-	private getSortedUsers( users:PersistedUser[], orderBy:string, ascending:boolean ):PersistedUser[] {
+	private getSortedUsers( users:User[], orderBy:string, ascending:boolean ):User[] {
 		return users.sort( ( userA, userB ) => {
 			if( typeof userA[ orderBy ] === "string" && typeof userB[ orderBy ] === "string" ) {
 				if( userA[ orderBy ].toLowerCase() > userB[ orderBy ].toLowerCase() ) return ascending ? - 1 : 1;

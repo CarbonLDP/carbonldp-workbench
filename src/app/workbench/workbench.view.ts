@@ -2,7 +2,7 @@ import { Component, Inject, EventEmitter } from "@angular/core";
 import { Router, Event, NavigationEnd } from "@angular/router";
 
 import { CarbonLDP } from "carbonldp";
-import { PersistedUser } from "carbonldp/Auth";
+import { User } from "carbonldp/Auth";
 
 import { AuthService } from "app/authentication/services";
 import { HeaderService } from "app/header/header.service";
@@ -59,7 +59,7 @@ export class WorkbenchView {
 		this.sidebarService.toggle();
 	}
 
-	private getAuthenticatedUser():Promise<PersistedUser> {
+	private getAuthenticatedUser():Promise<User> {
 		return this.carbonldp.auth.authenticatedUser.resolve();
 	}
 

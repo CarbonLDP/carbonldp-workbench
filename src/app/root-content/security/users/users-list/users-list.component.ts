@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute, NavigationExtras } from "@angular/router";
 
 import { CarbonLDP } from "carbonldp";
-import { User, PersistedUser } from "carbonldp/Auth";
+import { User } from "carbonldp/Auth";
 import { URI } from "carbonldp/RDF/URI";
 
 import { UsersService } from "../users.service";
@@ -32,7 +32,7 @@ export class UsersListComponent implements OnInit {
 	private ascending:boolean = false;
 
 	public errorMessage:Message;
-	public users:PersistedUser[] = [];
+	public users:User[] = [];
 	public loading:boolean = false;
 	public deletingUser:User;
 
@@ -53,7 +53,7 @@ export class UsersListComponent implements OnInit {
 		this.getNumberOfUsers().then( ( amount:number ) => {
 			this.totalUsers = amount;
 			return this.getUsers();
-		} ).then( ( users:PersistedUser[] ) => {
+		} ).then( ( users:User[] ) => {
 			this.users = users;
 		} ).catch( ( error ) => {
 			console.error( error );
@@ -63,23 +63,23 @@ export class UsersListComponent implements OnInit {
 		} );
 	}
 
-	private getUsers():Promise<PersistedUser[]> {
-		return this.usersService.getAll( this.usersPerPage, this.activePage, this.sortedColumn, this.ascending ).then( ( users:PersistedUser[] ) => {
-			return users.filter( ( user:PersistedUser ) => { return user.id.indexOf( "/users/me/" ) === - 1 } );
+	private getUsers():Promise<User[]> {
+		return this.usersService.getAll( this.usersPerPage, this.activePage, this.sortedColumn, this.ascending ).then( ( users:User[] ) => {
+			return users.filter( ( user:User ) => { return user.id.indexOf( "/users/me/" ) === - 1 } );
 		} );
 	}
 
-	private openUser( event:Event, user:PersistedUser ):void {
+	private openUser( event:Event, user:User ):void {
 		event.stopPropagation();
 		this.goToUser( user );
 	}
 
-	private onClickEditUser( event:Event, user:PersistedUser ):void {
+	private onClickEditUser( event:Event, user:User ):void {
 		event.stopPropagation();
 		this.goToUser( user, true );
 	}
 
-	private goToUser( user:PersistedUser, edit?:boolean ):void {
+	private goToUser( user:User, edit?:boolean ):void {
 		let slug:string = URI.getSlug( user.id );
 		let extras:NavigationExtras = { relativeTo: this.route };
 		if( edit ) extras.queryParams = { mode: UserDetailsModes.EDIT };

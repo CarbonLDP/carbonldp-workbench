@@ -2,7 +2,7 @@ import { Component, Input, Output, ElementRef, SimpleChange, EventEmitter } from
 
 import * as Role from "carbonldp/Auth/Role";
 import * as PersistedRole from "carbonldp/Auth/PersistedRole";
-import { PersistedUser } from "carbonldp/Auth";
+import { User } from "carbonldp/Auth";
 import { Response } from "carbonldp/HTTP";
 import { CS } from "carbonldp/Vocabularies";
 import { Pointer } from "carbonldp/Pointer";
@@ -26,7 +26,7 @@ export class RoleDetailsComponent {
 	private $element:JQuery;
 	private rolesService:RolesService;
 	private messagesAreaService:MessagesAreaService;
-	private roleUsers:PersistedUser[] = [];
+	private roleUsers:User[] = [];
 	private parentRole:PersistedRole.Class;
 
 	public Modes:typeof Modes = Modes;
@@ -153,16 +153,16 @@ export class RoleDetailsComponent {
 		} );
 	}
 
-	private getUsers( role:PersistedRole.Class ):Promise<PersistedUser[]> {
+	private getUsers( role:PersistedRole.Class ):Promise<User[]> {
 		let promises:Promise<any>[] = [],
-			users:PersistedUser[] = [];
+			users:User[] = [];
 		if( typeof role.users === "undefined" ) return Promise.resolve( users );
 
 		(<any>role.users).forEach( ( userPointer:Pointer ) => {
 			promises.push( userPointer.resolve() );
 		} );
-		return Promise.all( promises ).then( ( resolvedUsers:[ PersistedUser, Response ][] ) => {
-			resolvedUsers.forEach( ( [ resolvedUser, response ]:[ PersistedUser, Response ] ) => {
+		return Promise.all( promises ).then( ( resolvedUsers:[ User, Response ][] ) => {
+			resolvedUsers.forEach( ( [ resolvedUser, response ]:[ User, Response ] ) => {
 				users.push( resolvedUser );
 			} );
 			return users;
@@ -173,14 +173,14 @@ export class RoleDetailsComponent {
 		return this.rolesService.get( roleID );
 	}
 
-	private editRoleUsers( role:PersistedRole.Class, selectedUsers:PersistedUser[] ):Promise<void[]> {
+	private editRoleUsers( role:PersistedRole.Class, selectedUsers:User[] ):Promise<void[]> {
 		let promises:Promise<void>[] = [],
-			removedUsers:PersistedUser[] = this.getRemovedUsers( selectedUsers );
+			removedUsers:User[] = this.getRemovedUsers( selectedUsers );
 
-		selectedUsers.forEach( ( user:PersistedUser ) => {
+		selectedUsers.forEach( ( user:User ) => {
 			promises.push( this.registerUserToRole( user.id, role.id ) )
 		} );
-		removedUsers.forEach( ( user:PersistedUser ) => {
+		removedUsers.forEach( ( user:User ) => {
 			promises.push( this.removeUserFromRole( user.id, role.id ) )
 		} );
 
@@ -192,10 +192,10 @@ export class RoleDetailsComponent {
 		} );
 	}
 
-	private getRemovedUsers( selectedUsers:PersistedUser[] ):PersistedUser[] {
-		return this.roleUsers.filter( ( roleUser:PersistedUser ) => {
-			return ! selectedUsers.some( ( selectedUser:PersistedUser ) => selectedUser.id === roleUser.id );
-		} ).map( ( removedUser:PersistedUser ) => {
+	private getRemovedUsers( selectedUsers:User[] ):User[] {
+		return this.roleUsers.filter( ( roleUser:User ) => {
+			return ! selectedUsers.some( ( selectedUser:User ) => selectedUser.id === roleUser.id );
+		} ).map( ( removedUser:User ) => {
 			return removedUser
 		} );
 	}
@@ -216,7 +216,7 @@ export class RoleDetailsComponent {
 		evt.target.value = DocumentExplorerLibrary.getAppendedSlashSlug( evt.target.value );
 	}
 
-	private changeUsers( selectedUsers:PersistedUser[] ):void {
+	private changeUsers( selectedUsers:User[] ):void {
 		this.roleFormModel.users = selectedUsers;
 	}
 
@@ -255,5 +255,5 @@ export interface RoleFormModel {
 	name:string;
 	description?:string;
 	parentRole?:string;
-	users:PersistedUser[];
+	users:User[];
 }
