@@ -6,7 +6,7 @@
 			       name="name"
 			       [(ngModel)]="register.name"
 			       cwValidation
-			       required
+			       cw-required
 			       #name="cwValidation">
 		</div>
 		<cw-error-label *ngIf="!name.valid">
@@ -22,7 +22,7 @@
 			       name="username"
 			       [(ngModel)]="register.username"
 			       cwValidation
-			       required cw-username
+			       cw-required
 			       #username="cwValidation">
 		</div>
 		<cw-error-label *ngIf="!username.valid">
