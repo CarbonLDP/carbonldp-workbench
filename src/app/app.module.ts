@@ -17,7 +17,6 @@ import { ErrorView } from "./error-pages/error.view";
 import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
 import { DashboardView } from "./dashboard/dashboard.view";
 import { BackgroundVideoComponent } from "./error-pages/background-video.component";
-import { VersionsPresenterComponent } from "./versions-presenter/versions-presenter.component";
 
 import { RegisterComponent } from "./register/register.component";
 import { LoginComponent } from "./login/login.component";
@@ -60,7 +59,6 @@ import { SidebarService } from "./sidebar/sidebar.service";
 		BreadcrumbsComponent,
 
 		BackgroundVideoComponent,
-		VersionsPresenterComponent
 	],
 	providers: [
 		{
