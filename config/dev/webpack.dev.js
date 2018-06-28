@@ -1,5 +1,5 @@
-const commonConfig = require( "./webpack.common.js" );
-const helpers = require( "./webpack.helpers" );
+const commonConfig = require( "../webpack.common.js" );
+const helpers = require( "../webpack.helpers" );
 const webpackMerge = require( "webpack-merge" );
 const config = require( "./dev.config.json" );
 const carbonConfig = config.carbon;

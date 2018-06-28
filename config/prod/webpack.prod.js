@@ -1,7 +1,7 @@
 const webpackMerge = require( "webpack-merge" );
-const helpers = require( "./webpack.helpers" );
+const helpers = require( "../webpack.helpers" );
 const config = require( "./prod.config.json" );
-const commonConfig = require( "./webpack.common.js" );
+const commonConfig = require( "../webpack.common.js" );
 const carbonConfig = config.carbon;
 
 

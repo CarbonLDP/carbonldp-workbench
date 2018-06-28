@@ -1,14 +1,14 @@
 const webpack = require( "webpack" );
-const commonConfig = require( "./webpack.common.js" );
-const helpers = require( "./webpack.helpers" );
-const config = require( "./dev.config.json" );
+const commonConfig = require( "../webpack.common.js" );
+const helpers = require( "../webpack.helpers" );
+const config = require( "../dev/dev.config.json" );
 const carbonConfig = config.carbon;
 const webpackMerge = require( "webpack-merge" );
 const HtmlWebpackPlugin = require( "html-webpack-plugin" );
-const headImports = require( "./head.config" );
+const headImports = require( "../head.config" );
 
 // carbonldp's projects versions
-const workbench = require( "../package.json" );
+const workbench = require( "../../package.json" );
 
 
 // Plugins
@@ -31,7 +31,7 @@ const METADATA = webpackMerge( commonConfig( { env: ENV } ).metadata, {
 	port: PORT,
 	ENV: ENV,
 	isDevServer: helpers.isWebpackDevServer(),
-	CARBON: {
+	carbondlp: {
 		protocol: carbonConfig.protocol,
 		domain: carbonConfig.domain,
 	}
@@ -99,7 +99,7 @@ module.exports = function( options ) {
 					"baseUrl": JSON.stringify( METADATA.baseUrl ),
 					"ENV": JSON.stringify( METADATA.ENV ),
 					"NODE_ENV": JSON.stringify( METADATA.ENV ),
-					"CARBON": {
+					"carbonldp": {
 						"protocol": JSON.stringify( carbonConfig.protocol ),
 						"domain": JSON.stringify( carbonConfig.domain ),
 					},
