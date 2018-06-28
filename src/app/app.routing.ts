@@ -7,7 +7,6 @@ import { CarbonLDPProviderResolver } from "app/resolvers";
 
 // Components
 import { LoginView } from "./login/login.view";
-import { WorkbenchView } from "./workbench/workbench.view";
 import { ErrorView } from "./error-pages/error.view";
 import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
 
@@ -27,7 +26,6 @@ const appRoutes:Routes = [
 	// },
 	{
 		path: "",
-		component: WorkbenchView,
 		// canActivate: [ AuthenticatedGuard ],
 		data: {
 			// AuthenticatedGuard cases
@@ -37,7 +35,7 @@ const appRoutes:Routes = [
 		children: [
 			{
 				path: "",
-				loadChildren: "app/root-content/root-content.module#RootContentModule",
+				loadChildren: "app/workbench/workbench.module#WorkbenchModule",
 			},
 		]
 	},
