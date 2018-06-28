@@ -15,7 +15,6 @@ import { LoginView } from "./login/login.view";
 import { WorkbenchView } from "./workbench/workbench.view";
 import { ErrorView } from "./error-pages/error.view";
 import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
-import { DashboardView } from "./dashboard/dashboard.view";
 import { BackgroundVideoComponent } from "./error-pages/background-video.component";
 
 import { RegisterComponent } from "./register/register.component";
@@ -48,7 +47,6 @@ import { SidebarService } from "./sidebar/sidebar.service";
 		WorkbenchView,
 		ErrorView,
 		NotFoundErrorView,
-		DashboardView,
 
 		RegisterComponent,
 		LoginComponent,
