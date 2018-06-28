@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 
-import { RouterService } from "app/router.service";
+import { RouterService } from "app/shared/router.service";
 import { SidebarItem } from "./sidebar.service";
 
 @Component( {

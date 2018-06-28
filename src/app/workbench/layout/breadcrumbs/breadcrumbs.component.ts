@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 import { Router, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
 
-import { RouterService } from "app/router.service";
-import { SidebarService } from "app/sidebar/sidebar.service";
+import { RouterService } from "app/shared/router.service";
+import { SidebarService } from "../sidebar/sidebar.service";
 
 import "semantic-ui/semantic";
 
@@ -27,7 +27,7 @@ export class BreadcrumbsComponent {
 		this.sidebarService = sidebarService;
 		this.base = this.sidebarService.base;
 		this.router.events.subscribe( ( event ) => {
-			if( ! (event instanceof NavigationEnd ) ) return;
+			if( ! (event instanceof NavigationEnd) ) return;
 			this.breadCrumbs = [];
 			let url:string = "",
 				currentRoute = this.route.root;

@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, AfterViewInit } from "@angular/core";
 
-import { RouterService } from "app/router.service";
+import { RouterService } from "app/shared/router.service";
 import { HeaderItem } from "./header.service";
 
 import * as $ from "jquery";
