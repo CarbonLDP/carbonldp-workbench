@@ -15,6 +15,7 @@ import { DirectivesModule } from "./directives/directives.module";
 import { SemanticModule } from "./semantic/semantic.module";
 
 // Services
+import { RouterService } from "./router.service";
 import { MessagesAreaService } from "./messages-area/messages-area.service";
 
 @NgModule( {
@@ -48,7 +49,7 @@ export class SharedModule {
 	static forRoot():ModuleWithProviders {
 		return {
 			ngModule: SharedModule,
-			providers: [ MessagesAreaService ]
+			providers: [ MessagesAreaService, RouterService ]
 		};
 	}
 
