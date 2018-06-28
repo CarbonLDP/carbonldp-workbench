@@ -18,6 +18,7 @@ import { SPARQLClientModule } from "./sparql-client/sparql-client.module";
 import { ConfigurationModule } from "./configuration/configuration.module";
 import { DocumentExplorerModule } from "./explorer/document-explorer/document-explorer.module";
 import { DashboardModule } from "./dashboard/dahsboard.module";
+import { LayoutModule } from "./layout/layout.module";
 
 // Services
 import { DocumentsResolverService } from "./explorer/document-explorer/documents-resolver.service";
@@ -34,6 +35,7 @@ import { DocumentsResolverService } from "./explorer/document-explorer/documents
 		ConfigurationModule,
 		DocumentExplorerModule,
 		DashboardModule,
+		LayoutModule,
 	],
 	declarations: [
 		WorkbenchView,
