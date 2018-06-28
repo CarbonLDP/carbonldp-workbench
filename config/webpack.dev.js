@@ -14,7 +14,7 @@ const METADATA = {
 	port: devServerConfig.port,
 	ENV: "development",
 	isDevServer: true,
-	CARBON: {
+	carbonldp: {
 		protocol: carbonConfig.protocol,
 		domain: carbonConfig.domain,
 	}
@@ -25,7 +25,7 @@ module.exports = webpackMerge( commonConfig( METADATA ), {
 	devtool: "source-map",
 
 	mode: "development",
-	// Another rule to load ts files is to use [ "awesome-typescript-loader", "angular2-template-loader", "angular-router-loader" ]
+	// Another rule to load ts files in dev is to use [ "awesome-typescript-loader", "angular2-template-loader", "angular-router-loader" ]
 
 	output: {
 		path: helpers.root( "dist" ),

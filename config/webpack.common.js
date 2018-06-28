@@ -123,9 +123,9 @@ module.exports = function( metadata ) {
 					"baseUrl": JSON.stringify( metadata.baseUrl ),
 					"ENV": JSON.stringify( metadata.ENV ),
 					"NODE_ENV": JSON.stringify( metadata.ENV ),
-					"CARBON": {
-						"protocol": JSON.stringify( metadata.CARBON.protocol ),
-						"domain": JSON.stringify( metadata.CARBON.domain ),
+					"carbonldp": {
+						"protocol": JSON.stringify( metadata.carbonldp.protocol ),
+						"domain": JSON.stringify( metadata.carbonldp.domain ),
 					},
 					"PACKAGES": {
 						"carbonldp-workbench": JSON.stringify( workbench.version ),

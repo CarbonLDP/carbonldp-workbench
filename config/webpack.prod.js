@@ -9,7 +9,7 @@ const carbonConfig = config.carbon;
 const LoaderOptionsPlugin = require( "webpack/lib/LoaderOptionsPlugin" );
 const NoEmitOnErrorsPlugin = require( "webpack/lib/NoEmitOnErrorsPlugin" );
 const UglifyJsPlugin = require( "uglifyjs-webpack-plugin" );
-const OccurenceOrderPlugin = require( "webpack/lib/optimize/OccurrenceOrderPlugin" );
+const OccurrenceOrderPlugin = require( "webpack/lib/optimize/OccurrenceOrderPlugin" );
 
 
 // Webpack Constants
@@ -17,7 +17,7 @@ const METADATA = {
 	baseUrl: config.url.base,
 	ENV: "production",
 	isDevServer: false,
-	CARBON: {
+	carbonldp: {
 		protocol: carbonConfig.protocol,
 		domain: carbonConfig.domain,
 	}
@@ -71,7 +71,7 @@ module.exports = webpackMerge( commonConfig( METADATA ), {
 	plugins: [
 
 		// Webpack gives IDs to identify your modules. With this plugin, Webpack will analyze and prioritize often used modules assigning them the smallest ids.
-		new OccurenceOrderPlugin(),
+		new OccurrenceOrderPlugin(),
 
 		// Stops the build if there is any error.
 		new NoEmitOnErrorsPlugin(),
