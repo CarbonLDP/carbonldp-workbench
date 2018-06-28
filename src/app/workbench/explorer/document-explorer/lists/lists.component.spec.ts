@@ -8,8 +8,8 @@ import { ListRow, ListComponent } from "./../lists/list.component";
 import { LiteralRow, LiteralComponent } from "./../literals/literal.component";
 import { PointerRow, PointerComponent } from "./../pointers/pointer.component";
 import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
-import { BlankNodeRow } from "app/root-content/explorer/document-explorer/blank-nodes/blank-node.component";
-import { NamedFragmentRow } from "app/root-content/explorer/document-explorer/named-fragments/named-fragment.component";
+import { BlankNodeRow } from "app/workbench/explorer/document-explorer/blank-nodes/blank-node.component";
+import { NamedFragmentRow } from "app/workbench/explorer/document-explorer/named-fragments/named-fragment.component";
 
 export function listsSpecs() {
 

@@ -2,22 +2,22 @@ import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
 
 
-import { RootContentView } from "./root-content.view";
+import { WorkbenchView } from "./workbench.view";
 import { DashboardView } from "./dashboard/dashboard.view";
 import { EditInstanceView } from "./edit-instance/edit-instance.view";
 import { SPARQLClientView } from "./sparql-client/sparql-client.view";
 import { ExplorerView } from "./explorer/explorer.view";
 import { ConfigurationView } from "./configuration/configuration.view";
 
-export const RootContentRoutes:Routes = [
+export const WorkbenchRoutes:Routes = [
 	{
 		path: "",
-		component: RootContentView,
+		component: WorkbenchView,
 		data: {
 			alias: "",
 			displayName: "Workbench",
 			title: "Workbench",
-			hide:true,
+			hide: true,
 		},
 		children: [
 			{
@@ -25,7 +25,7 @@ export const RootContentRoutes:Routes = [
 				data: {
 					alias: "",
 					displayName: "Dashboard",
-					hide:false,
+					hide: false,
 				},
 				component: DashboardView,
 			},
@@ -66,10 +66,10 @@ export const RootContentRoutes:Routes = [
 			},
 			{
 				path: "security",
-				loadChildren: "app/root-content/security/security.module#SecurityModule",
+				loadChildren: "app/workbench/security/security.module#SecurityModule",
 			},
 		]
 	}
 ];
 
-export const routing:ModuleWithProviders = RouterModule.forChild( RootContentRoutes );
+export const routing:ModuleWithProviders = RouterModule.forChild( WorkbenchRoutes );

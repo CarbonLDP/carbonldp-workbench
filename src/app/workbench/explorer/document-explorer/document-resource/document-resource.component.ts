@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } fro
 import { CarbonLDP } from "carbonldp"
 import { RDFNode } from "carbonldp/RDF/Node"
 
-import { DocumentsResolverService } from "app/root-content/explorer/document-explorer/documents-resolver.service";
+import { DocumentsResolverService } from "app/workbench/explorer/document-explorer/documents-resolver.service";
 import { Property, PropertyRow, Modes } from "../property/property.component";
 
 import * as $ from "jquery";

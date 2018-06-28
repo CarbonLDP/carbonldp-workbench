@@ -8,7 +8,7 @@ import { CS } from "carbonldp/Vocabularies";
 import { Pointer } from "carbonldp/Pointer";
 
 import { RolesService } from "./../roles.service";
-import { DocumentExplorerLibrary } from "app/root-content/explorer/document-explorer/document-explorer-library";
+import { DocumentExplorerLibrary } from "app/workbench/explorer/document-explorer/document-explorer-library";
 import { Message, Types } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
 import { MessagesAreaService } from "app/shared/messages-area/messages-area.service";

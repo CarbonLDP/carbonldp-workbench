@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/cor
 
 import { CarbonLDP } from "carbonldp";
 
-import { Widget } from "app/root-content/dashboard/widgets/widgets.component";
+import { Widget } from "app/workbench/dashboard/widgets/widgets.component";
 import { WidgetsService } from "../widgets.service";
 import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";

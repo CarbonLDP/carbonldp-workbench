@@ -8,7 +8,7 @@ import { AccessPointBase } from "carbonldp/AccessPoint";
 
 import { DocumentsResolverService } from "../documents-resolver.service"
 import { Message } from "app/shared/messages-area/message.component";
-import { DocumentExplorerLibrary } from "app/root-content/explorer/document-explorer/document-explorer-library";
+import { DocumentExplorerLibrary } from "app/workbench/explorer/document-explorer/document-explorer-library";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
 
 import "semantic-ui/semantic";

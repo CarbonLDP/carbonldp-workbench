@@ -6,7 +6,10 @@
 		<cw-messages-area></cw-messages-area>
 		<div class="scrollable-content">
 			<div class="rendered-content">
-				<router-outlet></router-outlet>
+				<div>
+					<h1>{{instance?.name}}</h1>
+					<router-outlet></router-outlet>
+				</div>
 			</div>
 			<cw-versions-presenter></cw-versions-presenter>
 		</div>

@@ -9,7 +9,7 @@ import { Response } from "carbonldp/HTTP";
 
 import { UsersService } from "../users.service";
 import { RolesService } from "../../roles/roles.service";
-import { DocumentExplorerLibrary } from "app/root-content/explorer/document-explorer/document-explorer-library";
+import { DocumentExplorerLibrary } from "app/workbench/explorer/document-explorer/document-explorer-library";
 import { Message, Types } from "app/shared/messages-area/message.component";
 import { MessagesAreaService } from "app/shared/messages-area/messages-area.service";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";

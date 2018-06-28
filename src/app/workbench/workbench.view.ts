@@ -4,16 +4,18 @@ import { Router, Event, NavigationEnd } from "@angular/router";
 import { CarbonLDP } from "carbonldp";
 
 import { AuthService } from "app/authentication/services";
-import { HeaderService } from "app/header/header.service";
-import { SidebarService } from "app/sidebar/sidebar.service";
+import { HeaderService } from "app/workbench/layout/header/header.service";
+import { SidebarService } from "app/workbench/layout/sidebar/sidebar.service";
 
 
 @Component( {
-	selector: "div.ng-view",
+	selector: "cw-workbench",
 	templateUrl: "./workbench.view.html",
 	styleUrls: [ "./workbench.view.scss" ],
 } )
 export class WorkbenchView {
+
+	public instance:any;
 
 	private headerService:HeaderService;
 	private sidebarService:SidebarService;

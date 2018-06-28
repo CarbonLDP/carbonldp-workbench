@@ -2,10 +2,10 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 
-import { routing } from "./root-content.routing";
+import { routing } from "./workbench.routing";
 
 // Components
-import { RootContentView } from "./root-content.view";
+import { WorkbenchView } from "./workbench.view";
 import { DashboardView } from "./dashboard/dashboard.view";
 import { EditInstanceComponent } from "./edit-instance/edit-instance.component";
 import { EditInstanceView } from "./edit-instance/edit-instance.view";
@@ -27,6 +27,7 @@ import { DocumentsResolverService } from "./explorer/document-explorer/documents
 	imports: [
 		CommonModule,
 		FormsModule,
+
 		routing,
 		SharedModule,
 		SPARQLClientModule,
@@ -35,7 +36,7 @@ import { DocumentsResolverService } from "./explorer/document-explorer/documents
 		DashboardModule,
 	],
 	declarations: [
-		RootContentView,
+		WorkbenchView,
 		DashboardView,
 		SPARQLClientView,
 		EditInstanceComponent,
@@ -47,5 +48,5 @@ import { DocumentsResolverService } from "./explorer/document-explorer/documents
 		DocumentsResolverService,
 	],
 } )
-export class RootContentModule {
+export class WorkbenchModule {
 }
