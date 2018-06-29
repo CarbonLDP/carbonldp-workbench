@@ -5,12 +5,19 @@ import { inject } from "./../utils";
 import { AuthService } from "./../services";
 import { carbonldpProvider } from "app/providers";
 
+/*
+*  Parent Guard of Authenticated and NotAuthenticated guards that provides the AuthService and
+*  determines if they canActivate themselves
+* */
 @Injectable()
 export abstract class AbstractAuthenticationGuard implements CanActivate {
 	protected authService:AuthService.Class;
 
 	constructor( protected router:Router ) {}
 
+	/*
+	*  Determines if the AuthService is ready so it can be used by its children
+	* */
 	canActivate( route:ActivatedRouteSnapshot, state:RouterStateSnapshot ):Promise<boolean> {
 		return carbonldpProvider.promise.then( () => {
 			// AuthService needs to be injected here so we don't cause a premature initialization of AuthService
