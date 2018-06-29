@@ -1,5 +1,4 @@
 import { Observable } from "rxjs";
-
 import { Injectable } from "@angular/core";
 import { Router, Resolve, ActivatedRouteSnapshot } from "@angular/router";
 
@@ -7,6 +6,9 @@ import { CarbonLDP } from "carbonldp";
 
 import { carbonldpProvider } from "app/providers";
 
+/*
+*  Resolver that returns the initialized CarbonLDP variables provided by the CARBON_PROVIDERS from carbonldpProvider
+* */
 @Injectable()
 export class CarbonLDPProviderResolver implements Resolve<boolean | CarbonLDP> {
 	constructor( protected router:Router ) {}
