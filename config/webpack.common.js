@@ -98,12 +98,7 @@ module.exports = function( metadata ) {
 					from: "src/assets",
 					to: "assets",
 					toType: "dir",
-				},
-				{
-					from: "src/semantic",
-					to: "semantic",
-					toType: "dir",
-				},
+				}
 			] ),
 
 			// Webpack inject scripts and links for us with the HtmlWebpackPlugin and also
@@ -139,6 +134,7 @@ module.exports = function( metadata ) {
 				entryModule: helpers.root( "src/app/app.module#AppModule" ),
 				mainPath: helpers.root( "src/main.ts" ),
 				sourceMap: true,
+				skipCodeGeneration: true,
 			} ),
 		],
 	}
