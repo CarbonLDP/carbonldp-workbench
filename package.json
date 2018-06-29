@@ -21,11 +21,10 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "build": "npm run build:semantic && npm run copy:assets && npm run build:prod",
+    "build": "npm run build:semantic && npm run build:prod",
     "build:prod": "npm run clean:dist && node_modules/.bin/webpack --config config/prod/webpack.prod.js --progress --profile --bail",
     "build:semantic": "node_modules/.bin/gulp --gulpfile src/semantic/gulpfile.js build",
     "clean:dist": "node_modules/.bin/gulp clean:dist",
-    "copy:assets": "node_modules/.bin/gulp copy:assets",
     "postinstall": "node scripts/force-semantic-ui-to-install-correctly.js && npm explore semantic-ui -- npm run-script install",
     "test": "karma start",
     "start": "npm run server:dev",
