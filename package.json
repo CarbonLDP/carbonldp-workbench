@@ -25,6 +25,9 @@
     "build:prod": "npm run clean:dist && node_modules/.bin/webpack --config config/prod/webpack.prod.js --progress --profile --bail",
     "build:semantic": "node_modules/.bin/gulp --gulpfile src/semantic/gulpfile.js build",
     "clean:dist": "node_modules/.bin/gulp clean:dist",
+    "compodoc": "./node_modules/.bin/compodoc --tsconfig tsconfig.json --output docs/architecture",
+    "compodoc:serve": "./node_modules/.bin/compodoc --tsconfig tsconfig.json --output docs/architecture --port=4002 --serve",
+    "compodoc:watch": "./node_modules/.bin/compodoc --tsconfig tsconfig.json --output docs/architecture --port=4002 --serve --watch",
     "postinstall": "node scripts/force-semantic-ui-to-install-correctly.js && npm explore semantic-ui -- npm run-script install",
     "test": "karma start",
     "start": "npm run server:dev",
@@ -32,6 +35,7 @@
   },
   "devDependencies": {
     "@angular/compiler-cli": "^5.2.4",
+    "@compodoc/compodoc": "^1.1.3",
     "@ngtools/webpack": "^1.10.2",
     "@types/codemirror": "^0.0.56",
     "@types/jasmine": "^2.8.6",
