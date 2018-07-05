@@ -1,37 +1,40 @@
-import { Component, ElementRef, Input, Output, EventEmitter } from "@angular/core";
+import { Component, Input, Output, HostBinding, ElementRef, EventEmitter } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 
 import { Widget } from "app/workbench/dashboard/widgets/widgets.component";
 import { WidgetsService } from "../widgets.service";
-import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
 
-import "semantic-ui/semantic";
 
+/*
+*  Widget that displays the existing triples in a Carbon LDP instance
+* */
 @Component( {
 	selector: "cw-triples-widget",
 	templateUrl: "./triples-widget.component.html",
 	styleUrls: [ "./triples-widget.component.scss" ]
 } )
-
 export class TriplesWidgetComponent {
 	carbonldp:CarbonLDP;
+
 	element:ElementRef;
+	$element:JQuery;
 	widgetsService:WidgetsService;
-	errorMessage:Message;
-	triplesTotalCount;
+
+	triplesTotalCount:number;
 
 	private oldWidgetHide:boolean;
 
 	@Input() widget:Widget;
 	@Output() onErrorOccurs:EventEmitter<any> = new EventEmitter();
 	@Output() onClose:EventEmitter<Widget> = new EventEmitter<Widget>();
+	@HostBinding( "class.error" ) hasError:boolean = false;
 
 	constructor( element:ElementRef, carbonldp:CarbonLDP, widgetsService:WidgetsService ) {
 		this.element = element;
-		this.widgetsService = widgetsService;
 		this.carbonldp = carbonldp;
+		this.widgetsService = widgetsService;
 	}
 
 	ngDoCheck() {
@@ -43,38 +46,33 @@ export class TriplesWidgetComponent {
 	}
 
 	ngAfterViewInit():void {
+		this.$element = $( this.element.nativeElement );
 		this.getTriplesCount();
 	}
 
-	public refreshWidget() {
-		this.errorMessage = null;
-		this.triplesTotalCount = null;
+	refreshWidget():void {
 		this.getTriplesCount();
 	}
 
-	public closeWidget() {
+	closeWidget():void {
 		this.onClose.emit( this.widget );
 	}
 
-	public getErrorMessage( error:any ):Message {
-		return ErrorMessageGenerator.getErrorMessage( error );
+	resetWidget():void {
+		this.hasError = false;
+		this.triplesTotalCount = null;
 	}
 
-	public errorWidget( error ) {
-		this.element.nativeElement.classList.add( "error" );
-		this.errorMessage = this.getErrorMessage( error );
-		this.onErrorOccurs.emit( this.errorMessage );
-	}
-
-	public getTriplesCount() {
-		this.widgetsService.getTriplesTotalCount()
-			.then( ( count ) => {
-				let widget = document.querySelector( ".widget-container--totalTriples" );
+	private getTriplesCount():void {
+		this.resetWidget();
+		this.widgetsService
+			.getTriplesTotalCount()
+			.then( ( count:number ) => {
 				this.triplesTotalCount = count;
-				widget.classList.remove( "error" );
 			} )
 			.catch( ( error:any ) => {
-				this.errorWidget( error );
+				this.hasError = true;
+				this.onErrorOccurs.emit( ErrorMessageGenerator.getErrorMessage( error ) );
 			} );
 	}
 
