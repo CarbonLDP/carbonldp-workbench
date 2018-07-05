@@ -1,11 +1,15 @@
+<!-- START: Widget header -->
 <div class="content widget-header">Documents
 	<div class="right floated">
 		<i class="refresh small icon widget-button" (click)="refreshWidget()"></i>
 		<i class="remove small icon widget-button" (click)="closeWidget()"></i>
 	</div>
 </div>
-<div class="content widget-body" [class.broken]="errorMessage">
+<!-- END: Widget header -->
+
+
+<!-- START: Widget body -->
+<div class="content widget-body" [class.broken]="hasError">
 	<div class="widget-text">{{documentsTotalCount}}</div>
 </div>
-
-
+<!-- END: Widget body -->
