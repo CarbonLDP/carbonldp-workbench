@@ -7,12 +7,13 @@ import { TriplesWidgetComponent } from "./widgets/triples/triples-widget.compone
 import { InstanceWidgetComponent } from "./widgets/instance/instance-widget.component"
 import { WidgetsComponent } from "./widgets/widgets.component";
 import { WidgetsMenu } from "./widgets/widgets-menu/widgets-menu.component"
-	
+
 // Modules
 import { SharedModule } from "app/shared/shared.module";
 
 // Services
 import { WidgetsService } from "./widgets/widgets.service";
+
 
 @NgModule( {
 	imports: [
@@ -40,5 +41,4 @@ export class DashboardModule {
 			providers: [ WidgetsService ]
 		};
 	}
-
 }

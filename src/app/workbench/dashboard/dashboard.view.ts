@@ -1,8 +1,10 @@
 import { Component } from "@angular/core";
 import { Widget } from "./widgets/widgets.component"
-import "semantic-ui/semantic";
 
 
+/*
+*  The landing page of the Workbench's Dashboard
+* */
 @Component( {
 	selector: "cw-dashboard-view",
 	templateUrl: "./dashboard.view.html",
@@ -11,7 +13,8 @@ import "semantic-ui/semantic";
 export class DashboardView {
 	widgetsList:Widget[] = [
 		{ id: 1, name: "totalDocuments", title: "Documents", hide: false },
-		{ id: 2, name: "totalTriples", title: "Triples", hide: false } ];
+		{ id: 2, name: "totalTriples", title: "Triples", hide: false }
+	];
 
 }
 
