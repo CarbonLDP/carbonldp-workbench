@@ -1,3 +1,4 @@
+<!-- START: Widget header -->
 <div class="content widget-header" (click)="collapseWidget($event)">My platform
 	<div class="right floated">
 		<i class="refresh small icon widget-button" [class.hidden]="hide" (click)="refreshWidget($event)"></i>
@@ -5,7 +6,11 @@
 		<i class="chevron up small icon widget-button" (click)="collapseWidget($event)" *ngIf="!hide"></i>
 	</div>
 </div>
-<div class="content widget-body" [class.hidden]="hide" [class.broken]="errorMessage">
+<!-- END: Widget header -->
+
+
+<!-- START: Widget body -->
+<div class="content widget-body" [class.hidden]="hide" [class.broken]="hasError">
 	<div class="widget-text">
 		<table class="ui very basic small compact table">
 			<tbody>
@@ -40,3 +45,4 @@
 		</table>
 	</div>
 </div>
+<!-- END: Widget body -->
