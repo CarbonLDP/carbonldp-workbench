@@ -9,6 +9,10 @@ import { Modes } from "../property/property.component"
 import * as $ from "jquery";
 import "semantic-ui/semantic";
 
+
+/*
+*  Displays the value, the type and language of a literal
+* */
 @Component( {
 	selector: "tr.cw-literal",
 	templateUrl: "./literal.component.html",
@@ -815,10 +819,10 @@ export class LiteralComponent implements AfterViewChecked {
 	}
 
 	// Inputs and Outputs
-	private _literal = <LiteralRow>{};
+	private _literal = <LiteralStatus>{};
 	get literal() { return this._literal; }
 
-	@Input() set literal( value:LiteralRow ) {
+	@Input() set literal( value:LiteralStatus ) {
 		this._literal = value;
 		if( this.literal.isBeingCreated ) setTimeout( () => { this.mode = Modes.EDIT; }, 1 );
 
@@ -848,9 +852,9 @@ export class LiteralComponent implements AfterViewChecked {
 
 	@Output() onEditMode:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();
-	@Output() onDeleteLiteral:EventEmitter<LiteralRow> = new EventEmitter<LiteralRow>();
-	@Output() onMoveUp:EventEmitter<LiteralRow> = new EventEmitter<LiteralRow>();
-	@Output() onMoveDown:EventEmitter<LiteralRow> = new EventEmitter<LiteralRow>();
+	@Output() onDeleteLiteral:EventEmitter<LiteralStatus> = new EventEmitter<LiteralStatus>();
+	@Output() onMoveUp:EventEmitter<LiteralStatus> = new EventEmitter<LiteralStatus>();
+	@Output() onMoveDown:EventEmitter<LiteralStatus> = new EventEmitter<LiteralStatus>();
 
 	@ViewChild( "valueInput" ) valueInputControl;
 
@@ -1008,7 +1012,7 @@ export class LiteralComponent implements AfterViewChecked {
 
 }
 
-export interface LiteralRow {
+export interface LiteralStatus {
 	copy:Literal;
 	modified?:Literal;
 	added?:Literal;

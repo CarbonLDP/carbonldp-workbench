@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 
 import { ListRow, ListComponent } from "./../lists/list.component";
-import { LiteralRow, LiteralComponent } from "./../literals/literal.component";
+import { LiteralStatus, LiteralComponent } from "./../literals/literal.component";
 import { PointerRow, PointerComponent } from "./../pointers/pointer.component";
 import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
 import { BlankNodeRow } from "app/workbench/explorer/document-explorer/blank-nodes/blank-node.component";
@@ -312,8 +312,8 @@ export function listSpecs() {
 			addLiteralButton.click();
 			fixture.detectChanges();
 
-			let literalRow:HTMLElement = de.nativeElement.querySelector( "tr.cw-literal" );
-			expect( literalRow ).not.toBeNull();
+			let literalStatus:HTMLElement = de.nativeElement.querySelector( "tr.cw-literal" );
+			expect( literalStatus ).not.toBeNull();
 			expect( comp.listCmp.tempList.length ).toEqual( 2 );
 		} );
 
@@ -358,7 +358,7 @@ export function listSpecs() {
 			addPointerButton.click();
 			fixture.detectChanges();
 
-			let addedItems:Array<PointerRow | LiteralRow> = comp.listCmp.getAddedItems();
+			let addedItems:Array<PointerRow | LiteralStatus> = comp.listCmp.getAddedItems();
 			expect( addedItems.length ).toEqual( 6 );
 			expect( addedItems.filter( item => typeof item.added[ "@id" ] !== "undefined" ).length ).toEqual( 3 );
 			expect( addedItems.filter( item => typeof item.added[ "@value" ] !== "undefined" ).length ).toEqual( 3 );
@@ -376,7 +376,7 @@ export function listSpecs() {
 			};
 			fixture.detectChanges();
 
-			let deletedItems:Array<PointerRow | LiteralRow> = comp.listCmp.getDeletedItems();
+			let deletedItems:Array<PointerRow | LiteralStatus> = comp.listCmp.getDeletedItems();
 			expect( deletedItems.length ).toEqual( 3 );
 		} );
 
@@ -392,7 +392,7 @@ export function listSpecs() {
 			};
 			fixture.detectChanges();
 
-			let modifiedItems:Array<PointerRow | LiteralRow> = comp.listCmp.getModifiedItems();
+			let modifiedItems:Array<PointerRow | LiteralStatus> = comp.listCmp.getModifiedItems();
 			expect( modifiedItems.length ).toEqual( 3 );
 		} );
 
@@ -408,7 +408,7 @@ export function listSpecs() {
 			};
 			fixture.detectChanges();
 
-			let untouchedItems:Array<PointerRow | LiteralRow> = comp.listCmp.getUntouchedItems();
+			let untouchedItems:Array<PointerRow | LiteralStatus> = comp.listCmp.getUntouchedItems();
 			expect( untouchedItems.length ).toEqual( 1 );
 		} );
 

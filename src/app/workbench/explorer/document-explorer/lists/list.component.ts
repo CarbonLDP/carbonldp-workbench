@@ -6,7 +6,7 @@ import { RDFLiteral } from "carbonldp/RDF/Literal";
 import { RDFNode } from "carbonldp/RDF/Node"
 import { ObjectUtils } from "carbonldp/Utils";
 
-import { Literal, LiteralRow } from "../literals/literal.component";
+import { Literal, LiteralStatus } from "../literals/literal.component";
 import { Pointer, PointerRow } from "../pointers/pointer.component";
 
 
@@ -67,7 +67,7 @@ export class ListComponent {
 		return RDFNode.is( item[ ! ! item.copy ? (! ! item.modified ? "modified" : "copy") : "added" ] );
 	}
 
-	moveUp( pointerOrLiteral:PointerRow | LiteralRow, index:number ):void {
+	moveUp( pointerOrLiteral:PointerRow | LiteralStatus, index:number ):void {
 		this.tempList.splice( index, 1 );
 		this.tempList.splice( index - 1, 0, pointerOrLiteral );
 		if( typeof this.list.copy === "undefined" ) return;
@@ -75,7 +75,7 @@ export class ListComponent {
 		this.updateTempList();
 	}
 
-	moveDown( pointerOrLiteral:PointerRow | LiteralRow, index:number ):void {
+	moveDown( pointerOrLiteral:PointerRow | LiteralStatus, index:number ):void {
 		this.tempList.splice( index, 1 );
 		this.tempList.splice( index + 1, 0, pointerOrLiteral );
 		if( typeof this.list.copy === "undefined" ) return;
@@ -92,10 +92,10 @@ export class ListComponent {
 	}
 
 	addLiteral():void {
-		let newLiteralRow:LiteralRow = <LiteralRow>{};
-		newLiteralRow.added = <Literal>{ "@value": "" };
-		newLiteralRow.isBeingCreated = true;
-		this.tempList.splice( this.tempList.length, 0, newLiteralRow );
+		let newLiteralStatus:LiteralStatus = <LiteralStatus>{};
+		newLiteralStatus.added = <Literal>{ "@value": "" };
+		newLiteralStatus.isBeingCreated = true;
+		this.tempList.splice( this.tempList.length, 0, newLiteralStatus );
 		this.updateTempList();
 	}
 
@@ -104,28 +104,28 @@ export class ListComponent {
 		this.updateTempList();
 	}
 
-	deleteItem( deletingItem:PointerRow | LiteralRow, index:number ):void {
+	deleteItem( deletingItem:PointerRow | LiteralStatus, index:number ):void {
 		if( typeof deletingItem.added !== "undefined" ) this.tempList.splice( index, 1 );
 		this.updateTempList();
 	}
 
-	getAddedItems():PointerRow[] | LiteralRow[] {
-		return this.tempList.filter( ( item:PointerRow | LiteralRow ) => typeof item.added !== "undefined" );
+	getAddedItems():PointerRow[] | LiteralStatus[] {
+		return this.tempList.filter( ( item:PointerRow | LiteralStatus ) => typeof item.added !== "undefined" );
 	}
 
-	getDeletedItems():PointerRow[] | LiteralRow[] {
-		return this.tempList.filter( ( item:PointerRow | LiteralRow ) => typeof item.deleted !== "undefined" );
+	getDeletedItems():PointerRow[] | LiteralStatus[] {
+		return this.tempList.filter( ( item:PointerRow | LiteralStatus ) => typeof item.deleted !== "undefined" );
 	}
 
-	getModifiedItems():PointerRow[] | LiteralRow[] {
-		return this.tempList.filter( ( item:PointerRow | LiteralRow ) => typeof item.modified !== "undefined" && typeof item.deleted === "undefined" );
+	getModifiedItems():PointerRow[] | LiteralStatus[] {
+		return this.tempList.filter( ( item:PointerRow | LiteralStatus ) => typeof item.modified !== "undefined" && typeof item.deleted === "undefined" );
 	}
 
-	getUntouchedItems():Array<PointerRow | LiteralRow> {
-		return this.tempList.filter( ( item:PointerRow | LiteralRow ) => typeof item.modified === "undefined" && typeof item.deleted === "undefined" );
+	getUntouchedItems():Array<PointerRow | LiteralStatus> {
+		return this.tempList.filter( ( item:PointerRow | LiteralStatus ) => typeof item.modified === "undefined" && typeof item.deleted === "undefined" );
 	}
 
-	areEquals( original:Array<LiteralRow | PointerRow>, modified:Array<ListRow | PointerRow> ):boolean {
+	areEquals( original:Array<LiteralStatus | PointerRow>, modified:Array<ListRow | PointerRow> ):boolean {
 		return ObjectUtils.areEqual( original, modified, { arrays: true, objects: true } );
 	}
 
@@ -142,7 +142,7 @@ export class ListComponent {
 	}
 
 	hasBeenModified():boolean {
-		return this.orderHasChanged || (this.tempList.findIndex( ( item:PointerRow | LiteralRow ) => { return typeof item.modified !== "undefined" || typeof item.added !== "undefined" || typeof item.deleted !== "undefined"} ) !== - 1);
+		return this.orderHasChanged || (this.tempList.findIndex( ( item:PointerRow | LiteralStatus ) => { return typeof item.modified !== "undefined" || typeof item.added !== "undefined" || typeof item.deleted !== "undefined"} ) !== - 1);
 	}
 
 	goToBlankNode( id:string ):void {

@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 
 import { FormsModule } from "@angular/forms";
 
-import { LiteralComponent, LiteralRow } from "./literal.component";
+import { LiteralComponent, LiteralStatus } from "./literal.component";
 import { LiteralsComponent } from "./literals.component";
 import { LiteralValueValidator } from "../document-explorer-validators";
 
@@ -21,7 +21,7 @@ export function literalsSpecs() {
 		class TestComponent {
 			canEdit:boolean = true;
 			addEmiter:EventEmitter<boolean> = new EventEmitter();
-			literals:LiteralRow[] = [];
+			literals:LiteralStatus[] = [];
 			@ViewChild( LiteralsComponent ) literalsCmp:LiteralsComponent;
 		}
 
@@ -40,7 +40,7 @@ export function literalsSpecs() {
 		} );
 
 		beforeEach( () => {
-			let literals:LiteralRow[] = [
+			let literals:LiteralStatus[] = [
 				{
 					copy: { "@value": "literal 1" }
 				},
@@ -58,7 +58,7 @@ export function literalsSpecs() {
 
 		it( "Should display language column when a literal has @language property", () => {
 
-			let literals:LiteralRow[] = [
+			let literals:LiteralStatus[] = [
 				{
 					copy: { "@value": "literal 1" }
 				},
@@ -112,12 +112,12 @@ export function literalsSpecs() {
 			expect( literals.length ).toEqual( 3 );
 
 			let toModifyLiteralIdx:number = 0;
-			let toModifyLiteral:LiteralRow = comp.literalsCmp.literals[ toModifyLiteralIdx ];
+			let toModifyLiteral:LiteralStatus = comp.literalsCmp.literals[ toModifyLiteralIdx ];
 			toModifyLiteral.modified = {
 				"@value": "Modified Literal 1"
 			};
 
-			comp.literalsCmp.onLiteralsChanges.subscribe( ( literals:LiteralRow[] ) => {
+			comp.literalsCmp.onLiteralsChanges.subscribe( ( literals:LiteralStatus[] ) => {
 				expect( literals ).not.toBeNull();
 				expect( literals.length ).toEqual( 3 );
 				expect( literals[ toModifyLiteralIdx ].modified ).toBeDefined();
@@ -135,10 +135,10 @@ export function literalsSpecs() {
 			expect( literals.length ).toEqual( 3 );
 
 			let toDeleteLiteralIdx:number = 0;
-			let toDeleteLiteral:LiteralRow = comp.literalsCmp.literals[ toDeleteLiteralIdx ];
+			let toDeleteLiteral:LiteralStatus = comp.literalsCmp.literals[ toDeleteLiteralIdx ];
 			toDeleteLiteral.deleted = toDeleteLiteral.copy;
 
-			comp.literalsCmp.onLiteralsChanges.subscribe( ( literals:LiteralRow[] ) => {
+			comp.literalsCmp.onLiteralsChanges.subscribe( ( literals:LiteralStatus[] ) => {
 				expect( literals ).not.toBeNull();
 				expect( literals.length ).toEqual( 3 );
 				expect( literals[ toDeleteLiteralIdx ].deleted ).toBeDefined();
@@ -162,10 +162,10 @@ export function literalsSpecs() {
 			expect( literals.length ).toEqual( 4 );
 
 			let toDeleteLiteralIdx:number = 0;
-			let toDeleteLiteral:LiteralRow = comp.literalsCmp.literals[ toDeleteLiteralIdx ];
+			let toDeleteLiteral:LiteralStatus = comp.literalsCmp.literals[ toDeleteLiteralIdx ];
 			toDeleteLiteral.deleted = toDeleteLiteral.copy;
 
-			comp.literalsCmp.onLiteralsChanges.subscribe( ( literals:LiteralRow[] ) => {
+			comp.literalsCmp.onLiteralsChanges.subscribe( ( literals:LiteralStatus[] ) => {
 				expect( literals ).not.toBeNull();
 				expect( literals.length ).toEqual( 3 );
 				done();
@@ -181,7 +181,7 @@ export function literalsSpecs() {
 			expect( literals.length ).toEqual( 3 );
 
 			let toDeleteLiteralIdx:number = 0;
-			let toDeleteLiteral:LiteralRow = comp.literalsCmp.literals[ toDeleteLiteralIdx ];
+			let toDeleteLiteral:LiteralStatus = comp.literalsCmp.literals[ toDeleteLiteralIdx ];
 			toDeleteLiteral.deleted = toDeleteLiteral.copy;
 			comp.literalsCmp.deleteLiteral( toDeleteLiteral, 0 );
 			fixture.detectChanges();
@@ -197,7 +197,7 @@ export function literalsSpecs() {
 			comp.literalsCmp.addNewLiteral();
 			fixture.detectChanges();
 
-			let addedLiterals:LiteralRow[] = comp.literalsCmp.getAddedLiterals();
+			let addedLiterals:LiteralStatus[] = comp.literalsCmp.getAddedLiterals();
 			expect( addedLiterals.length ).toEqual( 3 );
 		} );
 
@@ -211,7 +211,7 @@ export function literalsSpecs() {
 			comp.literalsCmp.deleteLiteral( comp.literalsCmp.literals[ 2 ], 2 );
 			fixture.detectChanges();
 
-			let deletedLiterals:LiteralRow[] = comp.literalsCmp.getDeletedLiterals();
+			let deletedLiterals:LiteralStatus[] = comp.literalsCmp.getDeletedLiterals();
 			expect( deletedLiterals.length ).toEqual( 2 );
 		} );
 
@@ -227,13 +227,13 @@ export function literalsSpecs() {
 			};
 			fixture.detectChanges();
 
-			let modifiedLiterals:LiteralRow[] = comp.literalsCmp.getModifiedLiterals();
+			let modifiedLiterals:LiteralStatus[] = comp.literalsCmp.getModifiedLiterals();
 			expect( modifiedLiterals.length ).toEqual( 2 );
 		} );
 
 		it( "Should return all untouched literals when calling `getUntouchedLiterals`", () => {
 
-			let untouchedLiterals:LiteralRow[] = comp.literalsCmp.getUntouchedLiterals();
+			let untouchedLiterals:LiteralStatus[] = comp.literalsCmp.getUntouchedLiterals();
 			expect( untouchedLiterals.length ).toEqual( 3 );
 		} );
 

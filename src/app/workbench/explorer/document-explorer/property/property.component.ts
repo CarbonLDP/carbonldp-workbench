@@ -6,7 +6,7 @@ import { URI } from "carbonldp/RDF/URI";
 import { RDFNode } from "carbonldp/RDF/Node"
 import { isArray } from "carbonldp/Utils";
 
-import { Literal, LiteralRow } from "../literals/literal.component";
+import { Literal, LiteralStatus } from "../literals/literal.component";
 import { Pointer, PointerRow } from "../pointers/pointer.component";
 import { List, ListRow } from "../lists/list.component";
 import { NamedFragmentRow } from "../named-fragments/named-fragment.component";
@@ -25,10 +25,10 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 
 	element:ElementRef;
 	$element:JQuery;
-	literals:LiteralRow[] = [];
+	literals:LiteralStatus[] = [];
 	pointers:PointerRow[] = [];
 	lists:ListRow[] = [];
-	tempLiterals:LiteralRow[];
+	tempLiterals:LiteralStatus[];
 	tempPointers:PointerRow[];
 	tempLists:ListRow[];
 	tempProperty:Property = <Property>{};
@@ -253,8 +253,8 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 		} else {
 			this.property[ this.copyOrAdded ].value.forEach( ( literalOrRDFNode ) => {
 				if( RDFLiteral.is( literalOrRDFNode ) ) {
-					this.literals.push( <LiteralRow>{ copy: literalOrRDFNode } );
-					this.tempLiterals.push( <LiteralRow>{ copy: literalOrRDFNode } );
+					this.literals.push( <LiteralStatus>{ copy: literalOrRDFNode } );
+					this.tempLiterals.push( <LiteralStatus>{ copy: literalOrRDFNode } );
 				}
 			} );
 		}
@@ -313,7 +313,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 		}
 	}
 
-	checkForChangesOnLiterals( literals:LiteralRow[] ):void {
+	checkForChangesOnLiterals( literals:LiteralStatus[] ):void {
 		this.tempLiterals = literals;
 		this.changePropertyContent();
 	}
@@ -383,7 +383,7 @@ export class PropertyComponent implements AfterViewInit, OnInit {
 				if( ! literalOrPointerOrListRow.deleted )
 					this.tempProperty.value.push( ! ! literalOrPointerOrListRow.added ? literalOrPointerOrListRow.added : ! ! literalOrPointerOrListRow.modified ? literalOrPointerOrListRow.modified : literalOrPointerOrListRow.copy );
 			} );
-			this.literalsHaveChanged = ! ! this.tempLiterals.find( ( literalRow ) => {return ! ! literalRow.modified || ! ! literalRow.added || ! ! literalRow.deleted } );
+			this.literalsHaveChanged = ! ! this.tempLiterals.find( ( literalStatus ) => {return ! ! literalStatus.modified || ! ! literalStatus.added || ! ! literalStatus.deleted } );
 			this.pointersHaveChanged = ! ! this.tempPointers.find( ( pointerRow ) => {return ! ! pointerRow.modified || ! ! pointerRow.added || ! ! pointerRow.deleted } );
 			this.listsHaveChanged = ! ! tempLists.find( ( listRow ) => {return ! ! listRow.modified || ! ! listRow.added || ! ! listRow.deleted } );
 
@@ -444,7 +444,7 @@ export interface PropertyRow {
 	isBeingModified?:boolean;
 	isBeingDeleted?:boolean;
 
-	modifiedLiterals?:LiteralRow[];
+	modifiedLiterals?:LiteralStatus[];
 	modifiedPointers?:PointerRow[];
 	modifiedLists?:ListRow[];
 }

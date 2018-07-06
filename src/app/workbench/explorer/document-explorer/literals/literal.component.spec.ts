@@ -6,7 +6,7 @@ import { FormsModule } from "@angular/forms";
 import { XSD } from "carbonldp/Vocabularies";
 
 import { Modes } from "../property/property.component"
-import { Literal, LiteralComponent, LiteralRow } from "./literal.component";
+import { Literal, LiteralComponent, LiteralStatus } from "./literal.component";
 import { LiteralValueValidator } from "../document-explorer-validators";
 
 export function literalSpecs() {
@@ -20,13 +20,13 @@ export function literalSpecs() {
 		@Component( {
 			template: `
 				<table>
-					<tr class="cw-literal" [literal]="literalRow" [partOfList]="partOfList"></tr>
+					<tr class="cw-literal" [literal]="literalStatus" [partOfList]="partOfList"></tr>
 				</table>`
 		} )
 		class TestComponent {
 
 			literal:Literal;
-			literalRow:LiteralRow;
+			literalStatus:LiteralStatus;
 			partOfList:boolean = false;
 			@ViewChild( LiteralComponent ) literalCmp:LiteralComponent;
 
@@ -50,12 +50,12 @@ export function literalSpecs() {
 		describe( "On READ mode", () => {
 
 			let literal:Literal;
-			let literalRow:LiteralRow;
+			let literalStatus:LiteralStatus;
 
 			beforeEach( () => {
 				literal = { "@value": "My value" };
-				literalRow = { copy: literal };
-				comp.literalRow = literalRow;
+				literalStatus = { copy: literal };
+				comp.literalStatus = literalStatus;
 				fixture.detectChanges();
 			} );
 
@@ -68,8 +68,8 @@ export function literalSpecs() {
 			it( "Should display @type", () => {
 
 				let literal:Literal = { "@value": 42, "@type": XSD.int };
-				let literalRow:LiteralRow = { copy: literal };
-				comp.literalRow = literalRow;
+				let literalStatus:LiteralStatus = { copy: literal };
+				comp.literalStatus = literalStatus;
 				fixture.detectChanges();
 
 				let typeLabel:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".type .read-mode p.value" );
@@ -79,8 +79,8 @@ export function literalSpecs() {
 			it( "Should display @type as string if not present", () => {
 
 				let literal:Literal = { "@value": 42 };
-				let literalRow:LiteralRow = { copy: literal };
-				comp.literalRow = literalRow;
+				let literalStatus:LiteralStatus = { copy: literal };
+				comp.literalStatus = literalStatus;
 				fixture.detectChanges();
 
 				let typeLabel:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".type .read-mode p.value" );
@@ -93,8 +93,8 @@ export function literalSpecs() {
 					"@value": "My value",
 					"@language": "en",
 				};
-				let literalRow:LiteralRow = { copy: literal };
-				comp.literalRow = literalRow;
+				let literalStatus:LiteralStatus = { copy: literal };
+				comp.literalStatus = literalStatus;
 				fixture.detectChanges();
 
 				let languageLabel:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".language .read-mode p.value" );
@@ -144,13 +144,13 @@ export function literalSpecs() {
 				it( "Should emit literal when clicking moveUp button", ( done ) => {
 
 					literal = { "@value": "My value" };
-					literalRow = { copy: literal };
-					comp.literalRow = literalRow;
+					literalStatus = { copy: literal };
+					comp.literalStatus = literalStatus;
 					fixture.detectChanges();
 
 					comp.literalCmp.onMoveUp.subscribe( ( value ) => {
 						expect( value ).toBeDefined();
-						expect( value ).toEqual( literalRow );
+						expect( value ).toEqual( literalStatus );
 						done();
 					} );
 					let upButton:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".updown.buttons .button .up.chevron" );
@@ -160,13 +160,13 @@ export function literalSpecs() {
 				it( "Should emit literal when clicking moveDown button", ( done ) => {
 
 					literal = { "@value": "My value" };
-					literalRow = { copy: literal };
-					comp.literalRow = literalRow;
+					literalStatus = { copy: literal };
+					comp.literalStatus = literalStatus;
 					fixture.detectChanges();
 
 					comp.literalCmp.onMoveDown.subscribe( ( value ) => {
 						expect( value ).toBeDefined();
-						expect( value ).toEqual( literalRow );
+						expect( value ).toEqual( literalStatus );
 						done();
 					} );
 					let downButton:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".updown.buttons .button .down.chevron" );
@@ -193,13 +193,13 @@ export function literalSpecs() {
 						"@value": "My value",
 						"@language": "en",
 					};
-					let literalRow:LiteralRow = { copy: literal };
-					comp.literalRow = literalRow;
+					let literalStatus:LiteralStatus = { copy: literal };
+					comp.literalStatus = literalStatus;
 					fixture.detectChanges();
 
 					comp.literalCmp.onDeleteLiteral.subscribe( ( value ) => {
 						expect( value ).toBeDefined();
-						expect( value ).toEqual( literalRow );
+						expect( value ).toEqual( literalStatus );
 						done();
 					} );
 					let removeButton:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".button[title='Delete Literal']" );
@@ -212,13 +212,13 @@ export function literalSpecs() {
 						"@value": "My value",
 						"@language": "en",
 					};
-					let literalRow:LiteralRow = { copy: undefined, added: literal };
-					comp.literalRow = literalRow;
+					let literalStatus:LiteralStatus = { copy: undefined, added: literal };
+					comp.literalStatus = literalStatus;
 					fixture.detectChanges();
 
 					comp.literalCmp.onDeleteLiteral.subscribe( ( value ) => {
 						expect( value ).toBeDefined();
-						expect( value ).toEqual( literalRow );
+						expect( value ).toEqual( literalStatus );
 						done();
 					} );
 					let removeButton:HTMLElement = comp.literalCmp.element.nativeElement.querySelector( ".button[title='Delete Literal']" );
@@ -230,12 +230,12 @@ export function literalSpecs() {
 		describe( "On EDIT mode", () => {
 
 			let literal:Literal;
-			let literalRow:LiteralRow;
+			let literalStatus:LiteralStatus;
 
 			beforeEach( () => {
 				literal = { "@value": "42" };
-				literalRow = { copy: literal };
-				comp.literalRow = literalRow;
+				literalStatus = { copy: literal };
+				comp.literalStatus = literalStatus;
 				fixture.detectChanges();
 			} );
 
@@ -268,8 +268,8 @@ export function literalSpecs() {
 					"@value": 42,
 					"@type": XSD.int,
 				};
-				let literalRow:LiteralRow = { copy: literal };
-				comp.literalRow = literalRow;
+				let literalStatus:LiteralStatus = { copy: literal };
+				comp.literalStatus = literalStatus;
 				fixture.detectChanges();
 
 				let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
@@ -302,10 +302,10 @@ export function literalSpecs() {
 					"@type": XSD.string,
 					"@language": "en"
 				};
-				let literalRow:LiteralRow = {
+				let literalStatus:LiteralStatus = {
 					copy: literal
 				};
-				comp.literalRow = literalRow;
+				comp.literalStatus = literalStatus;
 				fixture.detectChanges();
 
 				let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
@@ -335,10 +335,10 @@ export function literalSpecs() {
 						"@value": 42,
 						"@type": XSD.int,
 					};
-					let literalRow:LiteralRow = {
+					let literalStatus:LiteralStatus = {
 						copy: literal
 					};
-					comp.literalRow = literalRow;
+					comp.literalStatus = literalStatus;
 					fixture.detectChanges();
 
 					let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
@@ -365,10 +365,10 @@ export function literalSpecs() {
 						"@value": 42,
 						"@type": XSD.int,
 					};
-					let literalRow:LiteralRow = {
+					let literalStatus:LiteralStatus = {
 						copy: literal
 					};
-					comp.literalRow = literalRow;
+					comp.literalStatus = literalStatus;
 					fixture.detectChanges();
 
 					let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
@@ -405,8 +405,8 @@ export function literalSpecs() {
 						"@value": "",
 						"@language": "en",
 					};
-					let literalRow:LiteralRow = { copy: undefined, added: literal };
-					comp.literalRow = literalRow;
+					let literalStatus:LiteralStatus = { copy: undefined, added: literal };
+					comp.literalStatus = literalStatus;
 					fixture.detectChanges();
 
 					let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
@@ -415,7 +415,7 @@ export function literalSpecs() {
 
 					comp.literalCmp.onDeleteLiteral.subscribe( ( value ) => {
 						expect( value ).toBeDefined();
-						expect( value ).toEqual( literalRow );
+						expect( value ).toEqual( literalStatus );
 						done();
 					} );
 					let cancelButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Cancel']" );
@@ -432,13 +432,13 @@ export function literalSpecs() {
 					fixture.detectChanges();
 
 					let valueInput:HTMLInputElement = comp.literalCmp.element.nativeElement.querySelector( "input[name='valueInput']" );
-					valueInput.value = literalRow.copy[ "@value" ] + "";
+					valueInput.value = literalStatus.copy[ "@value" ] + "";
 					valueInput.dispatchEvent( new Event( "input" ) );
 					fixture.detectChanges();
 
 					comp.literalCmp.onSave.subscribe( ( value ) => {
 						expect( value ).toBeDefined();
-						expect( value ).toEqual( literalRow );
+						expect( value ).toEqual( literalStatus );
 						done();
 					} );
 					let saveButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Save']" );
@@ -451,8 +451,8 @@ export function literalSpecs() {
 						"@value": "new literal",
 						"@language": "en",
 					};
-					let literalRow:LiteralRow = { copy: undefined, added: literal };
-					comp.literalRow = literalRow;
+					let literalStatus:LiteralStatus = { copy: undefined, added: literal };
+					comp.literalStatus = literalStatus;
 					fixture.detectChanges();
 
 					let editButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( ".edit.button" );
@@ -460,13 +460,13 @@ export function literalSpecs() {
 					fixture.detectChanges();
 
 					let valueInput:HTMLInputElement = comp.literalCmp.element.nativeElement.querySelector( "input[name='valueInput']" );
-					valueInput.value = literalRow.added[ "@value" ] + "";
+					valueInput.value = literalStatus.added[ "@value" ] + "";
 					valueInput.dispatchEvent( new Event( "input" ) );
 					fixture.detectChanges();
 
 					comp.literalCmp.onSave.subscribe( ( value ) => {
 						expect( value ).toBeDefined();
-						expect( value ).toEqual( literalRow );
+						expect( value ).toEqual( literalStatus );
 						done();
 					} );
 					let saveButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Save']" );
@@ -484,9 +484,9 @@ export function literalSpecs() {
 					valueInput.dispatchEvent( new Event( "input" ) );
 					fixture.detectChanges();
 
-					comp.literalCmp.onSave.subscribe( ( value:LiteralRow ) => {
+					comp.literalCmp.onSave.subscribe( ( value:LiteralStatus ) => {
 						expect( value ).toBeDefined();
-						expect( value.copy ).toEqual( literalRow.copy );
+						expect( value.copy ).toEqual( literalStatus.copy );
 						expect( value.modified ).toBeDefined();
 						expect( value.modified[ "@value" ] ).toEqual( "My changed text" );
 						done();

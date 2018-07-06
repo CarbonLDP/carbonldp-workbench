@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 
 import { Modes } from "../property/property.component";
-import { Literal, LiteralRow } from "./literal.component";
+import { Literal, LiteralStatus } from "./literal.component";
 
 import "semantic-ui/semantic";
 
@@ -25,10 +25,10 @@ export class LiteralsComponent implements OnInit {
 	};
 
 
-	@Input() literals:LiteralRow[] = [];
+	@Input() literals:LiteralStatus[] = [];
 	@Input() onAddNewLiteral:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Input() canEdit:boolean = true;
-	@Output() onLiteralsChanges:EventEmitter<LiteralRow[]> = new EventEmitter<LiteralRow[]>();
+	@Output() onLiteralsChanges:EventEmitter<LiteralStatus[]> = new EventEmitter<LiteralStatus[]>();
 
 	constructor() {}
 
@@ -63,14 +63,14 @@ export class LiteralsComponent implements OnInit {
 	}
 
 	addNewLiteral():void {
-		let newLiteralRow:LiteralRow = <LiteralRow>{};
-		newLiteralRow.added = <Literal>{};
-		newLiteralRow.isBeingCreated = true;
-		this.literals.splice( 0, 0, newLiteralRow );
+		let newLiteralStatus:LiteralStatus = <LiteralStatus>{};
+		newLiteralStatus.added = <Literal>{};
+		newLiteralStatus.isBeingCreated = true;
+		this.literals.splice( 0, 0, newLiteralStatus );
 		this.updateCanDisplayLiterals();
 	}
 
-	deleteLiteral( deletingLiteral:LiteralRow, index:number ):void {
+	deleteLiteral( deletingLiteral:LiteralStatus, index:number ):void {
 		if( typeof deletingLiteral.added !== "undefined" ) this.literals.splice( index, 1 );
 		this.onLiteralsChanges.emit( this.literals );
 		this.updateCanDisplayLiterals();
@@ -80,19 +80,19 @@ export class LiteralsComponent implements OnInit {
 		this.canDisplayLiterals = this.getUntouchedLiterals().length > 0 || this.getAddedLiterals().length > 0 || this.getModifiedLiterals().length > 0;
 	}
 
-	getAddedLiterals():LiteralRow[] {
-		return this.literals.filter( ( literal:LiteralRow ) => typeof literal.added !== "undefined" );
+	getAddedLiterals():LiteralStatus[] {
+		return this.literals.filter( ( literal:LiteralStatus ) => typeof literal.added !== "undefined" );
 	}
 
-	getModifiedLiterals():LiteralRow[] {
-		return this.literals.filter( ( literal:LiteralRow ) => typeof literal.modified !== "undefined" && typeof literal.deleted === "undefined" );
+	getModifiedLiterals():LiteralStatus[] {
+		return this.literals.filter( ( literal:LiteralStatus ) => typeof literal.modified !== "undefined" && typeof literal.deleted === "undefined" );
 	}
 
-	getDeletedLiterals():LiteralRow[] {
-		return this.literals.filter( ( literal:LiteralRow ) => typeof literal.deleted !== "undefined" );
+	getDeletedLiterals():LiteralStatus[] {
+		return this.literals.filter( ( literal:LiteralStatus ) => typeof literal.deleted !== "undefined" );
 	}
 
-	getUntouchedLiterals():LiteralRow[] {
-		return this.literals.filter( ( literal:LiteralRow ) => typeof literal.modified === "undefined" && typeof literal.deleted === "undefined" );
+	getUntouchedLiterals():LiteralStatus[] {
+		return this.literals.filter( ( literal:LiteralStatus ) => typeof literal.modified === "undefined" && typeof literal.deleted === "undefined" );
 	}
 }
