@@ -5,21 +5,17 @@ import { RDFNode } from "carbonldp/RDF/Node"
 import { Modes } from "../property/property.component";
 import { Pointer, PointerRow } from "./pointer.component";
 
-import "semantic-ui/semantic";
-
 
 @Component( {
 	selector: "cw-pointers",
 	templateUrl: "./pointers.component.html",
-	styleUrls: [  "./pointers.component.scss"  ],
+	styleUrls: [ "./pointers.component.scss" ],
 } )
 
 export class PointersComponent implements OnInit {
 
 	modes:Modes = Modes;
-	tokens:string[] = [ "@id", "@type" ];
 	tempPointers:Pointer[] = [];
-	isEditingPointer:boolean = false;
 	canDisplayPointers:boolean = false;
 
 	@Input() documentURI:string = "";
@@ -45,13 +41,11 @@ export class PointersComponent implements OnInit {
 	addNewPointer():void {
 		let newPointerRow:PointerRow = <PointerRow>{};
 		newPointerRow.added = <Pointer>{};
-		newPointerRow.isBeingCreated = true;
 		this.pointers.splice( 0, 0, newPointerRow );
 		this.updateCanDisplayPointers();
 	}
 
-	savePointer( modifiedPointer:Pointer, originalPointer:Pointer, index:number ) {
-		if( typeof this.pointers[ index ].added !== "undefined" ) delete this.pointers[ index ].isBeingCreated;
+	savePointer() {
 		this.onPointersChanges.emit( this.pointers );
 		this.updateCanDisplayPointers();
 	}

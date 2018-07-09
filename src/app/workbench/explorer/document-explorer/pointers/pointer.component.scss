@@ -1,5 +1,9 @@
 :host {
 
+	td {
+		vertical-align: middle;
+	}
+
 	.dropdown.fragments {
 		.item {
 			&[data-value='bNodes-category'], &[data-value='named-fragments-category'] {

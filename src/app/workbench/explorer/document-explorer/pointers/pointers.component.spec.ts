@@ -93,7 +93,7 @@ export function pointersSpecs() {
 				expect( pointers[ toModifyPointerIdx ].modified[ "@id" ] ).toEqual( "http://modified-pointer-1" );
 				done();
 			} );
-			comp.pointersCmp.savePointer( toModifyPointer.modified, toModifyPointer.copy, 0 );
+			comp.pointersCmp.savePointer();
 			fixture.detectChanges();
 		} );
 

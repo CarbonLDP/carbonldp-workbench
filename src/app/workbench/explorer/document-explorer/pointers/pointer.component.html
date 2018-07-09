@@ -1,4 +1,6 @@
+<!-- START: Content of the Pointer -->
 <td class="id" [attr.colspan]="partOfList? 3 : 1">
+	<!-- START: READ mode-->
 	<div class="read-mode" *ngIf="mode===modes.READ">
 		<p *ngIf="!isBNode && !isNamedFragment || !existsOnPointers">
 			<span *ngIf="!!id">{{id}}</span>
@@ -19,9 +21,17 @@
 			{{id}}
 		</a>
 	</div>
+	<!-- END: READ mode-->
+
+
+	<!-- START: EDIT mode-->
 	<div class="edit-mode" [hidden]="mode===modes.READ">
 		<div class="ui error form">
-			<input type="text" name="idInput" [(ngModel)]="id" #idInput="ngModel" required cw-pointer-id [documentURI]="documentURI" [hidden]="true">
+			<input type="text" name="idInput"
+			       #idInput="ngModel"
+			       [(ngModel)]="id"
+			       [hidden]="true"
+			       required cw-pointer-id>
 			<select class="ui fluid search dropdown fragments" [hidden]="true">
 				<option value="">
 					Search or enter a fragment/bNode
@@ -51,14 +61,20 @@
 					</option>
 				</optgroup>
 			</select>
-			<div class="ui error message wide" *ngIf="!idInput.valid">
+			<cw-error-label *ngIf="!idInput.valid">
 				<p *ngIf="idInput.control.hasError('required')">Enter an @id.</p>
 				<p *ngIf="idInput.control.hasError('invalidId')">Enter a valid @id value.</p>
-			</div>
+			</cw-error-label>
 		</div>
 	</div>
+	<!-- END: EDIT mode-->
 </td>
+<!-- END: Content of the Pointer -->
+
+
+<!-- START: Action buttons for the Pointer -->
 <td *ngIf="canEdit">
+	<!-- START: Buttons for READ mode -->
 	<div class="ui mini basic icon edit value buttons" *ngIf="mode===modes.READ">
 		<button #editButton
 		        class="ui icon edit button" title="Edit Pointer"
@@ -73,6 +89,10 @@
 			<i class="remove red icon"></i>
 		</button>
 	</div>
+	<!-- END: Buttons for READ mode -->
+
+
+	<!-- START: Buttons for EDIT mode -->
 	<div class="ui mini basic icon confirm buttons" *ngIf="mode===modes.EDIT">
 		<button #cancelButton
 		        class="ui icon button" title="Cancel"
@@ -86,6 +106,10 @@
 			<i class="checkmark green icon"></i>
 		</button>
 	</div>
+	<!-- END: Buttons for EDIT mode -->
+
+
+	<!-- START: Buttons in case literal is part of a list -->
 	<div class="ui mini basic icon vertical updown buttons" *ngIf="partOfList">
 		<button #moveUpButton
 		        class="ui icon button"
@@ -100,4 +124,6 @@
 			<i class="down chevron icon"></i>
 		</button>
 	</div>
+	<!-- END: Buttons in case literal is part of a list -->
 </td>
+<!-- END: Action buttons for the Pointer -->

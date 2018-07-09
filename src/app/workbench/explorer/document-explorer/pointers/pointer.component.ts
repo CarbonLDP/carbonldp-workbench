@@ -6,8 +6,6 @@ import { Modes } from "../property/property.component";
 import { BlankNodeRow } from "../blank-nodes/blank-node.component";
 import { NamedFragmentRow } from "../named-fragments/named-fragment.component";
 
-import * as $ from "jquery";
-import "semantic-ui/semantic";
 
 @Component( {
 	selector: "tr.cw-pointer",
@@ -27,12 +25,11 @@ export class PointerComponent implements OnChanges {
 
 	private _mode = Modes.READ;
 	@Input() set mode( value:string ) {
-		setTimeout( () => { this._mode = value
-			this.onEditMode.emit( this.mode === Modes.EDIT );
-			if( this.mode === Modes.EDIT ) {
-				this.initializePointersDropdown();
-			}
-		}, 0 );
+		this._mode = value;
+		this.onEditMode.emit( this.mode === Modes.EDIT );
+		if( this.mode === Modes.EDIT ) {
+			this.initializePointersDropdown();
+		}
 	}
 
 	get mode() {
@@ -48,14 +45,14 @@ export class PointerComponent implements OnChanges {
 
 	@Input() set pointer( value:PointerRow ) {
 		this._pointer = value;
-		if( this.pointer.isBeingCreated ) setTimeout(()=> { this.mode = Modes.EDIT; }, 1);
+		if( this.pointer.added ) { this.mode = Modes.EDIT; }
 
 		if( typeof this.pointer.modified !== "undefined" ) {
-			this.id = ! ! this.tempPointer[ "@id" ] ? this.tempPointer[ "@id" ] : this.pointer.modified[ "@id" ];
+			this.id = this.pointer.modified[ "@id" ];
 		} else if( typeof this.pointer.copy !== "undefined" ) {
-			this.id = ! ! this.tempPointer[ "@id" ] ? this.tempPointer[ "@id" ] : this.pointer.copy[ "@id" ];
+			this.id = this.pointer.copy[ "@id" ];
 		} else if( typeof this.pointer.added !== "undefined" ) {
-			this.id = ! ! this.tempPointer[ "@id" ] ? this.tempPointer[ "@id" ] : this.pointer.added[ "@id" ];
+			this.id = this.pointer.added[ "@id" ];
 		}
 	}
 
@@ -100,9 +97,9 @@ export class PointerComponent implements OnChanges {
 		this.onDeletePointer.emit( this.pointer );
 	}
 
-	ngOnChanges( changes:{ [propName:string]:SimpleChange } ):void {
-		if( ( ! ! changes[ "bNodes" ] && changes[ "bNodes" ].currentValue !== changes[ "bNodes" ].previousValue ) ||
-			( ! ! changes[ "namedFragments" ] && changes[ "namedFragments" ].currentValue !== changes[ "namedFragments" ].previousValue ) ) {
+	ngOnChanges( changes:{ [ propName:string ]:SimpleChange } ):void {
+		if( (! ! changes.bNodes && changes.bNodes.currentValue !== changes.bNodes.previousValue) ||
+			(! ! changes.namedFragments && changes.namedFragments.currentValue !== changes.namedFragments.previousValue) ) {
 			this.checkForChangesOnPointers();
 		}
 	}
@@ -117,33 +114,42 @@ export class PointerComponent implements OnChanges {
 
 	cancelEdit():void {
 		this.mode = Modes.READ;
-		let copyOrAdded:string = typeof this.pointer.copy !== "undefined" ? "copy" : "added";
+		let initialStatus:string = typeof this.pointer.copy !== "undefined" ? "copy" : "added";
 
-		if( typeof this.tempPointer[ "@id" ] === "undefined" ) {
-			this.id = this.pointer[ copyOrAdded ][ "@id" ];
-			delete this.tempPointer[ "@id" ];
-		} else this.id = this.tempPointer[ "@id" ];
+		if( this.tempPointer[ PointerToken.ID ] === void 0 ) {
+			this.id = this.pointer[ initialStatus ][ PointerToken.ID ];
+			delete this.tempPointer[ PointerToken.ID ];
+		} else {
+			this.id = this.tempPointer[ PointerToken.ID ];
+		}
 
-
-		if( typeof this.pointer.added !== "undefined" && (typeof this.id === "undefined" || this.id.length === 0) ) {
+		// If canceling a new Pointer without previous id, delete it
+		if( this.pointer.added !== void 0 && this.id === void 0 ) {
 			this.onDeletePointer.emit( this.pointer );
 		}
 	}
 
 	save():void {
-		let copyOrAdded:string = typeof this.pointer.copy !== "undefined" ? "copy" : "added";
+		let initialStatus:string = typeof this.pointer.copy !== "undefined" ? "copy" : "added";
+		let initialId:string = this.pointer[ initialStatus ][ PointerToken.ID ];
 
-		if( typeof this.id !== "undefined" && (this.id !== this.pointer[ copyOrAdded ][ "@id" ] || this.id !== this.tempPointer[ "@id" ] ) ) {
-			this.tempPointer[ "@id" ] = this.id;
+		if( (this.id !== void 0) &&
+			(this.id !== initialId || this.id !== this.tempPointer[ PointerToken.ID ]) ) {
+			this.tempPointer[ PointerToken.ID ] = this.id;
 		}
 
-		if( (! ! this.pointer.copy) && (this.tempPointer[ "@id" ] === this.pointer.copy[ "@id" ] ) ) {
-			delete this.tempPointer[ "@id" ];
-			delete this.pointer.modified;
-		} else if( ! ! this.pointer.added ) {
-			this.pointer.added = this.tempPointer;
-		} else {
-			this.pointer.modified = this.tempPointer;
+		switch( initialStatus ) {
+			case "copy":
+				if( initialId === this.tempPointer[ PointerToken.ID ] ) {
+					delete this.tempPointer[ PointerToken.ID ];
+					delete this.pointer.modified;
+				} else {
+					this.pointer.modified = this.tempPointer;
+				}
+				break;
+			case "added":
+				this.pointer.added = this.tempPointer;
+				break;
 		}
 
 		this.onSave.emit( this.pointer );
@@ -168,7 +174,7 @@ export class PointerComponent implements OnChanges {
 	}
 
 	getFriendlyName( uri:string ):string {
-		if( URI.hasFragment( uri ) )return URI.getFragment( uri );
+		if( URI.hasFragment( uri ) ) return URI.getFragment( uri );
 		return URI.getSlug( uri );
 	}
 
@@ -192,14 +198,18 @@ export class PointerComponent implements OnChanges {
 		this.onMoveDown.emit( this.pointer );
 	}
 }
+
+export enum PointerToken {
+	ID = "@id"
+}
+
 export interface PointerRow {
 	copy:Pointer;
 	modified?:Pointer;
 	added?:Pointer;
 	deleted?:Pointer;
-
-	isBeingCreated?:boolean;
 }
+
 export interface Pointer {
 	"@id":string;
 }
