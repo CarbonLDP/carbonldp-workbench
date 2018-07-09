@@ -6,9 +6,6 @@ import { URI } from "carbonldp/RDF/URI";
 
 import { Modes } from "../property/property.component"
 
-import * as $ from "jquery";
-import "semantic-ui/semantic";
-
 
 /*
 *  Displays the value, the type and language of a literal
@@ -23,26 +20,6 @@ export class LiteralComponent implements AfterViewChecked {
 
 	element:ElementRef;
 	private cdRef:ChangeDetectorRef;
-
-	private _mode = Modes.READ;
-	private tempLiteral:any = {};
-	searchDropdown:JQuery;
-	languageDropdown:JQuery;
-
-	@Input() set mode( value:string ) {
-		setTimeout( () => {
-			this._mode = value;
-			this.onEditMode.emit( this.mode === Modes.EDIT );
-			if( this.mode === Modes.EDIT ) {
-				this.initializeTypesDropdown();
-				this.initializeLanguageDropdown()
-			}
-		}, 1 );
-	}
-
-	get mode() {
-		return this._mode;
-	}
 
 	modes:typeof Modes = Modes;
 	dataTypes:any = this.getDataTypes();
@@ -790,7 +767,52 @@ export class LiteralComponent implements AfterViewChecked {
 		}
 	];
 
-	// Literal Value;
+	typesDropdown:JQuery;
+	languageDropdown:JQuery;
+
+	/**
+	 *  Temporarily contains all the changes made to
+	 *  the literal (value, type, language)
+	 *  before modifying the original literal.
+	 *  Used in save and cancelEdit methods
+	 * */
+	private tempLiteral:any = {};
+
+	private set tempValue( value:string | boolean | number ) { this.tempLiteral[ LiteralToken.VALUE ] = value; }
+
+	private get tempValue():string | boolean | number { return this.tempLiteral[ LiteralToken.VALUE ]; }
+
+	private set tempType( type:string ) { this.tempLiteral[ LiteralToken.TYPE ] = type; }
+
+	private get tempType():string { return this.tempLiteral[ LiteralToken.TYPE ]; }
+
+	private set tempLanguage( language:string ) { this.tempLiteral[ LiteralToken.LANGUAGE ] = language; }
+
+	private get tempLanguage():string { return this.tempLiteral[ LiteralToken.LANGUAGE ]; }
+
+
+	/*
+	*  Mode variable
+	* */
+	private _mode = Modes.READ;
+	@Input() set mode( value:string ) {
+		setTimeout( () => {
+			this._mode = value;
+			this.onEditMode.emit( this.mode === Modes.EDIT );
+			if( this.mode === Modes.EDIT ) {
+				this.initializeTypesDropdown();
+				this.initializeLanguageDropdown()
+			}
+		}, 1 );
+	}
+
+	get mode() {
+		return this._mode;
+	}
+
+	/**
+	 * Literal's Value variable
+	 **/
 	private _value:string | boolean | number = "";
 	get value() { return this._value; }
 
@@ -798,23 +820,31 @@ export class LiteralComponent implements AfterViewChecked {
 		this._value = value;
 	}
 
-	// Literal Type;
+	/**
+	 * Literal's Type variable
+	 **/
 	private _type:string = XSD.string;
 	get type() {return this._type;}
 
 	set type( type:string ) {
-		if( type === "empty" ) {type = null;}
-		else if( ! type || type.length === 0 ) type = XSD.string;
+		if( type === "empty" ) {
+			type = undefined;
+		} else if( ! type || type.length === 0 ) {
+			type = XSD.string;
+		}
 		this._type = type;
 		this.isStringType = type === XSD.string;
 	}
 
-	// Literal Language;
+	/**
+	 * Literal Language variable
+	 **/
 	private _language:string = "";
 	get language() { return this._language; }
 
 	set language( language:string ) {
 		this._language = language;
+		// If no language is set, set language dropdown to empty
 		if( ! ! this.languageDropdown && ! this.language ) this.languageDropdown.dropdown( "set selected", "empty" );
 	}
 
@@ -824,29 +854,32 @@ export class LiteralComponent implements AfterViewChecked {
 
 	@Input() set literal( value:LiteralStatus ) {
 		this._literal = value;
-		if( this.literal.isBeingCreated ) setTimeout( () => { this.mode = Modes.EDIT; }, 1 );
+		if( this.literal.added !== void 0 ) { this.mode = Modes.EDIT; }
 
-		if( typeof this.literal.modified !== "undefined" ) {
-			this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal.modified[ "@value" ];
-			this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : this.literal.modified[ "@type" ];
-			this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal.modified[ "@language" ];
+		let literalContent:Literal;
 
-		} else if( typeof this.literal.copy !== "undefined" ) {
-			this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal.copy[ "@value" ];
-			this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : this.literal.copy[ "@type" ];
-			this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal.copy[ "@language" ];
-
-		} else if( typeof this.literal.added !== "undefined" ) {
-			this.value = ! ! this.tempLiteral[ "@value" ] ? this.tempLiteral[ "@value" ] : this.literal.added[ "@value" ];
-			this.type = ! ! this.tempLiteral[ "@type" ] ? this.tempLiteral[ "@type" ] : this.literal.added[ "@type" ];
-			this.language = ! ! this.tempLiteral[ "@language" ] ? this.tempLiteral[ "@language" ] : this.literal.added[ "@language" ];
+		/**
+		 *  Check if its going to use the modified,
+		 *  the original or the added values of the
+		 *  literal.
+		 * */
+		if( this.literal.modified !== void 0 ) {
+			literalContent = this.literal.modified;
+		} else if( this.literal.copy !== void 0 ) {
+			literalContent = this.literal.copy;
+		} else if( this.literal.added !== void 0 ) {
+			literalContent = this.literal.added;
 		}
+
+		this.value = literalContent[ LiteralToken.VALUE ];
+		this.type = literalContent[ LiteralToken.TYPE ];
+		this.language = literalContent[ LiteralToken.LANGUAGE ];
 
 	}
 
 	@Input() canEdit:boolean = true;
 	@Input() canDisplayLanguage:boolean = false;
-	@Input() partOfList:boolean = false;
+	@Input() isPartOfList:boolean = false;
 	@Input() isFirstItem:boolean = false;
 	@Input() isLastItem:boolean = false;
 
@@ -880,87 +913,108 @@ export class LiteralComponent implements AfterViewChecked {
 
 	cancelEdit():void {
 		this.mode = Modes.READ;
-		let copyOrAdded:string = typeof this.literal.copy !== "undefined" ? "copy" : "added";
 
-		if( typeof this.tempLiteral[ "@value" ] === "undefined" ) {
-			this.value = this.literal[ copyOrAdded ][ "@value" ];
-			delete this.tempLiteral[ "@value" ];
-		} else this.value = this.tempLiteral[ "@value" ];
+		this.restoreDisplayingTokenContent( LiteralToken.VALUE );
+		this.restoreDisplayingTokenContent( LiteralToken.TYPE );
+		this.restoreDisplayingTokenContent( LiteralToken.LANGUAGE );
 
-		if( typeof this.tempLiteral[ "@type" ] === "undefined" ) {
-			this.type = this.literal[ copyOrAdded ][ "@type" ];
-			delete this.tempLiteral[ "@type" ];
-		} else this.type = this.tempLiteral[ "@type" ];
-
-		if( typeof this.tempLiteral[ "@language" ] === "undefined" ) {
-			this.language = this.literal[ copyOrAdded ][ "@language" ];
-			delete this.tempLiteral[ "@language" ];
-		} else this.language = this.tempLiteral[ "@language" ];
-
-		if( typeof this.literal.added !== "undefined" && typeof this.value === "undefined" || this.value === "" ) {
+		// If canceling a new literal without previous value, delete it
+		if( this.literal.added !== void 0 && this.value === void 0 ) {
 			this.onDeleteLiteral.emit( this.literal );
 		}
 	}
 
+	/**
+	 *  Sets back the displaying content of the Value / Type / Language of a Literal
+	 * */
+	private restoreDisplayingTokenContent( token:string ):void {
+
+		let displayingContent:string;
+		let copyOrAdded:string = this.literal.copy !== void 0 ? "copy" : "added";
+
+		if( this.tempLiteral[ token ] === void 0 ) {
+			displayingContent = this.literal[ copyOrAdded ][ token ];
+			delete this.tempLiteral[ token ];
+		} else {
+			displayingContent = this.tempLiteral[ token ];
+		}
+
+		switch( token ) {
+			case LiteralToken.VALUE:
+				this.value = displayingContent;
+				break;
+			case LiteralToken.TYPE:
+				this.type = displayingContent;
+				break;
+			case LiteralToken.LANGUAGE:
+				this.language = displayingContent;
+				break;
+		}
+	}
+
 	save():void {
-		let copyOrAdded:string = typeof this.literal.copy !== "undefined" ? "copy" : "added";
+		let initialStatus:string = this.literal.copy !== void 0 ? "copy" : "added";
+		let initialValue:string | boolean | number = this.literal[ initialStatus ][ LiteralToken.VALUE ],
+			initialType:any = this.literal[ initialStatus ][ LiteralToken.TYPE ],
+			initialLanguage:any = this.literal[ initialStatus ][ LiteralToken.LANGUAGE ];
 
-		if( typeof this.value !== "undefined" && (this.value !== this.literal[ copyOrAdded ][ "@value" ] || this.value !== this.tempLiteral[ "@value" ]) ) {
-			this.tempLiteral[ "@value" ] = this.value;
+		if( (this.value !== void 0) &&
+			(this.value !== initialValue || this.value !== this.tempValue) ) {
+			this.tempValue = this.value;
 		}
-		if( typeof this.type !== "undefined" && (this.type !== this.literal[ copyOrAdded ][ "@type" ] || this.type !== this.tempLiteral[ "@type" ]) ) {
-			this.tempLiteral[ "@type" ] = this.type;
+		if( (this.type !== void 0) &&
+			(this.type !== initialType || this.type !== this.tempType) ) {
+			this.tempType = this.type;
 		}
-		if( typeof this.language !== "undefined" && (this.language !== this.literal[ copyOrAdded ][ "@language" ] || this.language !== this.tempLiteral[ "@language" ]) ) {
-			this.tempLiteral[ "@language" ] = this.language;
+		if( this.language !== initialLanguage || this.language !== this.tempLanguage ) {
+			this.tempLanguage = this.language;
 		}
 
-		if( this.tempLiteral[ "@type" ] !== XSD.string ) delete this.tempLiteral[ "@language" ];
-		if( this.tempLiteral[ "@type" ] === XSD.string || this.type === XSD.string ) delete this.tempLiteral[ "@type" ];
+		/* Check for tempLiteral to contain valid json+ld for literals
+		* 1. @value always present.
+		* 2. If @type empty or XSD.string, then delete @type from tempLiteral.
+		* 3. If @language empty or when @type different than XSD.string, then delete @language from tempLiteral.
+		*/
 
-		// Check for tempLiteral to contain valid json+ld for literals
 		// 1. @value always present, if not clean whole object.
-		// 2. If @type empty or XSD.string, then delete @type from tempLiteral.
-		// 3. If @language empty or when @type different than XSD.string, then delete @language from tempLiteral.
-		if( this.tempLiteral[ "@type" ] === null || typeof this.tempLiteral[ "@type" ] === "undefined" ) delete this.tempLiteral[ "@type" ];
-		if( this.tempLiteral[ "@language" ] === null || typeof this.tempLiteral[ "@language" ] === "undefined" || (typeof this.tempLiteral[ "@type" ] !== "undefined" && this.tempLiteral[ "@type" ] !== XSD.string) ) {
-			delete this.tempLiteral[ "@language" ];
-		}
-		if( this.tempLiteral[ "@value" ] === null || typeof this.tempLiteral[ "@value" ] === "undefined" ) {
-			delete this.tempLiteral[ "@value" ];
-			delete this.tempLiteral[ "@type" ];
-			delete this.tempLiteral[ "@language" ];
+		if( this.tempValue === void 0 ) {
+			delete this.tempLiteral[ LiteralToken.VALUE ];
+			delete this.tempLiteral[ LiteralToken.TYPE ];
+			delete this.tempLiteral[ LiteralToken.LANGUAGE ];
 		}
 
-		if( ! ! this.literal.copy ) {
-			if( (this.tempLiteral[ "@value" ] === this.literal.copy[ "@value" ]) &&
-				(this.tempLiteral[ "@type" ] === this.literal.copy[ "@type" ]) &&
-				(this.tempLiteral[ "@language" ] === this.literal.copy[ "@language" ]) ) {
-				delete this.tempLiteral[ "@value" ];
-				delete this.tempLiteral[ "@type" ];
-				delete this.tempLiteral[ "@language" ];
-				delete this.literal.modified;
-			} else {
-				this.literal.modified = this.tempLiteral;
-			}
-		} else if( ! ! this.literal.added ) {
-			this.literal.added = this.tempLiteral;
+		// 2. If @type empty or XSD.string, then delete @type from tempLiteral.
+		if( this.tempType === void 0 || this.tempType === XSD.string ) {
+			delete this.tempLiteral[ LiteralToken.TYPE ];
 		}
+
+		// 3. If @language empty or when @type different than XSD.string, then delete @language from tempLiteral.
+		if( (this.tempLanguage === void 0) ||
+			(this.tempType !== void 0 && this.tempType !== XSD.string) ) {
+			delete this.tempLiteral[ LiteralToken.LANGUAGE ];
+		}
+
+		switch( initialStatus ) {
+			case "copy":
+				if( initialValue === this.tempValue &&
+					initialType === this.tempType &&
+					initialLanguage === this.tempLanguage ) {
+					delete this.tempLiteral[ LiteralToken.VALUE ];
+					delete this.tempLiteral[ LiteralToken.TYPE ];
+					delete this.tempLiteral[ LiteralToken.LANGUAGE ];
+					delete this.literal.modified;
+				} else {
+					this.literal.modified = this.tempLiteral;
+				}
+				break;
+			case "added":
+				this.literal.added = this.tempLiteral;
+				break;
+		}
+
 
 		this.onSave.emit( this.literal );
 		this.mode = Modes.READ;
-	}
-
-	changeType( type:string, text?:string, choice?:JQuery ):void {
-		this.isStringType = type === XSD.string;
-		if( type === XSD.string ) { type = null; }
-		if( ! this.isStringType ) { this.language = null; }
-		this.type = type;
-	}
-
-	changeLanguage( language:string, text?:string, choice?:JQuery ):void {
-		if( language === "empty" ) language = null;
-		this.language = language;
 	}
 
 	private initializeLanguageDropdown():void {
@@ -973,12 +1027,24 @@ export class LiteralComponent implements AfterViewChecked {
 	}
 
 	private initializeTypesDropdown():void {
-		this.searchDropdown = $( this.element.nativeElement.querySelector( ".dropdown.types" ) );
-		this.searchDropdown.dropdown( {
+		this.typesDropdown = $( this.element.nativeElement.querySelector( ".dropdown.types" ) );
+		this.typesDropdown.dropdown( {
 			allowAdditions: true,
 			onChange: this.changeType.bind( this )
 		} );
-		this.searchDropdown.dropdown( "set selected", this.type );
+		this.typesDropdown.dropdown( "set selected", this.type );
+	}
+
+	private changeLanguage( language:string, text?:string, choice?:JQuery ):void {
+		if( language === "empty" ) language = undefined;
+		this.language = language;
+	}
+
+	private changeType( type:string, text?:string, choice?:JQuery ):void {
+		this.isStringType = type === XSD.string;
+		if( type === XSD.string ) { type = undefined; }
+		if( ! this.isStringType ) { this.language = undefined; }
+		this.type = type;
 	}
 
 	private getDataTypes():any {
@@ -1012,13 +1078,17 @@ export class LiteralComponent implements AfterViewChecked {
 
 }
 
+export enum LiteralToken {
+	VALUE = "@value",
+	TYPE = "@type",
+	LANGUAGE = "@language",
+}
+
 export interface LiteralStatus {
 	copy:Literal;
 	modified?:Literal;
 	added?:Literal;
 	deleted?:Literal;
-
-	isBeingCreated?:boolean;
 }
 
 export interface Literal {

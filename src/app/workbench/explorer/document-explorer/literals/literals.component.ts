@@ -1,14 +1,13 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 
 import { Modes } from "../property/property.component";
-import { Literal, LiteralStatus } from "./literal.component";
+import { Literal, LiteralStatus, LiteralToken } from "./literal.component";
 
-import "semantic-ui/semantic";
 
 @Component( {
 	selector: "cw-literals",
 	templateUrl: "./literals.component.html",
-	styleUrls: [  "./literals.component.scss"  ],
+	styleUrls: [ "./literals.component.scss" ],
 } )
 
 export class LiteralsComponent implements OnInit {
@@ -33,7 +32,7 @@ export class LiteralsComponent implements OnInit {
 	constructor() {}
 
 	ngOnInit():void {
-		this.isLanguagePresent = this.existsToken( "@language" );
+		this.isLanguagePresent = this.existsToken( LiteralToken.LANGUAGE );
 		this.onAddNewLiteral.subscribe( () => {
 			this.addNewLiteral();
 		} );
@@ -41,10 +40,10 @@ export class LiteralsComponent implements OnInit {
 	}
 
 	existsToken( token:string ):boolean {
-		return ! ! this.literals.find( ( literal:any ) => {
-			return (! ! literal.added && typeof literal.added[ token ] !== "undefined")
-				|| (! ! literal.modified && typeof literal.modified[ token ] !== "undefined")
-				|| (! ! literal.copy && typeof literal.copy[ token ] !== "undefined")
+		return ! ! this.literals.find( ( literal:LiteralStatus ) => {
+			return (! ! literal.added && literal.added[ token ] !== void 0)
+				|| (! ! literal.modified && literal.modified[ token ] !== void 0)
+				|| (! ! literal.copy && literal.copy[ token ] !== void 0)
 		} );
 	}
 
@@ -54,10 +53,8 @@ export class LiteralsComponent implements OnInit {
 		}, 1 );
 	}
 
-	// TODO: Remove unused parameters
-	saveLiteral( modifiedLiteral:Literal, originalLiteral:Literal, index:number ) {
-		if( typeof this.literals[ index ].added !== "undefined" ) delete this.literals[ index ].isBeingCreated;
-		this.isLanguagePresent = this.existsToken( "@language" );
+	saveLiteral() {
+		this.isLanguagePresent = this.existsToken( LiteralToken.LANGUAGE );
 		this.onLiteralsChanges.emit( this.literals );
 		this.updateCanDisplayLiterals();
 	}
@@ -65,7 +62,6 @@ export class LiteralsComponent implements OnInit {
 	addNewLiteral():void {
 		let newLiteralStatus:LiteralStatus = <LiteralStatus>{};
 		newLiteralStatus.added = <Literal>{};
-		newLiteralStatus.isBeingCreated = true;
 		this.literals.splice( 0, 0, newLiteralStatus );
 		this.updateCanDisplayLiterals();
 	}

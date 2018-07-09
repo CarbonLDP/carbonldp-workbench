@@ -1,5 +1,15 @@
 :host {
 
+	td {
+		vertical-align: middle;
+	}
+
+	.edit-mode.ui.form {
+		.field {
+			margin: 0;
+		}
+	}
+
 	.type {
 
 		/deep/ .dropdown.types {

@@ -258,7 +258,7 @@ export function literalSpecs() {
 				editButton.click();
 				fixture.detectChanges();
 
-				let type:string = comp.literalCmp.searchDropdown.val();
+				let type:string = comp.literalCmp.typesDropdown.val();
 				expect( type ).toEqual( XSD.string );
 			} );
 
@@ -376,7 +376,7 @@ export function literalSpecs() {
 					fixture.detectChanges();
 					comp.literalCmp.ngAfterViewChecked();
 
-					comp.literalCmp.searchDropdown.dropdown( "set selected", XSD.decimal );
+					comp.literalCmp.typesDropdown.dropdown( "set selected", XSD.decimal );
 					fixture.detectChanges();
 
 					let cancelButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Cancel']" );

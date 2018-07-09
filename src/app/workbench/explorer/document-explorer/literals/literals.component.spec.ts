@@ -124,7 +124,7 @@ export function literalsSpecs() {
 				expect( literals[ toModifyLiteralIdx ].modified[ "@value" ] ).toEqual( "Modified Literal 1" );
 				done();
 			} );
-			comp.literalsCmp.saveLiteral( toModifyLiteral.modified, toModifyLiteral.copy, 0 );
+			comp.literalsCmp.saveLiteral();
 			fixture.detectChanges();
 		} );
 
