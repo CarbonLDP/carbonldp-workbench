@@ -5,7 +5,7 @@ import { CarbonLDP } from "carbonldp";
 import { PersistedUser } from "carbonldp/Auth";
 
 import { AuthService } from "app/authentication/services";
-import { HeaderService } from "app/header/header.service";
+import { HeaderItem, HeaderService } from "app/header/header.service";
 import { SidebarService } from "app/sidebar/sidebar.service";
 
 
@@ -60,7 +60,7 @@ export class WorkbenchView {
 	}
 
 	private getAuthenticatedUser():Promise<PersistedUser> {
-		return this.carbonldp.auth.authenticatedUser.resolve();
+		return this.carbonldp.auth.authenticatedUser ? this.carbonldp.auth.authenticatedUser.resolve() : Promise.resolve( null );
 	}
 
 	private populateHeader():void {
@@ -76,15 +76,10 @@ export class WorkbenchView {
 			this.router.navigate( [ "/login" ] );
 		} );
 
-		let name:string = ! ! this.carbonldp.auth.authenticatedUser.name ? this.carbonldp.auth.authenticatedUser.name : "User";
-		this.headerService.addItems( [
-			{
-				name: "Dashboard",
-				route: [ "" ],
-				index: 0,
-			},
-			{
-				name: name,
+		let loginOrUsenameItem:HeaderItem;
+		if( this.carbonldp.auth.authenticatedUser ) {
+			loginOrUsenameItem = {
+				name: this.carbonldp.auth.authenticatedUser.name ? this.carbonldp.auth.authenticatedUser.name : "User",
 				children: [
 					{
 						icon: "sign out icon",
@@ -94,7 +89,20 @@ export class WorkbenchView {
 					}
 				],
 				index: 100,
-			}
+			};
+		} else {
+			loginOrUsenameItem = {
+				name: "Login",
+				route: [ "/login" ]
+			};
+		}
+		this.headerService.addItems( [
+			{
+				name: "Dashboard",
+				route: [ "" ],
+				index: 0,
+			},
+			loginOrUsenameItem
 		] );
 	}
 
