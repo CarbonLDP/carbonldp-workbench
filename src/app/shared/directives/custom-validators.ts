@@ -142,3 +142,15 @@ export class RequiredIfValidator {
 		return null;
 	}
 }
+
+@Directive( {
+	selector: '[cw-required]',
+	providers: [ { provide: NG_VALIDATORS, useExisting: RequiredDirective, multi: true } ]
+} )
+export class RequiredDirective implements Validator {
+
+	validate( control:AbstractControl ):{ [ key:string ]:any } {
+		let isWhitespace = (control.value || '').trim().length === 0;
+		return isWhitespace ? { 'required': true } : null;
+	}
+}

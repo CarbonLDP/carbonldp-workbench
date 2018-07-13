@@ -7,6 +7,8 @@ export interface Class {
 
 	isAuthenticated():boolean;
 
+	getAuthenticatedUser():Promise<any>;
+
 	login( username:string, password:string, rememberMe:boolean ):Promise<any>;
 
 	logout():void;

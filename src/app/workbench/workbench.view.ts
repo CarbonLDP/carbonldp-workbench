@@ -2,9 +2,10 @@ import { Component, Inject, EventEmitter } from "@angular/core";
 import { Router, Event, NavigationEnd } from "@angular/router";
 
 import { CarbonLDP } from "carbonldp";
+import { PersistedUser } from "carbonldp/Auth";
 
 import { AuthService } from "app/authentication/services";
-import { HeaderService } from "app/header/header.service";
+import { HeaderItem, HeaderService } from "app/header/header.service";
 import { SidebarService } from "app/sidebar/sidebar.service";
 
 
@@ -46,12 +47,20 @@ export class WorkbenchView {
 
 
 	ngOnInit():void {
-		this.populateHeader();
+		this.getAuthenticatedUser()
+			.catch( error => console.error( error ) )
+			.then( () => {
+				this.populateHeader();
+			} );
 		this.populateSidebar();
 	}
 
 	toggleSidebar():void {
 		this.sidebarService.toggle();
+	}
+
+	private getAuthenticatedUser():Promise<PersistedUser> {
+		return this.carbonldp.auth.authenticatedUser ? this.carbonldp.auth.authenticatedUser.resolve() : Promise.resolve( null );
 	}
 
 	private populateHeader():void {
@@ -67,26 +76,33 @@ export class WorkbenchView {
 			this.router.navigate( [ "/login" ] );
 		} );
 
-		let name:string = (this.carbonldp.auth.authenticatedUser && this.carbonldp.auth.authenticatedUser.name) ? this.carbonldp.auth.authenticatedUser.name : "User";
-		// TODO: Remove any to use HeaderItem instead
-		this.headerService.addItems( <any>[
+		let loginOrUsenameItem:HeaderItem;
+		if( this.carbonldp.auth.authenticatedUser ) {
+			loginOrUsenameItem = {
+				name: this.carbonldp.auth.authenticatedUser.name ? this.carbonldp.auth.authenticatedUser.name : "User",
+				children: [
+					{
+						icon: "sign out icon",
+						name: "Log Out",
+						onClick: onLogout,
+						index: 100,
+					}
+				],
+				index: 100,
+			};
+		} else {
+			loginOrUsenameItem = {
+				name: "Login",
+				route: [ "/login" ]
+			};
+		}
+		this.headerService.addItems( [
 			{
 				name: "Dashboard",
 				route: [ "" ],
 				index: 0,
 			},
-			// {
-			// 	name: name,
-			// 	children: [
-			// 		{
-			// 			icon: "sign out icon",
-			// 			name: "Log Out",
-			// 			onClick: onLogout,
-			// 			index: 100,
-			// 		}
-			// 	],
-			// 	index: 100,
-			// }
+			loginOrUsenameItem
 		] );
 	}
 

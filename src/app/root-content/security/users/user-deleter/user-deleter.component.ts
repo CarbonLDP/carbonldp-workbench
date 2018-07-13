@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
-import * as User from "carbonldp/Auth/User";
+import { User } from "carbonldp/Auth";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { Message } from "app/shared/messages-area/message.component";
@@ -26,7 +26,7 @@ export class UserDeleterComponent implements AfterViewInit {
 	public errorMessage:Message;
 	public deletingUser:boolean = false;
 
-	@Input() user:User.Class;
+	@Input() user:User;
 	@Output() onSuccess:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
 

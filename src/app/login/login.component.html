@@ -1,18 +1,17 @@
 <form #loginForm="ngForm" class="ui login form attached segment large" role="form" (submit)="onSubmit(loginForm.value, $event)">
-	<div class="field" [ngClass]="{ error: email.invalid }">
+	<div class="field" [ngClass]="{ error: username.invalid }">
 		<div class="ui left icon input">
 			<i class="user icon"></i>
 			<input type="text"
-			       placeholder="E-mail address"
-			       name="email"
-			       [(ngModel)]="login.email"
+			       placeholder="Username"
+			       name="username"
+			       [(ngModel)]="login.username"
 			       cwValidation
-			       required cw-email
-			       #email="cwValidation">
+			       required
+			       #username="cwValidation">
 		</div>
-		<cw-error-label *ngIf="!email.valid">
-			<span *ngIf="email.control.hasError('required')">Please enter your email address</span>
-			<span *ngIf="email.control.hasError('invalidEmailAddress')">Please enter a valid email address</span>
+		<cw-error-label *ngIf="!username.valid">
+			<span *ngIf="username.control.hasError('required')">Please enter a username</span>
 		</cw-error-label>
 	</div>
 	<div class="field" [ngClass]="{ error: password.invalid }">
