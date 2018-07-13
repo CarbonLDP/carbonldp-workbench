@@ -1,13 +1,12 @@
 import { Injectable, EventEmitter } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { User, PersistedUser, UsernameAndPasswordCredentials } from "carbonldp/Auth";
-import { Response } from "carbonldp/HTTP";
-import { ArrayUtils } from "carbonldp/Utils";
+import { User, PersistedUser, UsernameAndPasswordCredentials, LDAPCredentials } from "carbonldp/Auth";
 import { URI } from "carbonldp/RDF/URI";
 import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { CS } from "carbonldp/Vocabularies";
 import { QueryDocumentsBuilder } from "carbonldp/SPARQL/QueryDocument/QueryDocumentsBuilder";
+
 
 @Injectable()
 export class UsersService {
@@ -34,38 +33,32 @@ export class UsersService {
 	public get( slugOrURI:string ):Promise<PersistedUser> {
 		let uri:string = this.carbonldp.baseURI + `users/${slugOrURI}/`;
 		if( URI.isAbsolute( slugOrURI ) ) uri = slugOrURI;
-		this.users = typeof this.users === "undefined" ? new Map<string, PersistedUser>() : this.users;
 		return this.carbonldp.documents.get<PersistedUser>( uri ).then( ( user:PersistedUser ) => {
+			// TODO: Remove this when SDK resolves preference of Full document instead of partial document. issue:#264
+			delete user._partialMetadata;
 			this.users.set( user.id, user );
 			return user;
 		} );
 	}
 
 	public getAll( limit?:number, page?:number, orderBy?:string, ascending:boolean = true ):Promise<PersistedUser[]> {
-		let uri:string = this.carbonldp.baseURI + "users/";
-		this.users = typeof this.users === "undefined" ? new Map<string, PersistedUser>() : this.users;
 
-		let property:string = orderBy ? orderBy : "name";
+		let property:string = orderBy ? orderBy : "id";
 
-		return this.carbonldp.documents.getMembers<PersistedUser>( uri, ( _:QueryDocumentsBuilder ) => {
-			let func = _.properties( {
-				"name": _.inherit,
-				"email": _.inherit,
-				"created": _.inherit,
-				"modified": _.inherit,
-			} );
+		return this.carbonldp.auth.users.getChildren<PersistedUser>( ( _:QueryDocumentsBuilder ) => {
+			let func = _.withType( CS.User )
+				.properties( {
+					"created": _.inherit,
+					"modified": _.inherit,
+				} );
 			if( ! orderBy ) func.orderBy( property, ascending ? "ASC" : "DESC" );
 			if( typeof limit !== "undefined" ) func.limit( limit );
 			if( typeof page !== "undefined" ) func.offset( page * limit );
+
 			return func;
-
 		} ).then( ( users:PersistedUser[] ) => {
-			users.forEach( ( user:PersistedUser ) => this.users.set( user.id, user ) );
 
-			let usersArray:PersistedUser[] = ArrayUtils.from( this.users.values() );
-			if( orderBy ) usersArray = this.getSortedUsers( usersArray, orderBy, ascending );
-
-			return usersArray;
+			return orderBy ? this.getSortedUsers( users, orderBy, ascending ) : users;
 		} );
 	}
 
@@ -80,27 +73,19 @@ export class UsersService {
 		} );
 	}
 
-	public saveUser( user:PersistedUser ):Promise<[ PersistedUser, Response ]> {
+	public saveUser( user:PersistedUser ):Promise<PersistedUser> {
 		return user.save();
 	}
 
-	public saveAndRefreshUser( user:PersistedUser ):Promise<[ PersistedUser, Response [] ]> {
+	public saveAndRefreshUser( user:PersistedUser ):Promise<PersistedUser> {
 		return user.saveAndRefresh();
 	}
 
-	public createUser( email:string, password:string, enabled:boolean ):Promise<PersistedUser> {
-		let newUser:User = User.create( {
-			name: name,
-			credentials: UsernameAndPasswordCredentials.create( {
-				username: email,
-				password: password
-			} )
-		} );
+	public createUser( credentials:UsernameAndPasswordCredentials | LDAPCredentials, slug?:string ):Promise<PersistedUser> {
 
-		return this.carbonldp.auth.users.createChild( newUser ).then( ( persistedUser:PersistedUser ) => {
-			persistedUser.name = name;
-			return persistedUser.saveAndRefresh();
-		} );
+		let newUser:User = User.create( { credentials: credentials } );
+
+		return this.carbonldp.auth.users.createChild( newUser, slug );
 	}
 
 	public deleteUser( user:User, slug?:string ):Promise<void> {
