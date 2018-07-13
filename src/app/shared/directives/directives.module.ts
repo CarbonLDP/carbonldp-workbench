@@ -6,7 +6,7 @@ import { HighlightDirective } from "./highlight.directive";
 import { EmailValidator, MatchValidator } from "./custom-validators";
 import { SlugValidator, DomainValidator } from "./custom-validators";
 import { URIValidator, FragmentValidator, URIFragmentValidator } from "./custom-validators";
-import { RequiredIfValidator } from "./custom-validators";
+import { RequiredIfValidator, RequiredDirective } from "./custom-validators";
 import { InputValidationDirective } from "./input-validation.directive";
 import { GrayedOutDirective } from "./grayed-out.directive";
 
@@ -27,6 +27,7 @@ import { GrayedOutDirective } from "./grayed-out.directive";
 		HighlightDirective,
 		InputValidationDirective,
 		RequiredIfValidator,
+		RequiredDirective,
 		GrayedOutDirective,
 	],
 	exports: [
@@ -40,6 +41,7 @@ import { GrayedOutDirective } from "./grayed-out.directive";
 		HighlightDirective,
 		InputValidationDirective,
 		RequiredIfValidator,
+		RequiredDirective,
 		GrayedOutDirective,
 	],
 	providers: []
