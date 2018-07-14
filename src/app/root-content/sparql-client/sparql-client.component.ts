@@ -362,9 +362,9 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				if( error instanceof SPARQLClientResponse ) {
 					this.addResponse( error );
 				} else if( this.emitErrors ) {
-					this.errorOccurs.emit( this.getMessage( error ) );
+					this.errorOccurs.emit( error );
 				} else {
-					this.messages.push( this.getMessage( error ) );
+					this.messages.push( error );
 				}
 			} );
 	}
@@ -390,9 +390,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				break;
 			default:
 				// Unsupported Operation
-				promise = new Promise( ( resolve, reject ) => {
-					reject( "Unsupported Type" );
-				} );
+				promise = Promise.reject( this.getMessage( "Unsupported Operation" ) );
 		}
 
 		return promise.then(
@@ -401,7 +399,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				this.isSending = false;
 				return response;
 			},
-			( error:any ) => {
+			( error:SPARQLClientResponse | Message ) => {
 				// Response Fail
 				this.isSending = false;
 				return Promise.reject( error );
@@ -422,7 +420,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				return this.executeASK( query );
 			default:
 				// Unsupported Operation
-				return Promise.reject<SPARQLClientResponse>( "Unsupported Operation" );
+				return Promise.reject( this.getMessage( "Unsupported Operation" ) );
 		}
 	}
 
@@ -706,16 +704,16 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		return clientResponse;
 	}
 
-	handleError( error:Error | Errors.HTTPError, query:SPARQLQuery, beforeTimestamp:number ):SPARQLClientResponse | Errors.HTTPError | Error {
+	handleError( error:Error | Errors.HTTPError, query:SPARQLQuery, beforeTimestamp:number ):SPARQLClientResponse | Message {
 		let duration:number = (new Date()).valueOf() - beforeTimestamp;
 
+		let errorMessage:Message = this.getMessage( error );
 		let stackErrors:number[] = [ 400, 403, 404, 413, 414, 429 ];
 		// TODO implement login modal when 401
 		if( error instanceof Errors.HTTPError && stackErrors.indexOf( error.response.status ) > - 1 ) {
-			let errorMessage:Message = this.getMessage( error );
 			return this.buildResponse( duration, errorMessage, SPARQLResponseType.error, query );
 		}
-		return error;
+		return errorMessage;
 	}
 }
 
