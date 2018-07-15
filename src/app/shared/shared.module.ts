@@ -10,6 +10,9 @@ import { PaginatorComponent } from "./paginator/paginator.component";
 import { VersionsPresenterComponent } from "./versions-presenter/versions-presenter.component";
 import * as CodeMirrorComponent from "./code-mirror/code-mirror.component";
 
+// Pipes
+import { URIToSlugPipe } from "./pipes/uri-to-slug.pipe";
+
 // Modules
 import { DirectivesModule } from "./directives/directives.module";
 import { SemanticModule } from "./semantic/semantic.module";
@@ -29,6 +32,7 @@ import { MessagesAreaService } from "./messages-area/messages-area.service";
 		ErrorLabelComponent,
 		PaginatorComponent,
 		VersionsPresenterComponent,
+		URIToSlugPipe,
 	],
 	providers: [],
 	exports: [
@@ -38,6 +42,8 @@ import { MessagesAreaService } from "./messages-area/messages-area.service";
 		ErrorLabelComponent,
 		PaginatorComponent,
 		VersionsPresenterComponent,
+
+		URIToSlugPipe,
 
 		DirectivesModule,
 		SemanticModule

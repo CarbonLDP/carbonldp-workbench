@@ -15,7 +15,7 @@ export class UserDetailsView {
 	private router:Router;
 	private activatedRoute:ActivatedRoute;
 
-	private user:PersistedUser.Class;
+	private user:PersistedUser;
 	private mode:string = Modes.READ;
 
 	public canDisplay:boolean = true;
@@ -26,11 +26,11 @@ export class UserDetailsView {
 	}
 
 	ngOnInit() {
-		this.activatedRoute.data.forEach( ( data:{ user:PersistedUser.Class } ) => {
+		this.activatedRoute.data.forEach( ( data:{ user:PersistedUser } ) => {
 			this.user = data.user;
 		} );
 		this.activatedRoute.queryParams.subscribe( ( params ) => {
-			this.mode = params[ "mode" ] ? params[ "mode" ] : Modes.READ;
+			this.mode = params[ "mode" ] ? params[ "mode" ] : Modes.EDIT;
 		} );
 	}
 

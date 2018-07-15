@@ -1,5 +1,5 @@
-import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { AbstractControl, Validator, NG_VALIDATORS } from "@angular/forms";
+import { Directive, Input, OnChanges, SimpleChanges, Injector } from "@angular/core";
+import { AbstractControl, Validator, NgModel, NG_VALIDATORS, NgControl, FormControl } from "@angular/forms";
 import { URI } from "carbonldp/RDF/URI";
 
 @Directive( {
@@ -7,7 +7,7 @@ import { URI } from "carbonldp/RDF/URI";
 	providers: [ { provide: NG_VALIDATORS, useExisting: EmailValidator, multi: true } ]
 } )
 export class EmailValidator implements Validator {
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		// RFC 2822 compliant regex
 		if( control.value ) {
 			if( control.value.match( /[a-z0-9!#$%&"*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&"*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/ ) ) {
@@ -25,7 +25,7 @@ export class EmailValidator implements Validator {
 } )
 export class SlugValidator implements Validator {
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		if( control.value ) {
 			if( control.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
 				return null;
@@ -40,22 +40,30 @@ export class SlugValidator implements Validator {
 	selector: "[cw-match]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: MatchValidator, multi: true } ]
 } )
-export class MatchValidator implements Validator,OnChanges {
-	@Input() matchTo;
-	@Input() control;
+export class MatchValidator implements Validator, OnChanges {
+	@Input() matchTo:any;
+
+	private injector:Injector;
+	private ngModel:NgModel;
+	private control:FormControl;
+
+	constructor( injector:Injector ) {
+		this.injector = injector;
+	}
+
+	ngOnInit() {
+		this.ngModel = this.injector.get( NgControl );
+		this.control = this.ngModel.control;
+	}
 
 	ngOnChanges( changes:SimpleChanges ) {
-		this.control.control.updateValueAndValidity( false, true );
+		if( ! this.control || ! changes.hasOwnProperty( "matchTo" ) ) return;
+		setTimeout( this.control.updateValueAndValidity( { onlySelf: false, emitEvent: false } ), 0 );
 	}
 
 	validate( control:AbstractControl ):{ [ key:string ]:any; } {
-		if( control.value ) {
-			if( control.value === this.matchTo )
-				return null;
-			else {
-				return { "matchError": true };
-			}
-		}
+		if( ! control.value ) return;
+		return (control.value === this.matchTo) ? null : { "matchError": true };
 	}
 }
 
@@ -65,7 +73,7 @@ export class MatchValidator implements Validator,OnChanges {
 } )
 export class DomainValidator implements Validator {
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		if( control.value ) {
 			if( control.value.match( /^((cc:|https:|http:|[/][/])([a-z]|[A-Z]|[:0-9]|[/.-]){3,})$/g ) )
 				return null;
@@ -82,7 +90,7 @@ export class DomainValidator implements Validator {
 } )
 export class URIValidator implements Validator {
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		if( control.value ) {
 			if( control.value.match( /^(ftp|https?):\/\/(\w+:{0,1}\w*@)?((?![^\/]+\/(?:ftp|https?):)\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/ ) ) {
 				return null;
@@ -102,7 +110,7 @@ export class URIValidator implements Validator {
 } )
 export class FragmentValidator implements Validator {
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		if( ! control.value ) return null;
 		if( ! control.value.match( /^(ftp|https?):\/\/(\w+:{0,1}\w*@)?((?![^\/]+\/(?:ftp|https?):)\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/ ) ) return { "invalidURIAddress": true };
 		if( ! URI.hasFragment( control.value ) ) return { "missingFragment": true };
@@ -119,7 +127,7 @@ export class FragmentValidator implements Validator {
 } )
 export class URIFragmentValidator implements Validator {
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		if( ! control.value ) return null;
 		if( ! control.value.match( /^(ftp|https?):\/\/(\w+:{0,1}\w*@)?((?![^\/]+\/(?:ftp|https?):)\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/ ) ) return { "invalidURIAddress": true };
 		if( ! URI.hasFragment( control.value ) ) return;
@@ -134,11 +142,23 @@ export class URIFragmentValidator implements Validator {
 	selector: '[cw-required-if]',
 	providers: [ { provide: NG_VALIDATORS, useExisting: RequiredIfValidator, multi: true } ]
 } )
-export class RequiredIfValidator {
+export class RequiredIfValidator implements Validator {
 	@Input() condition:boolean;
 
-	validate( control:AbstractControl ):{ [key:string]:any } {
+	validate( control:AbstractControl ):{ [ key:string ]:any } {
 		if( this.condition && ! control.value ) return { "requiredIf": true };
 		return null;
+	}
+}
+
+@Directive( {
+	selector: '[cw-required]',
+	providers: [ { provide: NG_VALIDATORS, useExisting: RequiredDirective, multi: true } ]
+} )
+export class RequiredDirective implements Validator {
+
+	validate( control:AbstractControl ):{ [ key:string ]:any } {
+		let isWhitespace = (control.value || '').trim().length === 0;
+		return isWhitespace ? { 'required': true } : null;
 	}
 }

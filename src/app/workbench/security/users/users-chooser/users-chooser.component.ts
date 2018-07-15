@@ -1,6 +1,6 @@
 import { ElementRef, Component, Input, Output, AfterViewInit, AfterViewChecked, ChangeDetectorRef, EventEmitter } from "@angular/core";
 
-import * as PersistedUser from "carbonldp/Auth/PersistedUser";
+import { PersistedUser } from "carbonldp/Auth/PersistedUser";
 
 import { UsersService } from "../users.service";
 
@@ -26,13 +26,13 @@ export class UsersChooserComponent implements AfterViewInit, AfterViewChecked {
 	private ascending:boolean = false;
 
 	public loading:boolean = false;
-	public availableUsers:PersistedUser.Class[] = [];
+	public availableUsers:PersistedUser[] = [];
 
 
 	@Input() single:boolean = false;
-	@Input() selectedUsers:PersistedUser.Class[] = [];
+	@Input() selectedUsers:PersistedUser[] = [];
 
-	@Output() onChangeSelection:EventEmitter<PersistedUser.Class[]> = new EventEmitter<PersistedUser.Class[]>();
+	@Output() onChangeSelection:EventEmitter<PersistedUser[]> = new EventEmitter<PersistedUser[]>();
 
 	constructor( element:ElementRef, usersService:UsersService, cdRef:ChangeDetectorRef ) {
 		this.element = element;
@@ -49,32 +49,32 @@ export class UsersChooserComponent implements AfterViewInit, AfterViewChecked {
 		this.cdRef.detectChanges();
 	}
 
-	private hasUser( user:string, list:PersistedUser.Class[] ):boolean {
-		return list.findIndex( ( persistedUser:PersistedUser.Class ) => { return user === persistedUser.id } ) !== - 1;
+	private hasUser( user:string, list:PersistedUser[] ):boolean {
+		return list.findIndex( ( persistedUser:PersistedUser ) => { return user === persistedUser.id } ) !== - 1;
 	}
 
-	private onClickUser( evt:Event, user:PersistedUser.Class ):void {
+	private onClickUser( evt:Event, user:PersistedUser ):void {
 		evt.stopPropagation();
 		this.selectUser( user );
 	}
 
-	private selectUser( user:PersistedUser.Class ):void {
+	private selectUser( user:PersistedUser ):void {
 		if( this.single ) this.addUserAsSingle( user );
 		else this.addUserAsMulti( user );
 		this.onChangeSelection.emit( this.selectedUsers );
 	}
 
-	private addUserAsMulti( user:PersistedUser.Class ):void {
+	private addUserAsMulti( user:PersistedUser ):void {
 		user[ "checked" ] ? delete user[ "checked" ] : user[ "checked" ] = true;
-		let idx:number = this.selectedUsers.findIndex( ( persistedUser:PersistedUser.Class ) => { return user.id === persistedUser.id } );
+		let idx:number = this.selectedUsers.findIndex( ( persistedUser:PersistedUser ) => { return user.id === persistedUser.id } );
 		if( idx === - 1 )
 			this.selectedUsers.push( user );
 		else
 			this.selectedUsers.splice( idx, 1 );
 	}
 
-	private addUserAsSingle( user:PersistedUser.Class ):void {
-		this.availableUsers.forEach( ( localUser:PersistedUser.Class ) => {
+	private addUserAsSingle( user:PersistedUser ):void {
+		this.availableUsers.forEach( ( localUser:PersistedUser ) => {
 			localUser[ "checked" ] = false;
 		} );
 		user[ "checked" ] ? delete user[ "checked" ] : user[ "checked" ] = true;
@@ -86,7 +86,7 @@ export class UsersChooserComponent implements AfterViewInit, AfterViewChecked {
 		this.getNumberOfUsers().then( ( amount:number ) => {
 			this.totalUsers = amount;
 			return this.getUsers();
-		} ).then( ( users:PersistedUser.Class[] ) => {
+		} ).then( ( users:PersistedUser[] ) => {
 			this.availableUsers = users;
 		} ).catch( ( error ) => {
 			console.error( error );
@@ -102,12 +102,12 @@ export class UsersChooserComponent implements AfterViewInit, AfterViewChecked {
 		return this.usersService.getNumberOfUsers();
 	}
 
-	private getUsers():Promise<PersistedUser.Class[]> {
-		return this.usersService.getAll( this.usersPerPage, this.activePage, this.sortedColumn, this.ascending ).then( ( users:PersistedUser.Class[] ) => {
-			users.forEach( ( user:PersistedUser.Class ) => {
+	private getUsers():Promise<PersistedUser[]> {
+		return this.usersService.getAll( this.usersPerPage, this.activePage, this.sortedColumn, this.ascending ).then( ( users:PersistedUser[] ) => {
+			users.forEach( ( user:PersistedUser ) => {
 				user[ "checked" ] = this.hasUser( user.id, this.selectedUsers );
 			} );
-			return users.filter( ( user:PersistedUser.Class ) => { return user.id.indexOf( "/users/me/" ) === - 1 } );
+			return users.filter( ( user:PersistedUser ) => { return user.id.indexOf( "/users/me/" ) === - 1 } );
 		} );
 	}
 
