@@ -5,7 +5,7 @@ import { CarbonLDP } from "carbonldp";
 import { PersistedUser } from "carbonldp/Auth";
 
 import { AuthService } from "app/authentication/services";
-import { HeaderService } from "app/workbench/layout/header/header.service";
+import { HeaderService, HeaderItem } from "app/workbench/layout/header/header.service";
 import { SidebarService } from "app/workbench/layout/sidebar/sidebar.service";
 
 
