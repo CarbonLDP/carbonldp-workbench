@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { NgForm, ControlContainer } from "@angular/forms";
-import { Modes } from "app/root-content/security/users/user-details/user-details.component";
+import { Modes } from "app/workbench/security/users/user-details/user-details.component";
 
 @Component( {
 	selector: "basic-credentials",

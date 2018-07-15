@@ -9,8 +9,8 @@ import { DocumentExplorerLibrary } from "app/workbench/explorer/document-explore
 import { Message, Types } from "app/shared/messages-area/message.component";
 import { MessagesAreaService } from "app/shared/messages-area/messages-area.service";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
-import { CredentialsService } from "app/root-content/security/credentials/credentials.service";
-import { BasicCredentialsFormModel } from "app/root-content/security/credentials/basic-credentials.component";
+import { CredentialsService } from "app/workbench/security/credentials/credentials.service";
+import { BasicCredentialsFormModel } from "app/workbench/security/credentials/basic-credentials.component";
 
 @Component( {
 	selector: "cw-user-details",
