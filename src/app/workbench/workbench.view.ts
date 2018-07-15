@@ -102,7 +102,7 @@ export class WorkbenchView {
 				route: [ "" ],
 				index: 0,
 			},
-			loginOrUsenameItem
+			// loginOrUsenameItem
 		] );
 	}
 
@@ -128,12 +128,12 @@ export class WorkbenchView {
 				icon: "terminal icon",
 				route: [ this.base, "sparql-client" ],
 			},
-			{
-				type: "link",
-				name: "Security",
-				icon: "lock icon",
-				route: [ this.base, "security", "users" ],
-			},
+			// {
+			// 	type: "link",
+			// 	name: "Security",
+			// 	icon: "lock icon",
+			// 	route: [ this.base, "security", "users" ],
+			// },
 			// {
 			// 	type: "link",
 			// 	name: "Configuration",

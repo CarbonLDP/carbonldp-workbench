@@ -17,7 +17,7 @@ export const RootContentRoutes:Routes = [
 			alias: "",
 			displayName: "Workbench",
 			title: "Workbench",
-			hide:true,
+			hide: true,
 		},
 		children: [
 			{
@@ -25,7 +25,7 @@ export const RootContentRoutes:Routes = [
 				data: {
 					alias: "",
 					displayName: "Dashboard",
-					hide:false,
+					hide: false,
 				},
 				component: DashboardView,
 			},
@@ -64,10 +64,10 @@ export const RootContentRoutes:Routes = [
 					title: "Configuration",
 				},
 			},
-			{
-				path: "security",
-				loadChildren: "app/root-content/security/security.module#SecurityModule",
-			},
+			// {
+			// 	path: "security",
+			// 	loadChildren: "app/root-content/security/security.module#SecurityModule",
+			// },
 		]
 	}
 ];
