@@ -2,11 +2,6 @@ import { Injector } from "@angular/core";
 
 import * as Cookies from "js-cookie";
 
-import { CarbonLDP } from "carbonldp";
-import { IllegalArgumentError } from "carbonldp/Errors";
-import { Errors as HTTPErrors } from "carbonldp/HTTP";
-import { AuthMethod, TokenCredentials } from "carbonldp/Auth";
-
 
 /**
  * Function that holds the app's injector. To initialize it, call it passing appRef.injector as a parameter.
@@ -47,22 +42,6 @@ function inject( token:any ):Promise<any> {
 // Exports
 export function authenticationCookieIsPresent():boolean {
 	return typeof Cookies.get( AUTH_COOKIE ) !== "undefined";
-}
-
-export function authenticateWithCookie( carbonldp:CarbonLDP ):Promise<any> {
-	let token:TokenCredentials;
-	try {
-		token = Cookies.getJSON( AUTH_COOKIE );
-	} catch( error ) {
-		return Promise.reject( error );
-	}
-	// TODO: change the "TOKEN" string to Method.TOKEN
-	return carbonldp.auth.authenticateUsing( AuthMethod.TOKEN, token ).catch( ( error ) => {
-		if( error instanceof IllegalArgumentError || error instanceof HTTPErrors.UnauthorizedError ) {
-			// Invalid token
-			Cookies.remove( AUTH_COOKIE );
-		} else return Promise.reject( error );
-	} );
 }
 
 export const AUTH_COOKIE:string = "carbonldp-workbench-token";
