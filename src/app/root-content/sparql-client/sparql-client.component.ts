@@ -359,10 +359,12 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 			}
 		).catch(
 			( error:any ) => {
-				if( this.emitErrors ) {
-					this.errorOccurs.emit( this.getMessage( error ) );
+				if( error instanceof SPARQLClientResponse ) {
+					this.addResponse( error );
+				} else if( this.emitErrors ) {
+					this.errorOccurs.emit( error );
 				} else {
-					this.messages.push( this.getMessage( error ) );
+					this.messages.push( error );
 				}
 			} );
 	}
@@ -388,9 +390,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				break;
 			default:
 				// Unsupported Operation
-				promise = new Promise( ( resolve, reject ) => {
-					reject( "Unsupported Type" );
-				} );
+				promise = Promise.reject( this.getMessage( "Unsupported Operation" ) );
 		}
 
 		return promise.then(
@@ -399,7 +399,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				this.isSending = false;
 				return response;
 			},
-			( error:any ) => {
+			( error:SPARQLClientResponse | Message ) => {
 				// Response Fail
 				this.isSending = false;
 				return Promise.reject( error );
@@ -420,7 +420,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				return this.executeASK( query );
 			default:
 				// Unsupported Operation
-				return Promise.reject<SPARQLClientResponse>( "Unsupported Operation" );
+				return Promise.reject( this.getMessage( "Unsupported Operation" ) );
 		}
 	}
 
@@ -432,7 +432,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return this.handleError( error, query, beforeTimestamp );
+				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
 			} );
 	}
 
@@ -445,7 +445,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return this.handleError( error, query, beforeTimestamp );
+				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
 			} );
 	}
 
@@ -458,7 +458,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return this.handleError( error, query, beforeTimestamp );
+				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
 			} );
 	}
 
@@ -470,7 +470,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return this.handleError( error, query, beforeTimestamp );
+				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
 			} );
 	}
 
@@ -484,7 +484,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				return this.buildResponse( duration, "200 - OK", <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return this.handleError( error, query, beforeTimestamp );
+				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
 			} );
 	}
 
@@ -704,28 +704,16 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		return clientResponse;
 	}
 
-	handleError( error:Errors.HTTPError, query:SPARQLQuery, beforeTimestamp:number ):Promise<SPARQLClientResponse> {
+	handleError( error:Error | Errors.HTTPError, query:SPARQLQuery, beforeTimestamp:number ):SPARQLClientResponse | Message {
 		let duration:number = (new Date()).valueOf() - beforeTimestamp;
-		return new Promise<SPARQLClientResponse>(
-			( resolve, reject ) => {
-				let stackErrors:number[] = [ 400, 403, 404, 413, 414, 429 ];
-				// TODO implement login modal when 401
-				if( stackErrors.indexOf( error.response.status ) > - 1 ) {
-					let errorMessage:Message = this.getMessage( error );
-					let errorResponse:SPARQLClientResponse = this.buildResponse( duration, errorMessage, <string> SPARQLResponseType.error, query );
-					resolve( errorResponse );
-				} else {
-					reject( error );
-				}
-			}
-		).then(
-			( response:SPARQLClientResponse ) => {
-				return response;
-			},
-			( _error:Errors.HTTPError ) => {
-				return Promise.reject( _error );
-			}
-		);
+
+		let errorMessage:Message = this.getMessage( error );
+		let stackErrors:number[] = [ 400, 403, 404, 413, 414, 429 ];
+		// TODO implement login modal when 401
+		if( error instanceof Errors.HTTPError && stackErrors.indexOf( error.response.status ) > - 1 ) {
+			return this.buildResponse( duration, errorMessage, SPARQLResponseType.error, query );
+		}
+		return errorMessage;
 	}
 }
 
