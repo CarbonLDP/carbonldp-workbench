@@ -2,10 +2,10 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } fro
 
 import { CarbonLDP } from "carbonldp";
 import { Pointer } from "carbonldp/Pointer";
-import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { Document } from "carbonldp/Document";
 import { Errors } from "carbonldp/HTTP";
 import { URI } from "carbonldp/RDF/URI";
-import { SPARQLSelectResults, SPARQLBindingObject } from "carbonldp/SPARQL/SelectResults";
+import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { C, LDP } from "carbonldp/Vocabularies";
 
 import * as $ from "jquery";
@@ -78,10 +78,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} );
 	}
 
-	getDocumentTree():Promise<PersistedDocument | void> {
-		return this.carbonldp.documents.get( "" ).then( ( resolvedRoot:PersistedDocument ) => {
+	getDocumentTree():Promise<Document | void> {
+		return this.carbonldp.documents.get( "" ).then( ( resolvedRoot:Document ) => {
 			return resolvedRoot.refresh();
-		} ).then( ( updatedRoot:PersistedDocument ) => {
+		} ).then( ( updatedRoot:Document ) => {
 
 			let isRequiredSystemDocument:boolean = updatedRoot.types.findIndex( ( type:string ) => type === `${C.namespace}RequiredSystemDocument` ) !== - 1;
 
