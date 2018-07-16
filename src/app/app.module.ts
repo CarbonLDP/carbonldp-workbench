@@ -18,7 +18,6 @@ import { DashboardView } from "./dashboard/dashboard.view";
 import { BackgroundVideoComponent } from "./error-pages/background-video.component";
 import { VersionsPresenterComponent } from "./versions-presenter/versions-presenter.component";
 
-import { RegisterComponent } from "./register/register.component";
 import { HeaderItemComponent } from "./header/header-item.component";
 import { HeaderComponent } from "./header/header.component";
 import { SidebarComponent } from "./sidebar/sidebar.component";
@@ -48,7 +47,6 @@ import { SidebarService } from "./sidebar/sidebar.service";
 		NotFoundErrorView,
 		DashboardView,
 
-		RegisterComponent,
 		HeaderItemComponent,
 		HeaderComponent,
 		SidebarComponent,
