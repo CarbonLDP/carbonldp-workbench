@@ -7,7 +7,6 @@ import { DashboardView } from "./dashboard/dashboard.view";
 import { EditInstanceView } from "./edit-instance/edit-instance.view";
 import { SPARQLClientView } from "./sparql-client/sparql-client.view";
 import { ExplorerView } from "./explorer/explorer.view";
-import { ConfigurationView } from "./configuration/configuration.view";
 
 export const RootContentRoutes:Routes = [
 	{
@@ -53,15 +52,6 @@ export const RootContentRoutes:Routes = [
 					alias: "explore",
 					displayName: "Explorer",
 					title: "Explorer",
-				},
-			},
-			{
-				path: "configure",
-				component: ConfigurationView,
-				data: {
-					alias: "configure",
-					displayName: "Configuration",
-					title: "Configuration",
 				},
 			},
 		]

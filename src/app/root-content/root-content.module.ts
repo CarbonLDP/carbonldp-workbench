@@ -15,7 +15,7 @@ import { ExplorerView } from "./explorer/explorer.view";
 // Modules
 import { SharedModule } from "app/shared/shared.module";
 import { SPARQLClientModule } from "./sparql-client/sparql-client.module";
-import { ConfigurationModule } from "./configuration/configuration.module";
+// import { ConfigurationModule } from "./configuration/configuration.module";
 import { DocumentExplorerModule } from "./explorer/document-explorer/document-explorer.module";
 import { DashboardModule } from "./dashboard/dahsboard.module";
 
@@ -30,7 +30,7 @@ import { DocumentsResolverService } from "./explorer/document-explorer/documents
 		routing,
 		SharedModule,
 		SPARQLClientModule,
-		ConfigurationModule,
+		// ConfigurationModule,
 		DocumentExplorerModule,
 		DashboardModule,
 	],
