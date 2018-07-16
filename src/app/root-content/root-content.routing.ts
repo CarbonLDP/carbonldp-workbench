@@ -64,10 +64,6 @@ export const RootContentRoutes:Routes = [
 					title: "Configuration",
 				},
 			},
-			// {
-			// 	path: "security",
-			// 	loadChildren: "app/root-content/security/security.module#SecurityModule",
-			// },
 		]
 	}
 ];
