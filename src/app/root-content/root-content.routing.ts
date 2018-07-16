@@ -4,7 +4,6 @@ import { Routes, RouterModule } from "@angular/router";
 
 import { RootContentView } from "./root-content.view";
 import { DashboardView } from "./dashboard/dashboard.view";
-import { EditInstanceView } from "./edit-instance/edit-instance.view";
 import { SPARQLClientView } from "./sparql-client/sparql-client.view";
 import { ExplorerView } from "./explorer/explorer.view";
 
@@ -27,14 +26,6 @@ export const RootContentRoutes:Routes = [
 					hide: false,
 				},
 				component: DashboardView,
-			},
-			{
-				path: "edit",
-				component: EditInstanceView,
-				data: {
-					alias: "edit",
-					displayName: "Edit",
-				},
 			},
 			{
 				path: "sparql-client",
