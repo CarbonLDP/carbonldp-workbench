@@ -2,7 +2,6 @@ import { Component, Input, Output, EventEmitter, NgZone } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { RDFDocument } from "carbonldp/RDF/Document";
-import { Response } from "carbonldp/HTTP";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "./documents-resolver.service";
@@ -51,9 +50,10 @@ export class DocumentExplorerComponent {
 
 	resolveDocument( uri:string ):void {
 		this.zone.run( () => {this.loadingDocument = true;} );
-		this.documentsResolverService.get( uri ).catch( ( error ) => {
-			this.handleExternalError( error );
-		} ).then( ( document:RDFDocument ) => {
+		this.documentsResolverService.get( uri )
+			.catch( ( error ) => {
+				this.handleExternalError( error );
+			} ).then( ( document:RDFDocument ) => {
 			this.zone.run( () => {
 				this.inspectingDocument = document;
 				this.loadingDocument = false;
@@ -91,14 +91,8 @@ export class DocumentExplorerComponent {
 		this.onRefreshNode.emit( $event );
 	}
 
-	public handleExternalError( error:HTTPError | Response ):void {
-		if( error instanceof Response ) {
-			this.carbonldp.documents._parseErrorResponse( error ).catch( ( parsedError:HTTPError ) => {
-				this.messages.push( ErrorMessageGenerator.getErrorMessage( parsedError ) );
-			} );
-		} else {
-			this.messages.push( ErrorMessageGenerator.getErrorMessage( error ) );
-		}
+	public handleExternalError( error:HTTPError | Error ):void {
+		this.messages.push( ErrorMessageGenerator.getErrorMessage( error ) );
 	}
 
 }
