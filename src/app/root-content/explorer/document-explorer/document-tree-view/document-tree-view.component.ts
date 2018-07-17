@@ -5,7 +5,7 @@ import { Pointer } from "carbonldp/Pointer";
 import { Document } from "carbonldp/Document";
 import { Errors } from "carbonldp/HTTP";
 import { URI } from "carbonldp/RDF/URI";
-import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
+import { SPARQLSelectResults, SPARQLBindingObject } from "carbonldp/SPARQL/SelectResults";
 import { C, LDP } from "carbonldp/Vocabularies";
 
 import * as $ from "jquery";
@@ -193,7 +193,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 				        (c:created)
 				        (c:modified)
 			        }
-			        BIND( EXISTS{ ?value a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
+			        BIND( EXISTS{ ?s a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
 			    }
 			}
 		`;
@@ -212,9 +212,9 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.jsTree.refresh_node( this.selectedURI );
 	}
 
-	getSlug( pointer:Pointer | string ):string {
-		if( typeof pointer !== "string" ) return (<Pointer>pointer).id;
-		return URI.getSlug( <string>pointer );
+	getSlug( node:Document | string ):string {
+		if( typeof node === "string" ) return URI.getSlug( node );
+		return (<Document>node).$id;
 	}
 
 	showCreateChildForm():void {
