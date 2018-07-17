@@ -3,10 +3,12 @@ import { Injectable } from "@angular/core";
 import { CarbonLDP } from "carbonldp";
 import { RequestService, RequestUtils, RequestOptions, Response } from "carbonldp/HTTP";
 import { LDP } from "carbonldp/Vocabularies";
-import { RDFDocument, RDFDocumentParser } from "carbonldp/RDF/Document";
+import { RDFDocument } from "carbonldp/RDF/Document";
+import { JSONLDParser } from "carbonldp/JSONLD";
 import { Document } from "carbonldp/Document";
 import { BaseAccessPoint } from "carbonldp/AccessPoint";
 import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
+import { _getErrorResponseParserFn } from "carbonldp/DocumentsRepository/Utils";
 
 @Injectable()
 export class DocumentsResolverService {
@@ -14,7 +16,7 @@ export class DocumentsResolverService {
 	carbonldp:CarbonLDP;
 
 	documents:Map<string, { document:RDFDocument, ETag:string }> = new Map<string, { document:RDFDocument, ETag:string }>();
-	private parser:RDFDocumentParser = new RDFDocumentParser();
+	private parser:JSONLDParser = new JSONLDParser();
 
 	constructor( carbonldp:CarbonLDP ) {
 		this.carbonldp = carbonldp;
@@ -23,7 +25,7 @@ export class DocumentsResolverService {
 	get( uri:string ):Promise<RDFDocument | null> {
 		if( ! uri ) return <any> Promise.reject( new Error( "Provide the uri" ) );
 		let requestOptions:RequestOptions = { sendCredentialsOnCORS: true, };
-		if( this.carbonldp.auth.isAuthenticated() ) this.carbonldp.auth.addAuthentication( requestOptions );
+		// TODO: ADD authentication `addAuthentication( requestOptions )` if authenticated
 
 		RequestUtils.setAcceptHeader( "application/ld+json", requestOptions );
 		RequestUtils.setPreferredInteractionModel( LDP.RDFSource, requestOptions );
@@ -33,17 +35,14 @@ export class DocumentsResolverService {
 		return RequestService.get( uri, requestOptions ).then( ( response:Response ) => {
 			eTag = response.getETag();
 			return this.parser.parse( response.data );
-		} ).then( ( parsedDocuments:any ) => {
-			if( ! parsedDocuments[ 0 ] ) return null;
-
-			let parsedDocument:RDFDocument = parsedDocuments[ 0 ];
+		} ).then( ( object:object[] ) => {
+			if( ! object[ 0 ] ) return null;
+			let parsedDocument:RDFDocument = RDFDocument.getDocuments( object )[ 0 ];
 
 			this.documents.set( uri, { document: parsedDocument, ETag: eTag } );
 
 			return parsedDocument;
-		} ).catch( ( error ) => {
-			return Promise.reject( error );
-		} );
+		} ).catch( _getErrorResponseParserFn( this.carbonldp.registry ) );
 	}
 
 	getAll():Promise<RDFDocument[]> {
@@ -55,23 +54,18 @@ export class DocumentsResolverService {
 	}
 
 	createChild( parentURI:string, content:any, childSlug?:string ):Promise<Document> {
-		return this.carbonldp.documents.createChild( parentURI, content, childSlug ).then(
+		return this.carbonldp.documents.create( parentURI, content, childSlug ).then(
 			( createdChild:Document ) => {
 				return createdChild;
 			}
-		).catch( ( error ) => {
-			return Promise.reject( error );
-		} );
+		);
 	}
 
 	createAccessPoint( document:Document, accessPoint:BaseAccessPoint, slug?:string ):Promise<Document> {
-		return document.createAccessPoint( accessPoint, slug ).then(
+		return document.create( accessPoint, slug ).then(
 			( createdChild:Document ) => {
 				return createdChild;
-			}
-		).catch( ( error ) => {
-			return Promise.reject( error );
-		} );
+			} );
 	}
 
 	getAccessPointsHasMemberRelationProperties( documentURI:string ):Promise<string[]> {
@@ -84,15 +78,11 @@ export class DocumentsResolverService {
 		).then( ( results:SPARQLSelectResults ) => {
 
 			return results.bindings.map( ( value:{ accessPointURI:any, propertyName:any } ) => value.propertyName.id );
-		} ).catch( ( error ) => {
-			return Promise.reject( error );
 		} );
 	}
 
 	delete( documentURI:string ):Promise<void> {
-		return this.carbonldp.documents.delete( documentURI ).catch( ( error ) => {
-			return Promise.reject( error );
-		} );
+		return this.carbonldp.documents.delete( documentURI );
 	}
 
 	update( uri:string, body:string ):Promise<RDFDocument> {
@@ -104,7 +94,7 @@ export class DocumentsResolverService {
 
 	private callUpdate( uri:string, body:string, eTag:string ):Promise<RDFDocument> {
 		let requestOptions:RequestOptions = { sendCredentialsOnCORS: true, };
-		if( this.carbonldp.auth.isAuthenticated() ) this.carbonldp.auth.addAuthentication( requestOptions );
+		// TODO: ADD authentication `addAuthentication( requestOptions )` if authenticated
 		RequestUtils.setAcceptHeader( "application/ld+json", requestOptions );
 		RequestUtils.setContentTypeHeader( "application/ld+json", requestOptions );
 		RequestUtils.setIfMatchHeader( eTag, requestOptions );
@@ -114,9 +104,7 @@ export class DocumentsResolverService {
 		} ).then( ( parsedDocument:RDFDocument ) => {
 			if( ! parsedDocument ) return null;
 			return parsedDocument;
-		} ).catch( ( error ) => {
-			return Promise.reject( error );
-		} );
+		} ).catch( _getErrorResponseParserFn( this.carbonldp.registry ) );
 	}
 }
 
