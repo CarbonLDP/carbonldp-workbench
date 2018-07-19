@@ -11,6 +11,7 @@ import { VersionsPresenterComponent } from "./versions-presenter/versions-presen
 import * as CodeMirrorComponent from "./code-mirror/code-mirror.component";
 
 // Modules
+import { PipesModule } from "./pipes/pipes.module";
 import { DirectivesModule } from "./directives/directives.module";
 import { SemanticModule } from "./semantic/semantic.module";
 
@@ -39,6 +40,7 @@ import { MessagesAreaService } from "./messages-area/messages-area.service";
 		PaginatorComponent,
 		VersionsPresenterComponent,
 
+		PipesModule,
 		DirectivesModule,
 		SemanticModule
 	]
