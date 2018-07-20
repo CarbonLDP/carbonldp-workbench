@@ -19,4 +19,14 @@ export class DocumentExplorerLibrary {
 			slugIdx:number = documentURI.indexOf( slug );
 		return documentURI.substr( 0, slugIdx );
 	}
+
+	public static isValidURL( value:string ):boolean {
+		// TODO: Change the try/catch to a more appropriate URI verification using RegEx
+		try {
+			decodeURI( value );
+			return true;
+		} catch( e ) {
+			return false;
+		}
+	}
 }
