@@ -2,6 +2,7 @@ import { XSD } from "carbonldp/Vocabularies";
 import { isDate, isString, isInteger, isNumber } from "carbonldp/Utils";
 import { RDFLiteral } from "carbonldp/RDF/Literal";
 import { URI } from "carbonldp/RDF/URI";
+import { DocumentExplorerLibrary } from "./document-explorer-library";
 
 import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { AbstractControl, Validator, NG_VALIDATORS } from "@angular/forms";
@@ -25,12 +26,18 @@ export class PropertyNameValidator implements Validator, OnChanges {
 	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 
 		if( ! ! control ) {
-			if( typeof control.value === "undefined" || control.value === null || ! control.value ) return null;
-			if( this.existingProperties.indexOf( encodeURI( control.value ) ) !== - 1 && (this.property.added ? this.id !== encodeURI( control.value ) : this.originalName !== encodeURI( control.value )) ) return { "duplicatedPropertyName": true };
-			if( ! this.url.test( control.value ) ) return { "invalidName": true };
+			if( control.value === void 0 || control.value === null ) return null;
+			if( this.propertyAlreadyExists( control.value ) ) return { "duplicatedPropertyName": true };
+			if( control.value.replace( /\s/g, "" ).length === 0 ) return { "emptyName": true };
+			if( ! DocumentExplorerLibrary.isValidURL( control.value ) ) return { "invalidName": true };
 			if( control.value.split( "#" ).length > 2 ) return { "duplicatedHashtag": true };
 		}
 		return null;
+	}
+
+	private propertyAlreadyExists( propertyName:string ):boolean {
+		return (this.existingProperties.indexOf( encodeURI( propertyName ) ) !== - 1) &&
+			(this.property.added ? this.id !== encodeURI( propertyName ) : this.originalName !== encodeURI( propertyName ))
 	}
 }
 
@@ -58,10 +65,15 @@ export class IdValidator implements Validator, OnChanges {
 		if( ! ! control ) {
 			if( typeof control.value === "undefined" || control.value === null || ! control.value ) return null;
 			if( typeof control.value === "string" && ! control.value.startsWith( this.documentURI ) ) return { "invalidParent": true };
-			if( this.existingFragments.indexOf( control.value ) !== - 1 && (this.property.added ? this.id !== control.value : this.originalId !== control.value) ) return { "duplicatedNamedFragmentName": true };
+			if( this.fragmentAlreadyExists( control.value ) ) return { "duplicatedNamedFragmentName": true };
 			if( control.value.split( "#" ).length > 2 ) return { "duplicatedHashtag": true };
 		}
 		return null;
+	}
+
+	private fragmentAlreadyExists( fragmentName:string ):boolean {
+		return (this.existingFragments.indexOf( fragmentName ) !== - 1) &&
+			(this.property.added ? this.id !== fragmentName : this.originalId !== fragmentName);
 	}
 }
 
