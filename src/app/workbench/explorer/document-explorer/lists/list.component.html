@@ -30,7 +30,7 @@
 		<tr #literal
 		    class="cw-literal" [ngClass]="{'top aligned':literal.mode ==='EDIT','modified-literal':!!item.modified, 'added-literal':!!item.added}" *ngIf="!item.deleted && isLiteral(item)"
 		    [literal]="item"
-		    [partOfList]="true"
+		    [isPartOfList]="true"
 		    [isFirstItem]="isFirst"
 		    [isLastItem]="isLast"
 		    [canDisplayLanguage]="true"

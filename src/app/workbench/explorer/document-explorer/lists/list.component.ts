@@ -86,7 +86,6 @@ export class ListComponent {
 	addPointer():void {
 		let newPointerRow:PointerRow = <PointerRow>{};
 		newPointerRow.added = <Pointer>{ "@id": "" };
-		newPointerRow.isBeingCreated = true;
 		this.tempList.splice( this.tempList.length, 0, newPointerRow );
 		this.updateTempList();
 	}
@@ -94,13 +93,11 @@ export class ListComponent {
 	addLiteral():void {
 		let newLiteralStatus:LiteralStatus = <LiteralStatus>{};
 		newLiteralStatus.added = <Literal>{ "@value": "" };
-		newLiteralStatus.isBeingCreated = true;
 		this.tempList.splice( this.tempList.length, 0, newLiteralStatus );
 		this.updateTempList();
 	}
 
 	saveItem( modifiedPointer:PointerRow, originalPointer:PointerRow, index:number ) {
-		if( typeof originalPointer.added !== "undefined" ) delete originalPointer.isBeingCreated;
 		this.updateTempList();
 	}
 
