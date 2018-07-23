@@ -86,7 +86,7 @@ export class JobsService {
 
 	checkJobExecution( jobExecution:PersistedDocument | Pointer ):Promise<PersistedDocument> {
 		if( jobExecution.isResolved() ) {
-			return jobExecution.refresh().then(
+			return (<PersistedDocument>jobExecution).refresh().then(
 				( resolvedJobExecution:PersistedDocument ) => {
 					return resolvedJobExecution;
 				} ).catch( ( error ) => { return Promise.reject( error ) } );

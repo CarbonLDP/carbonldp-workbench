@@ -27,6 +27,7 @@ import { RoleDetailsComponent } from "./roles/role-details/role-details.componen
 import { RoleDeleterComponent } from "./roles/role-deleter/role-deleter.component";
 import { RolesChooserComponent } from "./roles/roles-chooser/roles-chooser.component";
 
+import { BasicCredentialsComponent } from "./credentials/basic-credentials.component";
 
 // Modules
 import { SharedModule } from "app/shared/shared.module";
@@ -36,6 +37,7 @@ import { UsersService } from "./users/users.service";
 import { RolesService } from "./roles/roles.service";
 import { UserResolver } from "./users/user.resolver";
 import { RoleResolver } from "./roles/role.resolver";
+import { CredentialsService } from "./credentials/credentials.service";
 
 
 @NgModule( {
@@ -66,12 +68,15 @@ import { RoleResolver } from "./roles/role.resolver";
 		RoleDetailsComponent,
 		RoleDeleterComponent,
 		RolesChooserComponent,
+
+		BasicCredentialsComponent,
 	],
 	providers: [
 		UsersService,
 		RolesService,
 		UserResolver,
 		RoleResolver,
+		CredentialsService,
 	],
 } )
 export class SecurityModule {

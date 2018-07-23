@@ -10,6 +10,8 @@ import { PaginatorComponent } from "./paginator/paginator.component";
 import { VersionsPresenterComponent } from "./versions-presenter/versions-presenter.component";
 import * as CodeMirrorComponent from "./code-mirror/code-mirror.component";
 
+// Pipes
+
 // Modules
 import { PipesModule } from "./pipes/pipes.module";
 import { DirectivesModule } from "./directives/directives.module";

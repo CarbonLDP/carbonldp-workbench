@@ -21,9 +21,9 @@ export class RegisterComponent implements OnInit {
 
 	sending:boolean = false;
 	errorMessage:string = "";
-	register:{ name:string, email:string, password:string, repeatPassword:string } = {
+	register:{ name:string, username:string, password:string, repeatPassword:string } = {
 		name: "",
-		email: "",
+		username: "",
 		password: "",
 		repeatPassword: ""
 	};
@@ -50,7 +50,7 @@ export class RegisterComponent implements OnInit {
 		}
 
 		let name:string = form.controls.name.value;
-		let username:string = form.controls.email.value;
+		let username:string = form.controls.username.value;
 		let password:string = form.controls.password.value;
 
 		this.authService.register( name, username, password, true ).then( () => {
@@ -83,7 +83,7 @@ export class RegisterComponent implements OnInit {
 		if( typeof error.message !== "undefined" ) this.errorMessage = error.message;
 		else switch( true ) {
 			case error instanceof Errors.ConflictError:
-				this.errorMessage = "That email is already in use";
+				this.errorMessage = "That username is already in use";
 				break;
 			case error instanceof Errors.ForbiddenError:
 				this.errorMessage = "Denied Access";

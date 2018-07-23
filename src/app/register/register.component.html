@@ -6,28 +6,27 @@
 			       name="name"
 			       [(ngModel)]="register.name"
 			       cwValidation
-			       required
+			       cw-required
 			       #name="cwValidation">
 		</div>
 		<cw-error-label *ngIf="!name.valid">
 			<span *ngIf="name.control.hasError('required')">Please enter your name</span>
 		</cw-error-label>
 	</div>
-	<div class="field" [ngClass]="{ error: email.invalid }">
+	<div class="field" [ngClass]="{ error: username.invalid }">
 		<div class="ui left icon input">
-			<i class="mail icon"></i>
-			<input class="field email"
+			<i class="user icon"></i>
+			<input class="field username"
 			       type="text"
-			       placeholder="E-mail address"
-			       name="email"
-			       [(ngModel)]="register.email"
+			       placeholder="Username"
+			       name="username"
+			       [(ngModel)]="register.username"
 			       cwValidation
-			       required cw-email
-			       #email="cwValidation">
+			       cw-required
+			       #username="cwValidation">
 		</div>
-		<cw-error-label *ngIf="!email.valid">
-			<span *ngIf="email.control.hasError( 'required' )">Please enter your email address</span>
-			<span *ngIf="!email.control.hasError( 'required' ) && email.control.hasError( 'invalidEmailAddress' )">Please enter a valid email address</span>
+		<cw-error-label *ngIf="!username.valid">
+			<span *ngIf="username.control.hasError( 'required' )">Please enter your username</span>
 		</cw-error-label>
 	</div>
 	<div class="field" [ngClass]="{ error: password.invalid }">
@@ -55,10 +54,8 @@
 			       name="repeatPassword"
 			       [(ngModel)]="register.repeatPassword"
 			       cwValidation
-			       [matchTo]="register.password"
-			       [control]="repeatPasswordControl"
-			       required cw-match
-			       #repeatPasswordControl="ngModel"
+			       required
+			       cw-match [matchTo]="register.password"
 			       #repeatPassword="cwValidation">
 		</div>
 		<cw-error-label *ngIf="!repeatPassword.valid">

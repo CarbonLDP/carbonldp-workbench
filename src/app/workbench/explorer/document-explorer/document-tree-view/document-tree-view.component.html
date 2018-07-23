@@ -1,6 +1,6 @@
 <div class="ui basic segment treeview-options">
 
-	<!-- Create Document/AccessPoint button -->
+	<!-- START: Create Document/AccessPoint button -->
 	<div title="Create a Document or Access Point"
 	     class="ui top left pointing dropdown mini basic black button treeview-optionsButton"
 	     [ngClass]="{'disabled':nodeChildren.length===0}">
@@ -19,20 +19,96 @@
 			</a>
 		</div>
 	</div>
+	<!-- END: Create Document/AccessPoint button -->
 
-	<!-- Refresh Button-->
+
+	<!-- START: Refresh Button-->
 	<button class="ui mini basic black right aligned icon button treeview-refreshButton" title="Refresh - Or double click a node to refresh it"
 	        (click)="refreshSelectedNode()">
 		<i class="refresh icon"></i>
 	</button>
+	<!-- END: Refresh Button-->
 
-	<!-- Delete Button -->
+
+	<!-- START: Delete Button -->
 	<button class="ui mini basic red right aligned icon button treeview-deleteButton" title="Delete document"
 	        [ngClass]="{disabled: (nodeChildren.length===0 || !canDelete) }"
 	        [disabled]="nodeChildren.length===0 || !canDelete"
 	        (click)="showDeleteChildForm()">
 		<i class="trash outline icon"></i>
 	</button>
+	<!-- END: Delete Button -->
+
+
+	<!-- START: Sort & Order by options -->
+	<div class="ui top left pointing dropdown mini basic black icon right floated button treeview-sortByButton" title="Sort alphabetically"
+	     [ngClass]="{'disabled':nodeChildren.length===0}">
+		<i class="sort alphabet icon"
+		   [ngClass]="{'ascending':sortAscending, 'descending':!sortAscending}"></i>
+		<div class="menu">
+
+			<!-- START: Header -->
+			<div class="header">
+				<i class="sort alphabet icon"
+				   [ngClass]="{'ascending':sortAscending, 'descending':!sortAscending}"></i>
+				Order by &nbsp;
+				<span [ngSwitch]="orderBy">
+					<span *ngSwitchCase="orderOptions.SLUG">Slug</span>
+					<span *ngSwitchCase="orderOptions.CREATED">Created date</span>
+					<span *ngSwitchCase="orderOptions.MODIFIED">Modified date</span>
+					<span *ngSwitchDefault>Slug</span>
+				</span>
+			</div>
+			<!-- END: Header -->
+
+
+			<div class="divider"></div>
+
+
+			<!-- START: Order by options -->
+			<a class="item" (click)="changeOrderBy(orderOptions.SLUG)"
+			   title="Order by Slug">
+				<i class="font icon"></i>
+				Slug
+				<i class="check icon" *ngIf="orderBy === orderOptions.SLUG"></i>
+			</a>
+			<a class="item" (click)="changeOrderBy(orderOptions.CREATED)"
+			   title="Order by Created date">
+				<i class="calendar plus outline icon"></i>
+				Created
+				<i class="check icon" *ngIf="orderBy === orderOptions.CREATED"></i>
+			</a>
+			<a class="item" (click)="changeOrderBy(orderOptions.MODIFIED)"
+			   title="Order by Modified date">
+				<i class="calendar alternate outline icon"></i>
+				Modified
+				<i class="check icon" *ngIf="orderBy === orderOptions.MODIFIED"></i>
+			</a>
+			<!-- END: Order by options -->
+
+
+			<div class="divider"></div>
+
+
+			<!-- START: Sorting options -->
+			<a class="item" title="Sort Ascending"
+			   (click)="changeSort(true)">
+				<i class="ascending sort alphabet icon"></i>
+				Ascending
+				<i class="check icon" *ngIf="sortAscending"></i>
+			</a>
+			<a class="item" title="Sort Descending"
+			   (click)="changeSort(false)">
+				<i class="descending sort alphabet icon"></i>
+				Descending
+				<i class="check icon" *ngIf="!sortAscending"></i>
+			</a>
+			<!-- END: Sorting options -->
+
+		</div>
+		<!-- END: Sort & Order by options -->
+	</div>
+
 </div>
 
 <div class="treeview-content">
