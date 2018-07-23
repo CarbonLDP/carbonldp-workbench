@@ -3,8 +3,8 @@ import { Router, Event, NavigationEnd } from "@angular/router";
 
 import { CarbonLDP } from "carbonldp";
 
-import { HeaderService } from "app/header/header.service";
-import { SidebarService } from "app/sidebar/sidebar.service";
+import { HeaderService } from "./layout/header/header.service";
+import { SidebarService } from "./layout/sidebar/sidebar.service";
 
 
 @Component( {
