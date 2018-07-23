@@ -4,10 +4,8 @@ import { Routes, RouterModule } from "@angular/router";
 
 import { WorkbenchView } from "./workbench.view";
 import { DashboardView } from "./dashboard/dashboard.view";
-import { EditInstanceView } from "./edit-instance/edit-instance.view";
 import { SPARQLClientView } from "./sparql-client/sparql-client.view";
 import { ExplorerView } from "./explorer/explorer.view";
-import { ConfigurationView } from "./configuration/configuration.view";
 
 export const WorkbenchRoutes:Routes = [
 	{
@@ -30,14 +28,6 @@ export const WorkbenchRoutes:Routes = [
 				component: DashboardView,
 			},
 			{
-				path: "edit",
-				component: EditInstanceView,
-				data: {
-					alias: "edit",
-					displayName: "Edit",
-				},
-			},
-			{
 				path: "sparql-client",
 				component: SPARQLClientView,
 				data: {
@@ -54,19 +44,6 @@ export const WorkbenchRoutes:Routes = [
 					displayName: "Explorer",
 					title: "Explorer",
 				},
-			},
-			{
-				path: "configure",
-				component: ConfigurationView,
-				data: {
-					alias: "configure",
-					displayName: "Configuration",
-					title: "Configuration",
-				},
-			},
-			{
-				path: "security",
-				loadChildren: "app/workbench/security/security.module#SecurityModule",
 			},
 		]
 	}

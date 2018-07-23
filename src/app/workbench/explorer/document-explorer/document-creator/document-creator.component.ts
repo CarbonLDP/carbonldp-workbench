@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { Document } from "carbonldp/Document";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "../documents-resolver.service"
@@ -55,12 +55,12 @@ export class DocumentCreatorComponent implements AfterViewInit {
 		$event.preventDefault();
 		let childSlug:string = null;
 		if( ! ! data.slug )
-			childSlug = data.slug + ((data.slug.endsWith( "/" ) && data.slug.trim() !== "" ) ? "/" : "");
+			childSlug = data.slug + ((data.slug.endsWith( "/" ) && data.slug.trim() !== "") ? "/" : "");
 		let childContent:any = {
 			hasMemberRelation: data.advancedOptions.hasMemberRelation
 		};
 		if( ! ! data.advancedOptions.isMemberOfRelation ) childContent[ "isMemberOfRelation" ] = data.advancedOptions.isMemberOfRelation;
-		this.documentsResolverService.createChild( this.parentURI, childContent, childSlug ).then( ( createdChild:PersistedDocument ) => {
+		this.documentsResolverService.createChild( this.parentURI, childContent, childSlug ).then( ( createdChild:Document ) => {
 			this.onSuccess.emit( createdChild );
 			this.hide();
 		} ).catch( ( error:HTTPError ) => {

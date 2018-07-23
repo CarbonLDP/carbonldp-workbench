@@ -1,5 +1,4 @@
 import { CarbonLDP } from "carbonldp";
-import { authenticateWithCookie, authenticationCookieIsPresent } from "app/authentication/utils";
 
 
 let carbonldp:CarbonLDP;
@@ -18,11 +17,6 @@ export const carbonldpProvider:CarbonLDPProviderFn = (():CarbonLDPProviderFn => 
 	carbonProviderFn.initialize = ( configuredCarbon:CarbonLDP ):Promise<void> => {
 		carbonldp = configuredCarbon;
 		_carbonProvider = carbonldp;
-		carbonProviderFn.promise = carbonProviderFn.promise.then( () => {
-			if( authenticationCookieIsPresent() ) {
-				return authenticateWithCookie( carbonldp );
-			}
-		} );
 		return carbonProviderFn.promise;
 	};
 

@@ -1,12 +1,10 @@
-import { Component, Inject, EventEmitter } from "@angular/core";
+import { Component, EventEmitter } from "@angular/core";
 import { Router, Event, NavigationEnd } from "@angular/router";
 
 import { CarbonLDP } from "carbonldp";
-import { PersistedUser } from "carbonldp/Auth";
 
-import { AuthService } from "app/authentication/services";
-import { HeaderService, HeaderItem } from "app/workbench/layout/header/header.service";
-import { SidebarService } from "app/workbench/layout/sidebar/sidebar.service";
+import { HeaderService } from "app/header/header.service";
+import { SidebarService } from "app/sidebar/sidebar.service";
 
 
 @Component( {
@@ -20,18 +18,15 @@ export class WorkbenchView {
 
 	private headerService:HeaderService;
 	private sidebarService:SidebarService;
-	private authService:AuthService.Class;
 	private router:Router;
 	private carbonldp:CarbonLDP;
 	private prevUrl:string;
 	private base:string;
 
-	constructor( headerService:HeaderService, sidebarService:SidebarService, @Inject( AuthService.Token ) authService:AuthService.Class, router:Router, carbonldp:CarbonLDP ) {
-
+	constructor( headerService:HeaderService, sidebarService:SidebarService, router:Router, carbonldp:CarbonLDP ) {
 		this.headerService = headerService;
 		this.sidebarService = sidebarService;
 		this.base = this.sidebarService.base;
-		this.authService = authService;
 		this.router = router;
 		this.carbonldp = carbonldp;
 		this.router.events.subscribe( ( event:Event ) => {
@@ -49,20 +44,12 @@ export class WorkbenchView {
 
 
 	ngOnInit():void {
-		this.getAuthenticatedUser()
-			.catch( error => console.error( error ) )
-			.then( () => {
-				this.populateHeader();
-			} );
+		this.populateHeader();
 		this.populateSidebar();
 	}
 
 	toggleSidebar():void {
 		this.sidebarService.toggle();
-	}
-
-	private getAuthenticatedUser():Promise<PersistedUser> {
-		return this.carbonldp.auth.authenticatedUser ? this.carbonldp.auth.authenticatedUser.resolve() : Promise.resolve( null );
 	}
 
 	private populateHeader():void {
@@ -74,37 +61,15 @@ export class WorkbenchView {
 
 		let onLogout:EventEmitter<boolean> = new EventEmitter<boolean>();
 		onLogout.subscribe( ( event:any ) => {
-			this.authService.logout();
 			this.router.navigate( [ "/login" ] );
 		} );
 
-		let loginOrUsenameItem:HeaderItem;
-		if( this.carbonldp.auth.authenticatedUser ) {
-			loginOrUsenameItem = {
-				name: this.carbonldp.auth.authenticatedUser.name ? this.carbonldp.auth.authenticatedUser.name : "User",
-				children: [
-					{
-						icon: "sign out icon",
-						name: "Log Out",
-						onClick: onLogout,
-						index: 100,
-					}
-				],
-				index: 100,
-			};
-		} else {
-			loginOrUsenameItem = {
-				name: "Login",
-				route: [ "/login" ]
-			};
-		}
 		this.headerService.addItems( [
 			{
 				name: "Dashboard",
 				route: [ "" ],
 				index: 0,
 			},
-			loginOrUsenameItem
 		] );
 	}
 
@@ -130,18 +95,6 @@ export class WorkbenchView {
 				icon: "terminal icon",
 				route: [ this.base, "sparql-client" ],
 			},
-			{
-				type: "link",
-				name: "Security",
-				icon: "lock icon",
-				route: [ this.base, "security", "users" ],
-			},
-			// {
-			// 	type: "link",
-			// 	name: "Configuration",
-			// 	icon: "settings icon",
-			// 	route: [ "configure" ],
-			// }
 		] );
 	}
 }
