@@ -63,13 +63,13 @@
 							</div>
 							Document
 						</a>
-						<a class="item" data-tab="bNodes">
+						<a class="item" data-tab="blankNodes">
 							<div class="floating ui teal circular label marker"
-							     *ngIf="bNodesHaveChanged"
-							     title="Blank nodes have changed.&#10;Modified: {{bNodesChanges.changes.size}}&#10;Added: {{bNodesChanges.additions.size}}&#10;Deleted: {{bNodesChanges.deletions.size}}">
+							     *ngIf="blankNodesHaveChanged"
+							     title="Blank nodes have changed.&#10;Modified: {{blankNodesChanges.changes.size}}&#10;Added: {{blankNodesChanges.additions.size}}&#10;Deleted: {{blankNodesChanges.deletions.size}}">
 								<i class="asterisk icon"></i>
 							</div>
-							Blank Nodes ({{bNodes.length}})
+							Blank Nodes ({{blankNodes.length}})
 						</a>
 						<a class="item" data-tab="namedFragments">
 							<div class="floating ui teal circular label marker"
@@ -85,7 +85,7 @@
 
 						                      [rootNode]="rootNode"
 						                      [hiddenProperties]="['@id']"
-						                      [blankNodes]="bNodes"
+						                      [blankNodes]="blankNodes"
 						                      [namedFragments]="namedFragments"
 						                      [documentURI]="rootNode['@id']"
 
@@ -94,10 +94,10 @@
 						                      (onChanges)="registerRootNodeChanges($event)">
 						</cw-document-resource>
 					</div>
-					<div class="ui tab segment" data-tab="bNodes">
+					<div class="ui tab segment" data-tab="blankNodes">
 						<cw-blank-nodes class="column"
 						                [documentURI]="document['@id']"
-						                [blankNodes]="bNodes"
+						                [blankNodes]="blankNodes"
 						                [namedFragments]="namedFragments"
 
 						                (onOpenBlankNode)="goToSection($event)"
@@ -107,7 +107,7 @@
 					<div class="ui tab segment" data-tab="namedFragments">
 						<cw-named-fragments class="column"
 						                    [documentURI]="document['@id']"
-						                    [blankNodes]="bNodes"
+						                    [blankNodes]="blankNodes"
 						                    [namedFragments]="namedFragments"
 
 						                    (onOpenBlankNode)="openBlankNode($event)"

@@ -21,7 +21,7 @@ export function pointerSpecs() {
 				<table>
 					<tr class="cw-pointer" 
 						[pointer]="pointerRow"
-						[bNodes]="bNodes" [namedFragments]="namedFragments"
+						[blankNodes]="blankNodes" [namedFragments]="namedFragments"
 						[partOfList]="partOfList" [documentURI]="documentURI"></tr>
 				</table>`
 		} )
@@ -30,7 +30,7 @@ export function pointerSpecs() {
 			pointer:Pointer;
 			pointerRow:PointerRow;
 
-			bNodes:BlankNodeRow[] = [];
+			blankNodes:BlankNodeRow[] = [];
 			namedFragments:NamedFragmentRow[] = [];
 
 			documentURI:string = "";
@@ -107,10 +107,10 @@ export function pointerSpecs() {
 				pointer = blankNodes[ 0 ].copy;
 				pointerRow = { copy: pointer };
 				comp.pointerRow = pointerRow;
-				comp.bNodes = blankNodes;
+				comp.blankNodes = blankNodes;
 				fixture.detectChanges();
 
-				comp.pointerCmp.onGoToBNode.subscribe( ( id:string ) => {
+				comp.pointerCmp.onGoToBlankNode.subscribe( ( id:string ) => {
 					expect( id ).not.toBeNull();
 					expect( id ).toEqual( blankNodes[ 0 ].copy[ "@id" ] );
 					done();
@@ -295,7 +295,7 @@ export function pointerSpecs() {
 				expect( pointersDropdown.innerText ).toEqual( "http://www.example.com" )
 			} );
 
-			it( "Should display bNodes in the dropdown when they are passed as Input", () => {
+			it( "Should display blankNodes in the dropdown when they are passed as Input", () => {
 
 				let blankNodes:BlankNodeRow[] = [
 					{
@@ -313,7 +313,7 @@ export function pointerSpecs() {
 				pointer = blankNodes[ 0 ].copy;
 				pointerRow = { copy: pointer };
 				comp.pointerRow = pointerRow;
-				comp.bNodes = blankNodes;
+				comp.blankNodes = blankNodes;
 				fixture.detectChanges();
 
 				let editButton:HTMLButtonElement = comp.pointerCmp.element.nativeElement.querySelector( ".edit.button" );
@@ -321,7 +321,7 @@ export function pointerSpecs() {
 				fixture.detectChanges();
 
 
-				let items:HTMLElement[] = comp.pointerCmp.element.nativeElement.querySelectorAll( ".fragments.dropdown optgroup[label='bNodes'] .item" );
+				let items:HTMLElement[] = comp.pointerCmp.element.nativeElement.querySelectorAll( ".fragments.dropdown optgroup[label='blankNodes'] .item" );
 				expect( items[ 0 ].innerText ).toContain( blankNodes[ 0 ].id );
 				expect( items[ 1 ].innerText ).toContain( blankNodes[ 1 ].id );
 				expect( items[ 2 ].innerText ).toContain( blankNodes[ 2 ].id );
@@ -401,7 +401,7 @@ export function pointerSpecs() {
 				pointer = blankNodes[ 0 ].copy;
 				pointerRow = { copy: pointer };
 				comp.pointerRow = pointerRow;
-				comp.bNodes = blankNodes;
+				comp.blankNodes = blankNodes;
 				fixture.detectChanges();
 
 				let editButton:HTMLButtonElement = comp.pointerCmp.element.nativeElement.querySelector( ".edit.button" );
@@ -442,7 +442,7 @@ export function pointerSpecs() {
 					let pointer:Pointer = blankNodes[ 0 ].copy; // Here we set the original value
 					let pointerRow:PointerRow = { copy: pointer };
 					comp.pointerRow = pointerRow;
-					comp.bNodes = blankNodes;
+					comp.blankNodes = blankNodes;
 					fixture.detectChanges();
 
 					let editButton:HTMLButtonElement = comp.pointerCmp.element.nativeElement.querySelector( ".edit.button" );
@@ -490,7 +490,7 @@ export function pointerSpecs() {
 					let pointer:Pointer = { "@id": "" };
 					let pointerRow:PointerRow = { copy: undefined, added: pointer };
 					comp.pointerRow = pointerRow;
-					comp.bNodes = blankNodes;
+					comp.blankNodes = blankNodes;
 					fixture.detectChanges();
 
 					let editButton:HTMLButtonElement = comp.pointerCmp.element.nativeElement.querySelector( ".edit.button" );
@@ -532,7 +532,7 @@ export function pointerSpecs() {
 					pointer = blankNodes[ 0 ].copy;
 					pointerRow = { copy: pointer };
 					comp.pointerRow = pointerRow;
-					comp.bNodes = blankNodes;
+					comp.blankNodes = blankNodes;
 					fixture.detectChanges();
 				} );
 

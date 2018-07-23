@@ -6,7 +6,7 @@
 
 	.dropdown.fragments {
 		.item {
-			&[data-value='bNodes-category'], &[data-value='named-fragments-category'] {
+			&[data-value='blankNodes-category'], &[data-value='named-fragments-category'] {
 				text-align: center;
 			}
 		}

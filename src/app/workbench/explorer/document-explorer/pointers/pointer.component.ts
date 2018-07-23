@@ -19,7 +19,7 @@ export class PointerComponent implements OnChanges {
 	element:ElementRef;
 	private tempPointer:any = {};
 	pointersDropdown:JQuery;
-	isBNode:boolean = false;
+	isBlankNode:boolean = false;
 	isNamedFragment:boolean = false;
 	existsOnPointers:boolean = false;
 
@@ -57,7 +57,7 @@ export class PointerComponent implements OnChanges {
 	}
 
 	@Input() documentURI:string = "";
-	@Input() bNodes:BlankNodeRow[] = [];
+	@Input() blankNodes:BlankNodeRow[] = [];
 	@Input() namedFragments:NamedFragmentRow[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() partOfList:boolean = false;
@@ -67,7 +67,7 @@ export class PointerComponent implements OnChanges {
 	@Output() onEditMode:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onDeletePointer:EventEmitter<PointerRow> = new EventEmitter<PointerRow>();
-	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onGoToBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onMoveUp:EventEmitter<PointerRow> = new EventEmitter<PointerRow>();
 	@Output() onMoveDown:EventEmitter<PointerRow> = new EventEmitter<PointerRow>();
@@ -98,7 +98,7 @@ export class PointerComponent implements OnChanges {
 	}
 
 	ngOnChanges( changes:{ [ propName:string ]:SimpleChange } ):void {
-		if( (! ! changes.bNodes && changes.bNodes.currentValue !== changes.bNodes.previousValue) ||
+		if( (! ! changes.blankNodes && changes.blankNodes.currentValue !== changes.blankNodes.previousValue) ||
 			(! ! changes.namedFragments && changes.namedFragments.currentValue !== changes.namedFragments.previousValue) ) {
 			this.checkForChangesOnPointers();
 		}
@@ -106,8 +106,8 @@ export class PointerComponent implements OnChanges {
 
 	checkForChangesOnPointers():void {
 		if( typeof this.id === "undefined" ) return;
-		let idx:number = this.bNodes.concat( this.namedFragments ).findIndex( ( nfOrBN ) => {return nfOrBN[ "name" ] === this.id || nfOrBN[ "id" ] === this.id;} );
-		this.isBNode = URI.isBNodeID( <string>this.id );
+		let idx:number = this.blankNodes.concat( this.namedFragments ).findIndex( ( nfOrBN ) => {return nfOrBN[ "name" ] === this.id || nfOrBN[ "id" ] === this.id;} );
+		this.isBlankNode = URI.isBNodeID( <string>this.id );
 		this.isNamedFragment = URI.isFragmentOf( this.id, this.documentURI );
 		this.existsOnPointers = idx !== - 1;
 	}
@@ -178,10 +178,10 @@ export class PointerComponent implements OnChanges {
 		return URI.getSlug( uri );
 	}
 
-	goToBNode( id:string ):void {
-		let idx:number = this.bNodes.findIndex( ( blankNode:BlankNodeRow ) => { return blankNode.id === id; } );
+	goToBlankNode( id:string ):void {
+		let idx:number = this.blankNodes.findIndex( ( blankNode:BlankNodeRow ) => { return blankNode.id === id; } );
 		this.existsOnPointers = idx !== - 1;
-		if( this.existsOnPointers ) this.onGoToBNode.emit( id );
+		if( this.existsOnPointers ) this.onGoToBlankNode.emit( id );
 	}
 
 	goToNamedFragment( id:string ):void {

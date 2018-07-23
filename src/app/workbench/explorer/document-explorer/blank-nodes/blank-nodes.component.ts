@@ -72,7 +72,7 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 	goToBlankNode( id:string ) {
 		if( ! this.nodesTab ) return;
 		this.nodesTab.find( "> [data-tab='" + id + "']" ).click();
-		this.onOpenBlankNode.emit( "bNodes" );
+		this.onOpenBlankNode.emit( "blankNodes" );
 	}
 
 	closeBlankNode( blankNode:BlankNodeRow, index?:number ):void {

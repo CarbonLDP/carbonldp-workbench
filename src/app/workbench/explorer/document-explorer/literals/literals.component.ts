@@ -13,7 +13,6 @@ import { Literal, LiteralStatus, LiteralToken } from "./literal.component";
 export class LiteralsComponent implements OnInit {
 
 	modes:Modes = Modes;
-	tokens:string[] = [ "@value", "@type", "@language" ];
 	tempLiterals:Literal[] = [];
 	isLanguagePresent:boolean = false;
 	isEditingLiteral:boolean = false;
@@ -24,9 +23,9 @@ export class LiteralsComponent implements OnInit {
 	};
 
 
+	@Input() canEdit:boolean = true;
 	@Input() literals:LiteralStatus[] = [];
 	@Input() onAddNewLiteral:EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Input() canEdit:boolean = true;
 	@Output() onLiteralsChanges:EventEmitter<LiteralStatus[]> = new EventEmitter<LiteralStatus[]>();
 
 	constructor() {}
@@ -48,9 +47,7 @@ export class LiteralsComponent implements OnInit {
 	}
 
 	editModeChanged( value:boolean ):void {
-		setTimeout( () => {
-			this.isEditingLiteral = value;
-		}, 1 );
+		this.isEditingLiteral = value;
 	}
 
 	saveLiteral() {
@@ -60,8 +57,7 @@ export class LiteralsComponent implements OnInit {
 	}
 
 	addNewLiteral():void {
-		let newLiteralStatus:LiteralStatus = <LiteralStatus>{};
-		newLiteralStatus.added = <Literal>{};
+		let newLiteralStatus:LiteralStatus = <LiteralStatus>{ added: {} };
 		this.literals.splice( 0, 0, newLiteralStatus );
 		this.updateCanDisplayLiterals();
 	}

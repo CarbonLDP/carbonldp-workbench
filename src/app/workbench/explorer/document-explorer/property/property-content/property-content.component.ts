@@ -47,7 +47,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 
 	@Input() mode:string = Modes.READ;
 	@Input() documentURI:string = "";
-	@Input() bNodes:RDFNode[] = [];
+	@Input() blankNodes:RDFNode[] = [];
 	@Input() namedFragments:NamedFragmentRow[] = [];
 	@Input() isPartOfNamedFragment:boolean = false;
 	@Input() canEdit:boolean = true;

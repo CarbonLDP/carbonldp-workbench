@@ -140,11 +140,11 @@
 		             [canEdit]="canEdit"
 		             [(pointers)]="pointers"
 		             [onAddNewPointer]="addNewPointer"
-		             [bNodes]="bNodes"
+		             [blankNodes]="blankNodes"
 		             [namedFragments]="namedFragments"
 		             [documentURI]="documentURI"
 
-		             (onGoToBNode)="goToBlankNode($event)"
+		             (onGoToBlankNode)="goToBlankNode($event)"
 		             (onGoToNamedFragment)="goToNamedFragment($event)"
 		             (onPointersChanges)="checkForChangesOnPointers($event)">
 		</cw-pointers>
@@ -152,7 +152,7 @@
 		          [canEdit]="canEdit"
 		          [(lists)]="lists"
 		          [onAddNewList]="addNewList"
-		          [blankNodes]="bNodes"
+		          [blankNodes]="blankNodes"
 		          [namedFragments]="namedFragments"
 		          [documentURI]="documentURI"
 

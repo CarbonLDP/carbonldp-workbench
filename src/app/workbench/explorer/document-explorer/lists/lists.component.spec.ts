@@ -108,8 +108,8 @@ export function listsSpecs() {
 		} );
 
 		fit( "Should emit blank node id when a list emits it", ( done ) => {
-			comp.listsCmp.onGoToBlankNode.subscribe( ( bNodeId:string ) => {
-				expect( bNodeId ).toEqual( comp.lists[ 0 ].copy[ 0 ].copy[ "@id" ] );
+			comp.listsCmp.onGoToBlankNode.subscribe( ( blankNodeId:string ) => {
+				expect( blankNodeId ).toEqual( comp.lists[ 0 ].copy[ 0 ].copy[ "@id" ] );
 				done()
 			} );
 

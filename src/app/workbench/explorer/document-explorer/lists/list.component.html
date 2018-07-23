@@ -47,13 +47,13 @@
 		    [isFirstItem]="isFirst"
 		    [isLastItem]="isLast"
 		    [documentURI]="documentURI"
-		    [bNodes]="blankNodes"
+		    [blankNodes]="blankNodes"
 		    [namedFragments]="namedFragments"
 
 		    (onSave)="saveItem($event, item, i)"
 		    (onMoveUp)="moveUp($event, i)"
 		    (onMoveDown)="moveDown($event, i)"
-		    (onGoToBNode)="goToBlankNode($event)"
+		    (onGoToBlankNode)="goToBlankNode($event)"
 		    (onGoToNamedFragment)="goToNamedFragment($event)"
 		    (onDeletePointer)="deleteItem($event, i)">
 		</tr>

@@ -2,11 +2,11 @@
 <td class="id" [attr.colspan]="partOfList? 3 : 1">
 	<!-- START: READ mode-->
 	<div class="read-mode" *ngIf="mode===modes.READ">
-		<p *ngIf="!isBNode && !isNamedFragment || !existsOnPointers">
+		<p *ngIf="!isBlankNode && !isNamedFragment || !existsOnPointers">
 			<span *ngIf="!!id">{{id}}</span>
 			<span *ngIf="!id">-</span>
 		</p>
-		<a *ngIf="isBNode && existsOnPointers" (click)="goToBNode(id)">
+		<a *ngIf="isBlankNode && existsOnPointers" (click)="goToBlankNode(id)">
 			<i class="icons">
 				<i class="thin circle blue icon"></i>
 				<i class="corner thin circle icon"></i>
@@ -34,17 +34,17 @@
 			       required cw-pointer-id>
 			<select class="ui fluid search dropdown fragments" [hidden]="true">
 				<option value="">
-					Search or enter a fragment/bNode
+					Search or enter a fragment/blankNode
 				</option>
 
-				<option class="item" value="bNodes-category" disabled="disabled">
-					<span *ngIf="bNodes.length===0">No </span>Blank Nodes
+				<option class="item" value="blankNodes-category" disabled="disabled">
+					<span *ngIf="blankNodes.length===0">No </span>Blank Nodes
 				</option>
-				<optgroup label="bNodes">
-					<option class="item" *ngFor="let bNode of bNodes; let i=index" value="{{bNode.id}}">
+				<optgroup label="blankNodes">
+					<option class="item" *ngFor="let blankNode of blankNodes; let i=index" value="{{blankNode.id}}">
 						<span>
-							<span class="title">bNode {{i}}</span>
-							<span class="description">{{bNode.id}}</span>
+							<span class="title">blankNode {{i}}</span>
+							<span class="description">{{blankNode.id}}</span>
 						</span>
 					</option>
 				</optgroup>

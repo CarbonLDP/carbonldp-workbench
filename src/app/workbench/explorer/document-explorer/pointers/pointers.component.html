@@ -10,11 +10,11 @@
 			<tr class="cw-pointer top aligned" [ngClass]="{'modified-pointer':!!pointer.modified, 'added-pointer':!!pointer.added}" *ngIf="!pointer.deleted"
 			    [pointer]="pointer"
 			    [documentURI]="documentURI"
-			    [bNodes]="bNodes"
+			    [blankNodes]="blankNodes"
 			    [namedFragments]="namedFragments"
 			    [canEdit]="canEdit"
 			    (onGoToNamedFragment)="goToNamedFragment($event)"
-			    (onGoToBNode)="goToBNode($event)"
+			    (onGoToBlankNode)="goToBlankNode($event)"
 			    (onSave)="savePointer($event, pointer, i)"
 			    (onDeletePointer)="deletePointer($event, i)"></tr>
 		</ng-template>

@@ -32,9 +32,9 @@ export class BlankNodeComponent implements AfterViewInit {
 	properties:PropertyStatus[];
 	existingPropertiesNames:string[] = [];
 
-	private _bNodeHasChanged:boolean;
-	set bNodeHasChanged( hasChanged:boolean ) {
-		this._bNodeHasChanged = hasChanged;
+	private _blankNodeHasChanged:boolean;
+	set blankNodeHasChanged( hasChanged:boolean ) {
+		this._blankNodeHasChanged = hasChanged;
 		delete this.blankNode.modified;
 		delete this.blankNode.records;
 		if( hasChanged ) {
@@ -45,8 +45,8 @@ export class BlankNodeComponent implements AfterViewInit {
 		this.onChanges.emit( this.blankNode );
 	}
 
-	get bNodeHasChanged() {
-		return this._bNodeHasChanged;
+	get blankNodeHasChanged() {
+		return this._blankNodeHasChanged;
 	}
 
 	@Input() blankNodes:BlankNodeRow[] = [];
@@ -191,7 +191,7 @@ export class BlankNodeComponent implements AfterViewInit {
 			idx = this.properties.findIndex( ( property:PropertyStatus ) => { return ! ! property.copy && property.copy.id === key} );
 			if( idx !== - 1 ) this.properties.splice( idx, 1 );
 		} );
-		this.bNodeHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
+		this.blankNodeHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
 	}
 
 	getRawVersion():RDFNode {

@@ -21,12 +21,12 @@ export class PointersComponent implements OnInit {
 	@Input() documentURI:string = "";
 	@Input() pointers:PointerRow[] = [];
 	@Input() onAddNewPointer:EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Input() bNodes:RDFNode[] = [];
+	@Input() blankNodes:RDFNode[] = [];
 	@Input() namedFragments:RDFNode[] = [];
 	@Input() canEdit:boolean = true;
 
 	@Output() onPointersChanges:EventEmitter<PointerRow[]> = new EventEmitter<PointerRow[]>();
-	@Output() onGoToBNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onGoToBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
 	constructor() { }
@@ -76,8 +76,8 @@ export class PointersComponent implements OnInit {
 		return this.pointers.filter( ( pointer:PointerRow ) => typeof pointer.modified === "undefined" && typeof pointer.deleted === "undefined" );
 	}
 
-	goToBNode( id:string ):void {
-		this.onGoToBNode.emit( id );
+	goToBlankNode( id:string ):void {
+		this.onGoToBlankNode.emit( id );
 	}
 
 	goToNamedFragment( id:string ):void {
