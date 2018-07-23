@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit, View
 import { URI } from "carbonldp/RDF/URI";
 import { RDFNode } from "carbonldp/RDF/Node"
 
-import { Property, PropertyRow, Modes } from "./../property.component";
+import { Property, PropertyStatus, Modes } from "./../property.component";
 import { NamedFragmentRow } from "../../named-fragments/named-fragment.component";
 
 
@@ -39,8 +39,8 @@ export class PropertyIDComponent implements AfterViewInit {
 	@Input() isPartOfNamedFragment:boolean = false;
 	@Input() canEdit:boolean = true;
 	@Input() accessPointsHasMemberRelationProperties:string[] = [];
-	private _property:PropertyRow;
-	@Input() set property( property:PropertyRow ) {
+	private _property:PropertyStatus;
+	@Input() set property( property:PropertyStatus ) {
 		this.copyOrAdded = (! ! property.modified) ? "modified" : (! ! property.copy) ? "copy" : "added";
 		this._property = property;
 
@@ -52,7 +52,7 @@ export class PropertyIDComponent implements AfterViewInit {
 		this.value = property[ this.copyOrAdded ].value;
 	}
 
-	get property():PropertyRow { return this._property; }
+	get property():PropertyStatus { return this._property; }
 
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 

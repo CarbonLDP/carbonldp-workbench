@@ -46,19 +46,19 @@ export class PropertyComponent {
 	@Input() canEdit:boolean = true;
 	@Input() existingProperties:string[] = [];
 	@Input() accessPointsHasMemberRelationProperties:string[] = [];
-	private _property:PropertyRow;
-	@Input() set property( property:PropertyRow ) {
+	private _property:PropertyStatus;
+	@Input() set property( property:PropertyStatus ) {
 		this._property = property;
 		this.name = property[ ! ! property.added ? "added" : ! ! property.modified ? "modified" : "copy" ].name;
 		console.log( "%o: %o", this.name, this.property );
 	}
 
-	get property():PropertyRow { return this._property; };
+	get property():PropertyStatus { return this._property; };
 
 	@Output() onGoToBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
-	@Output() onDeleteProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
+	@Output() onDeleteProperty:EventEmitter<PropertyStatus> = new EventEmitter<PropertyStatus>();
 	@Output() onSaveNewProperty:EventEmitter<Property> = new EventEmitter<Property>();
 
 
@@ -91,7 +91,7 @@ export class PropertyComponent {
 
 }
 
-export interface PropertyRow {
+export interface PropertyStatus {
 	copy?:any;
 	added?:any;
 	modified?:any;

@@ -3,7 +3,7 @@ import { Component, Input } from "@angular/core";
 import { URI } from "carbonldp/RDF/URI";
 import { LDP } from "carbonldp/Vocabularies/LDP";
 
-import { PropertyRow } from "../property.component";
+import { PropertyStatus } from "../property.component";
 
 @Component( {
 	selector: "cw-property-type",
@@ -16,13 +16,13 @@ export class PropertyTypeComponent {
 	types:string[] = [];
 
 
-	private _property:PropertyRow;
+	private _property:PropertyStatus;
 	@Input()
-	set property( prop:PropertyRow ) {
+	set property( prop:PropertyStatus ) {
 		this.types = prop.copy.value;
 	}
 
-	get property():PropertyRow { return this._property; }
+	get property():PropertyStatus { return this._property; }
 
 
 	getDisplayName( uri:string ):string {

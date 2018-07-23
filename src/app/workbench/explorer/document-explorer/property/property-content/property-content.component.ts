@@ -10,7 +10,7 @@ import { LiteralStatus } from "./../../literals/literal.component";
 import { PointerRow } from "./../../pointers/pointer.component";
 import { ListRow } from "./../../lists/list.component";
 import { NamedFragmentRow } from "./../../named-fragments/named-fragment.component";
-import { Property, PropertyRow, PropertyToken, Modes } from "./../property.component";
+import { Property, PropertyStatus, PropertyToken, Modes } from "./../property.component";
 
 @Component( {
 	selector: "cw-property-content",
@@ -53,9 +53,9 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	@Input() canEdit:boolean = true;
 	@Input() existingProperties:string[] = [];
 	@Input() accessPointsHasMemberRelationProperties:string[] = [];
-	private _property:PropertyRow;
+	private _property:PropertyStatus;
 	@Input()
-	set property( prop:PropertyRow ) {
+	set property( prop:PropertyStatus ) {
 		this._property = prop;
 		this.state = ! ! prop.copy ? (! ! prop.modified ? "modified" : "copy") : "added";
 
@@ -74,12 +74,12 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 		}
 	}
 
-	get property():PropertyRow { return this._property; }
+	get property():PropertyStatus { return this._property; }
 
 	@Output() onGoToBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
-	@Output() onDeleteProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
+	@Output() onDeleteProperty:EventEmitter<PropertyStatus> = new EventEmitter<PropertyStatus>();
 	@Output() onSaveNewProperty:EventEmitter<Property> = new EventEmitter<Property>();
 
 

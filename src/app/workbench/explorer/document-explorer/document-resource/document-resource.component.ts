@@ -4,7 +4,7 @@ import { CarbonLDP } from "carbonldp"
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { DocumentsResolverService } from "app/workbench/explorer/document-explorer/documents-resolver.service";
-import { Property, PropertyRow, Modes } from "../property/property.component";
+import { Property, PropertyStatus, Modes } from "../property/property.component";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
@@ -23,7 +23,7 @@ export class DocumentResourceComponent implements AfterViewInit {
 	carbonldp:CarbonLDP;
 
 	modes:Modes = Modes;
-	properties:PropertyRow[] = [];
+	properties:PropertyStatus[] = [];
 	existingPropertiesNames:string[] = [];
 	accessPointsHasMemberRelationProperties:string[] = [];
 	records:RootRecords;
@@ -85,7 +85,7 @@ export class DocumentResourceComponent implements AfterViewInit {
 		return this.hiddenProperties.indexOf( propertyName ) !== - 1 ? false : true;
 	}
 
-	changeProperty( property:PropertyRow, index:number ):void {
+	changeProperty( property:PropertyStatus, index:number ):void {
 		if( typeof this.records === "undefined" ) this.records = new RootRecords();
 		if( typeof property.modified !== "undefined" ) {
 			this.records.changes.set( property.modified.id, property );
@@ -100,7 +100,7 @@ export class DocumentResourceComponent implements AfterViewInit {
 		this.updateExistingProperties();
 	}
 
-	deleteProperty( property:PropertyRow, index:number ):void {
+	deleteProperty( property:PropertyStatus, index:number ):void {
 		if( typeof this.records === "undefined" ) this.records = new RootRecords();
 		if( typeof property.added !== "undefined" ) {
 			this.records.additions.delete( property.added.id );
@@ -111,7 +111,7 @@ export class DocumentResourceComponent implements AfterViewInit {
 		this.updateExistingProperties();
 	}
 
-	addProperty( property:PropertyRow, index:number ):void {
+	addProperty( property:PropertyStatus, index:number ):void {
 		if( typeof this.records === "undefined" ) this.records = new RootRecords();
 		if( typeof property.added !== "undefined" ) {
 			if( property.added.id === property.added.name ) {
@@ -125,9 +125,9 @@ export class DocumentResourceComponent implements AfterViewInit {
 		this.updateExistingProperties();
 	}
 
-	createProperty( property:Property, propertyRow:PropertyRow ):void {
+	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
 		let numberOfProperty:number = ! ! this.records ? (this.records.additions.size + 1) : 1;
-		let newProperty:PropertyRow = <PropertyRow>{
+		let newProperty:PropertyStatus = <PropertyStatus>{
 			added: <Property>{
 				id: "",
 				name: `${this.carbonldp.baseURI}vocabularies/main/#New_Property_${numberOfProperty}`,
@@ -184,14 +184,14 @@ export class DocumentResourceComponent implements AfterViewInit {
 				idx = this.existingPropertiesNames.indexOf( value.modified.id );
 				if( idx !== - 1 ) this.existingPropertiesNames.splice( idx, 1, value.modified.name );
 			}
-			idx = this.properties.findIndex( ( property:PropertyRow ) => { return ! ! property.copy && property.copy.id === key} );
+			idx = this.properties.findIndex( ( property:PropertyStatus ) => { return ! ! property.copy && property.copy.id === key} );
 			if( idx !== - 1 ) this.properties.splice( idx, 1, value );
 		} );
 		this.records.deletions.forEach( ( value, key ) => {
 			idx = this.existingPropertiesNames.indexOf( key );
 			if( idx !== - 1 ) this.existingPropertiesNames.splice( idx, 1 );
 
-			idx = this.properties.findIndex( ( property:PropertyRow ) => { return ! ! property.copy && property.copy.id === key} );
+			idx = this.properties.findIndex( ( property:PropertyStatus ) => { return ! ! property.copy && property.copy.id === key} );
 			if( idx !== - 1 ) this.properties.splice( idx, 1 );
 		} );
 		this.rootHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
@@ -203,8 +203,8 @@ export class DocumentResourceComponent implements AfterViewInit {
 }
 
 export class RootRecords {
-	changes:Map<string, PropertyRow> = new Map<string, PropertyRow>();
-	deletions:Map<string, PropertyRow> = new Map<string, PropertyRow>();
-	additions:Map<string, PropertyRow> = new Map<string, PropertyRow>();
+	changes:Map<string, PropertyStatus> = new Map<string, PropertyStatus>();
+	deletions:Map<string, PropertyStatus> = new Map<string, PropertyStatus>();
+	additions:Map<string, PropertyStatus> = new Map<string, PropertyStatus>();
 }
 
