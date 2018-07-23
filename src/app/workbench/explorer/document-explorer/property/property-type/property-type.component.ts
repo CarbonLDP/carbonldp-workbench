@@ -8,7 +8,7 @@ import { PropertyRow } from "../property.component";
 @Component( {
 	selector: "cw-property-type",
 	templateUrl: "./property-type.component.html",
-	// styleUrls: [ "./property-type.component.scss" ],
+	styleUrls: [ "./property-type.component.scss" ],
 } )
 
 export class PropertyTypeComponent {

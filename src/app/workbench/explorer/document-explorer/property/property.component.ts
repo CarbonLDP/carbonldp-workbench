@@ -129,3 +129,9 @@ export class Modes {
 	static READ:string = "READ";
 }
 
+export enum PropertyToken {
+	ID = "@id",
+	TYPE = "@type",
+	LIST = "@list",
+	SET = "@set"
+}

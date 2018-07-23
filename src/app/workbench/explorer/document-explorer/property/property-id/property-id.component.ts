@@ -2,11 +2,8 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit, View
 
 import { URI } from "carbonldp/RDF/URI";
 import { RDFNode } from "carbonldp/RDF/Node"
-import { isArray } from "carbonldp/Utils";
 
-import { LiteralStatus } from "../../literals/literal.component";
-import { PointerRow } from "../../pointers/pointer.component";
-import { ListRow } from "../../lists/list.component";
+import { Property, PropertyRow, Modes } from "./../property.component";
 import { NamedFragmentRow } from "../../named-fragments/named-fragment.component";
 
 
@@ -163,30 +160,3 @@ export class PropertyIDComponent implements AfterViewInit {
 		return decodeURI( uri );
 	}
 }
-
-export interface PropertyRow {
-	copy?:any;
-	added?:any;
-	modified?:any;
-	deleted?:any;
-
-	isBeingCreated?:boolean;
-	isBeingModified?:boolean;
-	isBeingDeleted?:boolean;
-
-	modifiedLiterals?:LiteralStatus[];
-	modifiedPointers?:PointerRow[];
-	modifiedLists?:ListRow[];
-}
-
-export interface Property {
-	id:string;
-	name:string;
-	value:any;
-}
-
-export class Modes {
-	static EDIT:string = "EDIT";
-	static READ:string = "READ";
-}
-

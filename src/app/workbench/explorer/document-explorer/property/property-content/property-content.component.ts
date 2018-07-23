@@ -10,7 +10,7 @@ import { LiteralStatus } from "./../../literals/literal.component";
 import { PointerRow } from "./../../pointers/pointer.component";
 import { ListRow } from "./../../lists/list.component";
 import { NamedFragmentRow } from "./../../named-fragments/named-fragment.component";
-import { DocumentExplorerLibrary } from "app/workbench/explorer/document-explorer/document-explorer-library";
+import { Property, PropertyRow, PropertyToken, Modes } from "./../property.component";
 
 @Component( {
 	selector: "cw-property-content",
@@ -399,37 +399,4 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 		return encodeURI( uri );
 	}
 
-}
-
-export interface PropertyRow {
-	copy?:any;
-	added?:any;
-	modified?:any;
-	deleted?:any;
-
-	isBeingCreated?:boolean;
-	isBeingModified?:boolean;
-	isBeingDeleted?:boolean;
-
-	modifiedLiterals?:LiteralStatus[];
-	modifiedPointers?:PointerRow[];
-	modifiedLists?:ListRow[];
-}
-
-export interface Property {
-	id:string;
-	name:string;
-	value:any;
-}
-
-export class Modes {
-	static EDIT:string = "EDIT";
-	static READ:string = "READ";
-}
-
-
-export enum PropertyToken {
-	ID = "@id",
-	TYPE = "@type",
-	LIST = "@list",
 }
