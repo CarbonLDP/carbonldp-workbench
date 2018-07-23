@@ -7,7 +7,7 @@ import { URI } from "carbonldp/RDF/URI";
 	providers: [ { provide: NG_VALIDATORS, useExisting: EmailValidator, multi: true } ]
 } )
 export class EmailValidator implements Validator {
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		// RFC 2822 compliant regex
 		if( control.value ) {
 			if( control.value.match( /[a-z0-9!#$%&"*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&"*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/ ) ) {
@@ -25,7 +25,7 @@ export class EmailValidator implements Validator {
 } )
 export class SlugValidator implements Validator {
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		if( control.value ) {
 			if( control.value.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) {
 				return null;
@@ -40,7 +40,7 @@ export class SlugValidator implements Validator {
 	selector: "[cw-match]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: MatchValidator, multi: true } ]
 } )
-export class MatchValidator implements Validator,OnChanges {
+export class MatchValidator implements Validator, OnChanges {
 	@Input() matchTo;
 	@Input() control;
 
@@ -65,7 +65,7 @@ export class MatchValidator implements Validator,OnChanges {
 } )
 export class DomainValidator implements Validator {
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		if( control.value ) {
 			if( control.value.match( /^((cc:|https:|http:|[/][/])([a-z]|[A-Z]|[:0-9]|[/.-]){3,})$/g ) )
 				return null;
@@ -82,7 +82,7 @@ export class DomainValidator implements Validator {
 } )
 export class URIValidator implements Validator {
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		if( control.value ) {
 			if( control.value.match( /^(ftp|https?):\/\/(\w+:{0,1}\w*@)?((?![^\/]+\/(?:ftp|https?):)\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/ ) ) {
 				return null;
@@ -102,7 +102,7 @@ export class URIValidator implements Validator {
 } )
 export class FragmentValidator implements Validator {
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		if( ! control.value ) return null;
 		if( ! control.value.match( /^(ftp|https?):\/\/(\w+:{0,1}\w*@)?((?![^\/]+\/(?:ftp|https?):)\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/ ) ) return { "invalidURIAddress": true };
 		if( ! URI.hasFragment( control.value ) ) return { "missingFragment": true };
@@ -119,12 +119,14 @@ export class FragmentValidator implements Validator {
 } )
 export class URIFragmentValidator implements Validator {
 
-	validate( control:AbstractControl ):{ [key:string]:any; } {
+	validate( control:AbstractControl ):{ [ key:string ]:any; } {
 		if( ! control.value ) return null;
 		if( ! control.value.match( /^(ftp|https?):\/\/(\w+:{0,1}\w*@)?((?![^\/]+\/(?:ftp|https?):)\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/ ) ) return { "invalidURIAddress": true };
 		if( ! URI.hasFragment( control.value ) ) return;
 		if( control.value.split( "#" ).length > 2 ) return { "multipleFragment": true };
 		if( URI.getFragment( control.value ).trim().length === 0 ) return { "missingFragment": true };
+		let fragmentPart:string = control.value.split( "#" )[ 0 ];
+		if( ! fragmentPart.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) return { "invalidURIAddress": true };
 
 		return null;
 	}
@@ -137,7 +139,7 @@ export class URIFragmentValidator implements Validator {
 export class RequiredIfValidator {
 	@Input() condition:boolean;
 
-	validate( control:AbstractControl ):{ [key:string]:any } {
+	validate( control:AbstractControl ):{ [ key:string ]:any } {
 		if( this.condition && ! control.value ) return { "requiredIf": true };
 		return null;
 	}
