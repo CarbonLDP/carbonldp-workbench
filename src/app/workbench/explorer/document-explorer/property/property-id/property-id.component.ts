@@ -55,7 +55,6 @@ export class PropertyIDComponent implements AfterViewInit {
 	get property():PropertyRow { return this._property; }
 
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
-	@Output() onChangeNewProperty:EventEmitter<Property> = new EventEmitter<Property>();
 
 	nameHasChanged:boolean = false;
 	valueHasChanged:boolean = false;

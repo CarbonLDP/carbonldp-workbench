@@ -59,9 +59,7 @@ export class PropertyComponent {
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 	@Output() onDeleteProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
-	@Output() onDeleteNewProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
 	@Output() onSaveNewProperty:EventEmitter<Property> = new EventEmitter<Property>();
-	@Output() onChangeNewProperty:EventEmitter<Property> = new EventEmitter<Property>();
 
 
 	constructor() {}
@@ -78,11 +76,6 @@ export class PropertyComponent {
 
 	deleteProperty( property ):void {
 		console.log( "deleteProperty: %o", property );
-		this.onDeleteNewProperty.emit( this.property );
-	}
-
-	deleteNewProperty( property ):void {
-		console.log( "deleteNewProperty: %o", property );
 		this.onDeleteProperty.emit( this.property );
 	}
 
@@ -94,11 +87,6 @@ export class PropertyComponent {
 	changeProperty( property:any ):void {
 		console.log( "changeProperty: %o", property );
 		this.onChangeProperty.emit( property );
-	}
-
-	changeNewProperty( property:any ):void {
-		console.log( "changeNewProperty: %o", property );
-		this.onChangeNewProperty.emit( property );
 	}
 
 }

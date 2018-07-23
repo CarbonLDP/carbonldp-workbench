@@ -14,8 +14,7 @@
 	                [canEdit]="canEdit"
 	                [property]="property"
 	                [accessPointsHasMemberRelationProperties]="accessPointsHasMemberRelationProperties"
-	                (onChangeProperty)="onChangeProperty( $event )"
-	                (onChangeNewProperty)="changeNewProperty( $event )">
+	                (onChangeProperty)="changeProperty( $event )">
 	</cw-property-id>
 	<!-- END: Property @Id  -->
 
@@ -45,9 +44,7 @@
 		                     (onGoToBlankNode)="goToBlankNode( $event )"
 		                     (onGoToNamedFragment)="goToNamedFragment( $event )"
 		                     (onChangeProperty)="changeProperty( $event )"
-		                     (onChangeNewProperty)="changeNewProperty( $event )"
 		                     (onDeleteProperty)="deleteProperty( $event )"
-		                     (onDeleteNewProperty)="deleteNewProperty( $event )"
 		                     (onSaveNewProperty)="saveNewProperty( $event )">
 		</cw-property-content>
 	</ng-container>

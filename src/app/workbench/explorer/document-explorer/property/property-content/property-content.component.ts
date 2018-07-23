@@ -16,7 +16,6 @@ import { Property, PropertyRow, PropertyToken, Modes } from "./../property.compo
 	selector: "cw-property-content",
 	templateUrl: "./property-content.component.html",
 	styleUrls: [ "./property-content.component.scss" ],
-	host: { "[class.has-changed]": "property.modified", "[class.deleted-property]": "property.deleted", "[class.added-property]": "property.added" },
 } )
 
 export class PropertyContentComponent implements AfterViewInit, OnInit {
@@ -81,9 +80,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 	@Output() onDeleteProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
-	@Output() onDeleteNewProperty:EventEmitter<PropertyRow> = new EventEmitter<PropertyRow>();
 	@Output() onSaveNewProperty:EventEmitter<Property> = new EventEmitter<Property>();
-	@Output() onChangeNewProperty:EventEmitter<Property> = new EventEmitter<Property>();
 
 
 	get nameHasChanged():boolean { return ! ! this.property.copy && this.property.copy.name !== this.tempProperty.name; };
@@ -166,7 +163,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 
 	cancelModification():void {
 		if( this.nameInputControl.valid ) this.mode = Modes.READ;
-		if( this.property.isBeingCreated ) this.onDeleteNewProperty.emit( this.property );
+		if( this.property.isBeingCreated ) this.onDeleteProperty.emit( this.property );
 	}
 
 	askToConfirmDeletion():void {
@@ -174,12 +171,10 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	}
 
 	deleteProperty():void {
-		if( typeof this.property.added !== "undefined" ) {
-			this.onDeleteNewProperty.emit( this.property );
-		} else {
+		if( this.property.added === void 0 ) {
 			this.property.deleted = this.property.copy;
-			this.onDeleteProperty.emit( this.property );
 		}
+		this.onDeleteProperty.emit( this.property );
 	}
 
 	save():void {
@@ -390,7 +385,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 			if( this.existingProperties.indexOf( this.tempProperty.id ) === - 1 ) {
 				this.onSaveNewProperty.emit( this.tempProperty );
 			} else {
-				this.onChangeNewProperty.emit( this.tempProperty );
+				this.onChangeProperty.emit( this.tempProperty );
 			}
 		}
 	}
