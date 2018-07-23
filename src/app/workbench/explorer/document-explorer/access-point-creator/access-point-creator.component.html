@@ -1,4 +1,5 @@
 <form class="ui create accesspoint modal error form" #createAccessPointFormModal #createAccessPointForm="ngForm" (submit)="onSubmitAccessPoint(createAccessPointForm.value, $event, createAccessPointForm )" *ngIf="visible">
+	<!-- START: Title of the modal -->
 	<div class="header">
 		<h2 class="ui header">
 			<i class="selected radio icon"></i>
@@ -8,7 +9,13 @@
 			</span>
 		</h2>
 	</div>
+	<!-- END: Title of the modal -->
+
+
+	<!-- START: Body of the modal -->
 	<div class="content">
+
+		<!-- START: Slug field -->
 		<div class="field"
 		     [ngClass]="{error: !slug.valid}">
 			<label>Slug: The slug of the access point you want to create. <span cw-grayed-out>(Optional)</span></label>
@@ -28,7 +35,11 @@
 				<span *ngIf="slug.control.hasError( 'invalidSlug' )">Please, provide a valid slug/name for the Access Point. (Only numbers and letters with dashes)</span>
 			</cw-error-label>
 		</div>
+		<!-- END: Slug field -->
+
 		<br>
+
+		<!-- START: hasMemberRelation field -->
 		<div class="field"
 		     [ngClass]="{error: !hasMemberRelation.valid}">
 			<label>
@@ -52,7 +63,11 @@
 				<span *ngIf="hasMemberRelation.control.hasError('multipleFragment')">Please, provide only one name after the hashtag (#) for the 'hasMemberRelation' property. E.g: http://example.com/ns#daughter</span>
 			</cw-error-label>
 		</div>
+		<!-- END: hasMemberRelation field -->
+
 		<br>
+
+		<!-- START: isMemberOfRelation field -->
 		<div class="field"
 		     [ngClass]="{error: !isMemberOfRelation.valid}">
 			<label>
@@ -76,12 +91,25 @@
 				<span *ngIf="isMemberOfRelation.control.hasError('multipleFragment')">Please, provide only one name after the hashtag (#) for the 'isMemberOfRelation' property. E.g: http://example.com/ns#father</span>
 			</cw-error-label>
 		</div>
+		<!-- END: isMemberOfRelation field -->
 
 
-		<cw-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage($event)" *ngIf="!!errorMessage"></cw-message>
+		<!-- START: Error message -->
+		<cw-message *ngIf="!!errorMessage"
+		            [message]="errorMessage" [type]="'error'" [closable]="true"
+		            (onClose)="clearErrorMessage($event)">
+		</cw-message>
+		<!-- END: Error message -->
 	</div>
+	<!-- END: Body of the modal -->
+
+
+	<!-- START: Actions of the modal -->
 	<div class="actions">
-		<button type="button" class="ui mini basic button" tabindex="5" title="Cancel creation" (click)="hideForm(createAccessPointForm)">Cancel</button>
+		<button type="button" class="ui mini basic button"
+		        tabindex="5" title="Cancel creation"
+		        (click)="hideForm(createAccessPointForm)">Cancel
+		</button>
 		<button type="submit"
 		        class="ui mini basic right floated button"
 		        [ngClass]="{ 'disabled': !createAccessPointForm.valid, 'green': createAccessPointForm.valid  }"
@@ -89,4 +117,5 @@
 		        [disabled]="!createAccessPointForm.valid">Create
 		</button>
 	</div>
+	<!-- END: Actions of the modal -->
 </form>

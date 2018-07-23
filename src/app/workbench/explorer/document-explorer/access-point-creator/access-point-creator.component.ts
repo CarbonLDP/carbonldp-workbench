@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } fro
 import { NgForm } from "@angular/forms";
 
 import { CarbonLDP } from "carbonldp";
-import { Response, Errors } from "carbonldp/HTTP";
+import { Errors } from "carbonldp/HTTP";
 import { PersistedDocument } from "carbonldp/PersistedDocument";
 import { AccessPointBase } from "carbonldp/AccessPoint";
 
@@ -13,11 +13,13 @@ import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-mess
 
 import "semantic-ui/semantic";
 
+/*
+*  Creates Access Points via the Document Explorer
+* */
 @Component( {
 	selector: "cw-access-point-creator",
 	templateUrl: "./access-point-creator.component.html",
 } )
-
 export class AccessPointCreatorComponent implements AfterViewInit {
 
 	private carbonldp:CarbonLDP;
