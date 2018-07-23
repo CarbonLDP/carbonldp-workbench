@@ -52,13 +52,13 @@
 					</div>
 				</div>
 			</div>
-			<div class="ui error message wide" *ngIf="!idInput.valid">
+			<cw-error-label class="ui error message wide" *ngIf="!idInput.valid">
 				<p *ngIf="idInput.control.hasError('required')">Enter an id.</p>
 				<p *ngIf="idInput.control.hasError('invalidParent')">Enter a valid name for a Named Fragment. A name must contains the parent URI ({{documentURI}}<- Your fragment name ->).</p>
 				<p *ngIf="idInput.control.hasError('invalidURIAddress')">Enter a valid URL. Only alphanumeric values (a-z, A-Z, 0..9)</p>
 				<p *ngIf="idInput.control.hasError('duplicatedHashtag')">Use only one hashtag (#) symbol.</p>
 				<p *ngIf="idInput.control.hasError('duplicatedNamedFragmentName')">A Fragment with that name already exists.</p>
-			</div>
+			</cw-error-label>
 		</div>
 	</div>
 	<!-- END: EDIT mode -->
