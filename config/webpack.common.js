@@ -135,6 +135,10 @@ module.exports = function( metadata ) {
 				mainPath: helpers.root( "src/main.ts" ),
 				sourceMap: true,
 				skipCodeGeneration: true,
+
+				"genDir": "compiled",
+				"skipMetadataEmit": true,
+				"typeChecking": true
 			} ),
 		],
 	}
