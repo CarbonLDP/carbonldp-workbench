@@ -130,7 +130,7 @@ export class DocumentResourceComponent implements AfterViewInit {
 		let newProperty:PropertyRow = <PropertyRow>{
 			added: <Property>{
 				id: "",
-				name: `${this.carbonldp.baseURI}vocabularies/main/#New Property ${numberOfProperty}`,
+				name: `${this.carbonldp.baseURI}vocabularies/main/#New_Property_${numberOfProperty}`,
 				value: []
 			},
 			isBeingCreated: true,
