@@ -7,12 +7,14 @@ import { BlankNodeRow } from "./blank-node.component"
 import * as $ from "jquery";
 import "semantic-ui/semantic";
 
+/*
+*  Lists all the Blank Nodes a Documents contains
+* */
 @Component( {
 	selector: "cw-blank-nodes",
 	templateUrl: "./blank-nodes.component.html",
 	styleUrls: [ "./blank-nodes.component.scss" ],
 } )
-
 export class BlankNodesComponent implements AfterViewInit, OnChanges {
 
 	element:ElementRef;

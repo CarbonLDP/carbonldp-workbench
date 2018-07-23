@@ -1,8 +1,14 @@
+<!-- START: Blank Node buttons -->
 <button class="ui basic compact labeled right icon button" (click)="createProperty()" *ngIf="canEdit">
 	<i class="plus icon"></i>
 	Add Property
 </button>
+<!-- END: Blank Node buttons -->
+
+
+<!-- START: Body of the Blank Node -->
 <div class="ui divided items">
+	<!-- START: Properties of the Blank Node -->
 	<ng-template ngFor let-propertyRow="$implicit" [ngForOf]="properties" let-i="index">
 		<cw-property class="property item"
 		             *ngIf="!isTemporalId(propertyRow)"
@@ -26,6 +32,10 @@
 		             (onGoToNamedFragment)="openNamedFragment($event)">
 		</cw-property>
 	</ng-template>
+	<!-- END: Properties of the Blank Node -->
+
+
+	<!-- START: Message for empty properties -->
 	<div class="item">
 		<div class="contet">
 			<div class="ui warning message" *ngIf="properties.length === 1">
@@ -33,4 +43,6 @@
 			</div>
 		</div>
 	</div>
+	<!-- END: Message for empty properties -->
 </div>
+<!-- END: Body of the Blank Node -->

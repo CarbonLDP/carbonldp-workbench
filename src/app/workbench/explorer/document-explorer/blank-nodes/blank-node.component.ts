@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
+import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { Property, PropertyRow, Modes } from "../property/property.component";
@@ -7,16 +8,20 @@ import { Property, PropertyRow, Modes } from "../property/property.component";
 import * as $ from "jquery";
 import "semantic-ui/semantic";
 
+/*
+*  Displays the contents of a Blank Node with all its properties
+* */
 @Component( {
 	selector: "cw-blank-node",
 	templateUrl: "./blank-node.component.html",
 	styles: [ ":host { display:block; }" ],
 } )
-
 export class BlankNodeComponent implements AfterViewInit {
 
+	carbonldp:CarbonLDP
 	element:ElementRef;
 	$element:JQuery;
+
 	modes:Modes = Modes;
 	records:BlankNodeRecords;
 	nonEditableProperties:string[] = [ "@id" ];
@@ -64,8 +69,9 @@ export class BlankNodeComponent implements AfterViewInit {
 	@Output() onChanges:EventEmitter<BlankNodeRow> = new EventEmitter<BlankNodeRow>();
 
 
-	constructor( element:ElementRef ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
 		this.element = element;
+		this.carbonldp =carbonldp;
 	}
 
 	ngAfterViewInit():void {
@@ -120,12 +126,13 @@ export class BlankNodeComponent implements AfterViewInit {
 		this.updateExistingProperties();
 	}
 
+
 	createProperty( property:Property, propertyRow:PropertyRow ):void {
 		let numberOfProperty:number = ! ! this.records ? (this.records.additions.size + 1) : 1;
 		let newProperty:PropertyRow = {
 			added: <Property>{
 				id: "",
-				name: "http://www.example.com#New Property " + numberOfProperty,
+				name: `${this.carbonldp.baseURI}vocabularies/main/#New_Property_${numberOfProperty}`,
 				value: []
 			},
 			isBeingCreated: true,
