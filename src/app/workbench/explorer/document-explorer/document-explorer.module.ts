@@ -9,6 +9,9 @@ import { PointersComponent } from "./pointers/pointers.component";
 import { ListComponent } from "./lists/list.component";
 import { ListsComponent } from "./lists/lists.component";
 import { PropertyComponent } from "./property/property.component";
+import { PropertyIDComponent } from "./property/property-id/property-id.component";
+import { PropertyTypeComponent } from "./property/property-type/property-type.component";
+import { PropertyContentComponent } from "./property/property-content/property-content.component";
 import { DocumentResourceComponent } from "./document-resource/document-resource.component";
 import { BlankNodeComponent } from "./blank-nodes/blank-node.component";
 import { BlankNodesComponent } from "./blank-nodes/blank-nodes.component";
@@ -39,22 +42,31 @@ import { IdValidator, PropertyNameValidator, LiteralValueValidator, PointerValid
 	declarations: [
 		LiteralComponent,
 		LiteralsComponent,
+
 		PointerComponent,
 		PointersComponent,
+
 		ListComponent,
 		ListsComponent,
+
 		PropertyComponent,
-		DocumentResourceComponent,
+		PropertyIDComponent,
+		PropertyTypeComponent,
+		PropertyContentComponent,
+
 		BlankNodeComponent,
 		BlankNodesComponent,
 		NamedFragmentComponent,
 		NamedFragmentsComponent,
+
 		DocumentViewerComponent,
 		DocumentTreeViewComponent,
+		DocumentResourceComponent,
 		DocumentExplorerComponent,
 		AccessPointCreatorComponent,
 		DocumentCreatorComponent,
 		DocumentDeleterComponent,
+
 		IdValidator,
 		PropertyNameValidator,
 		LiteralValueValidator,
