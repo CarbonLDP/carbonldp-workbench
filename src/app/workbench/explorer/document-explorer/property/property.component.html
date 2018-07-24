@@ -2,7 +2,7 @@
 <p class="ui grey label status indicator" *ngIf="!!property.modified">Changed</p>
 
 
-<ng-container [ngSwitch]="name">
+<ng-container [ngSwitch]="propertyName">
 	<!-- START: Property @Id  -->
 	<cw-property-id *ngSwitchCase="'@id'"
 	                class="content"

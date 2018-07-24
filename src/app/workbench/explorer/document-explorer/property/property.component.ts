@@ -2,9 +2,6 @@ import { Component, Input, Output, EventEmitter, ElementRef } from "@angular/cor
 
 import { RDFNode } from "carbonldp/RDF/Node"
 
-import { LiteralStatus } from "../literals/literal.component";
-import { PointerRow } from "../pointers/pointer.component";
-import { ListRow } from "../lists/list.component";
 import { NamedFragmentRow } from "../named-fragments/named-fragment.component";
 
 
@@ -23,19 +20,8 @@ export class PropertyComponent {
 
 	element:ElementRef;
 	$element:JQuery;
-	literals:LiteralStatus[] = [];
-	pointers:PointerRow[] = [];
-	lists:ListRow[] = [];
-	tempLiterals:LiteralStatus[];
-	tempPointers:PointerRow[];
-	tempLists:ListRow[];
-	tempProperty:Property = <Property>{};
-	copyOrAdded:string;
-	existingFragments:string[] = [];
 
-	name:string;
-	originalName:string;
-	value:any[] | string = [];
+	propertyName:string = "";
 
 
 	@Input() mode:string = Modes.READ;
@@ -49,8 +35,8 @@ export class PropertyComponent {
 	private _property:PropertyStatus;
 	@Input() set property( property:PropertyStatus ) {
 		this._property = property;
-		this.name = property[ ! ! property.added ? "added" : ! ! property.modified ? "modified" : "copy" ].name;
-		console.log( "%o: %o", this.name, this.property );
+		this.propertyName = property[ ! ! property.added ? "added" : ! ! property.modified ? "modified" : "copy" ].name;
+		console.log( "%o: %o", this.propertyName, this.property );
 	}
 
 	get property():PropertyStatus { return this._property; };
@@ -100,10 +86,6 @@ export interface PropertyStatus {
 	isBeingCreated?:boolean;
 	isBeingModified?:boolean;
 	isBeingDeleted?:boolean;
-
-	modifiedLiterals?:LiteralStatus[];
-	modifiedPointers?:PointerRow[];
-	modifiedLists?:ListRow[];
 }
 
 export interface Property {
