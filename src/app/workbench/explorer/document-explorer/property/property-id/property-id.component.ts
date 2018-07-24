@@ -11,7 +11,6 @@ import { NamedFragmentRow } from "../../named-fragments/named-fragment.component
 	selector: "cw-property-id",
 	templateUrl: "./property-id.component.html",
 	styleUrls: [ "./property-id.component.scss" ],
-	host: { "[class.has-changed]": "property?.modified", "[class.deleted-property]": "property?.deleted", "[class.added-property]": "property?.added" },
 } )
 
 export class PropertyIDComponent implements AfterViewInit {
@@ -20,15 +19,14 @@ export class PropertyIDComponent implements AfterViewInit {
 	$element:JQuery;
 
 
-	tempProperty:Property = <Property>{};
-	copyOrAdded:string;
+	status:string;
 	existingFragments:string[] = [];
+	tempProperty:Property = <Property>{};
 
 	id:string;
 	originalId:string;
 	value:any[] | string = [];
 
-	commonToken:string[] = [ "@id", "@type", "@value" ];
 	modes:Modes = Modes;
 	@ViewChild( "idInput" ) idInputControl;
 
@@ -41,27 +39,20 @@ export class PropertyIDComponent implements AfterViewInit {
 	@Input() accessPointsHasMemberRelationProperties:string[] = [];
 	private _property:PropertyStatus;
 	@Input() set property( property:PropertyStatus ) {
-		this.copyOrAdded = (! ! property.modified) ? "modified" : (! ! property.copy) ? "copy" : "added";
 		this._property = property;
+		this.status = (! ! property.modified) ? "modified" : (! ! property.copy) ? "copy" : "added";
 
-
-		this.id = property[ this.copyOrAdded ].id;
-		this.tempProperty.id = property[ this.copyOrAdded ].id;
-		this.originalId = property[ this.copyOrAdded ].value;
-
-		this.value = property[ this.copyOrAdded ].value;
+		this.id = property[ this.status ].id;
+		this.tempProperty.id = property[ this.status ].id;
+		this.originalId = property[ this.status ].value;
+		this.value = property[ this.status ].value;
 	}
 
 	get property():PropertyStatus { return this._property; }
 
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 
-	nameHasChanged:boolean = false;
-	valueHasChanged:boolean = false;
-
-	get propertyHasChanged():boolean { return this.nameHasChanged || this.valueHasChanged; }
-
-	get isAccessPointHasMemberRelationProperty():boolean { return this.accessPointsHasMemberRelationProperties.indexOf( this.id ) !== - 1; }
+	get valueHasChanged():boolean { return ! ! this.property.copy && this.property.copy.value !== this.tempProperty.value; };
 
 
 	constructor( element:ElementRef ) {
@@ -94,7 +85,7 @@ export class PropertyIDComponent implements AfterViewInit {
 		this.value = this.unescape( <string>this.value );
 	}
 
-	cancelIdModification():void {
+	cancelModification():void {
 		if( ! this.idInputControl.valid ) return;
 		this.mode = Modes.READ;
 	}
@@ -122,7 +113,7 @@ export class PropertyIDComponent implements AfterViewInit {
 	private checkForChangesOnId( newId:string ):void {
 		this.value = newId;
 		if( (this.value !== void 0) &&
-			(this.value !== this.property[ this.copyOrAdded ].value || this.value !== this.tempProperty.value) ) {
+			(this.value !== this.property[ this.status ].value || this.value !== this.tempProperty.value) ) {
 			this.tempProperty.value = this.value;
 			this.changePropertyContent();
 		}
@@ -130,25 +121,23 @@ export class PropertyIDComponent implements AfterViewInit {
 
 	private changePropertyContent():void {
 		this.tempProperty.id = this.id;
+		delete this.property.modified;
 
 		// Change value because it is a single string
 		if( ! ! this.property.copy ) {
 			if( this.tempProperty.value !== this.property.copy.value ) {
 				this.property.modified = this.tempProperty;
-				this.valueHasChanged = true;
-			} else { this.valueHasChanged = false; }
+			}
 		}
 
 		this.property.isBeingCreated = false;
 
 		if( ! ! this.property.copy ) {
-			if( this.propertyHasChanged ) {
+			if( this.valueHasChanged ) {
 				this.property.modified = this.tempProperty;
-			} else {
-				delete this.property.modified;
 			}
-			this.onChangeProperty.emit( this.tempProperty );
 		}
+		this.onChangeProperty.emit( this.tempProperty );
 	}
 
 	private escape( uri:string ):string {

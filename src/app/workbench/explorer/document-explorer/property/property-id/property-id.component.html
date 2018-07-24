@@ -1,6 +1,6 @@
 <!-- START: Display friendly name -->
 <div class="header">
-	<p>{{unescape(getSlug(value))}}</p>
+	<p>{{value | decodeURI | fragment}}</p>
 </div>
 <!-- END: Display friendly name -->
 
@@ -37,7 +37,7 @@
 				       cw-uri
 				       name="idInput"
 				       [(ngModel)]="value" #idInput="ngModel"
-				       (keyup.escape)="cancelIdModification()"
+				       (keyup.escape)="cancelModification()"
 				       (keyup.enter)="idInput.valid? saveId() : null">
 				<div class="ui save-cancel buttons">
 					<button class="ui button"
@@ -47,7 +47,7 @@
 					<div class="ui dropdown icon button">
 						<i class="dropdown icon"></i>
 						<div class="menu">
-							<div class="item" (click)="cancelIdModification()">Cancel</div>
+							<div class="item" (click)="cancelModification()">Cancel</div>
 						</div>
 					</div>
 				</div>
