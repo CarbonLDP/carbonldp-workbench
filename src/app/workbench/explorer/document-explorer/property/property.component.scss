@@ -1,6 +1,6 @@
 :host {
 	display: block;
-	.content {
+	/deep/ .content {
 		.meta {
 			.parent-uri {
 				margin-right: 0;

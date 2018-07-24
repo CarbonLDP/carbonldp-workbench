@@ -30,7 +30,7 @@
 		}
 	}
 
-	.updown.buttons {
+	/deep/ .updown.buttons {
 		max-height: 28px;
 		margin-top: 1px;
 		float: right;
