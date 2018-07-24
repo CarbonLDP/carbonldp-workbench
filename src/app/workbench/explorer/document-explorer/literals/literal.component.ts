@@ -774,7 +774,6 @@ export class LiteralComponent implements AfterViewChecked {
 	 *  Temporarily contains all the changes made to
 	 *  the literal (value, type, language)
 	 *  before modifying the original literal.
-	 *  Used in save and cancelEdit methods
 	 * */
 	private tempLiteral:any = {};
 
@@ -792,26 +791,21 @@ export class LiteralComponent implements AfterViewChecked {
 
 
 	/*
-	*  Mode variable
+	*  Mode
 	* */
 	private _mode = Modes.READ;
 	@Input() set mode( value:string ) {
-		setTimeout( () => {
-			this._mode = value;
-			this.onEditMode.emit( this.mode === Modes.EDIT );
-			if( this.mode === Modes.EDIT ) {
-				this.initializeTypesDropdown();
-				this.initializeLanguageDropdown()
-			}
-		}, 1 );
+		this._mode = value;
+		this.onEditMode.emit( this.mode === Modes.EDIT );
+		if( this.mode !== Modes.EDIT ) return;
+		this.initializeTypesDropdown();
+		this.initializeLanguageDropdown()
 	}
 
-	get mode() {
-		return this._mode;
-	}
+	get mode() { return this._mode; }
 
 	/**
-	 * Literal's Value variable
+	 * Literal's Value
 	 **/
 	private _value:string | boolean | number = "";
 	get value() { return this._value; }
@@ -821,7 +815,7 @@ export class LiteralComponent implements AfterViewChecked {
 	}
 
 	/**
-	 * Literal's Type variable
+	 * Literal's Type
 	 **/
 	private _type:string = XSD.string;
 	get type() {return this._type;}
@@ -837,7 +831,7 @@ export class LiteralComponent implements AfterViewChecked {
 	}
 
 	/**
-	 * Literal Language variable
+	 * Literal Language
 	 **/
 	private _language:string = "";
 	get language() { return this._language; }
@@ -930,10 +924,10 @@ export class LiteralComponent implements AfterViewChecked {
 	private restoreDisplayingTokenContent( token:string ):void {
 
 		let displayingContent:string;
-		let copyOrAdded:string = this.literal.copy !== void 0 ? "copy" : "added";
+		let initialStatus:string = this.literal.copy !== void 0 ? "copy" : "added";
 
 		if( this.tempLiteral[ token ] === void 0 ) {
-			displayingContent = this.literal[ copyOrAdded ][ token ];
+			displayingContent = this.literal[ initialStatus ][ token ];
 			delete this.tempLiteral[ token ];
 		} else {
 			displayingContent = this.tempLiteral[ token ];
