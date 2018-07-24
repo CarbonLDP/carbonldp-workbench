@@ -84,8 +84,6 @@ export interface PropertyStatus {
 	deleted?:any;
 
 	isBeingCreated?:boolean;
-	isBeingModified?:boolean;
-	isBeingDeleted?:boolean;
 }
 
 export interface Property {

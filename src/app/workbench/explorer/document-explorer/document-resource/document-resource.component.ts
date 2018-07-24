@@ -134,8 +134,6 @@ export class DocumentResourceComponent implements AfterViewInit {
 				value: []
 			},
 			isBeingCreated: true,
-			isBeingModified: false,
-			isBeingDeleted: false
 		};
 		this.properties.splice( 2, 0, newProperty );
 		// Animates created property

@@ -130,9 +130,7 @@ export class NamedFragmentComponent implements AfterViewInit {
 				name: "http://www.example.com#New Property " + numberOfProperty,
 				value: []
 			},
-			isBeingCreated: true,
-			isBeingModified: false,
-			isBeingDeleted: false
+			isBeingCreated: true
 		};
 		this.properties.splice( 1, 0, newProperty );
 		// Animates created property

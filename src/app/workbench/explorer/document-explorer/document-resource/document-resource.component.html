@@ -14,7 +14,7 @@
 		             [documentURI]="documentURI"
 		             [existingProperties]="existingPropertiesNames"
 		             [accessPointsHasMemberRelationProperties]="accessPointsHasMemberRelationProperties"
-		             [mode]="(!!propertyStatus.isBeingCreated || !!propertyStatus.isBeingModified || !!propertyStatus.isBeingDeleted)? modes.EDIT : modes.READ"
+		             [mode]="propertyStatus.isBeingCreated? modes.EDIT : modes.READ"
 
 		             (onChangeProperty)="changeProperty(propertyStatus, i)"
 		             (onDeleteProperty)="deleteProperty(propertyStatus, i)"

@@ -135,9 +135,7 @@ export class BlankNodeComponent implements AfterViewInit {
 				name: `${this.carbonldp.baseURI}vocabularies/main/#New_Property_${numberOfProperty}`,
 				value: []
 			},
-			isBeingCreated: true,
-			isBeingModified: false,
-			isBeingDeleted: false
+			isBeingCreated: true
 		};
 		this.properties.splice( 1, 0, newProperty );
 		// Animates created property
