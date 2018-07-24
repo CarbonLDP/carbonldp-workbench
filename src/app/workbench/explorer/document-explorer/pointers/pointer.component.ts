@@ -17,6 +17,12 @@ export class PointerComponent implements OnChanges {
 
 	$element:JQuery;
 	element:ElementRef;
+
+	/**
+	 *  Temporarily contains all the changes made to
+	 *  the pointer (@id) before modifying the
+	 *  original pointers.
+	 * */
 	private tempPointer:any = {};
 	pointersDropdown:JQuery;
 	isBlankNode:boolean = false;
@@ -27,14 +33,11 @@ export class PointerComponent implements OnChanges {
 	@Input() set mode( value:string ) {
 		this._mode = value;
 		this.onEditMode.emit( this.mode === Modes.EDIT );
-		if( this.mode === Modes.EDIT ) {
-			this.initializePointersDropdown();
-		}
+		if( this.mode !== Modes.EDIT ) return;
+		this.initializePointersDropdown()
 	}
 
-	get mode() {
-		return this._mode;
-	}
+	get mode() { return this._mode; }
 
 	modes:typeof Modes = Modes;
 
@@ -47,12 +50,17 @@ export class PointerComponent implements OnChanges {
 		this._pointer = value;
 		if( this.pointer.added ) { this.mode = Modes.EDIT; }
 
-		if( typeof this.pointer.modified !== "undefined" ) {
-			this.id = this.pointer.modified[ "@id" ];
-		} else if( typeof this.pointer.copy !== "undefined" ) {
-			this.id = this.pointer.copy[ "@id" ];
-		} else if( typeof this.pointer.added !== "undefined" ) {
-			this.id = this.pointer.added[ "@id" ];
+		/**
+		 *  Check if its going to use the modified,
+		 *  the original or the added values of the
+		 *  pointer.
+		 * */
+		if( this.pointer.modified !== void 0 ) {
+			this.id = this.pointer.modified[ PointerToken.ID ];
+		} else if( this.pointer.copy !== void 0 ) {
+			this.id = this.pointer.copy[ PointerToken.ID ];
+		} else if( this.pointer.added !== void 0 ) {
+			this.id = this.pointer.added[ PointerToken.ID ];
 		}
 	}
 
@@ -72,9 +80,9 @@ export class PointerComponent implements OnChanges {
 	@Output() onMoveUp:EventEmitter<PointerRow> = new EventEmitter<PointerRow>();
 	@Output() onMoveDown:EventEmitter<PointerRow> = new EventEmitter<PointerRow>();
 
-	// Literal Value;
+	// Pointer Value;
 	private _id:string = "";
-	get id():string {return this._id;}
+	get id():string { return this._id; }
 
 	set id( id:string ) {
 		this._id = id;
@@ -91,7 +99,7 @@ export class PointerComponent implements OnChanges {
 	}
 
 	deletePointer():void {
-		if( typeof this.pointer.added === "undefined" ) {
+		if( this.pointer.added === void 0 ) {
 			this.pointer.deleted = this.pointer.copy;
 		}
 		this.onDeletePointer.emit( this.pointer );
@@ -105,8 +113,12 @@ export class PointerComponent implements OnChanges {
 	}
 
 	checkForChangesOnPointers():void {
-		if( typeof this.id === "undefined" ) return;
-		let idx:number = this.blankNodes.concat( this.namedFragments ).findIndex( ( nfOrBN ) => {return nfOrBN[ "name" ] === this.id || nfOrBN[ "id" ] === this.id;} );
+		if( this.id === void 0 ) return;
+		let idx:number =
+			[
+				...this.blankNodes,
+				...this.namedFragments
+			].findIndex( ( nfOrBN ) => { return nfOrBN[ "name" ] === this.id || nfOrBN[ "id" ] === this.id; } );
 		this.isBlankNode = URI.isBNodeID( <string>this.id );
 		this.isNamedFragment = URI.isFragmentOf( this.id, this.documentURI );
 		this.existsOnPointers = idx !== - 1;
@@ -130,7 +142,7 @@ export class PointerComponent implements OnChanges {
 	}
 
 	save():void {
-		let initialStatus:string = typeof this.pointer.copy !== "undefined" ? "copy" : "added";
+		let initialStatus:string = ! ! this.pointer.copy ? "copy" : "added";
 		let initialId:string = this.pointer[ initialStatus ][ PointerToken.ID ];
 
 		if( (this.id !== void 0) &&
@@ -168,14 +180,9 @@ export class PointerComponent implements OnChanges {
 		this.pointersDropdown.dropdown( "set text", this.id );
 	}
 
-	changeId( id:string, text?:string, choice?:JQuery ):void {
+	private changeId( id:string, text?:string, choice?:JQuery ):void {
 		if( id === "empty" ) id = null;
 		this.id = id;
-	}
-
-	getFriendlyName( uri:string ):string {
-		if( URI.hasFragment( uri ) ) return URI.getFragment( uri );
-		return URI.getSlug( uri );
 	}
 
 	goToBlankNode( id:string ):void {

@@ -55,7 +55,7 @@
 				<optgroup label="Named Fragments">
 					<option class="item" *ngFor="let fragment of namedFragments; let i=index" value="{{fragment.name}}">
 						<span>
-							<span class="title">{{getFriendlyName(fragment.name)}}</span>
+							<span class="title">{{fragment.name | decodeURI | fragment}}</span>
 							<span class="description">{{fragment.name}}</span>
 						</span>
 					</option>
