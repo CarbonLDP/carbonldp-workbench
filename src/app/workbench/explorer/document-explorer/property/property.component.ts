@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, ElementRef } from "@angular/cor
 
 import { RDFNode } from "carbonldp/RDF/Node"
 
-import { NamedFragmentRow } from "../named-fragments/named-fragment.component";
+import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
 
 
 @Component( {
@@ -27,7 +27,7 @@ export class PropertyComponent {
 	@Input() mode:string = Modes.READ;
 	@Input() documentURI:string = "";
 	@Input() blankNodes:RDFNode[] = [];
-	@Input() namedFragments:NamedFragmentRow[] = [];
+	@Input() namedFragments:NamedFragmentStatus[] = [];
 	@Input() isPartOfNamedFragment:boolean = false;
 	@Input() canEdit:boolean = true;
 	@Input() existingProperties:string[] = [];

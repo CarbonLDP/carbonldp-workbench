@@ -11,7 +11,7 @@ import { RootRecords } from "../document-resource/document-resource.component";
 import { BlankNodesComponent, BlankNodesRecords } from "../blank-nodes/blank-nodes.component";
 import { NamedFragmentsComponent, NamedFragmentsRecords } from "../named-fragments/named-fragments.component";
 import { BlankNodeRow } from "../blank-nodes/blank-node.component";
-import { NamedFragmentRow } from "../named-fragments/named-fragment.component";
+import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
@@ -33,7 +33,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	sections:string[] = [ "blankNodes", "namedFragments", "documentResource" ];
 	rootNode:RDFNode;
 	blankNodes:BlankNodeRow[] = [];
-	namedFragments:NamedFragmentRow[] = [];
+	namedFragments:NamedFragmentStatus[] = [];
 	documentURI:string = "";
 
 	rootNodeHasChanged:boolean = false;
@@ -231,16 +231,16 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 	modifyNamedFragmentsWithChanges( document:RDFDocument ):void {
 		let tempIdx:number;
 		if( ! this.namedFragmentsChanges ) return;
-		this.namedFragmentsChanges.deletions.forEach( ( namedFragmentRow:NamedFragmentRow, namedFragmentId ) => {
+		this.namedFragmentsChanges.deletions.forEach( ( namedFragmentRow:NamedFragmentStatus, namedFragmentId ) => {
 			tempIdx = document[ "@graph" ].findIndex( (namedFragment => { return namedFragment[ "@id" ] === namedFragmentId }) );
 			document[ "@graph" ].splice( tempIdx, 1 );
 		} );
 		tempIdx = - 1;
-		this.namedFragmentsChanges.changes.forEach( ( namedFragmentRow:NamedFragmentRow, namedFragmentId ) => {
+		this.namedFragmentsChanges.changes.forEach( ( namedFragmentRow:NamedFragmentStatus, namedFragmentId ) => {
 			tempIdx = document[ "@graph" ].findIndex( (namedFragment => { return namedFragment[ "@id" ] === namedFragmentId }) );
 			document[ "@graph" ][ tempIdx ] = namedFragmentRow.modified;
 		} );
-		this.namedFragmentsChanges.additions.forEach( ( namedFragmentRow:NamedFragmentRow, namedFragmentId ) => {
+		this.namedFragmentsChanges.additions.forEach( ( namedFragmentRow:NamedFragmentStatus, namedFragmentId ) => {
 			document[ "@graph" ].push( namedFragmentRow.added );
 		} );
 	}

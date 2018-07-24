@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, OnCha
 
 import { URI } from "carbonldp/RDF/URI";
 
-import { NamedFragmentRow } from "./named-fragment.component";
+import { NamedFragmentStatus } from "./named-fragment.component";
 import { BlankNodeRow } from "../blank-nodes/blank-node.component";
 
 import * as $ from "jquery";
@@ -20,12 +20,12 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 	$element:JQuery;
 
 	nodesTab:JQuery;
-	openedNamedFragments:NamedFragmentRow[] = [];
+	openedNamedFragments:NamedFragmentStatus[] = [];
 	namedFragmentsRecords:NamedFragmentsRecords = new NamedFragmentsRecords();
-	askingDeletionNamedFragment:NamedFragmentRow;
+	askingDeletionNamedFragment:NamedFragmentStatus;
 
 	@Input() blankNodes:BlankNodeRow[] = [];
-	@Input() namedFragments:NamedFragmentRow[] = [];
+	@Input() namedFragments:NamedFragmentStatus[] = [];
 	@Input() documentURI:string = "";
 
 	@Output() onChanges:EventEmitter<NamedFragmentsRecords> = new EventEmitter<NamedFragmentsRecords>();
@@ -50,8 +50,8 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 		}
 	}
 
-	openNamedFragment( nodeOrId:NamedFragmentRow|string ):void {
-		let node:NamedFragmentRow;
+	openNamedFragment( nodeOrId:NamedFragmentStatus|string ):void {
+		let node:NamedFragmentStatus;
 		if( typeof nodeOrId === "string" ) {
 			node = this.namedFragments.find( ( node ) => { return node.name === nodeOrId} );
 		} else {
@@ -75,7 +75,7 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 		this.onOpenNamedFragment.emit( "namedFragments" );
 	}
 
-	closeNamedFragment( namedFragment:NamedFragmentRow, index?:number ):void {
+	closeNamedFragment( namedFragment:NamedFragmentStatus, index?:number ):void {
 		this.openedNamedFragments.splice( index, 1 );
 		this.goToNamedFragment( "all-namedFragments" );
 	}
@@ -96,7 +96,7 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 		return URI.getSlug( uri );
 	}
 
-	changeNamedFragment( namedFragmentRow:NamedFragmentRow, index?:number ):void {
+	changeNamedFragment( namedFragmentRow:NamedFragmentStatus, index?:number ):void {
 		if( typeof this.namedFragmentsRecords === "undefined" ) this.namedFragmentsRecords = new NamedFragmentsRecords();
 		if( typeof namedFragmentRow.modified !== "undefined" ) {
 			this.namedFragmentsRecords.changes.set( namedFragmentRow.id, namedFragmentRow );
@@ -107,7 +107,7 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 		this.onChanges.emit( this.namedFragmentsRecords );
 	}
 
-	deleteNamedFragment( namedFragmentRow:NamedFragmentRow, index?:number ):void {
+	deleteNamedFragment( namedFragmentRow:NamedFragmentStatus, index?:number ):void {
 		index = this.openedNamedFragments.indexOf( namedFragmentRow );
 		this.openedNamedFragments.splice( index, 1 );
 		if( typeof this.namedFragmentsRecords === "undefined" ) this.namedFragmentsRecords = new NamedFragmentsRecords();
@@ -127,9 +127,9 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 
 	createNamedFragment():void {
 		let newName:string = this.documentURI + "#New-Fragment-Name-";
-		let newFragments:NamedFragmentRow[] = this.namedFragments.filter( ( namedFragment:NamedFragmentRow ) => { return namedFragment.name.startsWith( newName ) } );
+		let newFragments:NamedFragmentStatus[] = this.namedFragments.filter( ( namedFragment:NamedFragmentStatus ) => { return namedFragment.name.startsWith( newName ) } );
 		let id:string = newName + (newFragments.length + 1);
-		let newNamedFragment:NamedFragmentRow = <NamedFragmentRow>{
+		let newNamedFragment:NamedFragmentStatus = <NamedFragmentStatus>{
 			id: id,
 			name: id,
 			copy: {
@@ -167,9 +167,9 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 }
 
 export class NamedFragmentsRecords {
-	changes:Map<string,NamedFragmentRow> = new Map<string, NamedFragmentRow>();
-	deletions:Map<string,NamedFragmentRow> = new Map<string, NamedFragmentRow>();
-	additions:Map<string,NamedFragmentRow> = new Map<string, NamedFragmentRow>();
+	changes:Map<string,NamedFragmentStatus> = new Map<string, NamedFragmentStatus>();
+	deletions:Map<string,NamedFragmentStatus> = new Map<string, NamedFragmentStatus>();
+	additions:Map<string,NamedFragmentStatus> = new Map<string, NamedFragmentStatus>();
 
 	clear():void {
 		this.changes.clear();

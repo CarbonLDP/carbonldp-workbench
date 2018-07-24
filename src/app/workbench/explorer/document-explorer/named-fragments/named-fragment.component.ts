@@ -49,20 +49,20 @@ export class NamedFragmentComponent implements AfterViewInit {
 	}
 
 	@Input() blankNodes:BlankNodeRow[] = [];
-	@Input() namedFragments:NamedFragmentRow[] = [];
+	@Input() namedFragments:NamedFragmentStatus[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
 
-	private _namedFragment:NamedFragmentRow;
+	private _namedFragment:NamedFragmentStatus;
 	@Input()
-	set namedFragment( namedFragment:NamedFragmentRow ) {
+	set namedFragment( namedFragment:NamedFragmentStatus ) {
 		this._namedFragment = namedFragment;
 		this.rootNode = namedFragment.copy;
 		if( ! ! namedFragment.records ) this.records = namedFragment.records;
 		this.getProperties();
 	}
 
-	get namedFragment():NamedFragmentRow { return this._namedFragment; }
+	get namedFragment():NamedFragmentStatus { return this._namedFragment; }
 
 	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
@@ -207,7 +207,7 @@ export class NamedFragmentComponent implements AfterViewInit {
 	}
 }
 
-export interface NamedFragmentRow {
+export interface NamedFragmentStatus {
 	id?:string;
 	name?:string;
 

@@ -8,7 +8,7 @@ import { RDFNode } from "carbonldp/RDF/Node"
 import { LiteralStatus } from "./../../literals/literal.component";
 import { PointerStatus } from "./../../pointers/pointer.component";
 import { ListRow } from "./../../lists/list.component";
-import { NamedFragmentRow } from "./../../named-fragments/named-fragment.component";
+import { NamedFragmentStatus } from "./../../named-fragments/named-fragment.component";
 import { Property, PropertyStatus, PropertyToken, Modes } from "./../property.component";
 
 @Component( {
@@ -44,7 +44,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	@Input() mode:string = Modes.READ;
 	@Input() documentURI:string = "";
 	@Input() blankNodes:RDFNode[] = [];
-	@Input() namedFragments:NamedFragmentRow[] = [];
+	@Input() namedFragments:NamedFragmentStatus[] = [];
 	@Input() isPartOfNamedFragment:boolean = false;
 	@Input() canEdit:boolean = true;
 	@Input() existingProperties:string[] = [];

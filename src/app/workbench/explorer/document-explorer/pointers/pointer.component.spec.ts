@@ -6,7 +6,7 @@ import { Modes } from "../property/property.component"
 import { Pointer, PointerComponent, PointerStatus } from "./../pointers/pointer.component";
 import { PointerValidator } from "../document-explorer-validators";
 import { BlankNodeRow } from "./../blank-nodes/blank-node.component";
-import { NamedFragmentRow } from "./../named-fragments/named-fragment.component";
+import { NamedFragmentStatus } from "./../named-fragments/named-fragment.component";
 
 export function pointerSpecs() {
 
@@ -31,7 +31,7 @@ export function pointerSpecs() {
 			pointerRow:PointerStatus;
 
 			blankNodes:BlankNodeRow[] = [];
-			namedFragments:NamedFragmentRow[] = [];
+			namedFragments:NamedFragmentStatus[] = [];
 
 			documentURI:string = "";
 			partOfList:boolean = false;
@@ -123,7 +123,7 @@ export function pointerSpecs() {
 			it( "Should emit id when clicking the id and the id is a Named Fragment", ( done ) => {
 
 				let documentURI:string = "http://localhost:8083/";
-				let namedFragments:NamedFragmentRow[] = [
+				let namedFragments:NamedFragmentStatus[] = [
 					{
 						id: "http://localhost:8083/#New-Fragment-Name-1",
 						name: "http://localhost:8083/#New-Fragment-Name-1",
@@ -330,7 +330,7 @@ export function pointerSpecs() {
 			it( "Should display fragments in the dropdown when they are passed as Input", () => {
 
 				let documentURI:string = "http://localhost:8083/";
-				let namedFragments:NamedFragmentRow[] = [
+				let namedFragments:NamedFragmentStatus[] = [
 					{
 						id: "http://localhost:8083/#New-Fragment-Name-1",
 						name: "http://localhost:8083/#New-Fragment-Name-1",

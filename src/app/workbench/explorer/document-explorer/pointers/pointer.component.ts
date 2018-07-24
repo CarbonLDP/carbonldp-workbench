@@ -4,7 +4,7 @@ import { URI } from "carbonldp/RDF/URI";
 
 import { Modes } from "../property/property.component";
 import { BlankNodeRow } from "../blank-nodes/blank-node.component";
-import { NamedFragmentRow } from "../named-fragments/named-fragment.component";
+import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
 
 
 @Component( {
@@ -66,7 +66,7 @@ export class PointerComponent implements OnChanges {
 
 	@Input() documentURI:string = "";
 	@Input() blankNodes:BlankNodeRow[] = [];
-	@Input() namedFragments:NamedFragmentRow[] = [];
+	@Input() namedFragments:NamedFragmentStatus[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() partOfList:boolean = false;
 	@Input() isFirstItem:boolean = false;
@@ -192,7 +192,7 @@ export class PointerComponent implements OnChanges {
 	}
 
 	goToNamedFragment( id:string ):void {
-		let idx:number = this.namedFragments.findIndex( ( namedFragment:NamedFragmentRow ) => { return namedFragment.name === id; } );
+		let idx:number = this.namedFragments.findIndex( ( namedFragment:NamedFragmentStatus ) => { return namedFragment.name === id; } );
 		this.existsOnPointers = idx !== - 1;
 		if( this.existsOnPointers ) this.onGoToNamedFragment.emit( id );
 	}

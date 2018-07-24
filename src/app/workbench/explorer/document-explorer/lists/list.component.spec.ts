@@ -8,7 +8,7 @@ import { LiteralStatus, LiteralComponent } from "./../literals/literal.component
 import { PointerStatus, PointerComponent } from "./../pointers/pointer.component";
 import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
 import { BlankNodeRow } from "app/workbench/explorer/document-explorer/blank-nodes/blank-node.component";
-import { NamedFragmentRow } from "app/workbench/explorer/document-explorer/named-fragments/named-fragment.component";
+import { NamedFragmentStatus } from "app/workbench/explorer/document-explorer/named-fragments/named-fragment.component";
 
 export function listSpecs() {
 
@@ -31,7 +31,7 @@ export function listSpecs() {
 			list:ListRow = <ListRow>{};
 			pointers:PointerStatus[] = [];
 			blankNodes:BlankNodeRow[] = [];
-			namedFragments:NamedFragmentRow[] = [];
+			namedFragments:NamedFragmentStatus[] = [];
 
 			@ViewChild( ListComponent ) listCmp:ListComponent;
 		}
@@ -55,7 +55,7 @@ export function listSpecs() {
 		beforeEach( () => {
 
 			let documentURI:string = "http://localhost:8083/";
-			let namedFragments:NamedFragmentRow[] = [
+			let namedFragments:NamedFragmentStatus[] = [
 				{
 					id: "http://localhost:8083/#Fragment-1",
 					name: "http://localhost:8083/#Fragment-1",

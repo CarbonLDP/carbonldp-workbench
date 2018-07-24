@@ -4,7 +4,7 @@ import { URI } from "carbonldp/RDF/URI";
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { Property, PropertyStatus, Modes } from "./../property.component";
-import { NamedFragmentRow } from "../../named-fragments/named-fragment.component";
+import { NamedFragmentStatus } from "../../named-fragments/named-fragment.component";
 
 
 @Component( {
@@ -33,7 +33,7 @@ export class PropertyIDComponent implements AfterViewInit {
 	@Input() mode:string = Modes.READ;
 	@Input() documentURI:string = "";
 	@Input() blankNodes:RDFNode[] = [];
-	@Input() namedFragments:NamedFragmentRow[] = [];
+	@Input() namedFragments:NamedFragmentStatus[] = [];
 	@Input() isPartOfNamedFragment:boolean = false;
 	@Input() canEdit:boolean = true;
 	@Input() accessPointsHasMemberRelationProperties:string[] = [];
@@ -81,7 +81,7 @@ export class PropertyIDComponent implements AfterViewInit {
 	onEditId():void {
 		this.mode = Modes.EDIT;
 		this.existingFragments = [];
-		this.namedFragments.forEach( ( nameFragment:NamedFragmentRow ) => { this.existingFragments.push( nameFragment.name ); } );
+		this.namedFragments.forEach( ( nameFragment:NamedFragmentStatus ) => { this.existingFragments.push( nameFragment.name ); } );
 		this.value = this.unescape( <string>this.value );
 	}
 
