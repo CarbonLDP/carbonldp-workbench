@@ -28,7 +28,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	// Variable that will have the JSON object of the property
 	// with all the changes made to the original property.
 	tempProperty:Property = <Property>{};
-	state:string;
+	status:string;
 
 	id:string;
 	propertyName:string;
@@ -52,20 +52,20 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	private _property:PropertyStatus;
 	@Input() set property( prop:PropertyStatus ) {
 		this._property = prop;
-		this.state = ! ! prop.copy ? (! ! prop.modified ? "modified" : "copy") : "added";
+		this.status = ! ! prop.copy ? (! ! prop.modified ? "modified" : "copy") : "added";
 
 		// Assign the id of the property
-		this.id = prop[ this.state ].id;
-		this.tempProperty.id = prop[ this.state ].id;
+		this.id = prop[ this.status ].id;
+		this.tempProperty.id = prop[ this.status ].id;
 
 		// Assign the name of the property
-		this.propertyName = prop[ this.state ].name;
-		this.tempProperty.name = prop[ this.state ].name;
+		this.propertyName = prop[ this.status ].name;
+		this.tempProperty.name = prop[ this.status ].name;
 		this.originalName = this.propertyName;
 
 		// Assign the value of the property
 		this.value = [];
-		prop[ this.state ].value.forEach( ( literalOrPointerOrList ) => { this.value.push( Object.assign( literalOrPointerOrList ) ) } )
+		prop[ this.status ].value.forEach( ( literalOrPointerOrList ) => { this.value.push( Object.assign( literalOrPointerOrList ) ) } )
 	}
 
 	get property():PropertyStatus { return this._property; }
@@ -152,7 +152,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 		this.pointers = [];
 		this.lists = [];
 
-		this.property[ this.state ].value.forEach( ( literalOrRDFNodeOrList ) => {
+		this.property[ this.status ].value.forEach( ( literalOrRDFNodeOrList ) => {
 			if( RDFLiteral.is( literalOrRDFNodeOrList ) ) {
 				this.literals.push( { copy: literalOrRDFNodeOrList } );
 			} else if( RDFNode.is( literalOrRDFNodeOrList ) ) {
@@ -188,7 +188,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	checkForChangesOnName( newName:string ):void {
 		this.propertyName = newName;
 		if( (this.propertyName !== void 0) &&
-			((this.propertyName !== this.property[ this.state ].name) || (this.propertyName !== this.tempProperty.name)) ||
+			((this.propertyName !== this.property[ this.status ].name) || (this.propertyName !== this.tempProperty.name)) ||
 			this.property.isBeingCreated ) {
 
 			this.tempProperty.name = this.propertyName;
