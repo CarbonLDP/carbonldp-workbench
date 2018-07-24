@@ -246,7 +246,9 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 		delete this.property.modified;
 
 		if( ! ! this.property.copy ) {
-			this.property.modified = this.tempProperty;
+			if( this.propertyHasChanged ) {
+				this.property.modified = this.tempProperty;
+			}
 			this.onChangeProperty.emit( this.tempProperty );
 
 		} else if( ! ! this.property.added ) {
