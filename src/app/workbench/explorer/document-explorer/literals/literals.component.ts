@@ -47,7 +47,9 @@ export class LiteralsComponent implements OnInit {
 	}
 
 	editModeChanged( value:boolean ):void {
-		this.isEditingLiteral = value;
+		setTimeout( () => {
+			this.isEditingLiteral = value;
+		}, 1 );
 	}
 
 	saveLiteral() {
