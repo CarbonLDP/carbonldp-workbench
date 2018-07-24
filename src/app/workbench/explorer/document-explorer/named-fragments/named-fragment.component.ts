@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
 
+import { CarbonLDP } from "carbonldp/CarbonLDP";
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { BlankNodeRow } from "../blank-nodes/blank-node.component";
@@ -18,6 +19,8 @@ export class NamedFragmentComponent implements AfterViewInit {
 
 	element:ElementRef;
 	$element:JQuery;
+	carbonldp:CarbonLDP;
+
 	modes:Modes = Modes;
 	records:NamedFragmentRecords;
 	copyOrAdded:string = "";
@@ -66,8 +69,9 @@ export class NamedFragmentComponent implements AfterViewInit {
 	@Output() onChanges:EventEmitter<NamedFragmentRecords> = new EventEmitter<NamedFragmentRecords>();
 
 
-	constructor( element:ElementRef ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
 		this.element = element;
+		this.carbonldp = carbonldp;
 	}
 
 	ngAfterViewInit():void {
@@ -127,7 +131,7 @@ export class NamedFragmentComponent implements AfterViewInit {
 		let newProperty:PropertyStatus = {
 			added: <Property>{
 				id: "",
-				name: "http://www.example.com#New Property " + numberOfProperty,
+				name: `${this.carbonldp.baseURI}vocabularies/main/#New_Property_${numberOfProperty}`,
 				value: []
 			},
 			isBeingCreated: true
