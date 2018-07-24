@@ -6,7 +6,7 @@ import { FormsModule } from "@angular/forms";
 import { ListsComponent } from "./../lists/lists.component";
 import { ListRow, ListComponent } from "./../lists/list.component";
 import { LiteralStatus, LiteralComponent } from "./../literals/literal.component";
-import { PointerRow, PointerComponent } from "./../pointers/pointer.component";
+import { PointerStatus, PointerComponent } from "./../pointers/pointer.component";
 import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
 import { BlankNodeRow } from "app/workbench/explorer/document-explorer/blank-nodes/blank-node.component";
 import { NamedFragmentRow } from "app/workbench/explorer/document-explorer/named-fragments/named-fragment.component";

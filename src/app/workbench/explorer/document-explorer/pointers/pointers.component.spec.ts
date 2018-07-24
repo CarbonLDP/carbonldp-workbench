@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 
 import { FormsModule } from "@angular/forms";
 
-import { PointerComponent, PointerRow } from "./../pointers/pointer.component";
+import { PointerComponent, PointerStatus } from "./../pointers/pointer.component";
 import { PointersComponent } from "./../pointers/pointers.component";
 import { PointerValidator } from "../document-explorer-validators";
 
@@ -21,7 +21,7 @@ export function pointersSpecs() {
 		class TestComponent {
 			canEdit:boolean = true;
 			addEmiter:EventEmitter<boolean> = new EventEmitter();
-			pointers:PointerRow[] = [];
+			pointers:PointerStatus[] = [];
 			@ViewChild( PointersComponent ) pointersCmp:PointersComponent;
 		}
 
@@ -40,7 +40,7 @@ export function pointersSpecs() {
 		} );
 
 		beforeEach( () => {
-			let pointers:PointerRow[] = [
+			let pointers:PointerStatus[] = [
 				{
 					copy: { "@id": "http://pointer-1.com" }
 				},
@@ -83,10 +83,10 @@ export function pointersSpecs() {
 			expect( pointers.length ).toEqual( 3 );
 
 			let toModifyPointerIdx:number = 0;
-			let toModifyPointer:PointerRow = comp.pointersCmp.pointers[ toModifyPointerIdx ];
+			let toModifyPointer:PointerStatus = comp.pointersCmp.pointers[ toModifyPointerIdx ];
 			toModifyPointer.modified = { "@id": "http://modified-pointer-1" };
 
-			comp.pointersCmp.onPointersChanges.subscribe( ( pointers:PointerRow[] ) => {
+			comp.pointersCmp.onPointersChanges.subscribe( ( pointers:PointerStatus[] ) => {
 				expect( pointers ).not.toBeNull();
 				expect( pointers.length ).toEqual( 3 );
 				expect( pointers[ toModifyPointerIdx ].modified ).toBeDefined();
@@ -104,10 +104,10 @@ export function pointersSpecs() {
 			expect( pointers.length ).toEqual( 3 );
 
 			let toDeletePointerIdx:number = 0;
-			let toDeletePointer:PointerRow = comp.pointersCmp.pointers[ toDeletePointerIdx ];
+			let toDeletePointer:PointerStatus = comp.pointersCmp.pointers[ toDeletePointerIdx ];
 			toDeletePointer.deleted = toDeletePointer.copy;
 
-			comp.pointersCmp.onPointersChanges.subscribe( ( pointers:PointerRow[] ) => {
+			comp.pointersCmp.onPointersChanges.subscribe( ( pointers:PointerStatus[] ) => {
 				expect( pointers ).not.toBeNull();
 				expect( pointers.length ).toEqual( 3 );
 				expect( pointers[ toDeletePointerIdx ].deleted ).toBeDefined();
@@ -131,10 +131,10 @@ export function pointersSpecs() {
 			expect( pointers.length ).toEqual( 4 );
 
 			let toDeletePointerIdx:number = 0;
-			let toDeletePointer:PointerRow = comp.pointersCmp.pointers[ toDeletePointerIdx ];
+			let toDeletePointer:PointerStatus = comp.pointersCmp.pointers[ toDeletePointerIdx ];
 			toDeletePointer.deleted = toDeletePointer.copy;
 
-			comp.pointersCmp.onPointersChanges.subscribe( ( pointers:PointerRow[] ) => {
+			comp.pointersCmp.onPointersChanges.subscribe( ( pointers:PointerStatus[] ) => {
 				expect( pointers ).not.toBeNull();
 				expect( pointers.length ).toEqual( 3 );
 				done();
@@ -150,7 +150,7 @@ export function pointersSpecs() {
 			expect( pointers.length ).toEqual( 3 );
 
 			let toDeletePointerIdx:number = 0;
-			let toDeletePointer:PointerRow = comp.pointersCmp.pointers[ toDeletePointerIdx ];
+			let toDeletePointer:PointerStatus = comp.pointersCmp.pointers[ toDeletePointerIdx ];
 			toDeletePointer.deleted = toDeletePointer.copy;
 			comp.pointersCmp.deletePointer( toDeletePointer, 0 );
 			fixture.detectChanges();
@@ -166,7 +166,7 @@ export function pointersSpecs() {
 			comp.pointersCmp.addNewPointer();
 			fixture.detectChanges();
 
-			let addedPointers:PointerRow[] = comp.pointersCmp.getAddedPointers();
+			let addedPointers:PointerStatus[] = comp.pointersCmp.getAddedPointers();
 			expect( addedPointers.length ).toEqual( 3 );
 		} );
 
@@ -180,7 +180,7 @@ export function pointersSpecs() {
 			comp.pointersCmp.deletePointer( comp.pointersCmp.pointers[ 2 ], 2 );
 			fixture.detectChanges();
 
-			let deletedPointers:PointerRow[] = comp.pointersCmp.getDeletedPointers();
+			let deletedPointers:PointerStatus[] = comp.pointersCmp.getDeletedPointers();
 			expect( deletedPointers.length ).toEqual( 2 );
 		} );
 
@@ -196,13 +196,13 @@ export function pointersSpecs() {
 			};
 			fixture.detectChanges();
 
-			let modifiedPointers:PointerRow[] = comp.pointersCmp.getModifiedPointers();
+			let modifiedPointers:PointerStatus[] = comp.pointersCmp.getModifiedPointers();
 			expect( modifiedPointers.length ).toEqual( 2 );
 		} );
 
 		it( "Should return all untouched pointers when calling `getUntouchedPointers`", () => {
 
-			let untouchedPointers:PointerRow[] = comp.pointersCmp.getUntouchedPointers();
+			let untouchedPointers:PointerStatus[] = comp.pointersCmp.getUntouchedPointers();
 			expect( untouchedPointers.length ).toEqual( 3 );
 		} );
 

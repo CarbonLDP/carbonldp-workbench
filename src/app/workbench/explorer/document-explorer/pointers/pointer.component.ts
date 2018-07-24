@@ -43,10 +43,10 @@ export class PointerComponent implements OnChanges {
 
 
 	// Inputs and Outputs
-	private _pointer = <PointerRow>{};
+	private _pointer = <PointerStatus>{};
 	get pointer() { return this._pointer; }
 
-	@Input() set pointer( value:PointerRow ) {
+	@Input() set pointer( value:PointerStatus ) {
 		this._pointer = value;
 		if( this.pointer.added ) { this.mode = Modes.EDIT; }
 
@@ -74,11 +74,11 @@ export class PointerComponent implements OnChanges {
 
 	@Output() onEditMode:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSave:EventEmitter<any> = new EventEmitter<any>();
-	@Output() onDeletePointer:EventEmitter<PointerRow> = new EventEmitter<PointerRow>();
+	@Output() onDeletePointer:EventEmitter<PointerStatus> = new EventEmitter<PointerStatus>();
 	@Output() onGoToBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onMoveUp:EventEmitter<PointerRow> = new EventEmitter<PointerRow>();
-	@Output() onMoveDown:EventEmitter<PointerRow> = new EventEmitter<PointerRow>();
+	@Output() onMoveUp:EventEmitter<PointerStatus> = new EventEmitter<PointerStatus>();
+	@Output() onMoveDown:EventEmitter<PointerStatus> = new EventEmitter<PointerStatus>();
 
 	// Pointer Value;
 	private _id:string = "";
@@ -210,7 +210,7 @@ export enum PointerToken {
 	ID = "@id"
 }
 
-export interface PointerRow {
+export interface PointerStatus {
 	copy:Pointer;
 	modified?:Pointer;
 	added?:Pointer;

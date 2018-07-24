@@ -6,7 +6,7 @@ import { URI } from "carbonldp/RDF/URI";
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { LiteralStatus } from "./../../literals/literal.component";
-import { PointerRow } from "./../../pointers/pointer.component";
+import { PointerStatus } from "./../../pointers/pointer.component";
 import { ListRow } from "./../../lists/list.component";
 import { NamedFragmentRow } from "./../../named-fragments/named-fragment.component";
 import { Property, PropertyStatus, PropertyToken, Modes } from "./../property.component";
@@ -22,7 +22,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	element:ElementRef;
 	$element:JQuery;
 	literals:LiteralStatus[] = [];
-	pointers:PointerRow[] = [];
+	pointers:PointerStatus[] = [];
 	lists:ListRow[] = [];
 
 	// Variable that will have the JSON object of the property
@@ -156,7 +156,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 			if( RDFLiteral.is( literalOrRDFNodeOrList ) ) {
 				this.literals.push( { copy: literalOrRDFNodeOrList } );
 			} else if( RDFNode.is( literalOrRDFNodeOrList ) ) {
-				this.pointers.push( <PointerRow>{ copy: literalOrRDFNodeOrList } );
+				this.pointers.push( <PointerStatus>{ copy: literalOrRDFNodeOrList } );
 			} else if( RDFList.is( literalOrRDFNodeOrList ) ) {
 				this.lists.push( <ListRow>{ copy: literalOrRDFNodeOrList[ "@list" ].map( ( item ) => { return { copy: item } } ) } );
 			}
@@ -201,7 +201,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 		this.changePropertyContent();
 	}
 
-	checkForChangesOnPointers( pointers:PointerRow[] ):void {
+	checkForChangesOnPointers( pointers:PointerStatus[] ):void {
 		this.pointers = pointers;
 		this.changePropertyContent();
 	}
@@ -267,14 +267,14 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	*   Creates a new array with the new value created by concatenating
 	*   the original/modified/added literals, pointers and lists
 	* */
-	private getValueWithChanges():Array<LiteralStatus | PointerRow | ListRow> {
-		let tempValue:Array<LiteralStatus | PointerRow | ListRow> = [];
+	private getValueWithChanges():Array<LiteralStatus | PointerStatus | ListRow> {
+		let tempValue:Array<LiteralStatus | PointerStatus | ListRow> = [];
 		let tempLists:ListRow[] = this.convertToListWithStates( this.lists );
 
 		// Concat the literals with the pointers and the lists
 		// and add them to the returning value
 		[ ...this.literals, ...this.pointers, ...tempLists ]
-			.forEach( ( literalOrPointerOrList:LiteralStatus | PointerRow | ListRow ) => {
+			.forEach( ( literalOrPointerOrList:LiteralStatus | PointerStatus | ListRow ) => {
 				if( literalOrPointerOrList.deleted ) return;
 
 				let state:string = (! ! literalOrPointerOrList.modified) ? "modified" : (! ! literalOrPointerOrList.added) ? "added" : "copy";

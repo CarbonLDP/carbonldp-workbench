@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 
 import { Modes } from "../property/property.component"
-import { Pointer, PointerComponent, PointerRow } from "./../pointers/pointer.component";
+import { Pointer, PointerComponent, PointerStatus } from "./../pointers/pointer.component";
 import { PointerValidator } from "../document-explorer-validators";
 import { BlankNodeRow } from "./../blank-nodes/blank-node.component";
 import { NamedFragmentRow } from "./../named-fragments/named-fragment.component";
@@ -28,7 +28,7 @@ export function pointerSpecs() {
 		class TestComponent {
 
 			pointer:Pointer;
-			pointerRow:PointerRow;
+			pointerRow:PointerStatus;
 
 			blankNodes:BlankNodeRow[] = [];
 			namedFragments:NamedFragmentRow[] = [];
@@ -57,7 +57,7 @@ export function pointerSpecs() {
 		describe( "On READ mode", () => {
 
 			let pointer:Pointer;
-			let pointerRow:PointerRow;
+			let pointerRow:PointerStatus;
 
 			beforeEach( () => {
 				pointer = { "@id": "http://www.example.com" };
@@ -227,7 +227,7 @@ export function pointerSpecs() {
 				it( "Should emit pointer when pointer already exists", ( done ) => {
 
 					let pointer:Pointer = { "@id": "http://www.example.com" };
-					let pointerRow:PointerRow = { copy: pointer };
+					let pointerRow:PointerStatus = { copy: pointer };
 					comp.pointerRow = pointerRow;
 					fixture.detectChanges();
 
@@ -243,11 +243,11 @@ export function pointerSpecs() {
 				it( "Should emit pointer with property added when pointer is being added", ( done ) => {
 
 					let pointer:Pointer = { "@id": "http://www.example.com" };
-					let pointerRow:PointerRow = { copy: undefined, added: pointer };
+					let pointerRow:PointerStatus = { copy: undefined, added: pointer };
 					comp.pointerRow = pointerRow;
 					fixture.detectChanges();
 
-					comp.pointerCmp.onDeletePointer.subscribe( ( value:PointerRow ) => {
+					comp.pointerCmp.onDeletePointer.subscribe( ( value:PointerStatus ) => {
 						expect( value ).toBeDefined();
 						expect( value ).toEqual( pointerRow );
 						expect( value.added ).toBeDefined();
@@ -264,7 +264,7 @@ export function pointerSpecs() {
 		describe( "On EDIT mode", () => {
 
 			let pointer:Pointer;
-			let pointerRow:PointerRow;
+			let pointerRow:PointerStatus;
 
 			beforeEach( () => {
 				pointer = { "@id": "http://www.example.com" };
@@ -440,7 +440,7 @@ export function pointerSpecs() {
 						}
 					];
 					let pointer:Pointer = blankNodes[ 0 ].copy; // Here we set the original value
-					let pointerRow:PointerRow = { copy: pointer };
+					let pointerRow:PointerStatus = { copy: pointer };
 					comp.pointerRow = pointerRow;
 					comp.blankNodes = blankNodes;
 					fixture.detectChanges();
@@ -488,7 +488,7 @@ export function pointerSpecs() {
 						}
 					];
 					let pointer:Pointer = { "@id": "" };
-					let pointerRow:PointerRow = { copy: undefined, added: pointer };
+					let pointerRow:PointerStatus = { copy: undefined, added: pointer };
 					comp.pointerRow = pointerRow;
 					comp.blankNodes = blankNodes;
 					fixture.detectChanges();
@@ -514,7 +514,7 @@ export function pointerSpecs() {
 
 				let blankNodes:BlankNodeRow[];
 				let pointer:Pointer;
-				let pointerRow:PointerRow;
+				let pointerRow:PointerStatus;
 
 				beforeEach( () => {
 					blankNodes = [
@@ -561,7 +561,7 @@ export function pointerSpecs() {
 				it( "Should emit pointer with property added if it's a new pointer", ( done ) => {
 
 					let pointer:Pointer = { "@id": "http://example.com" };
-					let pointerRow:PointerRow = { copy: undefined, added: pointer };
+					let pointerRow:PointerStatus = { copy: undefined, added: pointer };
 					comp.pointerRow = pointerRow;
 					fixture.detectChanges();
 
@@ -597,7 +597,7 @@ export function pointerSpecs() {
 					idInput.dispatchEvent( new Event( "input" ) );
 					fixture.detectChanges();
 
-					comp.pointerCmp.onSave.subscribe( ( value:PointerRow ) => {
+					comp.pointerCmp.onSave.subscribe( ( value:PointerStatus ) => {
 						expect( value ).toBeDefined();
 						expect( value.copy ).toEqual( pointerRow.copy );
 						expect( value.modified ).toBeDefined();

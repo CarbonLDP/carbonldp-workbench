@@ -5,7 +5,7 @@ import { FormsModule } from "@angular/forms";
 
 import { ListRow, ListComponent } from "./../lists/list.component";
 import { LiteralStatus, LiteralComponent } from "./../literals/literal.component";
-import { PointerRow, PointerComponent } from "./../pointers/pointer.component";
+import { PointerStatus, PointerComponent } from "./../pointers/pointer.component";
 import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
 import { BlankNodeRow } from "app/workbench/explorer/document-explorer/blank-nodes/blank-node.component";
 import { NamedFragmentRow } from "app/workbench/explorer/document-explorer/named-fragments/named-fragment.component";
@@ -29,7 +29,7 @@ export function listSpecs() {
 
 			documentURI:string = "";
 			list:ListRow = <ListRow>{};
-			pointers:PointerRow[] = [];
+			pointers:PointerStatus[] = [];
 			blankNodes:BlankNodeRow[] = [];
 			namedFragments:NamedFragmentRow[] = [];
 
@@ -173,7 +173,7 @@ export function listSpecs() {
 
 		it( "Should display Modified! on top right when list is modified", () => {
 
-			let modifiedItem:PointerRow = {
+			let modifiedItem:PointerStatus = {
 				copy: { "@id": "http://example.com" },
 				modified: { "@id": "http://example-modified.com" },
 			};
@@ -358,7 +358,7 @@ export function listSpecs() {
 			addPointerButton.click();
 			fixture.detectChanges();
 
-			let addedItems:Array<PointerRow | LiteralStatus> = comp.listCmp.getAddedItems();
+			let addedItems:Array<PointerStatus | LiteralStatus> = comp.listCmp.getAddedItems();
 			expect( addedItems.length ).toEqual( 6 );
 			expect( addedItems.filter( item => typeof item.added[ "@id" ] !== "undefined" ).length ).toEqual( 3 );
 			expect( addedItems.filter( item => typeof item.added[ "@value" ] !== "undefined" ).length ).toEqual( 3 );
@@ -376,7 +376,7 @@ export function listSpecs() {
 			};
 			fixture.detectChanges();
 
-			let deletedItems:Array<PointerRow | LiteralStatus> = comp.listCmp.getDeletedItems();
+			let deletedItems:Array<PointerStatus | LiteralStatus> = comp.listCmp.getDeletedItems();
 			expect( deletedItems.length ).toEqual( 3 );
 		} );
 
@@ -392,7 +392,7 @@ export function listSpecs() {
 			};
 			fixture.detectChanges();
 
-			let modifiedItems:Array<PointerRow | LiteralStatus> = comp.listCmp.getModifiedItems();
+			let modifiedItems:Array<PointerStatus | LiteralStatus> = comp.listCmp.getModifiedItems();
 			expect( modifiedItems.length ).toEqual( 3 );
 		} );
 
@@ -408,7 +408,7 @@ export function listSpecs() {
 			};
 			fixture.detectChanges();
 
-			let untouchedItems:Array<PointerRow | LiteralStatus> = comp.listCmp.getUntouchedItems();
+			let untouchedItems:Array<PointerStatus | LiteralStatus> = comp.listCmp.getUntouchedItems();
 			expect( untouchedItems.length ).toEqual( 1 );
 		} );
 
