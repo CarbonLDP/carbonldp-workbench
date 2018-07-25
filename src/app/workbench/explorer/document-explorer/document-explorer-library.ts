@@ -200,3 +200,13 @@ export class ResourceRecords {
 		this.additions.clear();
 	}
 }
+
+export enum JsonLDKeyword {
+	GRAPH = "@graph",
+	ID = "@id",
+	VALUE = "@value",
+	TYPE = "@type",
+	LANGUAGE = "@language",
+	LIST = "@list",
+	SET = "@set",
+}
