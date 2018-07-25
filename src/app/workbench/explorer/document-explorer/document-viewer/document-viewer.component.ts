@@ -3,19 +3,19 @@ import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, ViewC
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node"
 import { RDFDocument } from "carbonldp/RDF/Document";
-import { JSONLDParser } from "carbonldp/JSONLD";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "../documents-resolver.service";
-import { RootRecords } from "../document-resource/document-resource.component";
+import { JsonLDKeyword, ResourceRecords } from "../document-explorer-library";
 import { BlankNodesComponent, BlankNodesRecords } from "../blank-nodes/blank-nodes.component";
 import { NamedFragmentsComponent, NamedFragmentsRecords } from "../named-fragments/named-fragments.component";
-import { BlankNodeRow } from "../blank-nodes/blank-node.component";
+import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
 
-import * as $ from "jquery";
-import "semantic-ui/semantic";
 
+/*
+*   Contains and displays the contents of a @graph (Document, Blank Nodes and Fragments)
+* */
 @Component( {
 	selector: "cw-document-viewer",
 	host: { "[class.ui]": "true", "[class.basic]": "true", "[class.segment]": "true", },
@@ -32,28 +32,29 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 
 	sections:string[] = [ "blankNodes", "namedFragments", "documentResource" ];
 	rootNode:RDFNode;
-	blankNodes:BlankNodeRow[] = [];
+	blankNodes:BlankNodeStatus[] = [];
 	namedFragments:NamedFragmentStatus[] = [];
 	documentURI:string = "";
 
-	rootNodeHasChanged:boolean = false;
-	rootNodeRecords:RootRecords;
-	blankNodesHaveChanged:boolean = false;
-	blankNodesChanges:BlankNodesRecords;
-	namedFragmentsHaveChanged:boolean = false;
-	namedFragmentsChanges:NamedFragmentsRecords;
 
-	get documentContentHasChanged() {
-		return this.rootNodeHasChanged || this.blankNodesHaveChanged || this.namedFragmentsHaveChanged;
-	}
+	rootNodeRecords:ResourceRecords = new ResourceRecords();
+	blankNodesChanges:BlankNodesRecords = new BlankNodesRecords();
+	namedFragmentsChanges:NamedFragmentsRecords = new NamedFragmentsRecords();
+
+	get rootNodeHasChanged():boolean { return this.rootNodeRecords.changes.size > 0 || this.rootNodeRecords.additions.size > 0 || this.rootNodeRecords.deletions.size > 0; }
+
+	get blankNodesHaveChanged():boolean { return this.blankNodesChanges.changes.size > 0 || this.blankNodesChanges.additions.size > 0 || this.blankNodesChanges.deletions.size > 0; }
+
+	get namedFragmentsHaveChanged():boolean { return this.namedFragmentsChanges.changes.size > 0 || this.namedFragmentsChanges.additions.size > 0 || this.namedFragmentsChanges.deletions.size > 0; }
+
+	get documentContentHasChanged() { return this.rootNodeHasChanged || this.blankNodesHaveChanged || this.namedFragmentsHaveChanged; }
 
 
 	documentsResolverService:DocumentsResolverService;
 	@Input() uri:string;
 	@Input() displaySuccessMessage:EventEmitter<string> = new EventEmitter<string>();
 	private _document:RDFDocument;
-	@Input()
-	set document( value:RDFDocument ) {
+	@Input() set document( value:RDFDocument ) {
 		this._document = value;
 		this.receiveDocument( value );
 	}
@@ -114,13 +115,20 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		}
 	}
 
+	/*
+	*   Prepares the changes to properly display the new
+	*   document contents by:
+    *   1) setting a new root
+    *   2) obtaining the fragments of the document
+    *   3) clearing the old changes
+	* */
 	receiveDocument( document:RDFDocument ):void {
 		if( ! document ) return;
 		this.loadingDocument = true;
 		this.setRoot();
 		this.generateFragments();
 		this.clearDocumentChanges();
-		this.documentURI = this.document[ "@id" ];
+		this.documentURI = this.document[ JsonLDKeyword.ID ];
 
 		setTimeout( () => {
 			this.loadingDocument = false;
@@ -143,14 +151,14 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		this.blankNodes = RDFDocument.getBNodeResources( this.document ).map(
 			( blankNode:RDFNode ) => {
 				return {
-					id: blankNode[ "@id" ],
+					id: blankNode[ JsonLDKeyword.ID ],
 					copy: blankNode
 				}
 			} );
 		this.namedFragments = RDFDocument.getNamedFragmentResources( this.document ).map( ( namedFragment:RDFNode ) => {
 			return {
-				id: namedFragment[ "@id" ],
-				name: namedFragment[ "@id" ],
+				id: namedFragment[ JsonLDKeyword.ID ],
+				name: namedFragment[ JsonLDKeyword.ID ],
 				copy: namedFragment
 			}
 		} );
@@ -176,93 +184,97 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		this.$element.find( ".secondary.menu.document.tabs .item" ).tab( "changeTab", section );
 	}
 
-	registerRootNodeChanges( records:RootRecords ):void {
+	registerRootNodeChanges( records:ResourceRecords ):void {
 		this.rootNodeRecords = records;
-		this.rootNodeHasChanged = records.changes.size > 0 || records.additions.size > 0 || records.deletions.size > 0;
 	}
 
 	registerBlankNodesChanges( blankNodeChanges:BlankNodesRecords ):void {
 		this.blankNodesChanges = blankNodeChanges;
-		this.blankNodesHaveChanged = blankNodeChanges.changes.size > 0 || blankNodeChanges.additions.size > 0 || blankNodeChanges.deletions.size > 0;
 	}
 
 	registerNamedFragmentsChanges( namedFragmentsChanges:NamedFragmentsRecords ):void {
 		this.namedFragmentsChanges = namedFragmentsChanges;
-		this.namedFragmentsHaveChanged = namedFragmentsChanges.changes.size > 0 || namedFragmentsChanges.additions.size > 0 || namedFragmentsChanges.deletions.size > 0;
 	}
 
-	modifyRootNodeWithChanges( rootNode:RDFNode ):void {
-		if( ! ! this.rootNodeRecords ) {
-			this.rootNodeRecords.deletions.forEach( ( property, key ) => {
+	applyRootNodeChanges( rootNode:RDFNode ):void {
+		if( ! this.rootNodeRecords ) return;
+		this.rootNodeRecords.deletions.forEach( ( property, key ) => {
+			delete rootNode[ key ];
+		} );
+		this.rootNodeRecords.changes.forEach( ( property, key ) => {
+			if( property.modified.id !== property.modified.name ) {
 				delete rootNode[ key ];
-			} );
-			this.rootNodeRecords.changes.forEach( ( property, key ) => {
-				if( property.modified.id !== property.modified.name ) {
-					delete rootNode[ key ];
-					rootNode[ property.modified.name ] = property.modified.value;
-				} else {
-					rootNode[ key ] = property.modified.value;
-				}
-			} );
-			this.rootNodeRecords.additions.forEach( ( property, key ) => {
-				rootNode[ key ] = property.added.value;
-			} );
-
-		}
+				rootNode[ property.modified.name ] = property.modified.value;
+			} else {
+				rootNode[ key ] = property.modified.value;
+			}
+		} );
+		this.rootNodeRecords.additions.forEach( ( property, key ) => {
+			rootNode[ key ] = property.added.value;
+		} );
 	}
 
-	modifyBlankNodesWithChanges( document:RDFDocument ):void {
+	applyBlankNodesChanges( document:RDFDocument ):void {
 		let tempIdx:number;
 		if( ! this.blankNodesChanges ) return;
-		this.blankNodesChanges.deletions.forEach( ( blankNodeRow:BlankNodeRow, blankNodeId ) => {
-			tempIdx = document[ "@graph" ].findIndex( (blankNode => { return blankNode[ "@id" ] === blankNodeId }) );
-			document[ "@graph" ].splice( tempIdx, 1 );
+		this.blankNodesChanges.deletions.forEach( ( blankNodeRow:BlankNodeStatus, blankNodeId ) => {
+			tempIdx = document[ JsonLDKeyword.GRAPH ].findIndex( (blankNode => { return blankNode[ JsonLDKeyword.ID ] === blankNodeId }) );
+			document[ JsonLDKeyword.GRAPH ].splice( tempIdx, 1 );
 		} );
 		tempIdx = - 1;
-		this.blankNodesChanges.changes.forEach( ( blankNodeRow:BlankNodeRow, blankNodeId ) => {
-			tempIdx = document[ "@graph" ].findIndex( (blankNode => { return blankNode[ "@id" ] === blankNodeId }) );
-			document[ "@graph" ][ tempIdx ] = blankNodeRow.modified;
+		this.blankNodesChanges.changes.forEach( ( blankNodeRow:BlankNodeStatus, blankNodeId ) => {
+			tempIdx = document[ JsonLDKeyword.GRAPH ].findIndex( (blankNode => { return blankNode[ JsonLDKeyword.ID ] === blankNodeId }) );
+			document[ JsonLDKeyword.GRAPH ][ tempIdx ] = blankNodeRow.modified;
 		} );
-		this.blankNodesChanges.additions.forEach( ( blankNodeRow:BlankNodeRow, blankNodeId ) => {
-			document[ "@graph" ].push( blankNodeRow.added );
+		this.blankNodesChanges.additions.forEach( ( blankNodeRow:BlankNodeStatus, blankNodeId ) => {
+			document[ JsonLDKeyword.GRAPH ].push( blankNodeRow.added );
 		} );
 	}
 
-	modifyNamedFragmentsWithChanges( document:RDFDocument ):void {
+	applyNamedFragmentsChanges( document:RDFDocument ):void {
 		let tempIdx:number;
 		if( ! this.namedFragmentsChanges ) return;
 		this.namedFragmentsChanges.deletions.forEach( ( namedFragmentRow:NamedFragmentStatus, namedFragmentId ) => {
-			tempIdx = document[ "@graph" ].findIndex( (namedFragment => { return namedFragment[ "@id" ] === namedFragmentId }) );
-			document[ "@graph" ].splice( tempIdx, 1 );
+			tempIdx = document[ JsonLDKeyword.GRAPH ].findIndex( (namedFragment => { return namedFragment[ JsonLDKeyword.ID ] === namedFragmentId }) );
+			document[ JsonLDKeyword.GRAPH ].splice( tempIdx, 1 );
 		} );
 		tempIdx = - 1;
 		this.namedFragmentsChanges.changes.forEach( ( namedFragmentRow:NamedFragmentStatus, namedFragmentId ) => {
-			tempIdx = document[ "@graph" ].findIndex( (namedFragment => { return namedFragment[ "@id" ] === namedFragmentId }) );
-			document[ "@graph" ][ tempIdx ] = namedFragmentRow.modified;
+			tempIdx = document[ JsonLDKeyword.GRAPH ].findIndex( (namedFragment => { return namedFragment[ JsonLDKeyword.ID ] === namedFragmentId }) );
+			document[ JsonLDKeyword.GRAPH ][ tempIdx ] = namedFragmentRow.modified;
 		} );
 		this.namedFragmentsChanges.additions.forEach( ( namedFragmentRow:NamedFragmentStatus, namedFragmentId ) => {
-			document[ "@graph" ].push( namedFragmentRow.added );
+			document[ JsonLDKeyword.GRAPH ].push( namedFragmentRow.added );
 		} );
 	}
 
 	clearDocumentChanges():void {
-		this.rootNodeRecords = new RootRecords();
+		this.rootNodeRecords = new ResourceRecords();
 		this.blankNodesChanges = new BlankNodesRecords();
-		this.namedFragmentsChanges = new BlankNodesRecords();
-		this.rootNodeHasChanged = false;
-		this.blankNodesHaveChanged = false;
-		this.namedFragmentsHaveChanged = false;
+		this.namedFragmentsChanges = new NamedFragmentsRecords();
 	}
 
 	saveDocument():void {
 		this.savingDocument = true;
+
+		// Creates a copy of the document so we could modify that copy instead of
+		// the original document.
 		let backupDocument:RDFDocument = JSON.parse( JSON.stringify( this.document ) );
 		let backupRootNode:RDFNode = RDFDocument.getDocumentResources( backupDocument )[ 0 ];
-		this.modifyRootNodeWithChanges( backupRootNode );
-		this.modifyBlankNodesWithChanges( backupDocument );
-		this.modifyNamedFragmentsWithChanges( backupDocument );
+
+
+		// Apply the changes to the backup document
+		this.applyRootNodeChanges( backupRootNode );
+		this.applyBlankNodesChanges( backupDocument );
+		this.applyNamedFragmentsChanges( backupDocument );
+
+
+		// Get the JSON string of the updated object
 		let body:string = JSON.stringify( backupDocument, null, "\t" );
-		this.documentsResolverService.update( backupDocument[ "@id" ], body ).then(
+
+
+		// Update the document
+		this.documentsResolverService.update( backupDocument[ JsonLDKeyword.ID ], body ).then(
 			( updatedDocument:RDFDocument ) => {
 				this.document = updatedDocument;
 				this.showSuccessMessage( "<p>Changes saved successfully</p>", 4500 );
@@ -271,20 +283,6 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 			this.onError.emit( error );
 		} ).then( () => {
 			this.savingDocument = false;
-			this.rootNodeHasChanged = this.rootNodeRecords.changes.size > 0 || this.rootNodeRecords.additions.size > 0 || this.rootNodeRecords.deletions.size > 0;
-			this.blankNodesHaveChanged = this.blankNodesChanges.changes.size > 0 || this.blankNodesChanges.additions.size > 0 || this.blankNodesChanges.deletions.size > 0;
-			this.namedFragmentsHaveChanged = this.namedFragmentsChanges.changes.size > 0 || this.namedFragmentsChanges.additions.size > 0 || this.namedFragmentsChanges.deletions.size > 0;
-		} );
-	}
-
-	getErrors( error:HTTPError ):Promise<any[]> {
-		let parser:JSONLDParser = new JSONLDParser();
-		let mainError = {};
-		let errors:any[] = [];
-		return parser.parse( error.response.data ).then( ( mainErrors ) => {
-			mainError = mainErrors.find( ( error ) => { return error[ "@type" ].indexOf( "https://carbonldp.com/ns/v1/platform#ErrorResponse" ) !== - 1} );
-			errors = mainErrors.filter( ( error ) => { return error[ "@type" ].indexOf( "https://carbonldp.com/ns/v1/platform#Error" ) !== - 1} );
-			return errors;
 		} );
 	}
 
@@ -304,9 +302,15 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		} );
 	}
 
+	/*
+	*   Checks if the document has changed before refreshing it
+	* */
 	private beforeRefreshDocument( documentURI:string ):void {
-		if( this.documentContentHasChanged ) this.toggleConfirmRefresh();
-		else this.refreshDocument( documentURI );
+		if( this.documentContentHasChanged ) {
+			this.toggleConfirmRefresh();
+			return;
+		}
+		this.refreshDocument( documentURI );
 	}
 
 	public refreshDocument( documentURI:string ):void {
