@@ -4,31 +4,25 @@ import { CarbonLDP } from "carbonldp/CarbonLDP";
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { BlankNodeRow } from "../blank-nodes/blank-node.component";
-import { Property, PropertyStatus, Modes } from "../property/property.component";
+import { Property, PropertyStatus, Modes, PropertyToken } from "../property/property.component";
+import { ResourceFeatures, ResourceRecords } from "../document-explorer-library";
 
-import * as $ from "jquery";
-import "semantic-ui/semantic";
-
+/*
+*  Displays the contents of a Named Fragment with all its properties
+* */
 @Component( {
 	selector: "cw-named-fragment",
 	templateUrl: "./named-fragment.component.html",
 	styles: [ ":host { display:block; }" ],
 } )
 
-export class NamedFragmentComponent implements AfterViewInit {
+export class NamedFragmentComponent extends ResourceFeatures implements AfterViewInit {
 
 	element:ElementRef;
 	$element:JQuery;
 	carbonldp:CarbonLDP;
 
 	modes:Modes = Modes;
-	records:NamedFragmentRecords;
-	copyOrAdded:string = "";
-	tempPropertiesNames:string[] = [];
-
-	rootNode:RDFNode;
-	properties:PropertyStatus[];
-	existingPropertiesNames:string[] = [];
 
 	private _namedFragmentHasChanged:boolean;
 	set namedFragmentHasChanged( hasChanged:boolean ) {
@@ -44,9 +38,7 @@ export class NamedFragmentComponent implements AfterViewInit {
 		this.onChanges.emit( this.records );
 	}
 
-	get namedFragmentHasChanged() {
-		return this.namedFragmentHasChanged;
-	}
+	get namedFragmentHasChanged() { return this._namedFragmentHasChanged; }
 
 	@Input() blankNodes:BlankNodeRow[] = [];
 	@Input() namedFragments:NamedFragmentStatus[] = [];
@@ -54,22 +46,22 @@ export class NamedFragmentComponent implements AfterViewInit {
 	@Input() documentURI:string = "";
 
 	private _namedFragment:NamedFragmentStatus;
-	@Input()
-	set namedFragment( namedFragment:NamedFragmentStatus ) {
+	@Input() set namedFragment( namedFragment:NamedFragmentStatus ) {
 		this._namedFragment = namedFragment;
 		this.rootNode = namedFragment.copy;
 		if( ! ! namedFragment.records ) this.records = namedFragment.records;
-		this.getProperties();
+		this.updateExistingProperties();
 	}
 
 	get namedFragment():NamedFragmentStatus { return this._namedFragment; }
 
 	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onChanges:EventEmitter<NamedFragmentRecords> = new EventEmitter<NamedFragmentRecords>();
+	@Output() onChanges:EventEmitter<ResourceRecords> = new EventEmitter<ResourceRecords>();
 
 
 	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
+		super( carbonldp );
 		this.element = element;
 		this.carbonldp = carbonldp;
 	}
@@ -87,56 +79,20 @@ export class NamedFragmentComponent implements AfterViewInit {
 	}
 
 	changeProperty( property:PropertyStatus, index:number ):void {
-		if( typeof this.records === "undefined" ) this.records = new NamedFragmentRecords();
-		if( typeof property.modified !== "undefined" ) {
-			this.records.changes.set( property.modified.id, property );
-		} else if( typeof property.added === "undefined" ) {
-			this.records.changes.delete( property.copy.id );
-		}
-		if( typeof property.added !== "undefined" ) {
-			this.records.additions.delete( property.added.id );
-			property.added.id = property.added.name;
-			this.records.additions.set( property.added.id, property );
-		}
-		this.updateExistingProperties();
+		super.changeProperty( property, index );
 	}
 
 	deleteProperty( property:PropertyStatus, index:number ):void {
-		if( typeof this.records === "undefined" ) this.records = new NamedFragmentRecords();
-		if( typeof property.added !== "undefined" ) {
-			this.records.additions.delete( property.added.id );
-			this.properties.splice( index, 1 );
-		} else if( typeof property.deleted !== "undefined" ) {
-			this.records.deletions.set( property.deleted.id, property );
-		}
-		this.updateExistingProperties();
+		super.deleteProperty( property, index );
 	}
 
 	addProperty( property:PropertyStatus, index:number ):void {
-		if( typeof this.records === "undefined" ) this.records = new NamedFragmentRecords();
-		if( typeof property.added !== "undefined" ) {
-			if( property.added.id === property.added.name ) {
-				this.records.additions.set( property.added.id, property );
-			} else {
-				this.records.additions.delete( property.added.id );
-				property.added.id = property.added.name;
-				this.records.additions.set( property.added.name, property );
-			}
-		}
-		this.updateExistingProperties();
+		super.addProperty( property, index );
 	}
 
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
-		let numberOfProperty:number = ! ! this.records ? (this.records.additions.size + 1) : 1;
-		let newProperty:PropertyStatus = {
-			added: <Property>{
-				id: "",
-				name: `${this.carbonldp.baseURI}vocabularies/main/#New_Property_${numberOfProperty}`,
-				value: []
-			},
-			isBeingCreated: true
-		};
-		this.properties.splice( 1, 0, newProperty );
+		super.createProperty( property, propertyStatus );
+
 		// Animates created property
 		setTimeout( () => {
 			let createdPropertyComponent:JQuery = this.$element.find( "cw-property.added-property" ).first();
@@ -145,53 +101,21 @@ export class NamedFragmentComponent implements AfterViewInit {
 		} );
 	}
 
-	getProperties():void {
-		this.updateExistingProperties();
-	}
-
 	updateExistingProperties():void {
-		this.properties = [];
-		this.existingPropertiesNames = Object.keys( this.rootNode );
-		this.existingPropertiesNames.forEach( ( propName:string ) => {
-			this.properties.push( {
-				copy: {
-					id: propName,
-					name: propName,
-					value: this.rootNode[ propName ]
-				}
-			} );
-		} );
-		if( ! this.records ) return;
-		this.records.additions.forEach( ( value, key ) => {
-			this.existingPropertiesNames.push( key );
-			this.properties.splice( 1, 0, value );
-		} );
-		let idx:number;
-		this.records.changes.forEach( ( value, key ) => {
-			if( value.modified.id !== value.modified.name ) {
-				idx = this.existingPropertiesNames.indexOf( value.modified.id );
-				if( idx !== - 1 ) this.existingPropertiesNames.splice( idx, 1, value.modified.name );
-			}
-			idx = this.properties.findIndex( ( property:PropertyStatus ) => { return ! ! property.copy && property.copy.id === key} );
-			if( idx !== - 1 ) this.properties.splice( idx, 1, value );
-		} );
-		this.records.deletions.forEach( ( value, key ) => {
-			idx = this.existingPropertiesNames.indexOf( key );
-			if( idx !== - 1 ) this.existingPropertiesNames.splice( idx, 1 );
-
-			idx = this.properties.findIndex( ( property:PropertyStatus ) => { return ! ! property.copy && property.copy.id === key} );
-			if( idx !== - 1 ) this.properties.splice( idx, 1 );
-		} );
-		this.namedFragmentHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
+		super.updateExistingProperties();
+		this.namedFragmentHasChanged = this.resourceHasChanged;
 	}
 
+	/*
+	*   Returns the fragment converted into its JSON+LD representation
+	* */
 	getRawVersion():RDFNode {
 		let rawNode:RDFNode = Object.assign( {}, this.namedFragment.added ? this.namedFragment.added : this.namedFragment.copy );
 		this.records.deletions.forEach( ( property, key ) => {
 			delete rawNode[ key ];
 		} );
 		this.records.changes.forEach( ( property, key ) => {
-			if( property.modified.id === "@id" ) this.namedFragment.name = property.modified.value;
+			if( property.modified.id === PropertyToken.ID ) { this.namedFragment.name = property.modified.value; }
 			if( property.modified.id !== property.modified.name ) {
 				delete rawNode[ key ];
 				rawNode[ property.modified.name ] = property.modified.value;
@@ -200,7 +124,7 @@ export class NamedFragmentComponent implements AfterViewInit {
 			}
 		} );
 		this.records.additions.forEach( ( property, key ) => {
-			if( property.added.id === "@id" ) this.namedFragment.name = property.modified.value;
+			if( property.added.id === PropertyToken.ID ) { this.namedFragment.name = property.modified.value; }
 			rawNode[ key ] = property.added.value;
 		} );
 		return rawNode;
@@ -216,12 +140,6 @@ export interface NamedFragmentStatus {
 	modified?:RDFNode;
 	deleted?:RDFNode;
 
-	records?:NamedFragmentRecords;
-}
-
-export class NamedFragmentRecords {
-	changes:Map<string, PropertyStatus> = new Map<string, PropertyStatus>();
-	deletions:Map<string, PropertyStatus> = new Map<string, PropertyStatus>();
-	additions:Map<string, PropertyStatus> = new Map<string, PropertyStatus>();
+	records?:ResourceRecords;
 }
 
