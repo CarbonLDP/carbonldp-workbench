@@ -9,8 +9,8 @@ import { LiteralStatus } from "./../../literals/literal.component";
 import { PointerStatus } from "./../../pointers/pointer.component";
 import { ListStatus } from "./../../lists/list.component";
 import { NamedFragmentStatus } from "./../../named-fragments/named-fragment.component";
-import { Property, PropertyStatus, Modes } from "./../property.component";
-import { JsonLDKeyword } from "./../../document-explorer-library";
+import { Property, PropertyStatus } from "./../property.component";
+import { Modes, JsonLDKeyword } from "./../../document-explorer-library";
 
 @Component( {
 	selector: "cw-property-content",

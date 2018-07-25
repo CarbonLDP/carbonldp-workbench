@@ -3,9 +3,9 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } fro
 import { CarbonLDP } from "carbonldp"
 import { RDFNode } from "carbonldp/RDF/Node"
 
-import { ResourceFeatures, ResourceRecords } from "../document-explorer-library";
+import { Modes, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
 import { DocumentsResolverService } from "../documents-resolver.service";
-import { Property, PropertyStatus, Modes } from "../property/property.component";
+import { Property, PropertyStatus } from "../property/property.component";
 
 /*
 *  Displays the contents of a Document with all its properties

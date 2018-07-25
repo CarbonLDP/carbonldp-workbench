@@ -4,8 +4,7 @@ import { XSD } from "carbonldp/Vocabularies/XSD";
 import { forEachOwnProperty } from "carbonldp/Utils";
 import { URI } from "carbonldp/RDF/URI";
 
-import { Modes } from "../property/property.component"
-import { JsonLDKeyword } from "../document-explorer-library";
+import { Modes, JsonLDKeyword } from "../document-explorer-library";
 
 
 /*

@@ -4,8 +4,8 @@ import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node"
 
 
-import { Property, PropertyStatus, Modes } from "../property/property.component";
-import { JsonLDKeyword, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
+import { Property, PropertyStatus } from "../property/property.component";
+import { Modes, JsonLDKeyword, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
 
 /*
 *  Displays the contents of a Blank Node with all its properties

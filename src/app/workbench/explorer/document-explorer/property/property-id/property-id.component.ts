@@ -3,7 +3,8 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit, View
 import { URI } from "carbonldp/RDF/URI";
 import { RDFNode } from "carbonldp/RDF/Node"
 
-import { Property, PropertyStatus, Modes } from "./../property.component";
+import { Modes } from "../../document-explorer-library";
+import { Property, PropertyStatus } from "./../property.component";
 import { NamedFragmentStatus } from "../../named-fragments/named-fragment.component";
 
 

@@ -2,10 +2,9 @@ import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, OnCha
 
 import { URI } from "carbonldp/RDF/URI";
 
-import { Modes } from "../property/property.component";
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
-import { JsonLDKeyword } from "../document-explorer-library";
+import { Modes, JsonLDKeyword } from "../document-explorer-library";
 
 
 /*

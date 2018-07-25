@@ -1,8 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 
-import { Modes } from "../property/property.component";
 import { Literal, LiteralStatus } from "./literal.component";
-import { JsonLDKeyword } from "../document-explorer-library";
+import { Modes, JsonLDKeyword } from "../document-explorer-library";
 
 
 /*

@@ -3,6 +3,7 @@ import { Component, Input, Output, EventEmitter, ElementRef } from "@angular/cor
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
+import { Modes } from "../document-explorer-library";
 
 
 @Component( {
@@ -90,9 +91,4 @@ export interface Property {
 	id:string;
 	name:string;
 	value:any;
-}
-
-export class Modes {
-	static EDIT:string = "EDIT";
-	static READ:string = "READ";
 }

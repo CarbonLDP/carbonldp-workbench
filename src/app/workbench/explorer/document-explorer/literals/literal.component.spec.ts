@@ -1,11 +1,10 @@
 import { Component, ViewChild, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, async } from "@angular/core/testing";
-import { By } from '@angular/platform-browser';
 import { FormsModule } from "@angular/forms";
 
 import { XSD } from "carbonldp/Vocabularies";
 
-import { Modes } from "../property/property.component"
+import { Modes } from "../document-explorer-library"
 import { Literal, LiteralComponent, LiteralStatus } from "./literal.component";
 import { LiteralValueValidator } from "../document-explorer-validators";
 

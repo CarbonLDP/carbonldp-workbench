@@ -4,8 +4,8 @@ import { CarbonLDP } from "carbonldp/CarbonLDP";
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
-import { Property, PropertyStatus, Modes} from "../property/property.component";
-import { JsonLDKeyword, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
+import { Property, PropertyStatus } from "../property/property.component";
+import { Modes, JsonLDKeyword, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
 
 /*
 *  Displays the contents of a Named Fragment with all its properties

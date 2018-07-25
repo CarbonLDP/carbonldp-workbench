@@ -2,7 +2,7 @@ import { Component, ViewChild, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 
-import { Modes } from "../property/property.component"
+import { Modes } from "../document-explorer-library";
 import { Pointer, PointerComponent, PointerStatus } from "./../pointers/pointer.component";
 import { PointerValidator } from "../document-explorer-validators";
 import { BlankNodeStatus } from "./../blank-nodes/blank-node.component";
