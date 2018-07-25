@@ -11,7 +11,6 @@ import { Message } from "app/shared/messages-area/message.component";
 import { DocumentExplorerLibrary } from "app/workbench/explorer/document-explorer/document-explorer-library";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
 
-import "semantic-ui/semantic";
 
 /*
 *  Creates Access Points via the Document Explorer
