@@ -1,7 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 
 import { Modes } from "../property/property.component";
-import { Literal, LiteralStatus, LiteralToken } from "./literal.component";
+import { Literal, LiteralStatus } from "./literal.component";
+import { JsonLDKeyword } from "../document-explorer-library";
 
 
 /*
@@ -34,7 +35,7 @@ export class LiteralsComponent implements OnInit {
 	constructor() {}
 
 	ngOnInit():void {
-		this.isLanguagePresent = this.existsToken( LiteralToken.LANGUAGE );
+		this.isLanguagePresent = this.existsToken( JsonLDKeyword.LANGUAGE );
 		this.onAddNewLiteral.subscribe( () => {
 			this.addNewLiteral();
 		} );
@@ -56,7 +57,7 @@ export class LiteralsComponent implements OnInit {
 	}
 
 	saveLiteral() {
-		this.isLanguagePresent = this.existsToken( LiteralToken.LANGUAGE );
+		this.isLanguagePresent = this.existsToken( JsonLDKeyword.LANGUAGE );
 		this.onLiteralsChanges.emit( this.literals );
 		this.updateCanDisplayLiterals();
 	}

@@ -4,8 +4,8 @@ import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node"
 
 
-import { Property, PropertyStatus, Modes, PropertyToken } from "../property/property.component";
-import { ResourceFeatures, ResourceRecords } from "../document-explorer-library";
+import { Property, PropertyStatus, Modes } from "../property/property.component";
+import { JsonLDKeyword, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
 
 /*
 *  Displays the contents of a Blank Node with all its properties
@@ -23,7 +23,7 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 	$element:JQuery;
 
 	modes:Modes = Modes;
-	nonEditableProperties:string[] = [ PropertyToken.ID ];
+	nonEditableProperties:string[] = [ JsonLDKeyword.ID ];
 
 	private _blankNodeHasChanged:boolean;
 	set blankNodeHasChanged( hasChanged:boolean ) {
@@ -135,7 +135,7 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 
 	isTemporalId( property:PropertyStatus ):boolean {
 		let copyAddedOrModified:string = property.added ? "added" : property.modified ? "modified" : "copy";
-		return property[ copyAddedOrModified ].id === PropertyToken.ID && property[ copyAddedOrModified ].value.startsWith( "_:New_Blank_Node_Temporal_Id_" );
+		return property[ copyAddedOrModified ].id === JsonLDKeyword.ID && property[ copyAddedOrModified ].value.startsWith( "_:New_Blank_Node_Temporal_Id_" );
 	}
 }
 

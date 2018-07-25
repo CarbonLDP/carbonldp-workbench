@@ -4,8 +4,8 @@ import { CarbonLDP } from "carbonldp/CarbonLDP";
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
-import { Property, PropertyStatus, Modes, PropertyToken } from "../property/property.component";
-import { ResourceFeatures, ResourceRecords } from "../document-explorer-library";
+import { Property, PropertyStatus, Modes} from "../property/property.component";
+import { JsonLDKeyword, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
 
 /*
 *  Displays the contents of a Named Fragment with all its properties
@@ -115,7 +115,7 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 			delete rawNode[ key ];
 		} );
 		this.records.changes.forEach( ( property, key ) => {
-			if( property.modified.id === PropertyToken.ID ) { this.namedFragment.name = property.modified.value; }
+			if( property.modified.id === JsonLDKeyword.ID ) { this.namedFragment.name = property.modified.value; }
 			if( property.modified.id !== property.modified.name ) {
 				delete rawNode[ key ];
 				rawNode[ property.modified.name ] = property.modified.value;
@@ -124,7 +124,7 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 			}
 		} );
 		this.records.additions.forEach( ( property, key ) => {
-			if( property.added.id === PropertyToken.ID ) { this.namedFragment.name = property.modified.value; }
+			if( property.added.id === JsonLDKeyword.ID ) { this.namedFragment.name = property.modified.value; }
 			rawNode[ key ] = property.added.value;
 		} );
 		return rawNode;

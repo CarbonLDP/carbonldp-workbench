@@ -5,6 +5,7 @@ import { URI } from "carbonldp/RDF/URI";
 import { Modes } from "../property/property.component";
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
+import { JsonLDKeyword } from "../document-explorer-library";
 
 
 /*
@@ -61,11 +62,11 @@ export class PointerComponent implements OnChanges {
 		 *  pointer.
 		 * */
 		if( this.pointer.modified !== void 0 ) {
-			this.id = this.pointer.modified[ PointerToken.ID ];
+			this.id = this.pointer.modified[ JsonLDKeyword.ID ];
 		} else if( this.pointer.copy !== void 0 ) {
-			this.id = this.pointer.copy[ PointerToken.ID ];
+			this.id = this.pointer.copy[ JsonLDKeyword.ID ];
 		} else if( this.pointer.added !== void 0 ) {
-			this.id = this.pointer.added[ PointerToken.ID ];
+			this.id = this.pointer.added[ JsonLDKeyword.ID ];
 		}
 	}
 
@@ -133,11 +134,11 @@ export class PointerComponent implements OnChanges {
 		this.mode = Modes.READ;
 		let initialStatus:string = typeof this.pointer.copy !== "undefined" ? "copy" : "added";
 
-		if( this.tempPointer[ PointerToken.ID ] === void 0 ) {
-			this.id = this.pointer[ initialStatus ][ PointerToken.ID ];
-			delete this.tempPointer[ PointerToken.ID ];
+		if( this.tempPointer[ JsonLDKeyword.ID ] === void 0 ) {
+			this.id = this.pointer[ initialStatus ][ JsonLDKeyword.ID ];
+			delete this.tempPointer[ JsonLDKeyword.ID ];
 		} else {
-			this.id = this.tempPointer[ PointerToken.ID ];
+			this.id = this.tempPointer[ JsonLDKeyword.ID ];
 		}
 
 		// If canceling a new Pointer without previous id, delete it
@@ -148,17 +149,17 @@ export class PointerComponent implements OnChanges {
 
 	save():void {
 		let initialStatus:string = ! ! this.pointer.copy ? "copy" : "added";
-		let initialId:string = this.pointer[ initialStatus ][ PointerToken.ID ];
+		let initialId:string = this.pointer[ initialStatus ][ JsonLDKeyword.ID ];
 
 		if( (this.id !== void 0) &&
-			(this.id !== initialId || this.id !== this.tempPointer[ PointerToken.ID ]) ) {
-			this.tempPointer[ PointerToken.ID ] = this.id;
+			(this.id !== initialId || this.id !== this.tempPointer[ JsonLDKeyword.ID ]) ) {
+			this.tempPointer[ JsonLDKeyword.ID ] = this.id;
 		}
 
 		switch( initialStatus ) {
 			case "copy":
-				if( initialId === this.tempPointer[ PointerToken.ID ] ) {
-					delete this.tempPointer[ PointerToken.ID ];
+				if( initialId === this.tempPointer[ JsonLDKeyword.ID ] ) {
+					delete this.tempPointer[ JsonLDKeyword.ID ];
 					delete this.pointer.modified;
 				} else {
 					this.pointer.modified = this.tempPointer;
@@ -209,10 +210,6 @@ export class PointerComponent implements OnChanges {
 	moveDown():void {
 		this.onMoveDown.emit( this.pointer );
 	}
-}
-
-export enum PointerToken {
-	ID = "@id"
 }
 
 export interface PointerStatus {

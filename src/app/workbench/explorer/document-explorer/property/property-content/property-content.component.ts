@@ -9,7 +9,8 @@ import { LiteralStatus } from "./../../literals/literal.component";
 import { PointerStatus } from "./../../pointers/pointer.component";
 import { ListStatus } from "./../../lists/list.component";
 import { NamedFragmentStatus } from "./../../named-fragments/named-fragment.component";
-import { Property, PropertyStatus, PropertyToken, Modes } from "./../property.component";
+import { Property, PropertyStatus, Modes } from "./../property.component";
+import { JsonLDKeyword } from "./../../document-explorer-library";
 
 @Component( {
 	selector: "cw-property-content",
@@ -217,7 +218,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 			let state:string = (! ! list.added) ? "added" : (! ! list.deleted) ? "deleted" : (! ! list.modified) ? "modified" : "copy";
 			let resultingList:ListStatus = {
 				[ state ]: {
-					[ PropertyToken.LIST ]: this.getRDFList( list, state )
+					[ JsonLDKeyword.LIST ]: this.getRDFList( list, state )
 				}
 			};
 			resultingLists.push( resultingList );

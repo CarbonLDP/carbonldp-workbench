@@ -5,6 +5,7 @@ import { forEachOwnProperty } from "carbonldp/Utils";
 import { URI } from "carbonldp/RDF/URI";
 
 import { Modes } from "../property/property.component"
+import { JsonLDKeyword } from "../document-explorer-library";
 
 
 /*
@@ -777,17 +778,17 @@ export class LiteralComponent implements AfterViewChecked {
 	 * */
 	private tempLiteral:any = {};
 
-	private set tempValue( value:string | boolean | number ) { this.tempLiteral[ LiteralToken.VALUE ] = value; }
+	private set tempValue( value:string | boolean | number ) { this.tempLiteral[ JsonLDKeyword.VALUE ] = value; }
 
-	private get tempValue():string | boolean | number { return this.tempLiteral[ LiteralToken.VALUE ]; }
+	private get tempValue():string | boolean | number { return this.tempLiteral[ JsonLDKeyword.VALUE ]; }
 
-	private set tempType( type:string ) { this.tempLiteral[ LiteralToken.TYPE ] = type; }
+	private set tempType( type:string ) { this.tempLiteral[ JsonLDKeyword.TYPE ] = type; }
 
-	private get tempType():string { return this.tempLiteral[ LiteralToken.TYPE ]; }
+	private get tempType():string { return this.tempLiteral[ JsonLDKeyword.TYPE ]; }
 
-	private set tempLanguage( language:string ) { this.tempLiteral[ LiteralToken.LANGUAGE ] = language; }
+	private set tempLanguage( language:string ) { this.tempLiteral[ JsonLDKeyword.LANGUAGE ] = language; }
 
-	private get tempLanguage():string { return this.tempLiteral[ LiteralToken.LANGUAGE ]; }
+	private get tempLanguage():string { return this.tempLiteral[ JsonLDKeyword.LANGUAGE ]; }
 
 
 	/*
@@ -867,9 +868,9 @@ export class LiteralComponent implements AfterViewChecked {
 			literalContent = this.literal.added;
 		}
 
-		this.value = literalContent[ LiteralToken.VALUE ];
-		this.type = literalContent[ LiteralToken.TYPE ];
-		this.language = literalContent[ LiteralToken.LANGUAGE ];
+		this.value = literalContent[ JsonLDKeyword.VALUE ];
+		this.type = literalContent[ JsonLDKeyword.TYPE ];
+		this.language = literalContent[ JsonLDKeyword.LANGUAGE ];
 
 	}
 
@@ -910,9 +911,9 @@ export class LiteralComponent implements AfterViewChecked {
 	cancelEdit():void {
 		this.mode = Modes.READ;
 
-		this.restoreDisplayingTokenContent( LiteralToken.VALUE );
-		this.restoreDisplayingTokenContent( LiteralToken.TYPE );
-		this.restoreDisplayingTokenContent( LiteralToken.LANGUAGE );
+		this.restoreDisplayingTokenContent( JsonLDKeyword.VALUE );
+		this.restoreDisplayingTokenContent( JsonLDKeyword.TYPE );
+		this.restoreDisplayingTokenContent( JsonLDKeyword.LANGUAGE );
 
 		// If canceling a new literal without previous value, delete it
 		if( this.literal.added !== void 0 && this.value === void 0 ) {
@@ -936,13 +937,13 @@ export class LiteralComponent implements AfterViewChecked {
 		}
 
 		switch( token ) {
-			case LiteralToken.VALUE:
+			case JsonLDKeyword.VALUE:
 				this.value = displayingContent;
 				break;
-			case LiteralToken.TYPE:
+			case JsonLDKeyword.TYPE:
 				this.type = displayingContent;
 				break;
-			case LiteralToken.LANGUAGE:
+			case JsonLDKeyword.LANGUAGE:
 				this.language = displayingContent;
 				break;
 		}
@@ -950,9 +951,9 @@ export class LiteralComponent implements AfterViewChecked {
 
 	save():void {
 		let initialStatus:string = this.literal.copy !== void 0 ? "copy" : "added";
-		let initialValue:string | boolean | number = this.literal[ initialStatus ][ LiteralToken.VALUE ],
-			initialType:any = this.literal[ initialStatus ][ LiteralToken.TYPE ],
-			initialLanguage:any = this.literal[ initialStatus ][ LiteralToken.LANGUAGE ];
+		let initialValue:string | boolean | number = this.literal[ initialStatus ][ JsonLDKeyword.VALUE ],
+			initialType:any = this.literal[ initialStatus ][ JsonLDKeyword.TYPE ],
+			initialLanguage:any = this.literal[ initialStatus ][ JsonLDKeyword.LANGUAGE ];
 
 		if( (this.value !== void 0) &&
 			(this.value !== initialValue || this.value !== this.tempValue) ) {
@@ -974,20 +975,20 @@ export class LiteralComponent implements AfterViewChecked {
 
 		// 1. @value always present, if not clean whole object.
 		if( this.tempValue === void 0 ) {
-			delete this.tempLiteral[ LiteralToken.VALUE ];
-			delete this.tempLiteral[ LiteralToken.TYPE ];
-			delete this.tempLiteral[ LiteralToken.LANGUAGE ];
+			delete this.tempLiteral[ JsonLDKeyword.VALUE ];
+			delete this.tempLiteral[ JsonLDKeyword.TYPE ];
+			delete this.tempLiteral[ JsonLDKeyword.LANGUAGE ];
 		}
 
 		// 2. If @type empty or XSD.string, then delete @type from tempLiteral.
 		if( this.tempType === void 0 || this.tempType === XSD.string ) {
-			delete this.tempLiteral[ LiteralToken.TYPE ];
+			delete this.tempLiteral[ JsonLDKeyword.TYPE ];
 		}
 
 		// 3. If @language empty or when @type different than XSD.string, then delete @language from tempLiteral.
 		if( (this.tempLanguage === void 0) ||
 			(this.tempType !== void 0 && this.tempType !== XSD.string) ) {
-			delete this.tempLiteral[ LiteralToken.LANGUAGE ];
+			delete this.tempLiteral[ JsonLDKeyword.LANGUAGE ];
 		}
 
 		switch( initialStatus ) {
@@ -995,9 +996,9 @@ export class LiteralComponent implements AfterViewChecked {
 				if( initialValue === this.tempValue &&
 					initialType === this.tempType &&
 					initialLanguage === this.tempLanguage ) {
-					delete this.tempLiteral[ LiteralToken.VALUE ];
-					delete this.tempLiteral[ LiteralToken.TYPE ];
-					delete this.tempLiteral[ LiteralToken.LANGUAGE ];
+					delete this.tempLiteral[ JsonLDKeyword.VALUE ];
+					delete this.tempLiteral[ JsonLDKeyword.TYPE ];
+					delete this.tempLiteral[ JsonLDKeyword.LANGUAGE ];
 					delete this.literal.modified;
 				} else {
 					this.literal.modified = this.tempLiteral;
@@ -1072,12 +1073,6 @@ export class LiteralComponent implements AfterViewChecked {
 		this.onMoveDown.emit( this.literal );
 	}
 
-}
-
-export enum LiteralToken {
-	VALUE = "@value",
-	TYPE = "@type",
-	LANGUAGE = "@language",
 }
 
 export interface LiteralStatus {
