@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 // Pipes
 import { FragmentPipe } from "./fragment.pipe";
 import { DecodeURIPipe } from "./decode-uri.pipe";
+import { URIToSlugPipe } from "./uri-to-slug.pipe";
 
 
 @NgModule( {
@@ -12,11 +13,13 @@ import { DecodeURIPipe } from "./decode-uri.pipe";
 	],
 	declarations: [
 		FragmentPipe,
-		DecodeURIPipe
+		DecodeURIPipe,
+		URIToSlugPipe
 	],
 	exports: [
 		FragmentPipe,
-		DecodeURIPipe
+		DecodeURIPipe,
+		URIToSlugPipe
 	],
 	providers: []
 } )
