@@ -8,7 +8,7 @@ import { ListStatus, ListComponent } from "./../lists/list.component";
 import { LiteralStatus, LiteralComponent } from "./../literals/literal.component";
 import { PointerStatus, PointerComponent } from "./../pointers/pointer.component";
 import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
-import { BlankNodeRow } from "app/workbench/explorer/document-explorer/blank-nodes/blank-node.component";
+import { BlankNodeStatus } from "app/workbench/explorer/document-explorer/blank-nodes/blank-node.component";
 import { NamedFragmentStatus } from "app/workbench/explorer/document-explorer/named-fragments/named-fragment.component";
 
 export function listsSpecs() {
@@ -29,7 +29,7 @@ export function listsSpecs() {
 
 			documentURI:string = "";
 			lists:ListStatus[] = [];
-			blankNodes:BlankNodeRow[] = [];
+			blankNodes:BlankNodeStatus[] = [];
 			namedFragments:NamedFragmentStatus[] = [];
 
 			@ViewChild( ListsComponent ) listsCmp:ListsComponent;
@@ -77,7 +77,7 @@ export function listsSpecs() {
 					}
 				}
 			];
-			let blankNodes:BlankNodeRow[] = [
+			let blankNodes:BlankNodeStatus[] = [
 				{
 					id: "_:sq23wLWUDsXhst823",
 					copy: { "@id": "_:sq23wLWUDsXhst823" }

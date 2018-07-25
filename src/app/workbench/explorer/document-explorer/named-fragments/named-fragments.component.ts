@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, OnCha
 import { URI } from "carbonldp/RDF/URI";
 
 import { NamedFragmentStatus } from "./named-fragment.component";
-import { BlankNodeRow } from "../blank-nodes/blank-node.component";
+import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 
 
 /*
@@ -25,7 +25,7 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 	namedFragmentsRecords:NamedFragmentsRecords = new NamedFragmentsRecords();
 	askingDeletionNamedFragment:NamedFragmentStatus;
 
-	@Input() blankNodes:BlankNodeRow[] = [];
+	@Input() blankNodes:BlankNodeStatus[] = [];
 	@Input() namedFragments:NamedFragmentStatus[] = [];
 	@Input() documentURI:string = "";
 
@@ -149,7 +149,7 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 		this.$element.find( ".confirm-deletion.dimmer" ).dimmer( { closable: false } );
 	}
 
-	askToConfirmDeletion( clickEvent:Event, blankNode:BlankNodeRow ):void {
+	askToConfirmDeletion( clickEvent:Event, blankNode:BlankNodeStatus ):void {
 		clickEvent.stopPropagation();
 		this.askingDeletionNamedFragment = blankNode;
 		this.$element.find( ".confirm-deletion.dimmer" ).dimmer( "show" );

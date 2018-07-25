@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, OnCha
 import { URI } from "carbonldp/RDF/URI";
 
 import { Modes } from "../property/property.component";
-import { BlankNodeRow } from "../blank-nodes/blank-node.component";
+import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
 
 
@@ -70,7 +70,7 @@ export class PointerComponent implements OnChanges {
 	}
 
 	@Input() documentURI:string = "";
-	@Input() blankNodes:BlankNodeRow[] = [];
+	@Input() blankNodes:BlankNodeStatus[] = [];
 	@Input() namedFragments:NamedFragmentStatus[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() partOfList:boolean = false;
@@ -191,7 +191,7 @@ export class PointerComponent implements OnChanges {
 	}
 
 	goToBlankNode( id:string ):void {
-		let idx:number = this.blankNodes.findIndex( ( blankNode:BlankNodeRow ) => { return blankNode.id === id; } );
+		let idx:number = this.blankNodes.findIndex( ( blankNode:BlankNodeStatus ) => { return blankNode.id === id; } );
 		this.existsOnPointers = idx !== - 1;
 		if( this.existsOnPointers ) this.onGoToBlankNode.emit( id );
 	}

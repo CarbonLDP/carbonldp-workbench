@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } fro
 import { CarbonLDP } from "carbonldp/CarbonLDP";
 import { RDFNode } from "carbonldp/RDF/Node"
 
-import { BlankNodeRow } from "../blank-nodes/blank-node.component";
+import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { Property, PropertyStatus, Modes, PropertyToken } from "../property/property.component";
 import { ResourceFeatures, ResourceRecords } from "../document-explorer-library";
 
@@ -40,7 +40,7 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 
 	get namedFragmentHasChanged() { return this._namedFragmentHasChanged; }
 
-	@Input() blankNodes:BlankNodeRow[] = [];
+	@Input() blankNodes:BlankNodeStatus[] = [];
 	@Input() namedFragments:NamedFragmentStatus[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";

@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, After
 
 import { RDFNode } from "carbonldp/RDF/Node"
 
-import { BlankNodeRow } from "./blank-node.component"
+import { BlankNodeStatus } from "./blank-node.component"
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
@@ -21,11 +21,11 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 	$element:JQuery;
 
 	nodesTab:JQuery;
-	openedBlankNodes:BlankNodeRow[] = [];
+	openedBlankNodes:BlankNodeStatus[] = [];
 	blankNodesRecords:BlankNodesRecords = new BlankNodesRecords();
-	askingDeletionBlankNode:BlankNodeRow;
+	askingDeletionBlankNode:BlankNodeStatus;
 
-	@Input() blankNodes:BlankNodeRow[] = [];
+	@Input() blankNodes:BlankNodeStatus[] = [];
 	@Input() namedFragments:RDFNode[] = [];
 	@Input() documentURI:string = "";
 
@@ -51,8 +51,8 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 		}
 	}
 
-	openBlankNode( nodeOrId:BlankNodeRow | string ):void {
-		let node:BlankNodeRow;
+	openBlankNode( nodeOrId:BlankNodeStatus | string ):void {
+		let node:BlankNodeStatus;
 		if( typeof nodeOrId === "string" ) {
 			node = this.blankNodes.find( ( node ) => { return node.id === nodeOrId} );
 		} else {
@@ -75,7 +75,7 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 		this.onOpenBlankNode.emit( "blankNodes" );
 	}
 
-	closeBlankNode( blankNode:BlankNodeRow, index?:number ):void {
+	closeBlankNode( blankNode:BlankNodeStatus, index?:number ):void {
 		this.openedBlankNodes.splice( index, 1 );
 		this.goToBlankNode( "all" );
 	}
@@ -93,7 +93,7 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 		return value === "all" ? value : value.substr( value.indexOf( "_:" ) + 2 );
 	}
 
-	changeBlankNode( blankNodeRow:BlankNodeRow, index?:number ):void {
+	changeBlankNode( blankNodeRow:BlankNodeStatus, index?:number ):void {
 		if( typeof this.blankNodesRecords === "undefined" ) this.blankNodesRecords = new BlankNodesRecords();
 		if( typeof blankNodeRow.modified !== "undefined" ) {
 			this.blankNodesRecords.changes.set( blankNodeRow.id, blankNodeRow );
@@ -103,7 +103,7 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 		this.onChanges.emit( this.blankNodesRecords );
 	}
 
-	deleteBlankNode( blankNodeRow:BlankNodeRow, index?:number ):void {
+	deleteBlankNode( blankNodeRow:BlankNodeStatus, index?:number ):void {
 		index = this.openedBlankNodes.indexOf( blankNodeRow );
 		this.openedBlankNodes.splice( index, 1 );
 		if( typeof this.blankNodesRecords === "undefined" ) this.blankNodesRecords = new BlankNodesRecords();
@@ -122,7 +122,7 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 
 	createBlankNode():void {
 		let id:string = "_:" + this.generateTemporalID();
-		let newBlankNode:BlankNodeRow = <BlankNodeRow>{
+		let newBlankNode:BlankNodeStatus = <BlankNodeStatus>{
 			id: id,
 			copy: {
 				"@id": id,
@@ -139,7 +139,7 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 		this.$element.find( ".confirm-deletion.dimmer" ).dimmer( { closable: false } );
 	}
 
-	askToConfirmDeletion( clickEvent:Event, blankNode:BlankNodeRow ):void {
+	askToConfirmDeletion( clickEvent:Event, blankNode:BlankNodeStatus ):void {
 		clickEvent.stopPropagation();
 		this.askingDeletionBlankNode = blankNode;
 		this.$element.find( ".confirm-deletion.dimmer" ).dimmer( "show" );
@@ -167,9 +167,9 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 }
 
 export class BlankNodesRecords {
-	changes:Map<string, BlankNodeRow> = new Map<string, BlankNodeRow>();
-	deletions:Map<string, BlankNodeRow> = new Map<string, BlankNodeRow>();
-	additions:Map<string, BlankNodeRow> = new Map<string, BlankNodeRow>();
+	changes:Map<string, BlankNodeStatus> = new Map<string, BlankNodeStatus>();
+	deletions:Map<string, BlankNodeStatus> = new Map<string, BlankNodeStatus>();
+	additions:Map<string, BlankNodeStatus> = new Map<string, BlankNodeStatus>();
 
 	clear():void {
 		this.changes.clear();

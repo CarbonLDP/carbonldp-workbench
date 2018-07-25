@@ -40,24 +40,24 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 
 	get blankNodeHasChanged() { return this._blankNodeHasChanged; }
 
-	@Input() blankNodes:BlankNodeRow[] = [];
+	@Input() blankNodes:BlankNodeStatus[] = [];
 	@Input() namedFragments:RDFNode[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
 
-	private _blankNode:BlankNodeRow;
-	@Input() set blankNode( blankNode:BlankNodeRow ) {
+	private _blankNode:BlankNodeStatus;
+	@Input() set blankNode( blankNode:BlankNodeStatus ) {
 		this._blankNode = blankNode;
 		this.rootNode = blankNode.copy;
 		if( ! ! blankNode.records ) this.records = blankNode.records;
 		this.updateExistingProperties();
 	}
 
-	get blankNode():BlankNodeRow { return this._blankNode; }
+	get blankNode():BlankNodeStatus { return this._blankNode; }
 
 	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onChanges:EventEmitter<BlankNodeRow> = new EventEmitter<BlankNodeRow>();
+	@Output() onChanges:EventEmitter<BlankNodeStatus> = new EventEmitter<BlankNodeStatus>();
 
 
 	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
@@ -139,7 +139,7 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 	}
 }
 
-export interface BlankNodeRow {
+export interface BlankNodeStatus {
 	id?:string;
 
 	copy?:RDFNode;

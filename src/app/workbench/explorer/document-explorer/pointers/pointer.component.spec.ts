@@ -5,7 +5,7 @@ import { FormsModule } from "@angular/forms";
 import { Modes } from "../property/property.component"
 import { Pointer, PointerComponent, PointerStatus } from "./../pointers/pointer.component";
 import { PointerValidator } from "../document-explorer-validators";
-import { BlankNodeRow } from "./../blank-nodes/blank-node.component";
+import { BlankNodeStatus } from "./../blank-nodes/blank-node.component";
 import { NamedFragmentStatus } from "./../named-fragments/named-fragment.component";
 
 export function pointerSpecs() {
@@ -30,7 +30,7 @@ export function pointerSpecs() {
 			pointer:Pointer;
 			pointerRow:PointerStatus;
 
-			blankNodes:BlankNodeRow[] = [];
+			blankNodes:BlankNodeStatus[] = [];
 			namedFragments:NamedFragmentStatus[] = [];
 
 			documentURI:string = "";
@@ -91,7 +91,7 @@ export function pointerSpecs() {
 
 			it( "Should emit id when clicking the id and the id is a BNode", ( done ) => {
 
-				let blankNodes:BlankNodeRow[] = [
+				let blankNodes:BlankNodeStatus[] = [
 					{
 						id: "_:sq23wLWUDsXhst823",
 						copy: { "@id": "_:sq23wLWUDsXhst823" }
@@ -297,7 +297,7 @@ export function pointerSpecs() {
 
 			it( "Should display blankNodes in the dropdown when they are passed as Input", () => {
 
-				let blankNodes:BlankNodeRow[] = [
+				let blankNodes:BlankNodeStatus[] = [
 					{
 						id: "_:sq23wLWUDsXhst823",
 						copy: { "@id": "_:sq23wLWUDsXhst823" }
@@ -386,7 +386,7 @@ export function pointerSpecs() {
 
 			it( "Should set @id when selecting one fragment from the dropdown", () => {
 
-				let blankNodes:BlankNodeRow[] = [
+				let blankNodes:BlankNodeStatus[] = [
 					{
 						id: "_:sq23wLWUDsXhst823",
 						copy: { "@id": "_:sq23wLWUDsXhst823" }
@@ -427,7 +427,7 @@ export function pointerSpecs() {
 
 				it( "Should show original @id", () => {
 
-					let blankNodes:BlankNodeRow[] = [
+					let blankNodes:BlankNodeStatus[] = [
 						{
 							id: "_:sq23wLWUDsXhst823",
 							copy: { "@id": "_:sq23wLWUDsXhst823" }
@@ -475,7 +475,7 @@ export function pointerSpecs() {
 
 				it( "Should emit pointer when cancelled pointer is being added", ( done ) => {
 
-					let blankNodes:BlankNodeRow[] = [
+					let blankNodes:BlankNodeStatus[] = [
 						{
 							id: "_:sq23wLWUDsXhst823",
 							copy: { "@id": "_:sq23wLWUDsXhst823" }
@@ -512,7 +512,7 @@ export function pointerSpecs() {
 
 			describe( "When clicking on save", () => {
 
-				let blankNodes:BlankNodeRow[];
+				let blankNodes:BlankNodeStatus[];
 				let pointer:Pointer;
 				let pointerRow:PointerStatus;
 
