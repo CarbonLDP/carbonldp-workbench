@@ -6,6 +6,7 @@ import { FormsModule } from "@angular/forms";
 import { LiteralComponent, LiteralStatus } from "./literal.component";
 import { LiteralsComponent } from "./literals.component";
 import { LiteralValueValidator } from "../document-explorer-validators";
+import { JsonLDKeyword } from "./../document-explorer-library";
 
 export function literalsSpecs() {
 
@@ -42,13 +43,13 @@ export function literalsSpecs() {
 		beforeEach( () => {
 			let literals:LiteralStatus[] = [
 				{
-					copy: { "@value": "literal 1" }
+					copy: { [ JsonLDKeyword.VALUE ]: "literal 1" }
 				},
 				{
-					copy: { "@value": "literal 2" }
+					copy: { [ JsonLDKeyword.VALUE ]: "literal 2" }
 				},
 				{
-					copy: { "@value": "literal 3" }
+					copy: { [ JsonLDKeyword.VALUE ]: "literal 3" }
 				},
 			];
 			comp.literals = literals;
@@ -60,13 +61,13 @@ export function literalsSpecs() {
 
 			let literals:LiteralStatus[] = [
 				{
-					copy: { "@value": "literal 1" }
+					copy: { [ JsonLDKeyword.VALUE ]: "literal 1" }
 				},
 				{
-					copy: { "@value": "literal 2", "@language": "en" }
+					copy: { [ JsonLDKeyword.VALUE ]: "literal 2", [ JsonLDKeyword.LANGUAGE ]: "en" }
 				},
 				{
-					copy: { "@value": "literal 3" }
+					copy: { [ JsonLDKeyword.VALUE ]: "literal 3" }
 				},
 			];
 			comp.literals = literals;
@@ -96,8 +97,8 @@ export function literalsSpecs() {
 		it( "Should add class `modified-literal` to literals that are being modified", () => {
 
 			comp.literalsCmp.literals[ 0 ] = {
-				copy: { "@value": "literal 3" },
-				modified: { "@value": "literal 3", "@language": "en" },
+				copy: { [ JsonLDKeyword.VALUE ]: "literal 3" },
+				modified: { [ JsonLDKeyword.VALUE ]: "literal 3", [ JsonLDKeyword.LANGUAGE ]: "en" },
 			};
 			fixture.detectChanges();
 
@@ -114,14 +115,14 @@ export function literalsSpecs() {
 			let toModifyLiteralIdx:number = 0;
 			let toModifyLiteral:LiteralStatus = comp.literalsCmp.literals[ toModifyLiteralIdx ];
 			toModifyLiteral.modified = {
-				"@value": "Modified Literal 1"
+				[ JsonLDKeyword.VALUE ]: "Modified Literal 1"
 			};
 
 			comp.literalsCmp.onLiteralsChanges.subscribe( ( literals:LiteralStatus[] ) => {
 				expect( literals ).not.toBeNull();
 				expect( literals.length ).toEqual( 3 );
 				expect( literals[ toModifyLiteralIdx ].modified ).toBeDefined();
-				expect( literals[ toModifyLiteralIdx ].modified[ "@value" ] ).toEqual( "Modified Literal 1" );
+				expect( literals[ toModifyLiteralIdx ].modified[ JsonLDKeyword.VALUE ] ).toEqual( "Modified Literal 1" );
 				done();
 			} );
 			comp.literalsCmp.saveLiteral();
@@ -142,7 +143,7 @@ export function literalsSpecs() {
 				expect( literals ).not.toBeNull();
 				expect( literals.length ).toEqual( 3 );
 				expect( literals[ toDeleteLiteralIdx ].deleted ).toBeDefined();
-				expect( literals[ toDeleteLiteralIdx ].deleted[ "@value" ] ).toEqual( "literal 1" );
+				expect( literals[ toDeleteLiteralIdx ].deleted[ JsonLDKeyword.VALUE ] ).toEqual( "literal 1" );
 				done();
 			} );
 
@@ -218,12 +219,12 @@ export function literalsSpecs() {
 		it( "Should return all modified literals when calling `getModifiedLiterals`", () => {
 
 			comp.literalsCmp.literals[ 1 ] = {
-				copy: { "@value": "literal 2" },
-				modified: { "@value": "literal 2", "@language": "en" },
+				copy: { [ JsonLDKeyword.VALUE ]: "literal 2" },
+				modified: { [ JsonLDKeyword.VALUE ]: "literal 2", [ JsonLDKeyword.LANGUAGE ]: "en" },
 			};
 			comp.literalsCmp.literals[ 2 ] = {
-				copy: { "@value": "literal 3" },
-				modified: { "@value": "literal 3", "@language": "en" },
+				copy: { [ JsonLDKeyword.VALUE ]: "literal 3" },
+				modified: { [ JsonLDKeyword.VALUE ]: "literal 3", [ JsonLDKeyword.LANGUAGE ]: "en" },
 			};
 			fixture.detectChanges();
 
