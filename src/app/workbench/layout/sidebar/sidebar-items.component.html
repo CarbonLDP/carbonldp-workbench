@@ -1,4 +1,6 @@
 <ng-template ngFor let-item [ngForOf]="items">
+
+	<!-- START: Link item for sidebar -->
 	<ng-template [ngIf]="item.type === 'link'">
 		<a class="item"
 		   [ngClass]="{ active: routerService.isActive( item.route ) }"
@@ -7,15 +9,27 @@
 			{{ item.name }}
 		</a>
 	</ng-template>
+	<!-- END: Link item for sidebar -->
+
+
+	<!-- START: Divider item -->
 	<ng-template [ngIf]="item.type === 'divider'">
 		<div class="ui horizontal inverted divider">
 			<i *ngIf="item.icon" [class]="item.icon"></i>
 			{{ item.name }}
 		</div>
 	</ng-template>
+	<!-- END: Divider item -->
+
+
+	<!-- START: Grouped sidebar items -->
 	<ng-template [ngIf]="item.type === 'group'">
 		<cw-sidebar-items [items]="item.children"></cw-sidebar-items>
 	</ng-template>
+	<!-- END: Grouped sidebar items -->
+
+
+	<!-- START: Item with a collapsible menu -->
 	<ng-template [ngIf]="item.type === 'submenu'">
 		<a class="item submenu"
 		   suiCollapsible
@@ -33,4 +47,5 @@
 			</div>
 		</a>
 	</ng-template>
+	<!-- END: Item with a collapsible menu -->
 </ng-template>

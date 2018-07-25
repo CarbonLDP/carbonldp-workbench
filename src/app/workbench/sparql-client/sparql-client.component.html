@@ -1,10 +1,16 @@
 <div class="ui basic segment query-builder">
+	<!-- START: Header of the query builder -->
 	<div class="ui top attached menu">
 		<div class="right menu">
 			<a class="show-queries item" (click)="toggleSidebar()"><i class="sidebar icon"></i> Saved Queries</a>
 		</div>
 	</div>
+	<!-- END: Header of the query builder -->
+
+
+	<!-- START: Body of the query builder -->
 	<div class="ui middle attached segment pushable">
+		<!-- START: List of the saved queries -->
 		<div class="ui inverted right vertical wide dimmed sidebar menu queries-list">
 			<p *ngIf="savedQueries.length == 0">
 				No saved queries yet.
@@ -18,12 +24,18 @@
 				<span class="operation" [ngClass]="query.operation.toLowerCase()">{{query.operation.toLowerCase()}}</span>
 			</a>
 		</div>
+		<!-- END: List of the saved queries -->
+
+
+		<!-- START: Form of the query builder -->
 		<div class="ui pusher">
 			<div class="ui basic segment">
 				<div class="ui grid">
 					<div class="row">
 						<div class="column">
 							<div class="ui grid form basic segment" [ngClass]="{loading: isSending}">
+
+								<!-- START: Endpoint URI input -->
 								<div class="fields row">
 									<div class="column field">
 										<label>Endpoint URI:</label>
@@ -36,6 +48,10 @@
 										<input placeholder="https://example.com/parent/.../resource/" [(ngModel)]="endpoint" type="text">
 									</div>
 								</div>
+								<!-- END: Endpoint URI input -->
+
+
+								<!-- START: Type and Output format of the query -->
 								<div class="fields row">
 									<div class="eight wide column field">
 										<label>Type:</label>
@@ -52,12 +68,20 @@
 										</select>
 									</div>
 								</div>
+								<!-- END: Type and Output format of the query -->
+
+
+								<!-- START: Body of the query -->
 								<div class="fields row">
 									<div class=" column field">
 										<label>Query:</label>
 										<cw-code-mirror [mode]="codeMirrorMode.SPARQL" [readOnly]="isSending" [(value)]="sparql" [showLineNumbers]="true"></cw-code-mirror>
 									</div>
 								</div>
+								<!-- END: Body of the query -->
+
+
+								<!-- START: Action buttons -->
 								<div class="fields row">
 									<div class="column field">
 										<button class="ui blue button"
@@ -73,20 +97,22 @@
 											Clean
 										</button>
 									</div>
-									<!-- /fields row -->
 								</div>
-								<!-- /form -->
+								<!-- END: Action buttons -->
 							</div>
-							<!-- /row -->
+							<!-- /basi segment -->
 						</div>
-						<!-- /form -->
+						<!-- /row -->
 					</div>
 				</div>
 			</div>
-			<!-- /segment -->
 		</div>
-		<!-- /pusher -->
+		<!-- START: Form of the query builder -->
 	</div>
+	<!-- END: Body of the query builder -->
+
+
+	<!-- START: Displays error message -->
 	<div class="ui attached error message" *ngFor="let message of messages">
 		<i class="close icon" (click)="closeMessage($event)"></i>
 		<div class="header">
@@ -98,6 +124,10 @@
 			<span *ngIf="message.endpoint">URI: {{message.endpoint}}</span>
 		</p>
 	</div>
+	<!-- END: Displays error message -->
+
+
+	<!-- START: Inputs to Save the query -->
 	<div class="ui bottom attached segment">
 		<div class="ui grid form row">
 			<div class="nine wide column">
@@ -131,7 +161,11 @@
 			</div>
 		</div>
 	</div>
+	<!-- END: Inputs to Save the query -->
 </div>
+
+
+<!-- START: Container of Query responses -->
 <div class="ui basic segment query-results">
 	<div class="ui two columns grid basic segment title">
 		<div class="column">
@@ -156,7 +190,10 @@
 		                    (onReExecute)="onReExecute($event)"></cw-sparql-response>
 	</div>
 </div>
-<!--Ask for current query replacement-->
+<!-- END: Container of Query responses -->
+
+
+<!-- START: Modal to confirm the replacement of the working query -->
 <div class="ui replace-query-confirmation modal">
 	<div class="header">
 		Unsaved Query
@@ -178,7 +215,10 @@
 		</button>
 	</div>
 </div>
-<!--Ask for saved queries deletion-->
+<!-- END: Modal to confirm the replacement of the working query  -->
+
+
+<!-- START: Modal to confirm query deletion -->
 <div class="ui delete-query-confirmation modal">
 	<div class="header">
 		Are you sure?
@@ -200,3 +240,4 @@
 		</button>
 	</div>
 </div>
+<!-- END: Modal to confirm query deletion -->
