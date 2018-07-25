@@ -5,6 +5,10 @@ import { HeaderService } from "./header.service";
 import * as $ from "jquery";
 import "semantic-ui/semantic";
 
+
+/*
+*   Header of the workbench listing all the items
+* */
 @Component( {
 	selector: "cw-header",
 	templateUrl: "./header.component.html",

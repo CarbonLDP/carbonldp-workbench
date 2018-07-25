@@ -1,5 +1,8 @@
 import { Injectable, EventEmitter } from "@angular/core";
 
+/*
+*   Service used to add/remove items to the Sidebar of the Workbench
+* */
 @Injectable()
 export class SidebarService {
 

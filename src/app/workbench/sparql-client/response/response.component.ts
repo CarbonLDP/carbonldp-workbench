@@ -6,6 +6,9 @@ import * as $ from "jquery";
 import "semantic-ui/semantic";
 
 
+/*
+*   Contains and displays the response of a SPARQL query
+* */
 @Component( {
 	selector: "cw-sparql-response",
 	templateUrl: "./response.component.html",

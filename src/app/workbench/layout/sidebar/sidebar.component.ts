@@ -7,6 +7,10 @@ import "semantic-ui/semantic";
 
 import { SidebarService } from "./sidebar.service"
 
+
+/*
+*   Sidebar of the Workbench listing all the sidebar items
+* */
 @Component( {
 	selector: "cw-sidebar",
 	templateUrl: "./sidebar.component.html",

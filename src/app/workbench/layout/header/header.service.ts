@@ -1,5 +1,9 @@
 import { Injectable, EventEmitter } from "@angular/core";
 
+
+/*
+*   Service used to add/remove items to the Header of the Workbench
+* */
 @Injectable()
 export class HeaderService {
 	logo:HeaderLogo;

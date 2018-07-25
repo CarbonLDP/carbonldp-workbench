@@ -7,6 +7,10 @@ import { HeaderService } from "./layout/header/header.service";
 import { SidebarService } from "./layout/sidebar/sidebar.service";
 
 
+/*
+*   Contains the main layout of the Workbench.
+*   All the Workbench routes are displayed here.
+* */
 @Component( {
 	selector: "cw-workbench",
 	templateUrl: "./workbench.view.html",

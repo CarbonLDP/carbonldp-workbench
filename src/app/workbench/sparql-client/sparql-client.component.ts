@@ -14,6 +14,9 @@ import * as $ from "jquery";
 import "semantic-ui/semantic";
 
 
+/*
+*   A component that allows users to create their own SPARQL queries.
+* */
 @Component( {
 	selector: "cw-sparql-client",
 	templateUrl: "./sparql-client.component.html",

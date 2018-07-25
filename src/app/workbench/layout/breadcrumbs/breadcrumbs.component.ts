@@ -6,6 +6,10 @@ import { SidebarService } from "../sidebar/sidebar.service";
 
 import "semantic-ui/semantic";
 
+
+/*
+*   Breadcrumb of the Workbench listing all the visiting routes
+* */
 @Component( {
 	selector: "cw-breadcrumbs",
 	templateUrl: "./breadcrumbs.component.html",
