@@ -34,10 +34,12 @@ export class PointerComponent implements OnChanges {
 
 	private _mode = Modes.READ;
 	@Input() set mode( value:string ) {
-		this._mode = value;
-		this.onEditMode.emit( this.mode === Modes.EDIT );
-		if( this.mode !== Modes.EDIT ) return;
-		this.initializePointersDropdown()
+		setTimeout( () => {
+			this._mode = value;
+			this.onEditMode.emit( this.mode === Modes.EDIT );
+			if( this.mode !== Modes.EDIT ) return;
+			this.initializePointersDropdown();
+		}, 0 );
 	}
 
 	get mode() { return this._mode; }

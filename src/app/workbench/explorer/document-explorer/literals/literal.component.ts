@@ -795,11 +795,13 @@ export class LiteralComponent implements AfterViewChecked {
 	* */
 	private _mode = Modes.READ;
 	@Input() set mode( value:string ) {
-		this._mode = value;
-		this.onEditMode.emit( this.mode === Modes.EDIT );
-		if( this.mode !== Modes.EDIT ) return;
-		this.initializeTypesDropdown();
-		this.initializeLanguageDropdown()
+		setTimeout( () => {
+			this._mode = value;
+			this.onEditMode.emit( this.mode === Modes.EDIT );
+			if( this.mode !== Modes.EDIT ) return;
+			this.initializeTypesDropdown();
+			this.initializeLanguageDropdown();
+		}, 0 );
 	}
 
 	get mode() { return this._mode; }
