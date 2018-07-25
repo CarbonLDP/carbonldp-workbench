@@ -201,6 +201,7 @@ export class ResourceRecords {
 	}
 }
 
+
 export enum JsonLDKeyword {
 	GRAPH = "@graph",
 	ID = "@id",
@@ -209,4 +210,10 @@ export enum JsonLDKeyword {
 	LANGUAGE = "@language",
 	LIST = "@list",
 	SET = "@set",
+}
+
+
+export class Modes {
+	static EDIT:string = "EDIT";
+	static READ:string = "READ";
 }
