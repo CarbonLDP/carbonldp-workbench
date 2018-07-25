@@ -1,3 +1,4 @@
+<!-- START: Delete confirmation message -->
 <div class="ui confirm-deletion list inverted dimmer">
 	<div class="content">
 		<div class="center">
@@ -8,6 +9,10 @@
 		</div>
 	</div>
 </div>
+<!-- END: Delete confirmation message -->
+
+
+<!-- START: Indicator displaying if its a new or a modified list -->
 <div class="ui top attached mini menu">
 	<div class="item">
 		<i class="sidebar icon"></i>
@@ -19,13 +24,22 @@
 		</div>
 	</div>
 </div>
+<!-- END: Indicator displaying if its a new or a modified list -->
+
+
+<!-- START: Content of the list -->
 <table class="ui very compact striped small celled table attached segment">
+	<!-- START: Headers of the list -->
 	<tr class="center aligned">
 		<th>@id/@value</th>
 		<th>@type</th>
 		<th>@language</th>
 		<th>Actions</th>
 	</tr>
+	<!-- END: Headers of the list -->
+
+
+	<!-- START: Pointers and Literals included in the list -->
 	<ng-template ngFor let-item="$implicit" [ngForOf]="tempList" let-i="index" let-isFirst="first" let-isLast="last">
 		<tr #literal
 		    class="cw-literal" [ngClass]="{'top aligned':literal.mode ==='EDIT','modified-literal':!!item.modified, 'added-literal':!!item.added}" *ngIf="!item.deleted && isLiteral(item)"
@@ -38,8 +52,8 @@
 		    (onSave)="saveItem($event, item, i)"
 		    (onMoveUp)="moveUp($event, i)"
 		    (onMoveDown)="moveDown($event, i)"
-		    (onDeleteLiteral)="deleteItem($event, i)"
-		></tr>
+		    (onDeleteLiteral)="deleteItem($event, i)">
+		</tr>
 		<tr #pointer
 		    class="cw-pointer" [ngClass]="{'top aligned':pointer.mode ==='EDIT', 'modified-pointer':!!item.modified, 'added-pointer':!!item.added}" *ngIf="!item.deleted && isPointer(item)" colspan="0"
 		    [pointer]="item"
@@ -58,6 +72,10 @@
 		    (onDeletePointer)="deleteItem($event, i)">
 		</tr>
 	</ng-template>
+	<!-- END: Pointers and Literals included in the list -->
+
+
+	<!-- START: Message to display when list is empty -->
 	<tr *ngIf="tempList.length === 0">
 		<td colspan="4">
 			<div class="ui message">
@@ -68,7 +86,12 @@
 			</div>
 		</td>
 	</tr>
+	<!-- END: Message to display when list is empty -->
 </table>
+<!-- END: Content of the list -->
+
+
+<!-- START: Action buttons for the list -->
 <div class="ui bottom attached mini menu">
 	<a class="item" about="" (click)="askToConfirmDeletion()">
 		<i class="remove icon"></i>
@@ -85,3 +108,4 @@
 		</a>
 	</div>
 </div>
+<!-- END: Action buttons for the list -->

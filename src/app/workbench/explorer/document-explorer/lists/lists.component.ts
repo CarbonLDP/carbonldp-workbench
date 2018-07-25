@@ -5,8 +5,10 @@ import { RDFNode } from "carbonldp/RDF/Node"
 import { Modes } from "../property/property.component";
 import { List, ListRow } from "./list.component";
 
-import "semantic-ui/semantic";
 
+/*
+*   Contains all the lists of a property
+* */
 @Component( {
 	selector: "cw-lists",
 	templateUrl: "./lists.component.html",

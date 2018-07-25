@@ -1,20 +1,27 @@
 import { ElementRef, Component, Input, Output, EventEmitter } from "@angular/core";
 
-import "semantic-ui/semantic";
 
 import { RDFLiteral } from "carbonldp/RDF/Literal";
 import { RDFNode } from "carbonldp/RDF/Node"
 import { ObjectUtils } from "carbonldp/Utils";
 
-import { Literal, LiteralStatus } from "../literals/literal.component";
+import { LiteralStatus } from "../literals/literal.component";
 import { Pointer, PointerStatus } from "../pointers/pointer.component";
 
 
+/*
+*   Contains a list that displays literals and
+*   pointers in the right order
+* */
 @Component( {
 	selector: "cw-list",
 	templateUrl: "./list.component.html",
 	styleUrls: [ "./list.component.scss" ],
-	host: { "[class.modified]": "list.modified", "[class.deleted]": "list.deleted", "[class.added]": "list.added" },
+	host: {
+		"[class.modified]": "list.modified",
+		"[class.deleted]": "list.deleted",
+		"[class.added]": "list.added"
+	},
 } )
 
 export class ListComponent {
@@ -22,7 +29,7 @@ export class ListComponent {
 	element:ElementRef;
 	$element:JQuery;
 
-	copyOrAddedOrModified:string;
+	status:string;
 	tempList:any[] = [];
 	orderHasChanged:boolean = false;
 
@@ -31,9 +38,9 @@ export class ListComponent {
 	get list() { return this._list; }
 
 	@Input() set list( list:ListRow ) {
-		this.copyOrAddedOrModified = ! ! list.copy ? (! ! list.modified ? "modified" : "copy") : "added";
+		this.status = ! ! list.copy ? (! ! list.modified ? "modified" : "copy") : "added";
 		this._list = list;
-		list[ this.copyOrAddedOrModified ].forEach( ( literalOrPointer ) => {
+		list[ this.status ].forEach( ( literalOrPointer ) => {
 			(<Array<any>>this.tempList).push( Object.assign( {}, literalOrPointer ) );
 		} );
 	}
@@ -92,7 +99,7 @@ export class ListComponent {
 
 	addLiteral():void {
 		let newLiteralStatus:LiteralStatus = <LiteralStatus>{};
-		newLiteralStatus.added = <Literal>{ "@value": "" };
+		newLiteralStatus.added = { "@value": "" };
 		this.tempList.splice( this.tempList.length, 0, newLiteralStatus );
 		this.updateTempList();
 	}
