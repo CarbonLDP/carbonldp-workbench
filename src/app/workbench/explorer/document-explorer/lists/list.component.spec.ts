@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 
 import { FormsModule } from "@angular/forms";
 
-import { ListRow, ListComponent } from "./../lists/list.component";
+import { ListStatus, ListComponent } from "./../lists/list.component";
 import { LiteralStatus, LiteralComponent } from "./../literals/literal.component";
 import { PointerStatus, PointerComponent } from "./../pointers/pointer.component";
 import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
@@ -28,7 +28,7 @@ export function listSpecs() {
 		class TestComponent {
 
 			documentURI:string = "";
-			list:ListRow = <ListRow>{};
+			list:ListStatus = <ListStatus>{};
 			pointers:PointerStatus[] = [];
 			blankNodes:BlankNodeRow[] = [];
 			namedFragments:NamedFragmentStatus[] = [];
@@ -97,7 +97,7 @@ export function listSpecs() {
 
 		it( "Should emit blank node id when clicking on it", ( done ) => {
 
-			comp.list = <ListRow>{
+			comp.list = <ListStatus>{
 				copy: [
 					{
 						copy: { "@id": "_:sq23wLWUDsXhst823" },
@@ -123,7 +123,7 @@ export function listSpecs() {
 
 		it( "Should emit named fragment id when clicking on it", ( done ) => {
 
-			comp.list = <ListRow>{
+			comp.list = <ListStatus>{
 				copy: [
 					{
 						copy: { "@id": "http://localhost:8083/#Fragment-1" }
@@ -149,7 +149,7 @@ export function listSpecs() {
 
 		it( "Should display Empty list when the list doesn't have any children", () => {
 
-			comp.list = <ListRow>{
+			comp.list = <ListStatus>{
 				added: [],
 				isBeingCreated: true
 			};
@@ -161,7 +161,7 @@ export function listSpecs() {
 
 		it( "Should display New! on top right when list is being added", () => {
 
-			comp.list = <ListRow>{
+			comp.list = <ListStatus>{
 				added: [],
 				isBeingCreated: true
 			};
@@ -177,7 +177,7 @@ export function listSpecs() {
 				copy: { "@id": "http://example.com" },
 				modified: { "@id": "http://example-modified.com" },
 			};
-			comp.list = <ListRow>{
+			comp.list = <ListStatus>{
 				copy: [ modifiedItem ],
 				modified: [ modifiedItem ]
 			};
@@ -191,7 +191,7 @@ export function listSpecs() {
 
 			it( "Should display confirmation message", () => {
 
-				comp.list = <ListRow>{
+				comp.list = <ListStatus>{
 					copy: [
 						{
 							copy: { "@id": "http://example.com" },
@@ -217,14 +217,14 @@ export function listSpecs() {
 
 			it( "Should emit onDeleteList when list is being added", ( done ) => {
 
-				comp.list = <ListRow>{
+				comp.list = <ListStatus>{
 					added: [],
 					isBeingCreated: true
 				};
 				fixture.detectChanges();
 
 				let deleteButton:HTMLElement = de.nativeElement.querySelector( ".bottom.menu a.item" );
-				comp.listCmp.onDeleteList.subscribe( ( list:ListRow ) => {
+				comp.listCmp.onDeleteList.subscribe( ( list:ListStatus ) => {
 
 					expect( list ).toBeDefined();
 					expect( list ).toEqual( comp.list );
@@ -238,7 +238,7 @@ export function listSpecs() {
 
 			it( "Should emit onSave when list is already exists", ( done ) => {
 
-				comp.list = <ListRow>{
+				comp.list = <ListStatus>{
 					copy: [
 						{
 							copy: { "@id": "http://example.com" },
@@ -254,7 +254,7 @@ export function listSpecs() {
 				fixture.detectChanges();
 
 				let deleteButton:HTMLElement = de.nativeElement.querySelector( ".bottom.menu a.item" );
-				comp.listCmp.onSave.subscribe( ( list:ListRow ) => {
+				comp.listCmp.onSave.subscribe( ( list:ListStatus ) => {
 					expect( list ).toBeDefined();
 					expect( list ).toEqual( comp.list );
 					done();
@@ -267,7 +267,7 @@ export function listSpecs() {
 
 			it( "Should emit onSave when list is already exists", ( done ) => {
 
-				comp.list = <ListRow>{
+				comp.list = <ListStatus>{
 					copy: [
 						{
 							copy: { "@id": "http://example.com" },
@@ -283,7 +283,7 @@ export function listSpecs() {
 				fixture.detectChanges();
 
 				let deleteButton:HTMLElement = de.nativeElement.querySelector( ".bottom.menu a.item" );
-				comp.listCmp.onSave.subscribe( ( list:ListRow ) => {
+				comp.listCmp.onSave.subscribe( ( list:ListStatus ) => {
 					expect( list ).toBeDefined();
 					expect( list ).toEqual( comp.list );
 					expect( list.deleted ).toBeDefined();
@@ -299,7 +299,7 @@ export function listSpecs() {
 
 		it( "Should add new literal when clicking on Add New Literal", () => {
 
-			comp.list = <ListRow>{
+			comp.list = <ListStatus>{
 				copy: [
 					{
 						copy: { "@id": "http://example.com" },
@@ -319,7 +319,7 @@ export function listSpecs() {
 
 		it( "Should add new pointer when clicking on Add New Pointer", () => {
 
-			comp.list = <ListRow>{
+			comp.list = <ListStatus>{
 				copy: [
 					{
 						copy: { "@id": "http://example.com" },
@@ -339,7 +339,7 @@ export function listSpecs() {
 
 		it( "Should return all added items when calling `getAddedItems`", () => {
 
-			comp.list = <ListRow>{
+			comp.list = <ListStatus>{
 				copy: [
 					{
 						copy: { "@id": "http://example.com" },
@@ -366,7 +366,7 @@ export function listSpecs() {
 
 		it( "Should return all deleted items when calling `getDeletedItems`", () => {
 
-			comp.list = <ListRow>{
+			comp.list = <ListStatus>{
 				copy: [
 					{ copy: { "@id": "http://example-1.com" }, },
 					{ copy: { "@id": "http://example-2.com" }, deleted: { "@id": "http://example-2.com" } },
@@ -382,7 +382,7 @@ export function listSpecs() {
 
 		it( "Should return all modified items when calling `getModifiedItems`", () => {
 
-			comp.list = <ListRow>{
+			comp.list = <ListStatus>{
 				copy: [
 					{ copy: { "@id": "http://example-1.com" }, },
 					{ copy: { "@id": "http://example-2.com" }, modified: { "@id": "http://modified-example-2.com" } },
@@ -398,7 +398,7 @@ export function listSpecs() {
 
 		it( "Should return all untouched items when calling `getUntouchedItems`", () => {
 
-			comp.list = <ListRow>{
+			comp.list = <ListStatus>{
 				copy: [
 					{ copy: { "@id": "http://example-1.com" }, },
 					{ copy: { "@id": "http://example-2.com" }, modified: { "@id": "http://modified-example-2.com" } },
@@ -414,7 +414,7 @@ export function listSpecs() {
 
 		it( "Should move items up when item emits onMoveUp", () => {
 
-			comp.list = <ListRow>{
+			comp.list = <ListStatus>{
 				copy: [
 					{ copy: { "@id": "http://example-1.com" }, },
 					{ copy: { "@id": "http://example-2.com" }, },
@@ -435,7 +435,7 @@ export function listSpecs() {
 
 		it( "Should move items down when item emits onMoveDown", () => {
 
-			comp.list = <ListRow>{
+			comp.list = <ListStatus>{
 				copy: [
 					{ copy: { "@id": "http://example-1.com" }, },
 					{ copy: { "@id": "http://example-2.com" }, },

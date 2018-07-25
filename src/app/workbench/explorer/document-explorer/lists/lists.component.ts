@@ -3,7 +3,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { Modes } from "../property/property.component";
-import { List, ListRow } from "./list.component";
+import { List, ListStatus } from "./list.component";
 
 
 /*
@@ -21,13 +21,13 @@ export class ListsComponent implements OnInit {
 	canDisplayLists:boolean = false;
 
 	@Input() documentURI:string = "";
-	@Input() lists:ListRow[] = [];
+	@Input() lists:ListStatus[] = [];
 	@Input() onAddNewList:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Input() blankNodes:RDFNode[] = [];
 	@Input() namedFragments:RDFNode[] = [];
 	@Input() canEdit:boolean = true;
 
-	@Output() onListsChanges:EventEmitter<ListRow[]> = new EventEmitter<ListRow[]>();
+	@Output() onListsChanges:EventEmitter<ListStatus[]> = new EventEmitter<ListStatus[]>();
 	@Output() onGoToBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
@@ -41,10 +41,10 @@ export class ListsComponent implements OnInit {
 	}
 
 	addNewList():void {
-		let newListRow:ListRow = <ListRow>{};
-		newListRow.added = [];
-		newListRow.isBeingCreated = true;
-		this.lists.splice( 0, 0, newListRow );
+		let newListStatus:ListStatus = <ListStatus>{};
+		newListStatus.added = [];
+		newListStatus.isBeingCreated = true;
+		this.lists.splice( 0, 0, newListStatus );
 		this.saveList( null, null, 0 );
 	}
 
@@ -54,7 +54,7 @@ export class ListsComponent implements OnInit {
 		this.updateCanDisplayLists();
 	}
 
-	deleteList( deletingList:ListRow, index:number ):void {
+	deleteList( deletingList:ListStatus, index:number ):void {
 		if( typeof deletingList.added !== "undefined" ) this.lists.splice( index, 1 );
 		this.onListsChanges.emit( this.lists );
 		this.updateCanDisplayLists();
@@ -64,20 +64,20 @@ export class ListsComponent implements OnInit {
 		this.canDisplayLists = this.getUntouchedLists().length > 0 || this.getAddedLists().length > 0 || this.getModifiedLists().length > 0;
 	}
 
-	getAddedLists():ListRow[] {
-		return this.lists.filter( ( list:ListRow ) => typeof list.added !== "undefined" );
+	getAddedLists():ListStatus[] {
+		return this.lists.filter( ( list:ListStatus ) => typeof list.added !== "undefined" );
 	}
 
-	getDeletedLists():ListRow[] {
-		return this.lists.filter( ( list:ListRow ) => typeof list.deleted !== "undefined" );
+	getDeletedLists():ListStatus[] {
+		return this.lists.filter( ( list:ListStatus ) => typeof list.deleted !== "undefined" );
 	}
 
-	getModifiedLists():ListRow[] {
-		return this.lists.filter( ( list:ListRow ) => typeof list.modified !== "undefined" && typeof list.deleted === "undefined" );
+	getModifiedLists():ListStatus[] {
+		return this.lists.filter( ( list:ListStatus ) => typeof list.modified !== "undefined" && typeof list.deleted === "undefined" );
 	}
 
-	getUntouchedLists():ListRow[] {
-		return this.lists.filter( ( list:ListRow ) => typeof list.modified === "undefined" && typeof list.deleted === "undefined" );
+	getUntouchedLists():ListStatus[] {
+		return this.lists.filter( ( list:ListStatus ) => typeof list.modified === "undefined" && typeof list.deleted === "undefined" );
 	}
 
 	goToBlankNode( id:string ):void {

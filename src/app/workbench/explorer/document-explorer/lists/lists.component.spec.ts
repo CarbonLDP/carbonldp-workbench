@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 
 import { ListsComponent } from "./../lists/lists.component";
-import { ListRow, ListComponent } from "./../lists/list.component";
+import { ListStatus, ListComponent } from "./../lists/list.component";
 import { LiteralStatus, LiteralComponent } from "./../literals/literal.component";
 import { PointerStatus, PointerComponent } from "./../pointers/pointer.component";
 import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
@@ -28,7 +28,7 @@ export function listsSpecs() {
 		class TestComponent {
 
 			documentURI:string = "";
-			lists:ListRow[] = [];
+			lists:ListStatus[] = [];
 			blankNodes:BlankNodeRow[] = [];
 			namedFragments:NamedFragmentStatus[] = [];
 
@@ -89,7 +89,7 @@ export function listsSpecs() {
 					copy: { "@id": "_:ffd23wsa83Xf8xz82" }
 				}
 			];
-			let lists:ListRow[] = [
+			let lists:ListStatus[] = [
 				{
 					copy: [
 						blankNodes[ 0 ],
@@ -131,8 +131,8 @@ export function listsSpecs() {
 
 			fit( "Should emit lists with new list with property `deleted`", ( done ) => {
 
-				comp.listsCmp.onListsChanges.subscribe( ( lists:ListRow[] ) => {
-					let deletedList:ListRow = lists[ 0 ];
+				comp.listsCmp.onListsChanges.subscribe( ( lists:ListStatus[] ) => {
+					let deletedList:ListStatus = lists[ 0 ];
 					expect( deletedList ).toBeDefined();
 					expect( deletedList.deleted ).toBeDefined();
 					expect( deletedList.deleted ).toEqual( deletedList.copy );
@@ -159,8 +159,8 @@ export function listsSpecs() {
 
 			fit( "Should emit lists with empty list with property `added`", ( done ) => {
 
-				comp.listsCmp.onListsChanges.subscribe( ( lists:ListRow[] ) => {
-					let addedList:ListRow = lists.find( ( list:ListRow ) => ! ! list.added );
+				comp.listsCmp.onListsChanges.subscribe( ( lists:ListStatus[] ) => {
+					let addedList:ListStatus = lists.find( ( list:ListStatus ) => ! ! list.added );
 					expect( lists.length ).toEqual( 2 );
 					expect( addedList ).toBeDefined();
 					expect( addedList.added ).toBeDefined();
@@ -176,8 +176,8 @@ export function listsSpecs() {
 
 			fit( "Should emit lists with list with property added", ( done ) => {
 
-				comp.listsCmp.onListsChanges.subscribe( ( lists:ListRow[] ) => {
-					let addedList:ListRow = lists.find( ( list:ListRow ) => ! ! list.added );
+				comp.listsCmp.onListsChanges.subscribe( ( lists:ListStatus[] ) => {
+					let addedList:ListStatus = lists.find( ( list:ListStatus ) => ! ! list.added );
 					expect( lists.length ).toEqual( 2 );
 					expect( addedList ).toBeDefined();
 					expect( addedList.added ).toBeDefined();
@@ -231,8 +231,8 @@ export function listsSpecs() {
 			fixture.detectChanges();
 
 
-			comp.listsCmp.onListsChanges.subscribe( ( lists:ListRow[] ) => {
-				let deletedList:ListRow = lists[ 0 ];
+			comp.listsCmp.onListsChanges.subscribe( ( lists:ListStatus[] ) => {
+				let deletedList:ListStatus = lists[ 0 ];
 				expect( deletedList ).toBeDefined();
 				expect( deletedList.deleted ).toBeDefined();
 				expect( deletedList.deleted ).toEqual( deletedList.copy );

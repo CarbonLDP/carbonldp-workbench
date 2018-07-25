@@ -7,7 +7,7 @@ import { RDFNode } from "carbonldp/RDF/Node"
 
 import { LiteralStatus } from "./../../literals/literal.component";
 import { PointerStatus } from "./../../pointers/pointer.component";
-import { ListRow } from "./../../lists/list.component";
+import { ListStatus } from "./../../lists/list.component";
 import { NamedFragmentStatus } from "./../../named-fragments/named-fragment.component";
 import { Property, PropertyStatus, PropertyToken, Modes } from "./../property.component";
 
@@ -23,7 +23,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	$element:JQuery;
 	literals:LiteralStatus[] = [];
 	pointers:PointerStatus[] = [];
-	lists:ListRow[] = [];
+	lists:ListStatus[] = [];
 
 	// Variable that will have the JSON object of the property
 	// with all the changes made to the original property.
@@ -158,7 +158,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 			} else if( RDFNode.is( literalOrRDFNodeOrList ) ) {
 				this.pointers.push( <PointerStatus>{ copy: literalOrRDFNodeOrList } );
 			} else if( RDFList.is( literalOrRDFNodeOrList ) ) {
-				this.lists.push( <ListRow>{ copy: literalOrRDFNodeOrList[ "@list" ].map( ( item ) => { return { copy: item } } ) } );
+				this.lists.push( <ListStatus>{ copy: literalOrRDFNodeOrList[ "@list" ].map( ( item ) => { return { copy: item } } ) } );
 			}
 		} );
 	}
@@ -206,16 +206,16 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 		this.changePropertyContent();
 	}
 
-	checkForChangesOnLists( lists:ListRow[] ):void {
+	checkForChangesOnLists( lists:ListStatus[] ):void {
 		this.lists = lists;
 		this.changePropertyContent();
 	}
 
-	private convertToListWithStates( lists:ListRow[] ):ListRow[] {
-		let resultingLists:ListRow[] = [];
-		lists.forEach( ( list:ListRow ) => {
+	private convertToListWithStates( lists:ListStatus[] ):ListStatus[] {
+		let resultingLists:ListStatus[] = [];
+		lists.forEach( ( list:ListStatus ) => {
 			let state:string = (! ! list.added) ? "added" : (! ! list.deleted) ? "deleted" : (! ! list.modified) ? "modified" : "copy";
-			let resultingList:ListRow = {
+			let resultingList:ListStatus = {
 				[ state ]: {
 					[ PropertyToken.LIST ]: this.getRDFList( list, state )
 				}
@@ -225,7 +225,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 		return resultingLists;
 	}
 
-	private getRDFList( list:ListRow, state:string ):any[] {
+	private getRDFList( list:ListStatus, state:string ):any[] {
 		let resultingListContent:any[] = [];
 		list[ state ].forEach( ( literalOrPointer:any ) => {
 			if( ! ! literalOrPointer.deleted ) return;
@@ -269,14 +269,14 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	*   Creates a new array with the new value created by concatenating
 	*   the original/modified/added literals, pointers and lists
 	* */
-	private getValueWithChanges():Array<LiteralStatus | PointerStatus | ListRow> {
-		let tempValue:Array<LiteralStatus | PointerStatus | ListRow> = [];
-		let tempLists:ListRow[] = this.convertToListWithStates( this.lists );
+	private getValueWithChanges():Array<LiteralStatus | PointerStatus | ListStatus> {
+		let tempValue:Array<LiteralStatus | PointerStatus | ListStatus> = [];
+		let tempLists:ListStatus[] = this.convertToListWithStates( this.lists );
 
 		// Concat the literals with the pointers and the lists
 		// and add them to the returning value
 		[ ...this.literals, ...this.pointers, ...tempLists ]
-			.forEach( ( literalOrPointerOrList:LiteralStatus | PointerStatus | ListRow ) => {
+			.forEach( ( literalOrPointerOrList:LiteralStatus | PointerStatus | ListStatus ) => {
 				if( literalOrPointerOrList.deleted ) return;
 
 				let state:string = (! ! literalOrPointerOrList.modified) ? "modified" : (! ! literalOrPointerOrList.added) ? "added" : "copy";

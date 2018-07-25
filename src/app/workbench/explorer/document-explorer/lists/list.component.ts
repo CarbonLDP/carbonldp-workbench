@@ -34,10 +34,10 @@ export class ListComponent {
 	orderHasChanged:boolean = false;
 
 
-	private _list:ListRow;
+	private _list:ListStatus;
 	get list() { return this._list; }
 
-	@Input() set list( list:ListRow ) {
+	@Input() set list( list:ListStatus ) {
 		this.status = ! ! list.copy ? (! ! list.modified ? "modified" : "copy") : "added";
 		this._list = list;
 		list[ this.status ].forEach( ( literalOrPointer ) => {
@@ -50,8 +50,8 @@ export class ListComponent {
 	@Input() blankNodes:RDFNode[] = [];
 	@Input() namedFragments:RDFNode[] = [];
 
-	@Output() onSave:EventEmitter<ListRow> = new EventEmitter<ListRow>();
-	@Output() onDeleteList:EventEmitter<ListRow> = new EventEmitter<ListRow>();
+	@Output() onSave:EventEmitter<ListStatus> = new EventEmitter<ListStatus>();
+	@Output() onDeleteList:EventEmitter<ListStatus> = new EventEmitter<ListStatus>();
 	@Output() onGoToBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
@@ -129,7 +129,7 @@ export class ListComponent {
 		return this.tempList.filter( ( item:PointerStatus | LiteralStatus ) => typeof item.modified === "undefined" && typeof item.deleted === "undefined" );
 	}
 
-	areEquals( original:Array<LiteralStatus | PointerStatus>, modified:Array<ListRow | PointerStatus> ):boolean {
+	areEquals( original:Array<LiteralStatus | PointerStatus>, modified:Array<ListStatus | PointerStatus> ):boolean {
 		return ObjectUtils.areEqual( original, modified, { arrays: true, objects: true } );
 	}
 
@@ -179,7 +179,7 @@ export class ListComponent {
 
 }
 
-export interface ListRow {
+export interface ListStatus {
 	copy?:any;
 	added?:any;
 	modified?:any;
