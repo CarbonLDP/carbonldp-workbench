@@ -5,13 +5,14 @@ import { URI } from "carbonldp/RDF/URI";
 import { NamedFragmentStatus } from "./named-fragment.component";
 import { BlankNodeRow } from "../blank-nodes/blank-node.component";
 
-import * as $ from "jquery";
-import "semantic-ui/semantic";
 
+/*
+*  Lists all the Named Fragments a Documents contains
+* */
 @Component( {
 	selector: "cw-named-fragments",
 	templateUrl: "./named-fragments.component.html",
-	styleUrls: [  "./named-fragments.component.scss"  ],
+	styleUrls: [ "./named-fragments.component.scss" ],
 } )
 
 export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
@@ -42,15 +43,15 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 		this.initializeDeletionDimmer();
 	}
 
-	ngOnChanges( changes:{ [propName:string]:SimpleChange } ):void {
-		if( ( changes[ "namedFragments" ].currentValue !== changes[ "namedFragments" ].previousValue ) ) {
+	ngOnChanges( changes:{ [ propName:string ]:SimpleChange } ):void {
+		if( (changes[ "namedFragments" ].currentValue !== changes[ "namedFragments" ].previousValue) ) {
 			this.openedNamedFragments = [];
 			this.goToNamedFragment( "all-namedFragments" );
 			this.namedFragmentsRecords.clear();
 		}
 	}
 
-	openNamedFragment( nodeOrId:NamedFragmentStatus|string ):void {
+	openNamedFragment( nodeOrId:NamedFragmentStatus | string ):void {
 		let node:NamedFragmentStatus;
 		if( typeof nodeOrId === "string" ) {
 			node = this.namedFragments.find( ( node ) => { return node.name === nodeOrId} );
@@ -167,9 +168,9 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 }
 
 export class NamedFragmentsRecords {
-	changes:Map<string,NamedFragmentStatus> = new Map<string, NamedFragmentStatus>();
-	deletions:Map<string,NamedFragmentStatus> = new Map<string, NamedFragmentStatus>();
-	additions:Map<string,NamedFragmentStatus> = new Map<string, NamedFragmentStatus>();
+	changes:Map<string, NamedFragmentStatus> = new Map<string, NamedFragmentStatus>();
+	deletions:Map<string, NamedFragmentStatus> = new Map<string, NamedFragmentStatus>();
+	additions:Map<string, NamedFragmentStatus> = new Map<string, NamedFragmentStatus>();
 
 	clear():void {
 		this.changes.clear();

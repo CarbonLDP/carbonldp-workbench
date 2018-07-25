@@ -1,11 +1,16 @@
+<!-- START: Action buttons -->
 <button class="ui basic compact labeled right icon button" (click)="createProperty()" *ngIf="canEdit">
 	<i class="plus icon"></i>
 	Add Property
 </button>
+<!-- END: Action buttons -->
+
 <div class="ui divider" *ngIf="canEdit"></div>
+
+<!-- START: Properties of the Document -->
 <div class="ui divided items">
 	<ng-template ngFor let-propertyStatus="$implicit" [ngForOf]="properties" let-i="index">
-		<cw-property class="property item" *ngIf="canDisplay(propertyStatus.copy? propertyStatus.copy.name:propertyStatus.added.name)"
+		<cw-property class="property item" *ngIf="canDisplay(propertyStatus.copy? propertyStatus.copy.name : propertyStatus.added.name)"
 		             [attr.data-tar]="propertyStatus.copy? propertyStatus.copy.name : propertyStatus.added.name"
 
 		             [property]="propertyStatus"
@@ -25,3 +30,4 @@
 		</cw-property>
 	</ng-template>
 </div>
+<!-- START: Properties of the Document -->

@@ -6,6 +6,9 @@ import { Modes } from "../property/property.component";
 import { Pointer, PointerStatus } from "./pointer.component";
 
 
+/*
+*  Contains all the pointers of a property.
+* */
 @Component( {
 	selector: "cw-pointers",
 	templateUrl: "./pointers.component.html",

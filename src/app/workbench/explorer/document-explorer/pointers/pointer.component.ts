@@ -7,6 +7,9 @@ import { BlankNodeRow } from "../blank-nodes/blank-node.component";
 import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
 
 
+/*
+*  Displays the id of a pointer
+* */
 @Component( {
 	selector: "tr.cw-pointer",
 	templateUrl: "./pointer.component.html",

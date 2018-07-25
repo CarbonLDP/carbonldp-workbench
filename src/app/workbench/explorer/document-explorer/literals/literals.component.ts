@@ -4,6 +4,9 @@ import { Modes } from "../property/property.component";
 import { Literal, LiteralStatus, LiteralToken } from "./literal.component";
 
 
+/*
+*  Contains all the literals of a property.
+* */
 @Component( {
 	selector: "cw-literals",
 	templateUrl: "./literals.component.html",
