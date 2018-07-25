@@ -121,14 +121,8 @@ export class PropertyIDComponent implements AfterViewInit {
 
 	private changePropertyContent():void {
 		this.tempProperty.id = this.id;
+		this.tempProperty.name = this.id;
 		delete this.property.modified;
-
-		// Change value because it is a single string
-		if( ! ! this.property.copy ) {
-			if( this.tempProperty.value !== this.property.copy.value ) {
-				this.property.modified = this.tempProperty;
-			}
-		}
 
 		this.property.isBeingCreated = false;
 
@@ -136,6 +130,8 @@ export class PropertyIDComponent implements AfterViewInit {
 			if( this.valueHasChanged ) {
 				this.property.modified = this.tempProperty;
 			}
+		} else if( ! ! this.property.added ) {
+			this.property.added = this.tempProperty;
 		}
 		this.onChangeProperty.emit( this.tempProperty );
 	}
