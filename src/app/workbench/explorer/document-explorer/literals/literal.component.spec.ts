@@ -4,7 +4,7 @@ import { FormsModule } from "@angular/forms";
 
 import { XSD } from "carbonldp/Vocabularies";
 
-import { Modes } from "../document-explorer-library"
+import { JsonLDKeyword, Modes } from "../document-explorer-library"
 import { Literal, LiteralComponent, LiteralStatus } from "./literal.component";
 import { LiteralValueValidator } from "../document-explorer-validators";
 
@@ -52,7 +52,7 @@ export function literalSpecs() {
 			let literalStatus:LiteralStatus;
 
 			beforeEach( () => {
-				literal = { "@value": "My value" };
+				literal = { [ JsonLDKeyword.VALUE ]: "My value" };
 				literalStatus = { copy: literal };
 				comp.literalStatus = literalStatus;
 				fixture.detectChanges();
@@ -66,7 +66,7 @@ export function literalSpecs() {
 
 			it( "Should display @type", () => {
 
-				let literal:Literal = { "@value": 42, "@type": XSD.int };
+				let literal:Literal = { [ JsonLDKeyword.VALUE ]: 42, [ JsonLDKeyword.TYPE ]: XSD.int };
 				let literalStatus:LiteralStatus = { copy: literal };
 				comp.literalStatus = literalStatus;
 				fixture.detectChanges();
@@ -77,7 +77,7 @@ export function literalSpecs() {
 
 			it( "Should display @type as string if not present", () => {
 
-				let literal:Literal = { "@value": 42 };
+				let literal:Literal = { [ JsonLDKeyword.VALUE ]: 42 };
 				let literalStatus:LiteralStatus = { copy: literal };
 				comp.literalStatus = literalStatus;
 				fixture.detectChanges();
@@ -89,8 +89,8 @@ export function literalSpecs() {
 			it( "Should display @language if present", () => {
 
 				let literal:Literal = {
-					"@value": "My value",
-					"@language": "en",
+					[ JsonLDKeyword.VALUE ]: "My value",
+					[ JsonLDKeyword.LANGUAGE ]: "en",
 				};
 				let literalStatus:LiteralStatus = { copy: literal };
 				comp.literalStatus = literalStatus;
@@ -142,7 +142,7 @@ export function literalSpecs() {
 
 				it( "Should emit literal when clicking moveUp button", ( done ) => {
 
-					literal = { "@value": "My value" };
+					literal = { [ JsonLDKeyword.VALUE ]: "My value" };
 					literalStatus = { copy: literal };
 					comp.literalStatus = literalStatus;
 					fixture.detectChanges();
@@ -158,7 +158,7 @@ export function literalSpecs() {
 
 				it( "Should emit literal when clicking moveDown button", ( done ) => {
 
-					literal = { "@value": "My value" };
+					literal = { [ JsonLDKeyword.VALUE ]: "My value" };
 					literalStatus = { copy: literal };
 					comp.literalStatus = literalStatus;
 					fixture.detectChanges();
@@ -189,8 +189,8 @@ export function literalSpecs() {
 				it( "Should emit literal when literal already exists", ( done ) => {
 
 					let literal:Literal = {
-						"@value": "My value",
-						"@language": "en",
+						[ JsonLDKeyword.VALUE ]: "My value",
+						[ JsonLDKeyword.LANGUAGE ]: "en",
 					};
 					let literalStatus:LiteralStatus = { copy: literal };
 					comp.literalStatus = literalStatus;
@@ -208,8 +208,8 @@ export function literalSpecs() {
 				it( "Should emit literal with property added when literal is being added", ( done ) => {
 
 					let literal:Literal = {
-						"@value": "My value",
-						"@language": "en",
+						[ JsonLDKeyword.VALUE ]: "My value",
+						[ JsonLDKeyword.LANGUAGE ]: "en",
 					};
 					let literalStatus:LiteralStatus = { copy: undefined, added: literal };
 					comp.literalStatus = literalStatus;
@@ -232,7 +232,7 @@ export function literalSpecs() {
 			let literalStatus:LiteralStatus;
 
 			beforeEach( () => {
-				literal = { "@value": "42" };
+				literal = { [ JsonLDKeyword.VALUE ]: "42" };
 				literalStatus = { copy: literal };
 				comp.literalStatus = literalStatus;
 				fixture.detectChanges();
@@ -264,8 +264,8 @@ export function literalSpecs() {
 			it( "Should show `invalid value type` when entering wrong value types", () => {
 
 				let literal:Literal = {
-					"@value": 42,
-					"@type": XSD.int,
+					[ JsonLDKeyword.VALUE ]: 42,
+					[ JsonLDKeyword.TYPE ]: XSD.int,
 				};
 				let literalStatus:LiteralStatus = { copy: literal };
 				comp.literalStatus = literalStatus;
@@ -297,9 +297,9 @@ export function literalSpecs() {
 			it( "Should display dropdown language when @language is present", () => {
 
 				let literal:Literal = {
-					"@value": "my value",
-					"@type": XSD.string,
-					"@language": "en"
+					[ JsonLDKeyword.VALUE ]: "my value",
+					[ JsonLDKeyword.TYPE ]: XSD.string,
+					[ JsonLDKeyword.LANGUAGE ]: "en"
 				};
 				let literalStatus:LiteralStatus = {
 					copy: literal
@@ -331,8 +331,8 @@ export function literalSpecs() {
 				it( "Should show original @value", () => {
 
 					let literal:Literal = {
-						"@value": 42,
-						"@type": XSD.int,
+						[ JsonLDKeyword.VALUE ]: 42,
+						[ JsonLDKeyword.TYPE ]: XSD.int,
 					};
 					let literalStatus:LiteralStatus = {
 						copy: literal
@@ -361,8 +361,8 @@ export function literalSpecs() {
 				it( "Should show original @type", () => {
 
 					let literal:Literal = {
-						"@value": 42,
-						"@type": XSD.int,
+						[ JsonLDKeyword.VALUE ]: 42,
+						[ JsonLDKeyword.TYPE ]: XSD.int,
 					};
 					let literalStatus:LiteralStatus = {
 						copy: literal
@@ -401,8 +401,8 @@ export function literalSpecs() {
 				it( "Should emit literal when cancelled literal is being added", ( done ) => {
 
 					let literal:Literal = {
-						"@value": "",
-						"@language": "en",
+						[ JsonLDKeyword.VALUE ]: "",
+						[ JsonLDKeyword.LANGUAGE ]: "en",
 					};
 					let literalStatus:LiteralStatus = { copy: undefined, added: literal };
 					comp.literalStatus = literalStatus;
@@ -431,7 +431,7 @@ export function literalSpecs() {
 					fixture.detectChanges();
 
 					let valueInput:HTMLInputElement = comp.literalCmp.element.nativeElement.querySelector( "input[name='valueInput']" );
-					valueInput.value = literalStatus.copy[ "@value" ] + "";
+					valueInput.value = literalStatus.copy[ JsonLDKeyword.VALUE ] + "";
 					valueInput.dispatchEvent( new Event( "input" ) );
 					fixture.detectChanges();
 
@@ -447,8 +447,8 @@ export function literalSpecs() {
 				it( "Should emit literal with property added if it's a new literal", ( done ) => {
 
 					let literal:Literal = {
-						"@value": "new literal",
-						"@language": "en",
+						[ JsonLDKeyword.VALUE ]: "new literal",
+						[ JsonLDKeyword.LANGUAGE ]: "en",
 					};
 					let literalStatus:LiteralStatus = { copy: undefined, added: literal };
 					comp.literalStatus = literalStatus;
@@ -459,7 +459,7 @@ export function literalSpecs() {
 					fixture.detectChanges();
 
 					let valueInput:HTMLInputElement = comp.literalCmp.element.nativeElement.querySelector( "input[name='valueInput']" );
-					valueInput.value = literalStatus.added[ "@value" ] + "";
+					valueInput.value = literalStatus.added[ JsonLDKeyword.VALUE ] + "";
 					valueInput.dispatchEvent( new Event( "input" ) );
 					fixture.detectChanges();
 
@@ -487,7 +487,7 @@ export function literalSpecs() {
 						expect( value ).toBeDefined();
 						expect( value.copy ).toEqual( literalStatus.copy );
 						expect( value.modified ).toBeDefined();
-						expect( value.modified[ "@value" ] ).toEqual( "My changed text" );
+						expect( value.modified[ JsonLDKeyword.VALUE ] ).toEqual( "My changed text" );
 						done();
 					} );
 					let saveButton:HTMLButtonElement = comp.literalCmp.element.nativeElement.querySelector( "button[title='Save']" );

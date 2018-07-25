@@ -4,6 +4,7 @@ import { URI } from "carbonldp/RDF/URI";
 
 import { NamedFragmentStatus } from "./named-fragment.component";
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
+import { JsonLDKeyword } from "app/workbench/explorer/document-explorer/document-explorer-library";
 
 
 /*
@@ -134,7 +135,7 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 			id: id,
 			name: id,
 			copy: {
-				"@id": id
+				[ JsonLDKeyword.ID ]: id
 			}
 		};
 		newNamedFragment.added = newNamedFragment.copy;

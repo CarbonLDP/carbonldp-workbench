@@ -6,6 +6,7 @@ import { FormsModule } from "@angular/forms";
 import { PointerComponent, PointerStatus } from "./../pointers/pointer.component";
 import { PointersComponent } from "./../pointers/pointers.component";
 import { PointerValidator } from "../document-explorer-validators";
+import { JsonLDKeyword } from "./../document-explorer-library";
 
 export function pointersSpecs() {
 
@@ -42,13 +43,13 @@ export function pointersSpecs() {
 		beforeEach( () => {
 			let pointers:PointerStatus[] = [
 				{
-					copy: { "@id": "http://pointer-1.com" }
+					copy: { [ JsonLDKeyword.ID ]: "http://pointer-1.com" }
 				},
 				{
-					copy: { "@id": "http://pointer-2.com" }
+					copy: { [ JsonLDKeyword.ID ]: "http://pointer-2.com" }
 				},
 				{
-					copy: { "@id": "http://pointer-3.com" }
+					copy: { [ JsonLDKeyword.ID ]: "http://pointer-3.com" }
 				},
 			];
 			comp.pointers = pointers;
@@ -68,8 +69,8 @@ export function pointersSpecs() {
 		it( "Should add class `modified-pointer` to pointers that are being modified", () => {
 
 			comp.pointersCmp.pointers[ 0 ] = {
-				copy: { "@id": "http://pointer-1.com" },
-				modified: { "@id": "http://pointer-2.com" },
+				copy: { [ JsonLDKeyword.ID ]: "http://pointer-1.com" },
+				modified: { [ JsonLDKeyword.ID ]: "http://pointer-2.com" },
 			};
 			fixture.detectChanges();
 
@@ -84,13 +85,13 @@ export function pointersSpecs() {
 
 			let toModifyPointerIdx:number = 0;
 			let toModifyPointer:PointerStatus = comp.pointersCmp.pointers[ toModifyPointerIdx ];
-			toModifyPointer.modified = { "@id": "http://modified-pointer-1" };
+			toModifyPointer.modified = { [ JsonLDKeyword.ID ]: "http://modified-pointer-1" };
 
 			comp.pointersCmp.onPointersChanges.subscribe( ( pointers:PointerStatus[] ) => {
 				expect( pointers ).not.toBeNull();
 				expect( pointers.length ).toEqual( 3 );
 				expect( pointers[ toModifyPointerIdx ].modified ).toBeDefined();
-				expect( pointers[ toModifyPointerIdx ].modified[ "@id" ] ).toEqual( "http://modified-pointer-1" );
+				expect( pointers[ toModifyPointerIdx ].modified[ JsonLDKeyword.ID ] ).toEqual( "http://modified-pointer-1" );
 				done();
 			} );
 			comp.pointersCmp.savePointer();
@@ -111,7 +112,7 @@ export function pointersSpecs() {
 				expect( pointers ).not.toBeNull();
 				expect( pointers.length ).toEqual( 3 );
 				expect( pointers[ toDeletePointerIdx ].deleted ).toBeDefined();
-				expect( pointers[ toDeletePointerIdx ].deleted[ "@id" ] ).toEqual( "http://pointer-1.com" );
+				expect( pointers[ toDeletePointerIdx ].deleted[ JsonLDKeyword.ID ] ).toEqual( "http://pointer-1.com" );
 				done();
 			} );
 
@@ -187,12 +188,12 @@ export function pointersSpecs() {
 		it( "Should return all modified pointers when calling `getModifiedPointers`", () => {
 
 			comp.pointersCmp.pointers[ 1 ] = {
-				copy: { "@id": "http://pointer-2" },
-				modified: { "@id": "http://modified-pointer-2" },
+				copy: { [ JsonLDKeyword.ID ]: "http://pointer-2" },
+				modified: { [ JsonLDKeyword.ID ]: "http://modified-pointer-2" },
 			};
 			comp.pointersCmp.pointers[ 2 ] = {
-				copy: { "@id": "http://pointer-3" },
-				modified: { "@id": "http://modified-pointer-3" },
+				copy: { [ JsonLDKeyword.ID ]: "http://pointer-3" },
+				modified: { [ JsonLDKeyword.ID ]: "http://modified-pointer-3" },
 			};
 			fixture.detectChanges();
 

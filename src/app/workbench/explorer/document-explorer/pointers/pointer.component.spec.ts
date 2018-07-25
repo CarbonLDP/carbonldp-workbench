@@ -2,7 +2,7 @@ import { Component, ViewChild, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 
-import { Modes } from "../document-explorer-library";
+import { JsonLDKeyword, Modes } from "../document-explorer-library";
 import { Pointer, PointerComponent, PointerStatus } from "./../pointers/pointer.component";
 import { PointerValidator } from "../document-explorer-validators";
 import { BlankNodeStatus } from "./../blank-nodes/blank-node.component";
@@ -60,7 +60,7 @@ export function pointerSpecs() {
 			let pointerRow:PointerStatus;
 
 			beforeEach( () => {
-				pointer = { "@id": "http://www.example.com" };
+				pointer = { [ JsonLDKeyword.ID ]: "http://www.example.com" };
 				pointerRow = { copy: pointer };
 				comp.pointerRow = pointerRow;
 				fixture.detectChanges();
@@ -94,13 +94,13 @@ export function pointerSpecs() {
 				let blankNodes:BlankNodeStatus[] = [
 					{
 						id: "_:sq23wLWUDsXhst823",
-						copy: { "@id": "_:sq23wLWUDsXhst823" }
+						copy: { [ JsonLDKeyword.ID ]: "_:sq23wLWUDsXhst823" }
 					}, {
 						id: "_:a8987w903nfVst5hs",
-						copy: { "@id": "_:a8987w903nfVst5hs" }
+						copy: { [ JsonLDKeyword.ID ]: "_:a8987w903nfVst5hs" }
 					}, {
 						id: "_:ffd23wsa83Xf8xz82",
-						copy: { "@id": "_:ffd23wsa83Xf8xz82" }
+						copy: { [ JsonLDKeyword.ID ]: "_:ffd23wsa83Xf8xz82" }
 					}
 				];
 
@@ -112,7 +112,7 @@ export function pointerSpecs() {
 
 				comp.pointerCmp.onGoToBlankNode.subscribe( ( id:string ) => {
 					expect( id ).not.toBeNull();
-					expect( id ).toEqual( blankNodes[ 0 ].copy[ "@id" ] );
+					expect( id ).toEqual( blankNodes[ 0 ].copy[ JsonLDKeyword.ID ] );
 					done();
 				} );
 
@@ -128,19 +128,19 @@ export function pointerSpecs() {
 						id: "http://localhost:8083/#New-Fragment-Name-1",
 						name: "http://localhost:8083/#New-Fragment-Name-1",
 						copy: {
-							"@id": "http://localhost:8083/#New-Fragment-Name-1",
+							[ JsonLDKeyword.ID ]: "http://localhost:8083/#New-Fragment-Name-1",
 						}
 					}, {
 						id: "http://localhost:8083/#New-Fragment-Name-2",
 						name: "http://localhost:8083/#New-Fragment-Name-2",
 						copy: {
-							"@id": "http://localhost:8083/#New-Fragment-Name-2"
+							[ JsonLDKeyword.ID ]: "http://localhost:8083/#New-Fragment-Name-2"
 						}
 					}, {
 						id: "http://localhost:8083/#New-Fragment-Name-3",
 						name: "http://localhost:8083/#New-Fragment-Name-3",
 						copy: {
-							"@id": "http://localhost:8083/#New-Fragment-Name-3",
+							[ JsonLDKeyword.ID ]: "http://localhost:8083/#New-Fragment-Name-3",
 						}
 					}
 				];
@@ -154,7 +154,7 @@ export function pointerSpecs() {
 
 				comp.pointerCmp.onGoToNamedFragment.subscribe( ( id:string ) => {
 					expect( id ).not.toBeNull();
-					expect( id ).toEqual( namedFragments[ 0 ].copy[ "@id" ] );
+					expect( id ).toEqual( namedFragments[ 0 ].copy[ JsonLDKeyword.ID ] );
 					done();
 				} );
 
@@ -180,7 +180,7 @@ export function pointerSpecs() {
 
 				it( "Should emit pointer when clicking moveUp button", ( done ) => {
 
-					pointer = { "@id": "http://www.example.com" };
+					pointer = { [ JsonLDKeyword.ID ]: "http://www.example.com" };
 					pointerRow = { copy: pointer };
 					comp.pointerRow = pointerRow;
 					fixture.detectChanges();
@@ -196,7 +196,7 @@ export function pointerSpecs() {
 
 				it( "Should emit pointer when clicking moveDown button", ( done ) => {
 
-					pointer = { "@id": "http://www.example.com" };
+					pointer = { [ JsonLDKeyword.ID ]: "http://www.example.com" };
 					pointerRow = { copy: pointer };
 					comp.pointerRow = pointerRow;
 					fixture.detectChanges();
@@ -226,7 +226,7 @@ export function pointerSpecs() {
 
 				it( "Should emit pointer when pointer already exists", ( done ) => {
 
-					let pointer:Pointer = { "@id": "http://www.example.com" };
+					let pointer:Pointer = { [ JsonLDKeyword.ID ]: "http://www.example.com" };
 					let pointerRow:PointerStatus = { copy: pointer };
 					comp.pointerRow = pointerRow;
 					fixture.detectChanges();
@@ -242,7 +242,7 @@ export function pointerSpecs() {
 
 				it( "Should emit pointer with property added when pointer is being added", ( done ) => {
 
-					let pointer:Pointer = { "@id": "http://www.example.com" };
+					let pointer:Pointer = { [ JsonLDKeyword.ID ]: "http://www.example.com" };
 					let pointerRow:PointerStatus = { copy: undefined, added: pointer };
 					comp.pointerRow = pointerRow;
 					fixture.detectChanges();
@@ -267,7 +267,7 @@ export function pointerSpecs() {
 			let pointerRow:PointerStatus;
 
 			beforeEach( () => {
-				pointer = { "@id": "http://www.example.com" };
+				pointer = { [ JsonLDKeyword.ID ]: "http://www.example.com" };
 				pointerRow = { copy: pointer };
 				comp.pointerRow = pointerRow;
 				fixture.detectChanges();
@@ -300,13 +300,13 @@ export function pointerSpecs() {
 				let blankNodes:BlankNodeStatus[] = [
 					{
 						id: "_:sq23wLWUDsXhst823",
-						copy: { "@id": "_:sq23wLWUDsXhst823" }
+						copy: { [ JsonLDKeyword.ID ]: "_:sq23wLWUDsXhst823" }
 					}, {
 						id: "_:a8987w903nfVst5hs",
-						copy: { "@id": "_:a8987w903nfVst5hs" }
+						copy: { [ JsonLDKeyword.ID ]: "_:a8987w903nfVst5hs" }
 					}, {
 						id: "_:ffd23wsa83Xf8xz82",
-						copy: { "@id": "_:ffd23wsa83Xf8xz82" }
+						copy: { [ JsonLDKeyword.ID ]: "_:ffd23wsa83Xf8xz82" }
 					}
 				];
 
@@ -335,19 +335,19 @@ export function pointerSpecs() {
 						id: "http://localhost:8083/#New-Fragment-Name-1",
 						name: "http://localhost:8083/#New-Fragment-Name-1",
 						copy: {
-							"@id": "http://localhost:8083/#New-Fragment-Name-1",
+							[ JsonLDKeyword.ID ]: "http://localhost:8083/#New-Fragment-Name-1",
 						}
 					}, {
 						id: "http://localhost:8083/#New-Fragment-Name-2",
 						name: "http://localhost:8083/#New-Fragment-Name-2",
 						copy: {
-							"@id": "http://localhost:8083/#New-Fragment-Name-2"
+							[ JsonLDKeyword.ID ]: "http://localhost:8083/#New-Fragment-Name-2"
 						}
 					}, {
 						id: "http://localhost:8083/#New-Fragment-Name-3",
 						name: "http://localhost:8083/#New-Fragment-Name-3",
 						copy: {
-							"@id": "http://localhost:8083/#New-Fragment-Name-3",
+							[ JsonLDKeyword.ID ]: "http://localhost:8083/#New-Fragment-Name-3",
 						}
 					}
 				];
@@ -371,7 +371,7 @@ export function pointerSpecs() {
 
 			it( "Should display `Enter a valid @id value` when entering wrong IRI's", () => {
 
-				pointer = { "@id": "http://www.exa mple.com" };
+				pointer = { [ JsonLDKeyword.ID ]: "http://www.exa mple.com" };
 				pointerRow = { copy: pointer };
 				comp.pointerRow = pointerRow;
 				fixture.detectChanges();
@@ -389,13 +389,13 @@ export function pointerSpecs() {
 				let blankNodes:BlankNodeStatus[] = [
 					{
 						id: "_:sq23wLWUDsXhst823",
-						copy: { "@id": "_:sq23wLWUDsXhst823" }
+						copy: { [ JsonLDKeyword.ID ]: "_:sq23wLWUDsXhst823" }
 					}, {
 						id: "_:a8987w903nfVst5hs",
-						copy: { "@id": "_:a8987w903nfVst5hs" }
+						copy: { [ JsonLDKeyword.ID ]: "_:a8987w903nfVst5hs" }
 					}, {
 						id: "_:ffd23wsa83Xf8xz82",
-						copy: { "@id": "_:ffd23wsa83Xf8xz82" }
+						copy: { [ JsonLDKeyword.ID ]: "_:ffd23wsa83Xf8xz82" }
 					}
 				];
 				pointer = blankNodes[ 0 ].copy;
@@ -430,13 +430,13 @@ export function pointerSpecs() {
 					let blankNodes:BlankNodeStatus[] = [
 						{
 							id: "_:sq23wLWUDsXhst823",
-							copy: { "@id": "_:sq23wLWUDsXhst823" }
+							copy: { [ JsonLDKeyword.ID ]: "_:sq23wLWUDsXhst823" }
 						}, {
 							id: "_:a8987w903nfVst5hs",
-							copy: { "@id": "_:a8987w903nfVst5hs" }
+							copy: { [ JsonLDKeyword.ID ]: "_:a8987w903nfVst5hs" }
 						}, {
 							id: "_:ffd23wsa83Xf8xz82",
-							copy: { "@id": "_:ffd23wsa83Xf8xz82" }
+							copy: { [ JsonLDKeyword.ID ]: "_:ffd23wsa83Xf8xz82" }
 						}
 					];
 					let pointer:Pointer = blankNodes[ 0 ].copy; // Here we set the original value
@@ -478,16 +478,16 @@ export function pointerSpecs() {
 					let blankNodes:BlankNodeStatus[] = [
 						{
 							id: "_:sq23wLWUDsXhst823",
-							copy: { "@id": "_:sq23wLWUDsXhst823" }
+							copy: { [ JsonLDKeyword.ID ]: "_:sq23wLWUDsXhst823" }
 						}, {
 							id: "_:a8987w903nfVst5hs",
-							copy: { "@id": "_:a8987w903nfVst5hs" }
+							copy: { [ JsonLDKeyword.ID ]: "_:a8987w903nfVst5hs" }
 						}, {
 							id: "_:ffd23wsa83Xf8xz82",
-							copy: { "@id": "_:ffd23wsa83Xf8xz82" }
+							copy: { [ JsonLDKeyword.ID ]: "_:ffd23wsa83Xf8xz82" }
 						}
 					];
-					let pointer:Pointer = { "@id": "" };
+					let pointer:Pointer = { [ JsonLDKeyword.ID ]: "" };
 					let pointerRow:PointerStatus = { copy: undefined, added: pointer };
 					comp.pointerRow = pointerRow;
 					comp.blankNodes = blankNodes;
@@ -520,13 +520,13 @@ export function pointerSpecs() {
 					blankNodes = [
 						{
 							id: "_:sq23wLWUDsXhst823",
-							copy: { "@id": "_:sq23wLWUDsXhst823" }
+							copy: { [ JsonLDKeyword.ID ]: "_:sq23wLWUDsXhst823" }
 						}, {
 							id: "_:a8987w903nfVst5hs",
-							copy: { "@id": "_:a8987w903nfVst5hs" }
+							copy: { [ JsonLDKeyword.ID ]: "_:a8987w903nfVst5hs" }
 						}, {
 							id: "_:ffd23wsa83Xf8xz82",
-							copy: { "@id": "_:ffd23wsa83Xf8xz82" }
+							copy: { [ JsonLDKeyword.ID ]: "_:ffd23wsa83Xf8xz82" }
 						}
 					];
 					pointer = blankNodes[ 0 ].copy;
@@ -560,7 +560,7 @@ export function pointerSpecs() {
 
 				it( "Should emit pointer with property added if it's a new pointer", ( done ) => {
 
-					let pointer:Pointer = { "@id": "http://example.com" };
+					let pointer:Pointer = { [ JsonLDKeyword.ID ]: "http://example.com" };
 					let pointerRow:PointerStatus = { copy: undefined, added: pointer };
 					comp.pointerRow = pointerRow;
 					fixture.detectChanges();
@@ -570,7 +570,7 @@ export function pointerSpecs() {
 					fixture.detectChanges();
 
 					let valueInput:HTMLInputElement = comp.pointerCmp.element.nativeElement.querySelector( "input[name='idInput']" );
-					valueInput.value = pointerRow.added[ "@id" ] + "";
+					valueInput.value = pointerRow.added[ JsonLDKeyword.ID ] + "";
 					valueInput.dispatchEvent( new Event( "input" ) );
 					fixture.detectChanges();
 
@@ -601,7 +601,7 @@ export function pointerSpecs() {
 						expect( value ).toBeDefined();
 						expect( value.copy ).toEqual( pointerRow.copy );
 						expect( value.modified ).toBeDefined();
-						expect( value.modified[ "@id" ] ).toEqual( blankNodes[ 2 ].copy[ "@id" ] );
+						expect( value.modified[ JsonLDKeyword.ID ] ).toEqual( blankNodes[ 2 ].copy[ JsonLDKeyword.ID ] );
 						done();
 					} );
 					let saveButton:HTMLButtonElement = comp.pointerCmp.element.nativeElement.querySelector( "button[title='Save']" );

@@ -1082,7 +1082,7 @@ export interface LiteralStatus {
 }
 
 export interface Literal {
-	"@value":string | number | boolean;
-	"@type"?:string;
-	"@language"?:string;
+	[ JsonLDKeyword.VALUE ]:string | number | boolean;
+	[ JsonLDKeyword.TYPE ]?:string;
+	[ JsonLDKeyword.LANGUAGE ]?:string;
 }

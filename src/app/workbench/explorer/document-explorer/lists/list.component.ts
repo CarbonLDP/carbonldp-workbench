@@ -7,6 +7,7 @@ import { ObjectUtils } from "carbonldp/Utils";
 
 import { LiteralStatus } from "../literals/literal.component";
 import { Pointer, PointerStatus } from "../pointers/pointer.component";
+import { JsonLDKeyword } from "../document-explorer-library";
 
 
 /*
@@ -92,14 +93,14 @@ export class ListComponent {
 
 	addPointer():void {
 		let newPointerStatus:PointerStatus = <PointerStatus>{};
-		newPointerStatus.added = <Pointer>{ "@id": "" };
+		newPointerStatus.added = <Pointer>{ [ JsonLDKeyword.ID ]: "" };
 		this.tempList.splice( this.tempList.length, 0, newPointerStatus );
 		this.updateTempList();
 	}
 
 	addLiteral():void {
 		let newLiteralStatus:LiteralStatus = <LiteralStatus>{};
-		newLiteralStatus.added = { "@value": "" };
+		newLiteralStatus.added = { [ JsonLDKeyword.VALUE ]: "" };
 		this.tempList.splice( this.tempList.length, 0, newLiteralStatus );
 		this.updateTempList();
 	}
@@ -189,5 +190,5 @@ export interface ListStatus {
 }
 
 export interface List {
-	"@list":any[];
+	[ JsonLDKeyword.LIST ]:any[];
 }

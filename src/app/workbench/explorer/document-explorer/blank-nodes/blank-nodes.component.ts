@@ -3,6 +3,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, After
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { BlankNodeStatus } from "./blank-node.component"
+import { JsonLDKeyword } from "../document-explorer-library";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
@@ -43,8 +44,8 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 		this.initializeDeletionDimmer();
 	}
 
-	ngOnChanges( changes:{ [propName:string]:SimpleChange } ):void {
-		if( ( changes[ "blankNodes" ].currentValue !== changes[ "blankNodes" ].previousValue ) ) {
+	ngOnChanges( changes:{ [ propName:string ]:SimpleChange } ):void {
+		if( (changes[ "blankNodes" ].currentValue !== changes[ "blankNodes" ].previousValue) ) {
 			this.openedBlankNodes = [];
 			this.goToBlankNode( "all" );
 			this.blankNodesRecords.clear();
@@ -125,7 +126,7 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 		let newBlankNode:BlankNodeStatus = <BlankNodeStatus>{
 			id: id,
 			copy: {
-				"@id": id,
+				[ JsonLDKeyword.ID ]: id,
 			}
 		};
 		newBlankNode.added = newBlankNode.copy;

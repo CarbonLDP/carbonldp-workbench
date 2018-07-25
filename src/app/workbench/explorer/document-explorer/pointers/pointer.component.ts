@@ -219,6 +219,6 @@ export interface PointerStatus {
 }
 
 export interface Pointer {
-	"@id":string;
+	[ JsonLDKeyword.ID ]:string;
 }
 

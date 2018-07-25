@@ -6,9 +6,10 @@ import { FormsModule } from "@angular/forms";
 import { ListStatus, ListComponent } from "./../lists/list.component";
 import { LiteralStatus, LiteralComponent } from "./../literals/literal.component";
 import { PointerStatus, PointerComponent } from "./../pointers/pointer.component";
+import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
+import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
 import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
-import { BlankNodeStatus } from "app/workbench/explorer/document-explorer/blank-nodes/blank-node.component";
-import { NamedFragmentStatus } from "app/workbench/explorer/document-explorer/named-fragments/named-fragment.component";
+import { JsonLDKeyword } from "../document-explorer-library";
 
 export function listSpecs() {
 
@@ -60,32 +61,32 @@ export function listSpecs() {
 					id: "http://localhost:8083/#Fragment-1",
 					name: "http://localhost:8083/#Fragment-1",
 					copy: {
-						"@id": "http://localhost:8083/#Fragment-1",
+						[ JsonLDKeyword.ID ]: "http://localhost:8083/#Fragment-1",
 					}
 				}, {
 					id: "http://localhost:8083/#Fragment-2",
 					name: "http://localhost:8083/#Fragment-2",
 					copy: {
-						"@id": "http://localhost:8083/#Fragment-2"
+						[ JsonLDKeyword.ID ]: "http://localhost:8083/#Fragment-2"
 					}
 				}, {
 					id: "http://localhost:8083/#Fragment-3",
 					name: "http://localhost:8083/#Fragment-3",
 					copy: {
-						"@id": "http://localhost:8083/#Fragment-3",
+						[ JsonLDKeyword.ID ]: "http://localhost:8083/#Fragment-3",
 					}
 				}
 			];
 			let blankNodes:BlankNodeStatus[] = [
 				{
 					id: "_:sq23wLWUDsXhst823",
-					copy: { "@id": "_:sq23wLWUDsXhst823" }
+					copy: { [ JsonLDKeyword.ID ]: "_:sq23wLWUDsXhst823" }
 				}, {
 					id: "_:a8987w903nfVst5hs",
-					copy: { "@id": "_:a8987w903nfVst5hs" }
+					copy: { [ JsonLDKeyword.ID ]: "_:a8987w903nfVst5hs" }
 				}, {
 					id: "_:ffd23wsa83Xf8xz82",
-					copy: { "@id": "_:ffd23wsa83Xf8xz82" }
+					copy: { [ JsonLDKeyword.ID ]: "_:ffd23wsa83Xf8xz82" }
 				}
 			];
 
@@ -100,20 +101,20 @@ export function listSpecs() {
 			comp.list = <ListStatus>{
 				copy: [
 					{
-						copy: { "@id": "_:sq23wLWUDsXhst823" },
+						copy: { [ JsonLDKeyword.ID ]: "_:sq23wLWUDsXhst823" },
 					},
 					{
-						copy: { "@value": "my value" },
+						copy: { [ JsonLDKeyword.VALUE ]: "my value" },
 					},
 					{
-						copy: { "@id": "http://example-2.com" }
+						copy: { [ JsonLDKeyword.ID ]: "http://example-2.com" }
 					}
 				]
 			};
 			fixture.detectChanges();
 
 			comp.listCmp.onGoToBlankNode.subscribe( ( id:string ) => {
-				expect( id ).toEqual( comp.list.copy[ 0 ].copy[ "@id" ] );
+				expect( id ).toEqual( comp.list.copy[ 0 ].copy[ JsonLDKeyword.ID ] );
 				done();
 			} );
 
@@ -126,20 +127,20 @@ export function listSpecs() {
 			comp.list = <ListStatus>{
 				copy: [
 					{
-						copy: { "@id": "http://localhost:8083/#Fragment-1" }
+						copy: { [ JsonLDKeyword.ID ]: "http://localhost:8083/#Fragment-1" }
 					},
 					{
-						copy: { "@id": "_:sq23wLWUDsXhst823" },
+						copy: { [ JsonLDKeyword.ID ]: "_:sq23wLWUDsXhst823" },
 					},
 					{
-						copy: { "@value": "my value" },
+						copy: { [ JsonLDKeyword.VALUE ]: "my value" },
 					}
 				]
 			};
 			fixture.detectChanges();
 
 			comp.listCmp.onGoToNamedFragment.subscribe( ( id:string ) => {
-				expect( id ).toEqual( comp.list.copy[ 0 ].copy[ "@id" ] );
+				expect( id ).toEqual( comp.list.copy[ 0 ].copy[ JsonLDKeyword.ID ] );
 				done();
 			} );
 
@@ -174,8 +175,8 @@ export function listSpecs() {
 		it( "Should display Modified! on top right when list is modified", () => {
 
 			let modifiedItem:PointerStatus = {
-				copy: { "@id": "http://example.com" },
-				modified: { "@id": "http://example-modified.com" },
+				copy: { [ JsonLDKeyword.ID ]: "http://example.com" },
+				modified: { [ JsonLDKeyword.ID ]: "http://example-modified.com" },
 			};
 			comp.list = <ListStatus>{
 				copy: [ modifiedItem ],
@@ -194,13 +195,13 @@ export function listSpecs() {
 				comp.list = <ListStatus>{
 					copy: [
 						{
-							copy: { "@id": "http://example.com" },
+							copy: { [ JsonLDKeyword.ID ]: "http://example.com" },
 						},
 						{
-							copy: { "@value": "my value" },
+							copy: { [ JsonLDKeyword.VALUE ]: "my value" },
 						},
 						{
-							copy: { "@id": "http://example-2.com" }
+							copy: { [ JsonLDKeyword.ID ]: "http://example-2.com" }
 						}
 					]
 				};
@@ -241,13 +242,13 @@ export function listSpecs() {
 				comp.list = <ListStatus>{
 					copy: [
 						{
-							copy: { "@id": "http://example.com" },
+							copy: { [ JsonLDKeyword.ID ]: "http://example.com" },
 						},
 						{
-							copy: { "@value": "my value" },
+							copy: { [ JsonLDKeyword.VALUE ]: "my value" },
 						},
 						{
-							copy: { "@id": "http://example-2.com" }
+							copy: { [ JsonLDKeyword.ID ]: "http://example-2.com" }
 						}
 					]
 				};
@@ -270,13 +271,13 @@ export function listSpecs() {
 				comp.list = <ListStatus>{
 					copy: [
 						{
-							copy: { "@id": "http://example.com" },
+							copy: { [ JsonLDKeyword.ID ]: "http://example.com" },
 						},
 						{
-							copy: { "@value": "my value" },
+							copy: { [ JsonLDKeyword.VALUE ]: "my value" },
 						},
 						{
-							copy: { "@id": "http://example-2.com" }
+							copy: { [ JsonLDKeyword.ID ]: "http://example-2.com" }
 						}
 					]
 				};
@@ -302,7 +303,7 @@ export function listSpecs() {
 			comp.list = <ListStatus>{
 				copy: [
 					{
-						copy: { "@id": "http://example.com" },
+						copy: { [ JsonLDKeyword.ID ]: "http://example.com" },
 					}
 				]
 			};
@@ -322,7 +323,7 @@ export function listSpecs() {
 			comp.list = <ListStatus>{
 				copy: [
 					{
-						copy: { "@id": "http://example.com" },
+						copy: { [ JsonLDKeyword.ID ]: "http://example.com" },
 					}
 				]
 			};
@@ -342,7 +343,7 @@ export function listSpecs() {
 			comp.list = <ListStatus>{
 				copy: [
 					{
-						copy: { "@id": "http://example.com" },
+						copy: { [ JsonLDKeyword.ID ]: "http://example.com" },
 					}
 				]
 			};
@@ -360,18 +361,18 @@ export function listSpecs() {
 
 			let addedItems:Array<PointerStatus | LiteralStatus> = comp.listCmp.getAddedItems();
 			expect( addedItems.length ).toEqual( 6 );
-			expect( addedItems.filter( item => typeof item.added[ "@id" ] !== "undefined" ).length ).toEqual( 3 );
-			expect( addedItems.filter( item => typeof item.added[ "@value" ] !== "undefined" ).length ).toEqual( 3 );
+			expect( addedItems.filter( item => typeof item.added[ JsonLDKeyword.ID ] !== "undefined" ).length ).toEqual( 3 );
+			expect( addedItems.filter( item => typeof item.added[ JsonLDKeyword.VALUE ] !== "undefined" ).length ).toEqual( 3 );
 		} );
 
 		it( "Should return all deleted items when calling `getDeletedItems`", () => {
 
 			comp.list = <ListStatus>{
 				copy: [
-					{ copy: { "@id": "http://example-1.com" }, },
-					{ copy: { "@id": "http://example-2.com" }, deleted: { "@id": "http://example-2.com" } },
-					{ copy: { "@id": "http://example-3.com" }, deleted: { "@id": "http://example-3.com" } },
-					{ copy: { "@id": "http://example-4.com" }, deleted: { "@id": "http://example-4.com" } }
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-1.com" }, },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-2.com" }, deleted: { [ JsonLDKeyword.ID ]: "http://example-2.com" } },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-3.com" }, deleted: { [ JsonLDKeyword.ID ]: "http://example-3.com" } },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-4.com" }, deleted: { [ JsonLDKeyword.ID ]: "http://example-4.com" } }
 				]
 			};
 			fixture.detectChanges();
@@ -384,10 +385,10 @@ export function listSpecs() {
 
 			comp.list = <ListStatus>{
 				copy: [
-					{ copy: { "@id": "http://example-1.com" }, },
-					{ copy: { "@id": "http://example-2.com" }, modified: { "@id": "http://modified-example-2.com" } },
-					{ copy: { "@id": "http://example-3.com" }, modified: { "@id": "http://modified-example-3.com" } },
-					{ copy: { "@id": "http://example-4.com" }, modified: { "@id": "http://modified-example-4.com" } }
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-1.com" }, },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-2.com" }, modified: { [ JsonLDKeyword.ID ]: "http://modified-example-2.com" } },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-3.com" }, modified: { [ JsonLDKeyword.ID ]: "http://modified-example-3.com" } },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-4.com" }, modified: { [ JsonLDKeyword.ID ]: "http://modified-example-4.com" } }
 				]
 			};
 			fixture.detectChanges();
@@ -400,10 +401,10 @@ export function listSpecs() {
 
 			comp.list = <ListStatus>{
 				copy: [
-					{ copy: { "@id": "http://example-1.com" }, },
-					{ copy: { "@id": "http://example-2.com" }, modified: { "@id": "http://modified-example-2.com" } },
-					{ copy: { "@id": "http://example-3.com" }, modified: { "@id": "http://modified-example-3.com" } },
-					{ copy: { "@id": "http://example-4.com" }, modified: { "@id": "http://modified-example-4.com" } }
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-1.com" }, },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-2.com" }, modified: { [ JsonLDKeyword.ID ]: "http://modified-example-2.com" } },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-3.com" }, modified: { [ JsonLDKeyword.ID ]: "http://modified-example-3.com" } },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-4.com" }, modified: { [ JsonLDKeyword.ID ]: "http://modified-example-4.com" } }
 				]
 			};
 			fixture.detectChanges();
@@ -416,42 +417,42 @@ export function listSpecs() {
 
 			comp.list = <ListStatus>{
 				copy: [
-					{ copy: { "@id": "http://example-1.com" }, },
-					{ copy: { "@id": "http://example-2.com" }, },
-					{ copy: { "@id": "http://example-3.com" }, },
-					{ copy: { "@id": "http://example-4.com" } }
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-1.com" }, },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-2.com" }, },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-3.com" }, },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-4.com" } }
 				]
 			};
 			fixture.detectChanges();
 
-			expect( comp.listCmp.tempList[ 2 ].copy[ "@id" ] ).toEqual( "http://example-3.com" );
+			expect( comp.listCmp.tempList[ 2 ].copy[ JsonLDKeyword.ID ] ).toEqual( "http://example-3.com" );
 
 			comp.listCmp.moveUp( comp.listCmp.tempList[ 3 ], 3 );
 			fixture.detectChanges();
 
-			expect( comp.listCmp.tempList[ 2 ].copy[ "@id" ] ).toEqual( "http://example-4.com" );
-			expect( comp.listCmp.tempList[ 3 ].copy[ "@id" ] ).toEqual( "http://example-3.com" );
+			expect( comp.listCmp.tempList[ 2 ].copy[ JsonLDKeyword.ID ] ).toEqual( "http://example-4.com" );
+			expect( comp.listCmp.tempList[ 3 ].copy[ JsonLDKeyword.ID ] ).toEqual( "http://example-3.com" );
 		} );
 
 		it( "Should move items down when item emits onMoveDown", () => {
 
 			comp.list = <ListStatus>{
 				copy: [
-					{ copy: { "@id": "http://example-1.com" }, },
-					{ copy: { "@id": "http://example-2.com" }, },
-					{ copy: { "@id": "http://example-3.com" }, },
-					{ copy: { "@id": "http://example-4.com" } }
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-1.com" }, },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-2.com" }, },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-3.com" }, },
+					{ copy: { [ JsonLDKeyword.ID ]: "http://example-4.com" } }
 				]
 			};
 			fixture.detectChanges();
 
-			expect( comp.listCmp.tempList[ 0 ].copy[ "@id" ] ).toEqual( "http://example-1.com" );
+			expect( comp.listCmp.tempList[ 0 ].copy[ JsonLDKeyword.ID ] ).toEqual( "http://example-1.com" );
 
 			comp.listCmp.moveDown( comp.listCmp.tempList[ 0 ], 0 );
 			fixture.detectChanges();
 
-			expect( comp.listCmp.tempList[ 0 ].copy[ "@id" ] ).toEqual( "http://example-2.com" );
-			expect( comp.listCmp.tempList[ 1 ].copy[ "@id" ] ).toEqual( "http://example-1.com" );
+			expect( comp.listCmp.tempList[ 0 ].copy[ JsonLDKeyword.ID ] ).toEqual( "http://example-2.com" );
+			expect( comp.listCmp.tempList[ 1 ].copy[ JsonLDKeyword.ID ] ).toEqual( "http://example-1.com" );
 		} );
 
 	} );

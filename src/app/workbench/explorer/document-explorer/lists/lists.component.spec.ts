@@ -5,11 +5,12 @@ import { FormsModule } from "@angular/forms";
 
 import { ListsComponent } from "./../lists/lists.component";
 import { ListStatus, ListComponent } from "./../lists/list.component";
-import { LiteralStatus, LiteralComponent } from "./../literals/literal.component";
-import { PointerStatus, PointerComponent } from "./../pointers/pointer.component";
+import { LiteralComponent } from "./../literals/literal.component";
+import { PointerComponent } from "./../pointers/pointer.component";
+import { JsonLDKeyword } from "./../document-explorer-library";
 import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
-import { BlankNodeStatus } from "app/workbench/explorer/document-explorer/blank-nodes/blank-node.component";
-import { NamedFragmentStatus } from "app/workbench/explorer/document-explorer/named-fragments/named-fragment.component";
+import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
+import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
 
 export function listsSpecs() {
 
@@ -61,32 +62,32 @@ export function listsSpecs() {
 					id: "http://localhost:8083/#Fragment-1",
 					name: "http://localhost:8083/#Fragment-1",
 					copy: {
-						"@id": "http://localhost:8083/#Fragment-1",
+						[ JsonLDKeyword.ID ]: "http://localhost:8083/#Fragment-1",
 					}
 				}, {
 					id: "http://localhost:8083/#Fragment-2",
 					name: "http://localhost:8083/#Fragment-2",
 					copy: {
-						"@id": "http://localhost:8083/#Fragment-2"
+						[ JsonLDKeyword.ID ]: "http://localhost:8083/#Fragment-2"
 					}
 				}, {
 					id: "http://localhost:8083/#Fragment-3",
 					name: "http://localhost:8083/#Fragment-3",
 					copy: {
-						"@id": "http://localhost:8083/#Fragment-3",
+						[ JsonLDKeyword.ID ]: "http://localhost:8083/#Fragment-3",
 					}
 				}
 			];
 			let blankNodes:BlankNodeStatus[] = [
 				{
 					id: "_:sq23wLWUDsXhst823",
-					copy: { "@id": "_:sq23wLWUDsXhst823" }
+					copy: { [ JsonLDKeyword.ID ]: "_:sq23wLWUDsXhst823" }
 				}, {
 					id: "_:a8987w903nfVst5hs",
-					copy: { "@id": "_:a8987w903nfVst5hs" }
+					copy: { [ JsonLDKeyword.ID ]: "_:a8987w903nfVst5hs" }
 				}, {
 					id: "_:ffd23wsa83Xf8xz82",
-					copy: { "@id": "_:ffd23wsa83Xf8xz82" }
+					copy: { [ JsonLDKeyword.ID ]: "_:ffd23wsa83Xf8xz82" }
 				}
 			];
 			let lists:ListStatus[] = [
@@ -109,7 +110,7 @@ export function listsSpecs() {
 
 		fit( "Should emit blank node id when a list emits it", ( done ) => {
 			comp.listsCmp.onGoToBlankNode.subscribe( ( blankNodeId:string ) => {
-				expect( blankNodeId ).toEqual( comp.lists[ 0 ].copy[ 0 ].copy[ "@id" ] );
+				expect( blankNodeId ).toEqual( comp.lists[ 0 ].copy[ 0 ].copy[ JsonLDKeyword.ID ] );
 				done()
 			} );
 
@@ -119,7 +120,7 @@ export function listsSpecs() {
 
 		fit( "Should emit named fragment id when a list emits it", ( done ) => {
 			comp.listsCmp.onGoToNamedFragment.subscribe( ( namedFragmentId:string ) => {
-				expect( namedFragmentId ).toEqual( comp.lists[ 0 ].copy[ 1 ].copy[ "@id" ] );
+				expect( namedFragmentId ).toEqual( comp.lists[ 0 ].copy[ 1 ].copy[ JsonLDKeyword.ID ] );
 				done()
 			} );
 
@@ -266,7 +267,7 @@ export function listsSpecs() {
 					],
 					modified: [
 						{
-							copy: { "@value": "modified value" }
+							copy: { [ JsonLDKeyword.VALUE ]: "modified value" }
 						}
 					]
 				},
@@ -304,7 +305,7 @@ export function listsSpecs() {
 					],
 					modified: [
 						{
-							copy: { "@value": "modified value" }
+							copy: { [ JsonLDKeyword.VALUE ]: "modified value" }
 						}
 					]
 				},

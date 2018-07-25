@@ -159,7 +159,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 			} else if( RDFNode.is( literalOrRDFNodeOrList ) ) {
 				this.pointers.push( <PointerStatus>{ copy: literalOrRDFNodeOrList } );
 			} else if( RDFList.is( literalOrRDFNodeOrList ) ) {
-				this.lists.push( <ListStatus>{ copy: literalOrRDFNodeOrList[ "@list" ].map( ( item ) => { return { copy: item } } ) } );
+				this.lists.push( <ListStatus>{ copy: literalOrRDFNodeOrList[ JsonLDKeyword.LIST ].map( ( item ) => { return { copy: item } } ) } );
 			}
 		} );
 	}
