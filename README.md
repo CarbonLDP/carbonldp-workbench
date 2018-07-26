@@ -1,4 +1,12 @@
-# carbonldp-workbench
+# [CarbonLDP Workbench](http://carbonldp.com/)
+
+<div align="center">
+  <a href="http://carbonldp.com/" style="text-decoration: none;">
+    <img width="500" src="https://carbonldp.com/assets/images/carbon-logo-header.svg">
+  </a>
+  <br>
+  <br>
+</div>
 
 [![Build Status](https://travis-ci.org/CarbonLDP/carbonldp-workbench.svg?branch=develop)](https://travis-ci.org/CarbonLDP/carbonldp-workbench)
 
