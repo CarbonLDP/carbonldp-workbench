@@ -29,9 +29,9 @@
     "compodoc:serve": "./node_modules/.bin/compodoc --tsconfig tsconfig.json --output docs/architecture --port=4002 --serve",
     "compodoc:watch": "./node_modules/.bin/compodoc --tsconfig tsconfig.json --output docs/architecture --port=4002 --serve --watch",
     "postinstall": "node scripts/force-semantic-ui-to-install-correctly.js && npm explore semantic-ui -- npm run-script install",
-    "test": "karma start",
     "start": "npm run server:dev",
-    "server:dev": "node_modules/.bin/webpack-dev-server --config config/dev/webpack.dev.js --progress --watch "
+    "server:dev": "node_modules/.bin/webpack-dev-server --config config/dev/webpack.dev.js --watch --bail",
+    "test": "karma start"
   },
   "devDependencies": {
     "@angular/compiler-cli": "^5.2.4",
