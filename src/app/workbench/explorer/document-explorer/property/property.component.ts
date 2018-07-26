@@ -37,7 +37,6 @@ export class PropertyComponent {
 	@Input() set property( property:PropertyStatus ) {
 		this._property = property;
 		this.propertyName = property[ ! ! property.added ? "added" : ! ! property.modified ? "modified" : "copy" ].name;
-		console.log( "%o: %o", this.propertyName, this.property );
 	}
 
 	get property():PropertyStatus { return this._property; };
@@ -52,27 +51,22 @@ export class PropertyComponent {
 	constructor() {}
 
 	goToBlankNode( id:string ):void {
-		console.log( "goToBlankNode: %o", id );
 		this.onGoToBlankNode.emit( id );
 	}
 
 	goToNamedFragment( id:string ):void {
-		console.log( "goToNamedFragment: %o", id );
 		this.onGoToNamedFragment.emit( id );
 	}
 
 	deleteProperty( property ):void {
-		console.log( "deleteProperty: %o", property );
 		this.onDeleteProperty.emit( this.property );
 	}
 
 	saveNewProperty( property:any ):void {
-		console.log( "saveNewProperty: %o", property );
 		this.onSaveNewProperty.emit( property );
 	}
 
 	changeProperty( property:any ):void {
-		console.log( "changeProperty: %o", property );
 		this.onChangeProperty.emit( property );
 	}
 
