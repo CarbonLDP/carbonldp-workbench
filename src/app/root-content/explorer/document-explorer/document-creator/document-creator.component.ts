@@ -34,7 +34,7 @@ export class DocumentCreatorComponent implements AfterViewInit {
 			isMemberOfRelation: ""
 		}
 	};
-	@Input() parentURI:string = "";
+	@Input() parentURI:Array<string> = [""];
 	@Output() onSuccess:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
 
@@ -60,7 +60,8 @@ export class DocumentCreatorComponent implements AfterViewInit {
 			hasMemberRelation: data.advancedOptions.hasMemberRelation
 		};
 		if( ! ! data.advancedOptions.isMemberOfRelation ) childContent[ "isMemberOfRelation" ] = data.advancedOptions.isMemberOfRelation;
-		this.documentsResolverService.createChild( this.parentURI, childContent, childSlug ).then( ( createdChild:Document ) => {
+
+		this.documentsResolverService.createChild( this.parentURI[0], childContent, childSlug ).then( ( createdChild:Document ) => {
 			this.onSuccess.emit( createdChild );
 			this.hide();
 		} ).catch( ( error:HTTPError ) => {
