@@ -19,7 +19,7 @@ import "semantic-ui/semantic";
 
 export class DocumentExplorerComponent {
 
-	selectedDocumentURI:string = "";
+	selectedDocumentURI:Array<string> = [""];
 	loadingDocument:boolean = false;
 	savingDocument:boolean = false;
 	inspectingDocument:RDFDocument;
@@ -73,17 +73,17 @@ export class DocumentExplorerComponent {
 		this.onOpenNode.emit( nodeId );
 	}
 
-	public changeSelection( documentURI:string ) {
+	public changeSelection( documentURI:Array<string> ) {
 		this.selectedDocumentURI = documentURI;
 	}
 
 	public onSuccessAccessPoint( $event:any ):void {
-		this.onRefreshNode.emit( this.selectedDocumentURI );
+		this.onRefreshNode.emit( this.selectedDocumentURI[0] );
 		this.onDisplaySuccessMessage.emit( "<p>The Access Point was created correctly</p>" );
 	}
 
 	public onSuccessCreateDocument( $event:any ):void {
-		this.onRefreshNode.emit( this.selectedDocumentURI );
+		this.onRefreshNode.emit( this.selectedDocumentURI[0] );
 		this.onDisplaySuccessMessage.emit( "<p>The child document was created correctly</p>" );
 	}
 
