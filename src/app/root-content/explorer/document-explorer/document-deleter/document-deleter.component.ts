@@ -30,7 +30,7 @@ export class DocumentDeleterComponent implements AfterViewInit {
 	isDeleting:boolean = false;
 
 
-	@Input() documentURI:string = "";
+	@Input() documentURI:Array<string> = [""];
 	@Output() onSuccess:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
 
@@ -48,8 +48,15 @@ export class DocumentDeleterComponent implements AfterViewInit {
 
 	public onSubmitDeleteDocument( data:{}, $event:any ):void {
 		this.isDeleting = true;
-		this.documentsResolverService.delete( this.documentURI ).then( ( result ) => {
-			this.onSuccess.emit( DocumentExplorerLibrary.getParentURI( this.documentURI ) );
+		let deletePromises = this.documentURI.map((documentURI)=>{
+			return this.documentsResolverService.delete(documentURI);
+		});
+
+		Promise.all( deletePromises ).then( ( result ) => {
+			let parentURIs = this.documentURI.map((documentURI)=>{
+				return DocumentExplorerLibrary.getParentURI(documentURI);
+			});
+			this.onSuccess.emit( parentURIs );
 			this.hide();
 		} ).catch( ( error:HTTPError ) => {
 			this.onError.emit( error );
