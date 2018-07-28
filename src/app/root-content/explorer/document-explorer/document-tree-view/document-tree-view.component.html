@@ -3,7 +3,7 @@
 	<!-- START: Create Document/AccessPoint button -->
 	<div title="Create a Document or Access Point"
 	     class="ui top left pointing dropdown mini basic black button treeview-optionsButton"
-	     [ngClass]="{'disabled':nodeChildren.length===0}">
+	     [ngClass]="{'disabled':nodeChildren.length===0 || selectedURI.length> 1}">
 		<i class="plus icon"></i>
 		<span class="text">New</span>
 		<div class="menu">
@@ -28,7 +28,6 @@
 		<i class="refresh icon"></i>
 	</button>
 	<!-- END: Refresh Button-->
-
 
 	<!-- START: Delete Button -->
 	<button class="ui mini basic red right aligned icon button treeview-deleteButton" title="Delete document"
