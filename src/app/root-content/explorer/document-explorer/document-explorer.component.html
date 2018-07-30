@@ -1,6 +1,6 @@
 <div class="ui divided grid segment" [ngClass]="{loading:loadingDocument || savingDocument}">
 
-	<div class="stretched row">
+	<div class="stretched row document-content-wrapper">
 		<div class="error messages" *ngIf="messages.length > 0">
 			<ng-template ngFor let-message="$implicit" [ngForOf]="messages" let-i="index">
 				<cw-message [message]="message" [type]="'error'" [closable]="true"></cw-message>
