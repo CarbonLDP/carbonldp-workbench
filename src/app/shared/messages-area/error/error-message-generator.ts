@@ -1,5 +1,5 @@
 import { Errors } from "carbonldp/HTTP";
-import { JSONLDParser } from "carbonldp/JSONLD/Parser";
+import { JSONLDParser } from "carbonldp/JSONLD";
 import { C } from "carbonldp/Vocabularies";
 
 import { Message, ValidationResult, ValidationDetails, ValidationError, Types } from "../message.component";
@@ -7,7 +7,7 @@ import { Message, ValidationResult, ValidationDetails, ValidationError, Types } 
 
 export class ErrorMessageGenerator {
 
-	public static getErrorMessage( error:Errors.HTTPError ):Message {
+	public static getErrorMessage( error:Errors.HTTPError | Error ):Message {
 		let errorMessage:Message = {
 			title: "",
 			content: "",
@@ -21,9 +21,9 @@ export class ErrorMessageGenerator {
 		errorMessage.content = error.hasOwnProperty( "message" ) ? error.message : "";
 
 		// If it's a HTTP error
-		if( error.hasOwnProperty( "statusCode" ) ) {
+		if( error instanceof Errors.HTTPError ) {
 			errorMessage.content = errorMessage.content === "" ? this.getFriendlyHTTPMessage( error ) : errorMessage.content;
-			errorMessage.statusCode = error.hasOwnProperty( "message" ) ? "" + error.statusCode : "";
+			errorMessage.statusCode = error.hasOwnProperty( "message" ) ? "" + error.response.status : "";
 			errorMessage.statusMessage = (<XMLHttpRequest>error.response.request).statusText;
 			errorMessage.title = errorMessage.statusMessage;
 			errorMessage.endpoint = (<any>error.response.request).responseURL;

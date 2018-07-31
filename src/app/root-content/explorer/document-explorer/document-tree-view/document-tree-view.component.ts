@@ -2,7 +2,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } fro
 
 import { CarbonLDP } from "carbonldp";
 import { Pointer } from "carbonldp/Pointer";
-import { PersistedDocument } from "carbonldp/PersistedDocument";
+import { Document } from "carbonldp/Document";
 import { Errors } from "carbonldp/HTTP";
 import { URI } from "carbonldp/RDF/URI";
 import { SPARQLSelectResults, SPARQLBindingObject } from "carbonldp/SPARQL/SelectResults";
@@ -78,10 +78,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} );
 	}
 
-	getDocumentTree():Promise<PersistedDocument | void> {
-		return this.carbonldp.documents.get( "" ).then( ( resolvedRoot:PersistedDocument ) => {
+	getDocumentTree():Promise<Document | void> {
+		return this.carbonldp.documents.get( "" ).then( ( resolvedRoot:Document ) => {
 			return resolvedRoot.refresh();
-		} ).then( ( updatedRoot:PersistedDocument ) => {
+		} ).then( ( updatedRoot:Document ) => {
 
 			let isRequiredSystemDocument:boolean = updatedRoot.types.findIndex( ( type:string ) => type === `${C.namespace}RequiredSystemDocument` ) !== - 1;
 
@@ -193,7 +193,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 				        (c:created)
 				        (c:modified)
 			        }
-			        BIND( EXISTS{ ?value a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
+			        BIND( EXISTS{ ?s a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
 			    }
 			}
 		`;
@@ -212,9 +212,9 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.jsTree.refresh_node( this.selectedURI );
 	}
 
-	getSlug( pointer:Pointer | string ):string {
-		if( typeof pointer !== "string" ) return (<Pointer>pointer).id;
-		return URI.getSlug( <string>pointer );
+	getSlug( node:Document | string ):string {
+		if( typeof node === "string" ) return URI.getSlug( node );
+		return (<Document>node).$id;
 	}
 
 	showCreateChildForm():void {
