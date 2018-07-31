@@ -3,7 +3,7 @@ import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, ViewC
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node"
 import { RDFDocument } from "carbonldp/RDF/Document";
-import { JSONLDParser } from "carbonldp/JSONLD/Parser";
+import { JSONLDParser } from "carbonldp/JSONLD";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "../documents-resolver.service";
@@ -109,7 +109,7 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		if( changes[ "uri" ] && ! ! changes[ "uri" ].currentValue && changes[ "uri" ].currentValue !== changes[ "uri" ].previousValue ) {
 			this.loadingDocument = true;
 			this.getDocument( this.uri ).then( ( document:RDFDocument ) => {
-				this.document = document[ 0 ];
+				this.document = document;
 			} );
 		}
 	}

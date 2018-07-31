@@ -4,10 +4,8 @@ import { Routes, RouterModule } from "@angular/router";
 
 import { RootContentView } from "./root-content.view";
 import { DashboardView } from "./dashboard/dashboard.view";
-import { EditInstanceView } from "./edit-instance/edit-instance.view";
 import { SPARQLClientView } from "./sparql-client/sparql-client.view";
 import { ExplorerView } from "./explorer/explorer.view";
-import { ConfigurationView } from "./configuration/configuration.view";
 
 export const RootContentRoutes:Routes = [
 	{
@@ -17,7 +15,7 @@ export const RootContentRoutes:Routes = [
 			alias: "",
 			displayName: "Workbench",
 			title: "Workbench",
-			hide:true,
+			hide: true,
 		},
 		children: [
 			{
@@ -25,17 +23,9 @@ export const RootContentRoutes:Routes = [
 				data: {
 					alias: "",
 					displayName: "Dashboard",
-					hide:false,
+					hide: false,
 				},
 				component: DashboardView,
-			},
-			{
-				path: "edit",
-				component: EditInstanceView,
-				data: {
-					alias: "edit",
-					displayName: "Edit",
-				},
 			},
 			{
 				path: "sparql-client",
@@ -54,19 +44,6 @@ export const RootContentRoutes:Routes = [
 					displayName: "Explorer",
 					title: "Explorer",
 				},
-			},
-			{
-				path: "configure",
-				component: ConfigurationView,
-				data: {
-					alias: "configure",
-					displayName: "Configuration",
-					title: "Configuration",
-				},
-			},
-			{
-				path: "security",
-				loadChildren: "app/root-content/security/security.module#SecurityModule",
 			},
 		]
 	}

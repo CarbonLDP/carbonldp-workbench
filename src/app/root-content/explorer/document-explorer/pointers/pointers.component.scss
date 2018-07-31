@@ -3,6 +3,10 @@
 	padding-top: .5em;
 	padding-bottom: .5em;
 
+	.ui.striped.table {
+		table-layout: fixed;
+	}
+
 	.ui.striped.table tbody tr.modified-pointer {
 		background-color: #FFFBB4;
 	}

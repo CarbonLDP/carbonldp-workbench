@@ -2,9 +2,8 @@ import { Component, ElementRef, Input, Output, EventEmitter, OnInit, AfterViewIn
 
 import { CarbonLDP } from "carbonldp";
 import { SPARQLRawResults } from "carbonldp/SPARQL/RawResults";
-import { Errors } from "carbonldp/HTTP";
-import { Header } from "carbonldp/HTTP/Header";
-import { RequestOptions } from "carbonldp/HTTP/Request";
+import { Errors, Header, Response, RequestOptions } from "carbonldp/HTTP";
+import { SPARQLService } from "carbonldp/SPARQL";
 
 import { SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from "./response/response.component";
 import * as CodeMirrorComponent from "app/shared/code-mirror/code-mirror.component";
@@ -359,10 +358,12 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 			}
 		).catch(
 			( error:any ) => {
-				if( this.emitErrors ) {
-					this.errorOccurs.emit( this.getMessage( error ) );
+				if( error instanceof SPARQLClientResponse ) {
+					this.addResponse( error );
+				} else if( this.emitErrors ) {
+					this.errorOccurs.emit( error );
 				} else {
-					this.messages.push( this.getMessage( error ) );
+					this.messages.push( error );
 				}
 			} );
 	}
@@ -388,9 +389,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				break;
 			default:
 				// Unsupported Operation
-				promise = new Promise( ( resolve, reject ) => {
-					reject( "Unsupported Type" );
-				} );
+				promise = Promise.reject( this.getMessage( "Unsupported Operation" ) );
 		}
 
 		return promise.then(
@@ -399,7 +398,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				this.isSending = false;
 				return response;
 			},
-			( error:any ) => {
+			( error:SPARQLClientResponse | Message ) => {
 				// Response Fail
 				this.isSending = false;
 				return Promise.reject( error );
@@ -420,57 +419,57 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				return this.executeASK( query );
 			default:
 				// Unsupported Operation
-				return Promise.reject<SPARQLClientResponse>( "Unsupported Operation" );
+				return Promise.reject( this.getMessage( "Unsupported Operation" ) );
 		}
 	}
 
 	executeSELECT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = (new Date()).valueOf();
-		return this.carbonldp.documents.executeRawSELECTQuery( query.endpoint, query.content ).then(
-			( result:SPARQLRawResults ):SPARQLClientResponse => {
+		return SPARQLService.executeRawSELECTQuery( query.endpoint, query.content ).then(
+			( [ result, response ]:[ SPARQLRawResults, Response ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return this.handleError( error, query, beforeTimestamp );
+				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
 			} );
 	}
 
 	executeDESCRIBE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = (new Date()).valueOf();
 		let requestOptions:RequestOptions = { headers: new Map().set( "Accept", new Header( query.format ) ) };
-		return this.carbonldp.documents.executeRawDESCRIBEQuery( query.endpoint, query.content, requestOptions ).then(
-			( result:string ):SPARQLClientResponse => {
+		return SPARQLService.executeRawDESCRIBEQuery( query.endpoint, query.content, requestOptions ).then(
+			( [ result, response ]:[ string, Response ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return this.handleError( error, query, beforeTimestamp );
+				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
 			} );
 	}
 
 	executeCONSTRUCT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = (new Date()).valueOf();
 		let requestOptions:RequestOptions = { headers: new Map().set( "Accept", new Header( query.format ) ) };
-		return this.carbonldp.documents.executeRawCONSTRUCTQuery( query.endpoint, query.content, requestOptions ).then(
-			( result:string ):SPARQLClientResponse => {
+		return SPARQLService.executeRawCONSTRUCTQuery( query.endpoint, query.content, requestOptions ).then(
+			( [ result, response ]:[ string, Response ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return this.handleError( error, query, beforeTimestamp );
+				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
 			} );
 	}
 
 	executeASK( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = (new Date()).valueOf();
-		return this.carbonldp.documents.executeRawASKQuery( query.endpoint, query.content ).then(
-			( result:SPARQLRawResults ):SPARQLClientResponse => {
+		return SPARQLService.executeRawASKQuery( query.endpoint, query.content ).then(
+			( [ result, response ]:[ SPARQLRawResults, Response ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return this.handleError( error, query, beforeTimestamp );
+				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
 			} );
 	}
 
@@ -484,7 +483,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				return this.buildResponse( duration, "200 - OK", <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return this.handleError( error, query, beforeTimestamp );
+				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
 			} );
 	}
 
@@ -704,28 +703,16 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		return clientResponse;
 	}
 
-	handleError( error:Errors.HTTPError, query:SPARQLQuery, beforeTimestamp:number ):Promise<SPARQLClientResponse> {
+	handleError( error:Error | Errors.HTTPError, query:SPARQLQuery, beforeTimestamp:number ):SPARQLClientResponse | Message {
 		let duration:number = (new Date()).valueOf() - beforeTimestamp;
-		return new Promise<SPARQLClientResponse>(
-			( resolve, reject ) => {
-				let stackErrors:number[] = [ 400, 403, 404, 413, 414, 429 ];
-				// TODO implement login modal when 401
-				if( stackErrors.indexOf( error.response.status ) > - 1 ) {
-					let errorMessage:Message = this.getMessage( error );
-					let errorResponse:SPARQLClientResponse = this.buildResponse( duration, errorMessage, <string> SPARQLResponseType.error, query );
-					resolve( errorResponse );
-				} else {
-					reject( error );
-				}
-			}
-		).then(
-			( response:SPARQLClientResponse ) => {
-				return response;
-			},
-			( _error:Errors.HTTPError ) => {
-				return Promise.reject( _error );
-			}
-		);
+
+		let errorMessage:Message = this.getMessage( error );
+		let stackErrors:number[] = [ 400, 403, 404, 413, 414, 429 ];
+		// TODO implement login modal when 401
+		if( error instanceof Errors.HTTPError && stackErrors.indexOf( error.response.status ) > - 1 ) {
+			return this.buildResponse( duration, errorMessage, SPARQLResponseType.error, query );
+		}
+		return errorMessage;
 	}
 }
 
