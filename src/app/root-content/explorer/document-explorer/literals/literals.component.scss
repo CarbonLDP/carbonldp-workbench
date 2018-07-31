@@ -1,3 +1,4 @@
+
 :host {
 	display: block;
 	padding-top: .5em;
@@ -15,4 +16,10 @@
 		padding-top: .2em;
 		padding-bottom: .2em;
 	}
+
+	.ui.striped.table {
+		table-layout: fixed;
+	}
 }
+
+
