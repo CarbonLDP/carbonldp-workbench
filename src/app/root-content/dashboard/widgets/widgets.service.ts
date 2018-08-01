@@ -3,6 +3,8 @@ import { Injectable } from "@angular/core";
 import { CarbonLDP } from "carbonldp";
 import { PlatformMetadata } from "carbonldp/System/PlatformMetadata";
 import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
+import { CustomWidget } from "app/root-content/dashboard/widgets/widgets.component";
+import { SPARQLQuery } from "app/root-content/sparql-client/response/response.component";
 
 @Injectable()
 export class WidgetsService {
@@ -58,4 +60,20 @@ export class WidgetsService {
 		return platformMetadata.refresh();
 	}
 
+
+	getCustomTotalCount( query ):Promise<number> {
+		let count;
+		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( results:SPARQLSelectResults ) => {
+			results.bindings.forEach( ( binding ) => {
+				count = binding[ "count" ];
+			} );
+			return count;
+		} );
+	}
+
+	getCustomWidgetsOnLocalStorage(): CustomWidget[] {
+		if( !! window.localStorage.getItem( "savedWidgets" ) )
+			return <CustomWidget[]>JSON.parse( window.localStorage.getItem( "savedWidgets" ) );
+
+	}
 }
