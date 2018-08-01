@@ -6,8 +6,10 @@ import { DocumentsWidgetComponent } from "./widgets/documents/documents-widget.c
 import { TriplesWidgetComponent } from "./widgets/triples/triples-widget.component";
 import { InstanceWidgetComponent } from "./widgets/instance/instance-widget.component"
 import { WidgetsComponent } from "./widgets/widgets.component";
-import { WidgetsMenu } from "./widgets/widgets-menu/widgets-menu.component"
-	
+import { WidgetsMenu } from "./widgets/widgets-menu/widgets-menu.component";
+import { CustomWidgetsComponent } from "./widgets/customWidgets/custom-widgets.component";
+import { CustomCountWidgetComponent } from "./widgets/customWidgets/custom-count-widget/custom-count-widget.component";
+
 // Modules
 import { SharedModule } from "app/shared/shared.module";
 
@@ -25,6 +27,8 @@ import { WidgetsService } from "./widgets/widgets.service";
 		TriplesWidgetComponent,
 		WidgetsComponent,
 		WidgetsMenu,
+		CustomWidgetsComponent,
+		CustomCountWidgetComponent
 	],
 	exports: [
 		WidgetsMenu,
