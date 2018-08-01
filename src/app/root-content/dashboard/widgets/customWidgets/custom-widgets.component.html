@@ -1,0 +1,3 @@
+<ng-container *ngIf="isCustomWidget && widget.type == 'counter' ">
+	<cw-custom-counter-widget [(widget)]="widget" (onErrorOccurs)="errorWidget($event)" (onClose)="closeWidget($event)"></cw-custom-counter-widget>
+</ng-container>
