@@ -1,8 +1,10 @@
 import { Component, Input } from "@angular/core";
 
+//Services/Providers
 import { MessagesAreaService } from "app/shared/messages-area/messages-area.service";
 
 import "semantic-ui/semantic";
+import { SPARQLQuery } from "app/root-content/sparql-client/response/response.component";
 
 @Component( {
 	selector: "cw-widgets",
@@ -13,9 +15,10 @@ import "semantic-ui/semantic";
 export class WidgetsComponent {
 	private messagesAreaService:MessagesAreaService;
 
-	@Input() widgetsList:Widget[];
+	customWidgetsIndex: Array<number>;
+	@Input() widgetsList: Array<Widget|CustomWidget>;
 
-	constructor( messagesAreaService:MessagesAreaService ) {
+	constructor( messagesAreaService:MessagesAreaService) {
 		this.messagesAreaService = messagesAreaService;
 	}
 
@@ -34,6 +37,19 @@ export class WidgetsComponent {
 		widget.hide = ! widget.hide;
 	}
 
+	getCustomWidgetIndex():Array<number>{
+		let indexArray: Array<number> = [];
+		this.widgetsList.forEach((widget, index)=>{
+			if(widget.customWidget){
+				indexArray.push(index);
+			}
+		});
+		return indexArray;
+	}
+
+	ngOnInit(){
+		this.customWidgetsIndex = this.getCustomWidgetIndex();
+	}
 }
 
 export interface Widget {
@@ -41,4 +57,15 @@ export interface Widget {
 	name:string,
 	title:string,
 	hide:boolean
+	customWidget:boolean
+}
+
+export interface CustomWidget extends Widget{
+	id: number,
+	name: string,
+	title: string,
+	hide: boolean,
+	query: SPARQLQuery,
+	type: string,
+	customWidget:boolean
 }
