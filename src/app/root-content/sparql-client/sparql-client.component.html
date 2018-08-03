@@ -103,7 +103,7 @@
 			<div class="nine wide column">
 				<input placeholder="name of the query" type="text" [(ngModel)]="currentQuery.name">
 			</div>
-			<div class="seven wide column field">
+			<div class="two wide column field">
 				<button class="ui button"
 				        [ngClass]="{loading: isSaving, disabled: !canSaveQuery()}"
 				        [disabled]="currentQuery.endpoint && !currentQuery.format && !currentQuery.content"
@@ -128,6 +128,15 @@
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="two wide column field">
+				<button class="ui button"
+				        [ngClass]="{loading: isSavingWidget, disabled: !canSaveQuery() || currentQuery.type !== sparqlTypes.query}"
+				        [disabled]="currentQuery.endpoint && !currentQuery.format && !currentQuery.content && currentQuery.type !== sparqlTypes.query"
+				        (click)="onClickOpenSaveWidgetModal()"
+				>
+					Create Widget
+				</button>
 			</div>
 		</div>
 	</div>
@@ -190,6 +199,37 @@
 			<p>Do you want to proceed?</p>
 		</div>
 	</div>
+	<div class="actions">
+		<button class="ui black deny button">
+			No
+		</button>
+		<button class="ui positive right labeled icon button" (click)="onApproveQueryRemoval(askingQuery)">
+			Yes, proceed
+			<i class="checkmark icon"></i>
+		</button>
+	</div>
+</div>
+
+<!--Ask for save widget queries-->
+<div class="ui save-widget-query modal">
+	<div class="header">
+		Do you want create a custom widget with this query?
+	</div>
+	<div class="content">
+		<div class="description">
+			<!--<div class="ui header">You are about to remove this query.</div>-->
+			<!--<p>If you proceed your query will be deleted.</p>-->
+			<!--<p>Do you want to proceed?</p>-->
+		</div>
+		<input type="text" [(ngModel)]="currentCustomWidget.title">
+		<label>Query (read only):</label>
+		<cw-code-mirror [mode]="codeMirrorMode.SPARQL" [readOnly]="true" [(value)]="currentCustomWidget.query.content" [showLineNumbers]="false"></cw-code-mirror>
+
+		<code>
+			{{currentCustomWidget | json}}
+		</code>
+	</div>
+
 	<div class="actions">
 		<button class="ui black deny button">
 			No
