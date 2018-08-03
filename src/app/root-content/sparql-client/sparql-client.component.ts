@@ -12,6 +12,7 @@ import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-mess
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
+import { CustomWidget } from "app/root-content/dashboard/widgets/widgets.component";
 
 
 @Component( {
@@ -108,6 +109,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	isQueryType:boolean = true;
 	isSending:boolean = false;
 	isSaving:boolean = false;
+	isSavingWidget:boolean = false;
 	isCarbonContext:boolean = false;
 	responses:SPARQLClientResponse[] = [];
 
@@ -130,6 +132,8 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	};
 	formatsAvailable:any = [];
 	savedQueries:SPARQLQuery[] = [];
+	savedWidgets:CustomWidget[] = [];
+	currentCustomWidget: CustomWidget;
 	messages:any[] = [];
 
 	// Buttons
@@ -142,6 +146,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	// Modals
 	replaceQueryConfirmationModal:JQuery;
 	deleteQueryConfirmationModal:JQuery;
+	saveWidgetQueryModal:JQuery;
 
 	// Regex
 	regExpSelect:RegExp = new RegExp( "((.|\n)+)?SELECT((.|\n)+)?", "i" );
@@ -230,7 +235,18 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.element = element;
 		this.isSending = false;
 		this.savedQueries = this.getLocalSavedQueries() || [];
+		this.savedWidgets = this.getLocalSavedWidgets() || [];
 		this.carbonldp = carbonldp;
+		this.currentCustomWidget = {
+			id: 3 + this.savedWidgets.length,
+			name: "",
+			title: "",
+			hide: false,
+			query: this.currentQuery,
+			type: "Counter",
+			customWidget:true
+		}
+
 	}
 
 	ngOnInit():void {
@@ -248,6 +264,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.btnsGroupSaveQuery.find( ".dropdown" ).dropdown();
 		this.replaceQueryConfirmationModal = this.$element.find( ".ui.replace-query-confirmation.modal" );
 		this.deleteQueryConfirmationModal = this.$element.find( ".ui.delete-query-confirmation.modal" );
+		this.saveWidgetQueryModal = this.$element.find( ".ui.save-widget-query.modal" );
 		this.initializeSavedQueriesSidebar();
 		this.initializeModal();
 	}
@@ -605,6 +622,14 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.toggleDeleteQueryConfirmationModal();
 	}
 
+	onClickOpenSaveWidgetModal():void{
+		this.currentCustomWidget.name = this.currentQuery.name;
+		this.currentCustomWidget.query = this.currentQuery;
+		//this.savedQueries = this.getLocalSavedQueries();
+		//this.askingQuery = this.savedQueries[ index ];
+		this.toggleSaveWidgetQueryModal();
+	}
+
 	removeQuery( query:SPARQLQuery ):void {
 		this.savedQueries = this.getLocalSavedQueries();
 		let index:number = this.savedQueries.indexOf( query );
@@ -634,6 +659,10 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 			closable: false,
 			blurring: true,
 		} );
+		this.saveWidgetQueryModal.modal({
+			closable: false,
+			blurring: true,
+		});
 	}
 
 	toggleReplaceQueryConfirmationModal():void {
@@ -643,6 +672,12 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	toggleDeleteQueryConfirmationModal():void {
 		this.deleteQueryConfirmationModal.modal( "toggle" );
 	}
+
+	toggleSaveWidgetQueryModal():void {
+		this.saveWidgetQueryModal.modal( "toggle" );
+	}
+
+
 
 	onApproveQueryReplacement( approvedQuery:SPARQLQuery ):void {
 		this.askingQuery = <SPARQLQuery>{};
@@ -659,6 +694,11 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		if( ! window.localStorage.getItem( "savedQueries" ) )
 			this.updateLocalSavedQueries();
 		return <SPARQLQuery[]>JSON.parse( window.localStorage.getItem( "savedQueries" ) );
+	}
+
+	getLocalSavedWidgets():CustomWidget[] {
+		if( !! window.localStorage.getItem( "savedWidgets" ) )
+			return <CustomWidget[]>JSON.parse( window.localStorage.getItem( "savedWidgets" ) );
 	}
 
 	updateLocalSavedQueries():void {
