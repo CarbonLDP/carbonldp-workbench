@@ -39,4 +39,11 @@
 			padding: 1px;
 		}
 	}
+
+	td:nth-child(1) span{
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		display: inherit;
+	}
 }
