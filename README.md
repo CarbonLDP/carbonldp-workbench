@@ -12,21 +12,18 @@ Workbench to administer an on premise installation of Carbon LDP
     - [node.js](https://nodejs.org/en/)
     - gulp: `npm install gulp -g`
     - [docker](https://www.docker.com/)
-2. Clone dependency projects alongside the project's directory:
+2. Clone the CarbonLDP JS SDK the project's directory:
     - carbonldp-js-sdk: `gulp clone https://github.com/CarbonLDP/carbonldp-js-sdk.git`
-    - carbonldp-panel: `gulp clone https://github.com/CarbonLDP/carbonldp-panel.git`
-    - angular2-carbonldp: `gulp clone https://github.com/CarbonLDP/angular2-carbonldp.git`
-    
+
     You should end up with the following directories in the same directory:
     - `carbonldp-workbench`
-    - `carbonldp-panel`
     - `carbonldp-js-sdk`
-    - `angular2-carbonldp`
 3. cd into `carbonldp-workbench`
 4. run `npm install`
-5. To start the application server run `npm start`
+5. run `npm run build:semantic`
+6. To start the application server run `npm start`
 	
-	**Note**: You may need to change the Carbon host configuration inside `config/dev.config.json`
+	**Note**: You may need to change the Carbon host configuration inside `config/dev/dev.config.json`
 
 ### NPM Scripts
 
@@ -36,21 +33,20 @@ Workbench to administer an on premise installation of Carbon LDP
 - `build:prod`: Runs Webpack bundler to generate the final `dist` files
 - `build:semantic`: Builds Semantic UI's `dist` files
 - `clean:dist`: Cleans `dist` directory
-- `copy:assets`: Copies third party libraries to the assets folder
+- `compodoc`: Runs compodoc to produce the documentation of the angular architecture of the project
+- `compodoc:serve`: Runs `compodoc` and serves it on port `4200`
+- `compodoc:watch`: Runs `compodoc`, serves it on port `4200` and watches the changes made to the app
 - `postinstall`: Install a compiled version of Semantic UI inside the `src` folder - _Triggered after `npm install`_
 - `start`: Runs `server:dev`
-- `server:dev`: Runs Webpack bundler in dev mode and starts the app on the host and the port specified in `config/dev.config.json`
+- `server:dev`: Runs Webpack bundler in dev mode and starts the app on the host and the port specified in `config/dev/dev.config.json`
+- `test`: Runs the tests using karma
 
 ### Gulp Tasks
 
-Gulp defines six tasks:
+Gulp defines two tasks:
 
 - `clean:dist`: Cleans `dist` directory
 - `clean:src`: Cleans `src` directory, removing any unused compiled file (useful when changing branches)
-- `copy:assets`: Copies all the assets to `dist/assets`
-- `copy:node-dependencies`: Copies node dependencies to `src/assets/node_modules` so they can be treated like any normal asset
-- `copy:node-dependencies:files`: Copies single files
-- `copy:node-dependencies:packages`: Copies complete packages
 
 ### File Structure
 
@@ -59,30 +55,38 @@ Gulp defines six tasks:
     ├── build                               # Build related files (e.g. `nginx.conf`)
     │   └── nginx.conf                      # Configuration file for nginx server inside the docker image
     ├── config                              # Configuration files used while bundling the application
-    │   ├── dev.config.json                 # Settings used during DEVELOPMENT mode of the application
+    │   ├── dev                             # Contains the files for DEVELOPMENT mode
+    │   │   ├── dev.config.json             # Settings and values used during DEVELOPMENT mode of the application
+    │   │   └── webpack.dev.js              # Webpack bundling settings for DEVELOPMENT mode
+    │   ├── prod                            # Contains the files for PRODUCTION mode
+    │   │   ├── prod.config.json            # Settings used during PRODUCTION mode of the application
+    │   │   └── webpack.prod.js             # Webpack bundling settings for PRODUCTION mode
+    │   ├── test                            # Contains the files for TEST mode
+    │   │   ├── karma.conf.json             # Settings of Karma to run the tests
+    │   │   ├── karma-test-shim             # Some polyfills needed by karma to properly run the tests
+    │   │   └── webpack.test.js             # Webpack bundling settings for TEST mode
     │   ├── head.config.js                  # HTML head elements injected into the application index.html
-    │   ├── prod.config.json                # Settings used during PRODUCTION mode of the application
     │   ├── webpack.common.js               # Webpack's settings used by DEV and PROD modes
-    │   ├── webpack.dev.js                  # Webpack bundling settings for DEVELOPMENT mode
-    │   ├── webpack.helpers.js              # Helpers used by webpack's webpack.common/dev/prod.js files
-    │   └── webpack.prod.js                 # Webpack bundling settings for PRODUCTION mode
-    ├── dist                                # Distribution related files
+    │   └── webpack.helpers.js              # Helpers used by webpack's webpack.common/dev/prod.js files
+    ├── dist                                # Distribution files
     ├── hooks                               # Scripts launched before building images
-    │   └── pre_build                       # BASH script that runs the docker image
+    │   └── pre_build                       # BASH script the docker image runs
     ├── node_modules                        # npm dependencies (don't touch them)
     ├── scripts                             # Scripts that help to install dependencies
     │   ├── force-semantic-ui-to-install-correctly.js   
-    │   │                                   # Force correct install of Semantic UI using `semantic.json` 
-    │   ├── pre_build.sh                    # SHELL script that runs the docker image
+    │   │                                   # Force the correct install of Semantic UI using `semantic.json`
+    │   ├── pre_build.sh                    # SHELL script the docker image runs
     │   └── write-global-variables.sh       # SHELL script that replaces Carbon settings in index.html 
     ├── src                                 # All source files
     │   ├── app                             # Source files for the Angular application
     │   ├── assets                          # Any asset (image, json, etc.)
+    │   │   ├── fonts                       # Fonts used by the Workbench
     │   │   └── images                      # General images
-    │   ├── semantic                        # Source code for the Semantic UI theme
+    │   ├── semantic                        # Source code for the installed Semantic UI theme
     │   ├── index.html                      # Entry point for the app
     │   ├── main.ts                         # Entry file of angular, it bootstrap the main angular module
-    │   └── polyfills.ts                    # File that imports all the required polyfills
+    │   ├── polyfills.ts                    # Imports all the required polyfills
+    │   └── styles.ts                       # Imports the global styles (Semantic UI)
     ├── typings                             # Typescript description files
     │   ├── customs                         # Directory to store custom description files
     │   │   ├── codemirror
@@ -94,18 +98,18 @@ Gulp defines six tasks:
     │   │   └── semantic-ui
     │   │       └── index.d.ts              # Semantic-UI's description file
     │   └── typings.d.ts                    # Main typings file referencing all index.d.ts custom files
+    ├── .dockerignore                       # Ignore file for docker
     ├── .gitignore                          # Ignore file for git
     ├── .travis.yml                         # Travis configuration file
     ├── CHANGELOG                           # File to track package changes
     ├── Dockerfile                          # File to build the docker image for deployment
     ├── gulpfile.js                         # Gulp's configuration file
+    ├── karma.conf.js                       # Karma's main entry point
     ├── LICENSE
     ├── package.json                        # npm configuration file
     ├── README.md                           # this
     ├── semantic.json                       # Semantic UI configuration file
-    ├── tsconfig.json                       # Typescript compiler configuration file
-    ├── tsconfig-aot.json                       # AOT compiler configuration file
-    └── webpack.config.js                   # It bundles app depending on process.env.NODE_ENV (Dev/Prod)
+    └── tsconfig.json                       # Typescript compiler configuration file
 
 ### Developing the Project
 
@@ -113,27 +117,34 @@ In order to develop this project you need to do the following:
  
 1. cd into `carbonldp-workbench`
 2. run `npm start`
-3. Modify the code inside this `carbonldp-workbench`
+3. Start coding!
 
-### Developing other carbonldp's projects
+### Developing other CarbonLDP's projects
 
-As mentioned earlier, during the Setup section, this project uses the following sibling directories:
+As mentioned earlier, during the Setup section, this project uses the following sibling directory:
  
-- `carbonldp-panel`
 - `carbonldp-js-sdk`
-- `angular2-carbonldp`
 
-If you want to develop any of those projects, you can do that by following these steps:
+If you want to develop the Workbench against a specific version of the SDK, make sure
+you've followed the steps from setup and run the following commands:
 
-1. cd into desired project. E.g:`cd carbonldp-panel`
-2. Run `gulp watch` to wait for changes (If the desired project is `carbonldp-js-sdk` you need to manually run `gulp` whenever you want to test a change)
-3. Cd into `../carbonldp-workbench`
-4. Add `"carbonldp-panel/*": [ "../carbonldp-panel/src/*" ]` to the `paths` property of `compilerOptions` in _`tsconfig.json`_ file 
-4. Run `sudo npm link DESIRED_PROJECT_PATH` E.g: `sudo npm link ../carbonldp-panel/dist`
-5. Enter your super user credentials
-5. Run `npm start`
+1. cd into the SDK. E.g:`cd carbonldp-js-sdk`
+2. Build the project or run a watch task to wait for changes. E.g: `npm run build`
+3. cd into the production folder of the project `cd dist`
+4. Run `npm link`
+5. cd into the workbench directory. E.g:`cd ../../carbonldp-workbench`
+6. Run `npm link carbonldp`
+7. Run `npm start`
 
-After this you will be able to see the changes whenever you modify something from the source projects.
+After this you will be able to see the changes whenever you modify something from the SDK.
+
+## Generating the Docker image
+
+To generate the Docker image of the Workbench, do the following:
+
+1. Run `npm run build` to build the Workbench 
+2. Run `docker build -t carbonldp/carbonldp-workbench .` to build the Docker image
+3. Run the Docker image `docker run -d --name carbonldp-workbench -p 8080:80 -e "CARBON_HOST=localhost:8083" -e "CARBON_PROTOCOL=http" carbonldp/carbonldp-workbench`
 
 ### Deploying the Project
 

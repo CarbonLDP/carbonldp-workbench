@@ -1,0 +1,22 @@
+<table class="ui very compact striped small celled table" *ngIf="canDisplayPointers">
+	<thead>
+		<tr class="center aligned">
+			<th class="ten wide">@id</th>
+			<th class="one wide" *ngIf="canEdit">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		<ng-template ngFor let-pointer="$implicit" [ngForOf]="pointers" let-i="index">
+			<tr class="cw-pointer top aligned" [ngClass]="{'modified-pointer':!!pointer.modified, 'added-pointer':!!pointer.added}" *ngIf="!pointer.deleted"
+			    [pointer]="pointer"
+			    [documentURI]="documentURI"
+			    [blankNodes]="blankNodes"
+			    [namedFragments]="namedFragments"
+			    [canEdit]="canEdit"
+			    (onGoToNamedFragment)="goToNamedFragment($event)"
+			    (onGoToBlankNode)="goToBlankNode($event)"
+			    (onSave)="savePointer($event, pointer, i)"
+			    (onDeletePointer)="deletePointer($event, i)"></tr>
+		</ng-template>
+	</tbody>
+</table>

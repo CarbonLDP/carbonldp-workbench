@@ -1,0 +1,243 @@
+<div class="ui basic segment query-builder">
+	<!-- START: Header of the query builder -->
+	<div class="ui top attached menu">
+		<div class="right menu">
+			<a class="show-queries item" (click)="toggleSidebar()"><i class="sidebar icon"></i> Saved Queries</a>
+		</div>
+	</div>
+	<!-- END: Header of the query builder -->
+
+
+	<!-- START: Body of the query builder -->
+	<div class="ui middle attached segment pushable">
+		<!-- START: List of the saved queries -->
+		<div class="ui inverted right vertical wide dimmed sidebar menu queries-list">
+			<p *ngIf="savedQueries.length == 0">
+				No saved queries yet.
+			</p>
+			<a class="item" *ngFor="let query of savedQueries; let i = index" (click)="onClickSavedQuery( query )">
+				<button class="ui right floated circular icon mini inverted red button" (click)="onClickRemoveSavedQuery( i )">
+					<i class="icon remove"></i>
+				</button>
+				<span class="name">{{query.name}}</span>
+				<br/>
+				<span class="operation" [ngClass]="query.operation.toLowerCase()">{{query.operation.toLowerCase()}}</span>
+			</a>
+		</div>
+		<!-- END: List of the saved queries -->
+
+
+		<!-- START: Form of the query builder -->
+		<div class="ui pusher">
+			<div class="ui basic segment">
+				<div class="ui grid">
+					<div class="row">
+						<div class="column">
+							<div class="ui grid form basic segment" [ngClass]="{loading: isSending}">
+
+								<!-- START: Endpoint URI input -->
+								<div class="fields row">
+									<div class="column field">
+										<label>Endpoint URI:</label>
+										<div class="ui info message" *ngIf="!isCarbonContext">
+											<p>
+												URI:
+												<span>{{currentQuery.endpoint}}</span>
+											</p>
+										</div>
+										<input placeholder="https://example.com/parent/.../resource/" [(ngModel)]="endpoint" type="text">
+									</div>
+								</div>
+								<!-- END: Endpoint URI input -->
+
+
+								<!-- START: Type and Output format of the query -->
+								<div class="fields row">
+									<div class="eight wide column field">
+										<label>Type:</label>
+										<select #queryType class="ui dropdown" [(ngModel)]="currentQuery.type" (change)="onChangeQueryType($event)">
+											<option value="{{sparqlTypes.query}}">{{sparqlTypes.query}}</option>
+											<option value="{{sparqlTypes.update}}">{{sparqlTypes.update}}</option>
+										</select>
+									</div>
+									<div class="eight wide column field" *ngIf="currentQuery.type == 'Query'">
+										<label>Output Format:</label>
+										<select class="ui dropdown" [(ngModel)]="currentQuery.format"
+										        [disabled]="isSending || !currentQuery.operation || (!!formatsAvailable && formatsAvailable.length === 0)">
+											<option *ngFor="let format of formatsAvailable" [value]="format.value">{{format.name}}</option>
+										</select>
+									</div>
+								</div>
+								<!-- END: Type and Output format of the query -->
+
+
+								<!-- START: Body of the query -->
+								<div class="fields row">
+									<div class=" column field">
+										<label>Query:</label>
+										<cw-code-mirror [mode]="codeMirrorMode.SPARQL" [readOnly]="isSending" [(value)]="sparql" [showLineNumbers]="true"></cw-code-mirror>
+									</div>
+								</div>
+								<!-- END: Body of the query -->
+
+
+								<!-- START: Action buttons -->
+								<div class="fields row">
+									<div class="column field">
+										<button class="ui blue button"
+										        [ngClass]="{disabled: !canExecute()}"
+										        (click)="onExecute()">
+											<i class="play icon"></i>
+											Execute
+										</button>
+										<button class="ui basic button"
+										        [ngClass]="{disabled: !canErase()}"
+										        (click)="onErase()">
+											<i class="erase icon"></i>
+											Clean
+										</button>
+									</div>
+								</div>
+								<!-- END: Action buttons -->
+							</div>
+							<!-- /basi segment -->
+						</div>
+						<!-- /row -->
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- START: Form of the query builder -->
+	</div>
+	<!-- END: Body of the query builder -->
+
+
+	<!-- START: Displays error message -->
+	<div class="ui attached error message" *ngFor="let message of messages">
+		<i class="close icon" (click)="closeMessage($event)"></i>
+		<div class="header">
+			{{message.title}}
+		</div>
+		<p>
+			{{message.content}}<br>
+			<span *ngIf="message.statusCode">Status: {{message.statusCode}} - {{message.statusMessage}}</span><br>
+			<span *ngIf="message.endpoint">URI: {{message.endpoint}}</span>
+		</p>
+	</div>
+	<!-- END: Displays error message -->
+
+
+	<!-- START: Inputs to Save the query -->
+	<div class="ui bottom attached segment">
+		<div class="ui grid form row">
+			<div class="nine wide column">
+				<input placeholder="name of the query" type="text" [(ngModel)]="currentQuery.name">
+			</div>
+			<div class="seven wide column field">
+				<button class="ui button"
+				        [ngClass]="{loading: isSaving, disabled: !canSaveQuery()}"
+				        [disabled]="currentQuery.endpoint && !currentQuery.format && !currentQuery.content"
+				        (click)="onClickSaveQuery()"
+				        *ngIf="currentQuery.id==null">
+					<i class="star icon"></i>
+					<span>Save Query</span>
+				</button>
+				<div class="ui teal buttons btnsGroupSaveQuery"
+				     [style.display]="currentQuery.id != null && currentQuery.id != undefined? '':'none'">
+					<button class="ui button btnSave"
+					        (click)="onClickSaveExistingQuery()">
+						<span>Save Query</span>
+					</button>
+					<div class="ui floating dropdown icon button">
+						<i class="dropdown icon"></i>
+						<div class="menu">
+							<button class="ui basic button item btnSaveAs"
+							        (click)="onClickSaveQuery()">
+								<i class="save icon"></i> Save As "{{currentQuery.name}}"
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END: Inputs to Save the query -->
+</div>
+
+
+<!-- START: Container of Query responses -->
+<div class="ui basic segment query-results">
+	<div class="ui two columns grid basic segment title">
+		<div class="column">
+			<h3>Response Stack</h3>
+		</div>
+		<div class="column right aligned">
+			<button class="ui inverted white button"
+			        [disabled]="responses.length <= 0"
+			        (click)="onEmptyStack()">
+				<i class="trash outline icon"></i>
+				Empty Stack <span *ngIf="responses.length>0">({{responses.length}})</span>
+			</button>
+		</div>
+	</div>
+	<div class="ui list responses-list">
+		<cw-sparql-response class="item"
+		                    *ngFor="let response of responses; let i = index"
+		                    [response]="response"
+		                    [prefixes]="prefixes"
+		                    (onRemove)="onRemove($event)"
+		                    (onConfigure)="onConfigureResponse($event)"
+		                    (onReExecute)="onReExecute($event)"></cw-sparql-response>
+	</div>
+</div>
+<!-- END: Container of Query responses -->
+
+
+<!-- START: Modal to confirm the replacement of the working query -->
+<div class="ui replace-query-confirmation modal">
+	<div class="header">
+		Unsaved Query
+	</div>
+	<div class="image content">
+		<div class="description">
+			<div class="ui header">You haven't saved your query.</div>
+			<p>If you proceed your query will be replaced.</p>
+			<p>Do you want to proceed?</p>
+		</div>
+	</div>
+	<div class="actions">
+		<button class="ui black deny button">
+			No
+		</button>
+		<button class="ui positive right labeled icon button" (click)="onApproveQueryReplacement(askingQuery)">
+			Yes, proceed
+			<i class="checkmark icon"></i>
+		</button>
+	</div>
+</div>
+<!-- END: Modal to confirm the replacement of the working query  -->
+
+
+<!-- START: Modal to confirm query deletion -->
+<div class="ui delete-query-confirmation modal">
+	<div class="header">
+		Are you sure?
+	</div>
+	<div class="image content">
+		<div class="description">
+			<div class="ui header">You are about to remove this query.</div>
+			<p>If you proceed your query will be deleted.</p>
+			<p>Do you want to proceed?</p>
+		</div>
+	</div>
+	<div class="actions">
+		<button class="ui black deny button">
+			No
+		</button>
+		<button class="ui positive right labeled icon button" (click)="onApproveQueryRemoval(askingQuery)">
+			Yes, proceed
+			<i class="checkmark icon"></i>
+		</button>
+	</div>
+</div>
+<!-- END: Modal to confirm query deletion -->

@@ -7,16 +7,18 @@ import { MessageComponent } from "./messages-area/message.component";
 import { MessagesAreaComponent } from "./messages-area/messages-area.component";
 import { ErrorLabelComponent } from "./messages-area/error/error-label.component";
 import { PaginatorComponent } from "./paginator/paginator.component";
+import { VersionsPresenterComponent } from "./versions-presenter/versions-presenter.component";
 import * as CodeMirrorComponent from "./code-mirror/code-mirror.component";
 
 // Pipes
-import { URIToSlugPipe } from "./pipes/uri-to-slug.pipe";
 
 // Modules
+import { PipesModule } from "./pipes/pipes.module";
 import { DirectivesModule } from "./directives/directives.module";
 import { SemanticModule } from "./semantic/semantic.module";
 
 // Services
+import { RouterService } from "./router.service";
 import { MessagesAreaService } from "./messages-area/messages-area.service";
 
 @NgModule( {
@@ -29,7 +31,7 @@ import { MessagesAreaService } from "./messages-area/messages-area.service";
 		CodeMirrorComponent.Class,
 		ErrorLabelComponent,
 		PaginatorComponent,
-		URIToSlugPipe,
+		VersionsPresenterComponent,
 	],
 	providers: [],
 	exports: [
@@ -38,9 +40,9 @@ import { MessagesAreaService } from "./messages-area/messages-area.service";
 		CodeMirrorComponent.Class,
 		ErrorLabelComponent,
 		PaginatorComponent,
+		VersionsPresenterComponent,
 
-		URIToSlugPipe,
-
+		PipesModule,
 		DirectivesModule,
 		SemanticModule
 	]
@@ -51,7 +53,7 @@ export class SharedModule {
 	static forRoot():ModuleWithProviders {
 		return {
 			ngModule: SharedModule,
-			providers: [ MessagesAreaService ]
+			providers: [ MessagesAreaService, RouterService ]
 		};
 	}
 

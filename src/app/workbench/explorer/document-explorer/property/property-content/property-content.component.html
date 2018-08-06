@@ -1,0 +1,165 @@
+<!-- START: Delete property confirmation message -->
+<div class="ui confirm-deletion property inverted dimmer">
+	<div class="content">
+		<div class="center">
+			<h2 class="ui header"><i class="trash outline red icon"></i> Are you sure?</h2>
+			<p class="ui description">Confirm to delete the property: '{{propertyName}}'</p>
+			<div class="ui red button" title="Confirm deletion" (click)="deleteProperty()">Confirm</div>
+			<div class="ui button" title="Cancel deletion" (click)="cancelDeletion()">Cancel</div>
+		</div>
+	</div>
+</div>
+<!-- END: Delete property confirmation message -->
+
+
+<!-- START: Displays property id as friendly name -->
+<div class="header">
+	<p>{{propertyName | decodeURI | fragment}}</p>
+</div>
+<!-- END: Displays property id as friendly name -->
+
+
+<!-- START: READ and EDIT modes for property id/name -->
+<div class="meta">
+
+
+	<!-- START: READ mode for property id -->
+	<div [hidden]="mode === modes.EDIT">
+		<a [attr.href]="propertyName" target="_blank">{{propertyName}}</a>
+	</div>
+	<!-- END: READ mode for property id -->
+
+
+	<!-- START: EDIT mode for property id -->
+	<div [hidden]="mode === modes.READ">
+		<div class="ui error form">
+
+
+			<!-- Name form -->
+			<div class="ui fluid action input">
+				<input type="text"
+				       [existingProperties]="existingProperties"
+				       [property]="property"
+				       [id]="id"
+				       [originalName]="originalName"
+				       [control]="nameInput"
+				       cw-property-name
+				       name="nameInput"
+				       #nameInput="ngModel"
+				       [(ngModel)]="propertyName"
+				       (keyup.escape)="cancelModification()"
+				       (keyup.enter)="nameInput.valid? save() : null">
+				<div class="ui save-cancel buttons">
+					<button class="ui button"
+					        [disabled]="!nameInput.valid"
+					        (click)="save(nameInput.value)">Save
+					</button>
+					<div class="ui dropdown icon button">
+						<i class="dropdown icon"></i>
+						<div class="menu">
+							<div class="item" (click)="cancelModification()">Cancel</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+			<!-- Error messages -->
+			<cw-error-label *ngIf="!nameInput.valid">
+				<p *ngIf="nameInput.control.hasError('required')">Enter a name for the property.</p>
+				<p *ngIf="nameInput.control.hasError('emptyName')">Enter a name for the property.</p>
+				<p *ngIf="nameInput.control.hasError('invalidName')">Enter a valid URL. Only alphanumeric values (a-z, A-Z, 0..9)</p>
+				<p *ngIf="nameInput.control.hasError('duplicatedHashtag')">Use only one hashtag (#) symbol.</p>
+				<p *ngIf="nameInput.control.hasError('duplicatedPropertyName')">A property with that name already exists.</p>
+			</cw-error-label>
+		</div>
+	</div>
+	<!-- END: EDIT mode for property id -->
+</div>
+<!-- END: READ and EDIT modes for property id -->
+
+
+<!-- START: Property content (Literals, Pointers and Lists) -->
+<!--<div class="description" [hidden]="!id">-->
+<div class="description" [hidden]="!id">
+
+	<!-- START: Actions buttons for a normal property -->
+	<div *ngIf="canEdit">
+
+		<!-- Add literal -->
+		<button class="ui right labeled icon basic mini button" (click)="addLiteral()">
+			<i class="plus icon"></i>
+			Add Literal
+		</button>
+
+		<!-- Add Pointer -->
+		<button class="ui right labeled icon basic mini button" (click)="addPointer()">
+			<i class="plus icon"></i>
+			Add Pointer
+		</button>
+
+		<!-- Add List -->
+		<button class="ui right labeled icon basic mini button" (click)="addList()">
+			<i class="plus icon"></i>
+			Add List
+		</button>
+
+		<!-- Buttons to Edit or Delete the property -->
+		<div class="ui icon bottom left pointing dropdown basic mini button options" title="Options">
+			<i class="ellipsis horizontal icon"></i>
+			<div class="menu">
+				<div class="item" title="Edit Property's name" (click)="onEditName()">
+					<i class="edit icon"></i> Edit Name
+				</div>
+				<div class="item" title="Options" (click)="askToConfirmDeletion()">
+					<i class="trash outline red icon"></i> Delete Property
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END: Actions buttons for a normal property -->
+
+
+	<!-- START: Display message when property is empty -->
+	<div class="ui mini warning message" [hidden]="literalsContainer.canDisplayLiterals || pointersContainer.canDisplayPointers || listsContainer.canDisplayLists">
+		<p>The property needs at least one literal, one pointer or one list in order to be saved, otherwise the property won't be added to the document. Add a literal, a pointer or a list.</p>
+	</div>
+	<!-- END: Display message when property is empty -->
+
+
+	<!-- Dispaly property content pointers/literals/lists -->
+	<div [hidden]="!literalsContainer.canDisplayLiterals && !pointersContainer.canDisplayPointers && lists.length===0">
+		<cw-literals #literalsContainer
+		             [canEdit]="canEdit"
+		             [(literals)]="literals"
+		             [onAddNewLiteral]="addNewLiteral"
+
+		             (onLiteralsChanges)="checkForChangesOnLiterals($event)">
+		</cw-literals>
+		<cw-pointers #pointersContainer
+		             [canEdit]="canEdit"
+		             [(pointers)]="pointers"
+		             [onAddNewPointer]="addNewPointer"
+		             [blankNodes]="blankNodes"
+		             [namedFragments]="namedFragments"
+		             [documentURI]="documentURI"
+
+		             (onGoToBlankNode)="goToBlankNode($event)"
+		             (onGoToNamedFragment)="goToNamedFragment($event)"
+		             (onPointersChanges)="checkForChangesOnPointers($event)">
+		</cw-pointers>
+		<cw-lists #listsContainer
+		          [canEdit]="canEdit"
+		          [(lists)]="lists"
+		          [onAddNewList]="addNewList"
+		          [blankNodes]="blankNodes"
+		          [namedFragments]="namedFragments"
+		          [documentURI]="documentURI"
+
+		          (onGoToBlankNode)="goToBlankNode($event)"
+		          (onGoToNamedFragment)="goToNamedFragment($event)"
+		          (onListsChanges)="checkForChangesOnLists($event)"
+		></cw-lists>
+	</div>
+</div>
+<!-- END: Property content (Literals, Pointers and Lists) -->
