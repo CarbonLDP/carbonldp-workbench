@@ -1,11 +1,11 @@
-import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { Pointer } from "carbonldp/Pointer";
 import { Document } from "carbonldp/Document";
 import { Errors } from "carbonldp/HTTP";
 import { URI } from "carbonldp/RDF/URI";
-import { SPARQLSelectResults, SPARQLBindingObject } from "carbonldp/SPARQL/SelectResults";
+import { SPARQLBindingObject, SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { C, LDP } from "carbonldp/Vocabularies";
 
 import * as $ from "jquery";
@@ -136,11 +136,11 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			"sort": this.sort.bind( this ),
 			"plugins": [ "types", "wholerow", "sort" ],
 		} ).jstree( true );
-		this.$tree.on( "select_node.jstree", ( e:Event, data:any ):void => {
+		this.$tree.on( "select_node.jstree", (( e:Event, data:any ):void => {
 			let node:any = data.node;
 			this.selectedURI = node.id;
 			this.canDelete = ! node.data.isRequiredSystemDocument;
-		} );
+		}) as any );
 		this.$tree.on( "loaded.jstree", () => {
 			this.jsTree.select_node( this.nodeChildren[ 0 ].id );
 			this.jsTree.open_node( this.nodeChildren[ 0 ].id );

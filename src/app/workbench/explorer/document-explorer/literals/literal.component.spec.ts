@@ -257,7 +257,7 @@ export function literalSpecs() {
 				editButton.click();
 				fixture.detectChanges();
 
-				let type:string = comp.literalCmp.typesDropdown.val();
+				let type:string | number | string[] = comp.literalCmp.typesDropdown.val();
 				expect( type ).toEqual( XSD.string );
 			} );
 
