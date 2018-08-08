@@ -67,5 +67,6 @@ export interface CustomWidget extends Widget{
 	hide: boolean,
 	query: SPARQLQuery,
 	type: string,
-	customWidget:boolean
+	customWidget:boolean,
+	mainVariable: string
 }
