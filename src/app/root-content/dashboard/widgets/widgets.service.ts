@@ -61,18 +61,18 @@ export class WidgetsService {
 	}
 
 
-	getCustomTotalCount( query ):Promise<number> {
+	getCustomTotalCount( query:SPARQLQuery, mainVariable:string ):Promise<number> {
 		let count;
-		return this.carbonldp.documents.executeSELECTQuery( '', query ).then( ( results:SPARQLSelectResults ) => {
+		return this.carbonldp.documents.executeSELECTQuery( query.endpoint, query.content ).then( ( results:SPARQLSelectResults ) => {
 			results.bindings.forEach( ( binding ) => {
-				count = binding[ "count" ];
+				count = binding[ mainVariable ];
 			} );
 			return count;
 		} );
 	}
 
-	getCustomWidgetsOnLocalStorage(): CustomWidget[] {
-		if( !! window.localStorage.getItem( "savedWidgets" ) )
+	getCustomWidgetsOnLocalStorage():CustomWidget[] {
+		if( ! ! window.localStorage.getItem( "savedWidgets" ) )
 			return <CustomWidget[]>JSON.parse( window.localStorage.getItem( "savedWidgets" ) );
 
 	}
