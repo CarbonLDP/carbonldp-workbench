@@ -106,14 +106,25 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		}
 	};
 
+	customWidgetsTypes: Array<CustomWidgetType> = [
+		{
+			name: "Counter",
+			value: "counter"
+		}
+
+	];
+
+
+
 	isQueryType:boolean = true;
 	isSending:boolean = false;
 	isSaving:boolean = false;
-	isSavingWidget:boolean = false;
 	isCarbonContext:boolean = false;
+	isSavingWidget:boolean = false;
+	isQueryCountType:boolean = false;
+	isQueryActive:boolean;
+
 	responses:SPARQLClientResponse[] = [];
-
-
 	currentQuery:SPARQLQuery = <SPARQLQuery>{
 		endpoint: "",
 		type: this.sparqlTypes.query,
@@ -132,9 +143,10 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	};
 	formatsAvailable:any = [];
 	savedQueries:SPARQLQuery[] = [];
-	savedWidgets:CustomWidget[] = [];
+	savedWidgets:Array<CustomWidget> = [];
+	queryVariables: Array<CustomWidgetVariable>;
 	currentCustomWidget: CustomWidget;
-	messages:any[] = [];
+	messages:Array<any> = [];
 
 	// Buttons
 	btnsGroupSaveQuery:JQuery;
@@ -147,7 +159,6 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	replaceQueryConfirmationModal:JQuery;
 	deleteQueryConfirmationModal:JQuery;
 	saveWidgetQueryModal:JQuery;
-
 	// Regex
 	regExpSelect:RegExp = new RegExp( "((.|\n)+)?SELECT((.|\n)+)?", "i" );
 	regExpConstruct:RegExp = new RegExp( "((.|\n)+)?CONSTRUCT((.|\n)+)?", "i" );
@@ -160,6 +171,8 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	regExpCreate:RegExp = new RegExp( "((.|\n)+)?CREATE((.|\n)+)?", "i" );
 	regExpDrop:RegExp = new RegExp( "((.|\n)+)?DROP((.|\n)+)?", "i" );
 	regExpLoad:RegExp = new RegExp( "((.|\n)+)?LOAD((.|\n)+)?", "i" );
+	regExpCount:RegExp = new RegExp( "(select)(\\?[a-z0-9]*)*(\\(count\\(\\?[a-z0-9]+\\)as\\?[a-z0-9]+\\))(\\?[a-z0-9]*)*(where\\{((\\D)|([0-9]))*\\})", "gi" );
+	regExpVariables:RegExp = new RegExp( "\\?[a-z0-9]+", "gi" );
 
 	// Inputs and Outputs
 	@Input() emitErrors:boolean = false;
@@ -237,16 +250,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.savedQueries = this.getLocalSavedQueries() || [];
 		this.savedWidgets = this.getLocalSavedWidgets() || [];
 		this.carbonldp = carbonldp;
-		this.currentCustomWidget = {
-			id: 3 + this.savedWidgets.length,
-			name: "",
-			title: "",
-			hide: false,
-			query: this.currentQuery,
-			type: "Counter",
-			customWidget:true
-		}
-
+		this.initCustomWidget();
 	}
 
 	ngOnInit():void {
@@ -622,13 +626,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.toggleDeleteQueryConfirmationModal();
 	}
 
-	onClickOpenSaveWidgetModal():void{
-		this.currentCustomWidget.name = this.currentQuery.name;
-		this.currentCustomWidget.query = this.currentQuery;
-		//this.savedQueries = this.getLocalSavedQueries();
-		//this.askingQuery = this.savedQueries[ index ];
-		this.toggleSaveWidgetQueryModal();
-	}
+
 
 	removeQuery( query:SPARQLQuery ):void {
 		this.savedQueries = this.getLocalSavedQueries();
@@ -636,6 +634,8 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.savedQueries.splice( index, 1 );
 		this.updateLocalSavedQueries();
 	}
+
+
 
 	loadQuery( query:SPARQLQuery ):void {
 		this.currentQuery = Object.assign( {}, query );
@@ -673,9 +673,6 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.deleteQueryConfirmationModal.modal( "toggle" );
 	}
 
-	toggleSaveWidgetQueryModal():void {
-		this.saveWidgetQueryModal.modal( "toggle" );
-	}
 
 
 
@@ -690,22 +687,20 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.askingQuery = <SPARQLQuery>{};
 	}
 
+
 	getLocalSavedQueries():SPARQLQuery[] {
 		if( ! window.localStorage.getItem( "savedQueries" ) )
 			this.updateLocalSavedQueries();
 		return <SPARQLQuery[]>JSON.parse( window.localStorage.getItem( "savedQueries" ) );
 	}
 
-	getLocalSavedWidgets():CustomWidget[] {
-		if( !! window.localStorage.getItem( "savedWidgets" ) )
-			return <CustomWidget[]>JSON.parse( window.localStorage.getItem( "savedWidgets" ) );
-	}
 
 	updateLocalSavedQueries():void {
 		window.localStorage.setItem( "savedQueries", JSON.stringify( this.savedQueries ) );
 	}
 
-	toggleSidebar():void {
+	toggleSidebar(option?: string):void {
+		this.isQueryActive = option === 'queries';
 		this.sidebar.sidebar( "toggle" );
 	}
 
@@ -754,6 +749,123 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		}
 		return errorMessage;
 	}
+
+
+	//Custom widgets functions
+
+	getLocalSavedWidgets():CustomWidget[] {
+		if( !! window.localStorage.getItem( "savedWidgets" ) )
+			return <CustomWidget[]>JSON.parse( window.localStorage.getItem( "savedWidgets" ) );
+	}
+
+	toggleSaveWidgetQueryModal():void {
+		this.saveWidgetQueryModal.modal( "toggle" );
+	}
+
+	onSaveCustomWidget():void{
+		this.isSavingWidget = true;
+		this.savedWidgets = this.getLocalSavedWidgets() || [];
+		if(!!this.currentCustomWidget.id){
+			let i:number = this.savedWidgets.findIndex((widget:CustomWidget)=>{
+				return widget.id === this.currentCustomWidget.id;
+			});
+			this.savedWidgets[i] = this.currentCustomWidget;
+		}else{
+			this.currentCustomWidget.id = 3 + this.savedWidgets.length;
+			this.savedWidgets.push( this.currentCustomWidget );
+		}
+		this.updateLocalSavedWidgets().then( () => {
+			this.isSavingWidget = false;
+			this.toggleSaveWidgetQueryModal();
+		});
+	}
+
+	updateLocalSavedWidgets():Promise<boolean>{
+		return new Promise((resolve, reject)=>{
+			window.localStorage.setItem( "savedWidgets", JSON.stringify( this.savedWidgets ) );
+			resolve(true);
+		});
+	}
+
+	onClickRemoveSavedWidget( index:number ):void {
+		this.savedWidgets = this.getLocalSavedWidgets();
+		this.askingQuery = this.savedWidgets[ index ].query;
+		this.toggleDeleteQueryConfirmationModal();
+	}
+
+	onClickOpenSaveWidgetModal():void{
+		this.regExpCount.lastIndex = 0;
+		this.isQueryCountType = this.regExpCount.test(this.currentQuery.content.replace(/\s/g, ""));
+		this.queryVariables  = this.currentQuery.content.toLowerCase().split("where")[0].match(this.regExpVariables).map((finding)=>{
+			return {
+				name: finding,
+				value: finding.replace("?","")
+			}
+		});
+		this.currentCustomWidget.mainVariable = !!this.currentCustomWidget.mainVariable ? this.currentCustomWidget.mainVariable : this.queryVariables[0].value;
+		this.currentCustomWidget.name = this.currentQuery.name !== this.currentCustomWidget.name ? this.currentQuery.name : this.currentCustomWidget.name;
+		this.currentCustomWidget.query = this.currentQuery;
+		this.toggleSaveWidgetQueryModal();
+	}
+
+	onClickSavedWidget( widget: CustomWidget):void {
+		this.currentCustomWidget = widget;
+		let selectedQuery:SPARQLQuery = widget.query
+		if( ! ! this.currentQuery.endpoint || ! ! this.currentQuery.content ) {
+			if( ! ! this.currentQuery.endpoint && ! ! this.currentQuery.content ) {
+				if( JSON.stringify( this.currentQuery ) !== JSON.stringify( selectedQuery ) ) {
+					this.askConfirmationToReplace( selectedQuery );
+				} else {
+					this.loadQuery( selectedQuery );
+					this.toggleSidebar();
+				}
+			} else {
+				if( (! ! this.currentQuery.endpoint && this.currentQuery.endpoint === selectedQuery.endpoint) ||
+					(! ! this.currentQuery.content && this.currentQuery.content === selectedQuery.content) ) {
+					this.loadQuery( selectedQuery );
+					this.toggleSidebar();
+				} else {
+					this.askConfirmationToReplace( selectedQuery );
+				}
+			}
+
+		} else {
+			this.loadQuery( selectedQuery );
+			this.toggleSidebar();
+		}
+	}
+
+	onApproveWidgetRemoval(widgettoDelete:CustomWidget){
+		this.removeWidget(widgettoDelete);
+		this.initCustomWidget();
+	}
+
+	removeWidget( widgettoDelete:CustomWidget ):void {
+		this.savedWidgets = this.getLocalSavedWidgets() || [];
+		let index:number = this.savedWidgets.findIndex((widget:CustomWidget)=>{
+			return widget.id === widgettoDelete.id;
+		});
+		this.savedWidgets.splice( index, 1 );
+		this.updateLocalSavedWidgets();
+	}
+
+	isCustomWidgetComplete(): boolean{
+		return this.currentCustomWidget.title !== "" && this.currentCustomWidget.type !== "" ;
+	}
+
+	initCustomWidget(): void {
+		this.currentCustomWidget = {
+			id: null,
+			name: "",
+			title: "",
+			hide: false,
+			query: this.currentQuery,
+			type: this.customWidgetsTypes[0].value,
+			customWidget:true,
+			mainVariable: ""
+		}
+	}
+
 }
 
 export interface SPARQLQueryOperationFormat {
@@ -783,3 +895,14 @@ export interface SPARQLTypes {
 	query:string;
 	update:string;
 }
+
+export interface CustomWidgetType {
+	name:string;
+	value:string;
+}
+
+export interface CustomWidgetVariable {
+	name:string;
+	value:string;
+}
+
