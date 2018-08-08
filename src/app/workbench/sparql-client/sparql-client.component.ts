@@ -13,6 +13,7 @@ import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-mess
 import * as $ from "jquery";
 import "semantic-ui/semantic";
 import { CustomWidget } from "../dashboard/widgets/widgets.component";
+import { CustomWidgetsService } from "app/workbench/dashboard/widgets/customWidgets/custom-widgets.service";
 
 
 /*
@@ -226,6 +227,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	};
 	private $element:JQuery;
 	private carbonldp:CarbonLDP;
+	private customWidgetsService:CustomWidgetsService;
 	private _sparql:string = "";
 	private _endpoint:string = "";
 
@@ -247,11 +249,12 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.endpointChanged();
 	}
 
-	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
+	constructor( element:ElementRef, carbonldp:CarbonLDP , customWidgetsService: CustomWidgetsService) {
 		this.element = element;
+		this.customWidgetsService = customWidgetsService;
 		this.isSending = false;
 		this.savedQueries = this.getLocalSavedQueries() || [];
-		this.savedWidgets = this.getLocalSavedWidgets() || [];
+		this.savedWidgets = this.customWidgetsService.getAllSavedWidgets() || [];
 		this.carbonldp = carbonldp;
 		this.initCustomWidget();
 	}
@@ -756,42 +759,20 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 
 	//Custom widgets functions
 
-	getLocalSavedWidgets():CustomWidget[] {
-		if( !! window.localStorage.getItem( "savedWidgets" ) )
-			return <CustomWidget[]>JSON.parse( window.localStorage.getItem( "savedWidgets" ) );
-	}
-
 	toggleSaveWidgetQueryModal():void {
 		this.saveWidgetQueryModal.modal( "toggle" );
 	}
 
 	onSaveCustomWidget():void{
 		this.isSavingWidget = true;
-		this.savedWidgets = this.getLocalSavedWidgets() || [];
-		if(!!this.currentCustomWidget.id){
-			let i:number = this.savedWidgets.findIndex((widget:CustomWidget)=>{
-				return widget.id === this.currentCustomWidget.id;
-			});
-			this.savedWidgets[i] = this.currentCustomWidget;
-		}else{
-			this.currentCustomWidget.id = 3 + this.savedWidgets.length;
-			this.savedWidgets.push( this.currentCustomWidget );
-		}
-		this.updateLocalSavedWidgets().then( () => {
+		this.customWidgetsService.saveWidget(this.currentCustomWidget).then( () => {
 			this.isSavingWidget = false;
 			this.toggleSaveWidgetQueryModal();
 		});
 	}
 
-	updateLocalSavedWidgets():Promise<boolean>{
-		return new Promise((resolve, reject)=>{
-			window.localStorage.setItem( "savedWidgets", JSON.stringify( this.savedWidgets ) );
-			resolve(true);
-		});
-	}
-
 	onClickRemoveSavedWidget( index:number ):void {
-		this.savedWidgets = this.getLocalSavedWidgets();
+		this.savedWidgets = this.customWidgetsService.getAllSavedWidgets();
 		this.askingQuery = this.savedWidgets[ index ].query;
 		this.toggleDeleteQueryConfirmationModal();
 	}
@@ -813,7 +794,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 
 	onClickSavedWidget( widget: CustomWidget):void {
 		this.currentCustomWidget = widget;
-		let selectedQuery:SPARQLQuery = widget.query
+		let selectedQuery:SPARQLQuery = widget.query;
 		if( ! ! this.currentQuery.endpoint || ! ! this.currentQuery.content ) {
 			if( ! ! this.currentQuery.endpoint && ! ! this.currentQuery.content ) {
 				if( JSON.stringify( this.currentQuery ) !== JSON.stringify( selectedQuery ) ) {
@@ -839,17 +820,8 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	}
 
 	onApproveWidgetRemoval(widgettoDelete:CustomWidget){
-		this.removeWidget(widgettoDelete);
+		this.savedWidgets = this.customWidgetsService.removeWidget(widgettoDelete);
 		this.initCustomWidget();
-	}
-
-	removeWidget( widgettoDelete:CustomWidget ):void {
-		this.savedWidgets = this.getLocalSavedWidgets() || [];
-		let index:number = this.savedWidgets.findIndex((widget:CustomWidget)=>{
-			return widget.id === widgettoDelete.id;
-		});
-		this.savedWidgets.splice( index, 1 );
-		this.updateLocalSavedWidgets();
 	}
 
 	isCustomWidgetComplete(): boolean{

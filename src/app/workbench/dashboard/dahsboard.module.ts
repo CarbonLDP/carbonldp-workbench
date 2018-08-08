@@ -15,6 +15,7 @@ import { SharedModule } from "app/shared/shared.module";
 
 // Services
 import { WidgetsService } from "./widgets/widgets.service";
+import { CustomWidgetsService } from "app/workbench/dashboard/widgets/customWidgets/custom-widgets.service";
 
 
 @NgModule( {
@@ -35,7 +36,7 @@ import { WidgetsService } from "./widgets/widgets.service";
 		WidgetsMenu,
 		WidgetsComponent
 	],
-	providers: [ WidgetsService ],
+	providers: [ WidgetsService, CustomWidgetsService ],
 } )
 export class DashboardModule {
 
