@@ -12,7 +12,7 @@ import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-mess
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
-import { CustomWidget } from "app/root-content/dashboard/widgets/widgets.component";
+import { CustomWidget } from "../dashboard/widgets/widgets.component";
 
 
 /*
