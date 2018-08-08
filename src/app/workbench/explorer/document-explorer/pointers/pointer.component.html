@@ -1,0 +1,129 @@
+<!-- START: Content of the Pointer -->
+<td class="id" [attr.colspan]="partOfList? 3 : 1">
+	<!-- START: READ mode-->
+	<div class="read-mode" *ngIf="mode===modes.READ">
+		<p *ngIf="!isBlankNode && !isNamedFragment || !existsOnPointers">
+			<span *ngIf="!!id">{{id}}</span>
+			<span *ngIf="!id">-</span>
+		</p>
+		<a *ngIf="isBlankNode && existsOnPointers" (click)="goToBlankNode(id)">
+			<i class="icons">
+				<i class="thin circle blue icon"></i>
+				<i class="corner thin circle icon"></i>
+			</i>
+			{{id}}
+		</a>
+		<a *ngIf="isNamedFragment && existsOnPointers" (click)="goToNamedFragment(id)">
+			<i class="icons">
+				<i class="puzzle green icon"></i>
+				<i class="corner puzzle icon"></i>
+			</i>
+			{{id}}
+		</a>
+	</div>
+	<!-- END: READ mode-->
+
+
+	<!-- START: EDIT mode-->
+	<div class="edit-mode" [hidden]="mode===modes.READ">
+		<div class="ui error form">
+			<input type="text" name="idInput"
+			       #idInput="ngModel"
+			       [(ngModel)]="id"
+			       [hidden]="true"
+			       required cw-pointer-id>
+			<select class="ui fluid search dropdown fragments" [hidden]="true">
+				<option value="">
+					Search or enter a fragment/blankNode
+				</option>
+
+				<option class="item" value="blankNodes-category" disabled="disabled">
+					<span *ngIf="blankNodes.length===0">No </span>Blank Nodes
+				</option>
+				<optgroup label="blankNodes">
+					<option class="item" *ngFor="let blankNode of blankNodes; let i=index" value="{{blankNode.id}}">
+						<span>
+							<span class="title">blankNode {{i}}</span>
+							<span class="description">{{blankNode.id}}</span>
+						</span>
+					</option>
+				</optgroup>
+
+				<option class="item" value="named-fragments-category" disabled="disabled">
+					<span *ngIf="namedFragments.length===0">No </span>Named Fragments
+				</option>
+				<optgroup label="Named Fragments">
+					<option class="item" *ngFor="let fragment of namedFragments; let i=index" value="{{fragment.name}}">
+						<span>
+							<span class="title">{{fragment.name | decodeURI | fragment}}</span>
+							<span class="description">{{fragment.name}}</span>
+						</span>
+					</option>
+				</optgroup>
+			</select>
+			<cw-error-label *ngIf="!idInput.valid">
+				<p *ngIf="idInput.control.hasError('required')">Enter an @id.</p>
+				<p *ngIf="idInput.control.hasError('invalidId')">Enter a valid @id value.</p>
+			</cw-error-label>
+		</div>
+	</div>
+	<!-- END: EDIT mode-->
+</td>
+<!-- END: Content of the Pointer -->
+
+
+<!-- START: Action buttons for the Pointer -->
+<td *ngIf="canEdit">
+	<!-- START: Buttons for READ mode -->
+	<div class="ui mini basic icon edit value buttons" *ngIf="mode===modes.READ">
+		<button #editButton
+		        class="ui icon edit button" title="Edit Pointer"
+		        *ngIf="mode===modes.READ"
+		        [ngClass]="{hidden:editButton.classList.contains('active')}"
+		        (click)="onEdit($event)">
+			<i class="pencil icon"></i>
+		</button>
+		<button #deleteButton
+		        class="ui icon button" title="Delete Pointer"
+		        (click)="deletePointer()">
+			<i class="remove red icon"></i>
+		</button>
+	</div>
+	<!-- END: Buttons for READ mode -->
+
+
+	<!-- START: Buttons for EDIT mode -->
+	<div class="ui mini basic icon confirm buttons" *ngIf="mode===modes.EDIT">
+		<button #cancelButton
+		        class="ui icon button" title="Cancel"
+		        (click)="cancelEdit()">
+			<i class="reply icon"></i>
+		</button>
+		<button #confirmButton
+		        class="ui icon button" title="Save"
+		        [disabled]="!idInput.valid"
+		        (click)="save()">
+			<i class="checkmark green icon"></i>
+		</button>
+	</div>
+	<!-- END: Buttons for EDIT mode -->
+
+
+	<!-- START: Buttons in case literal is part of a list -->
+	<div class="ui mini basic icon vertical updown buttons" *ngIf="partOfList">
+		<button #moveUpButton
+		        class="ui icon button"
+		        [disabled]="isFirstItem"
+		        (click)="moveUp()">
+			<i class="up chevron icon"></i>
+		</button>
+		<button #moveDownButton
+		        class="ui icon button"
+		        [disabled]="isLastItem"
+		        (click)="moveDown()">
+			<i class="down chevron icon"></i>
+		</button>
+	</div>
+	<!-- END: Buttons in case literal is part of a list -->
+</td>
+<!-- END: Action buttons for the Pointer -->

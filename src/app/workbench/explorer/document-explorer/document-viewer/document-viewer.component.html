@@ -1,0 +1,168 @@
+<!-- START: Loading document message -->
+<div class="ui basic segment" *ngIf="!document && loadingDocument">
+	<div class="ui icon message">
+		<i class="notched circle loading icon"></i>
+		<div class="content">
+			<div class="header">
+				Just one second
+			</div>
+			<p>Please wait while the document is being loaded...</p>
+		</div>
+	</div>
+</div>
+<!-- END: Loading document message -->
+
+
+<!-- START: Save changes button -->
+<a *ngIf="documentContentHasChanged"
+   class="ui blue top right attached label saving-message"
+   (click)="saveDocument()">
+	<i class="save icon"></i>Save changes
+</a>
+<!-- END: Save changes button -->
+
+
+<!-- START: Success message -->
+<div class="ui positive save success message hidden" #successMessage>
+	<i class="close icon" (click)="closeMessage(successMessage)"></i>
+	<div class="header">
+		Success!
+	</div>
+	<div [innerHTML]="successMessageContent"></div>
+</div>
+<!-- END: Success message -->
+
+
+<!-- START: Unsaved changes message -->
+<div class="ui unsaved prompt warning icon message hidden">
+	<i class="warning icon"></i>
+	<div class="content">
+		<div class="header">
+			Unsaved changes
+		</div>
+		<p>You have not saved changes, if you refresh the document, your changes will be lost, are you sure you want to refresh de document?</p>
+		<button class="ui basic mini button" (click)="refreshDocument(rootNode['@id'])">
+			Yes
+		</button>
+		<button class="ui basic mini button" (click)="toggleConfirmRefresh()">
+			No
+		</button>
+	</div>
+</div>
+<!-- END: Unsaved changes message -->
+
+
+<!-- START: Content of the Document -->
+<div class="ui basic segment document-content" *ngIf="document">
+	<div class="ui divided items">
+
+		<!-- START: ID Property of the document -->
+		<cw-property class="property item"
+		             [documentURI]="rootNode['@id']"
+		             [property]="{copy:{id:'@id', name:'@id', value:rootNode['@id']}}">
+		</cw-property>
+		<!-- END: ID Property of the document -->
+
+
+		<!-- START: Action buttons -->
+		<div class="item">
+			<div class="content">
+				<div class="document options">
+					<button class="ui right labeled icon basic mini button" (click)="beforeRefreshDocument( documentURI )">
+						<i class="refresh icon"></i>
+						Refresh
+					</button>
+				</div>
+			</div>
+		</div>
+		<!-- END: Action buttons -->
+
+
+		<!-- START: Content of the Document -->
+		<div class="item">
+			<div class="content">
+				<div class="description">
+
+					<!-- START: Tabs of a document (Document, Blank Nodes and Named Fragments) -->
+					<div class="ui secondary menu document tabs">
+						<a class="item active" data-tab="documentResource">
+							<div class="floating ui teal circular label marker"
+							     *ngIf="rootNodeHasChanged"
+							     title="Document's properties have changed.&#10;Modified: {{rootNodeRecords.changes.size}}&#10;Added: {{rootNodeRecords.additions.size}}&#10;Deleted: {{rootNodeRecords.deletions.size}}">
+								<i class="asterisk icon"></i>
+							</div>
+							Document
+						</a>
+						<a class="item" data-tab="blankNodes">
+							<div class="floating ui teal circular label marker"
+							     *ngIf="blankNodesHaveChanged"
+							     title="Blank nodes have changed.&#10;Modified: {{blankNodesChanges.changes.size}}&#10;Added: {{blankNodesChanges.additions.size}}&#10;Deleted: {{blankNodesChanges.deletions.size}}">
+								<i class="asterisk icon"></i>
+							</div>
+							Blank Nodes ({{blankNodes.length}})
+						</a>
+						<a class="item" data-tab="namedFragments">
+							<div class="floating ui teal circular label marker"
+							     *ngIf="namedFragmentsHaveChanged"
+							     title="Named Fragments have changed.&#10;Modified: {{namedFragmentsChanges.changes.size}}&#10;Added: {{namedFragmentsChanges.additions.size}}&#10;Deleted: {{namedFragmentsChanges.deletions.size}}">
+								<i class="asterisk icon"></i>
+							</div>
+							Named Fragments ({{namedFragments.length}})
+						</a>
+					</div>
+					<!-- END: Tabs of a document (Document, Blank Nodes and Named Fragments) -->
+
+
+					<!-- START: Tab of Document -->
+					<div class="ui active tab segment" data-tab="documentResource">
+						<cw-document-resource class="column"
+
+						                      [rootNode]="rootNode"
+						                      [hiddenProperties]="['@id']"
+						                      [blankNodes]="blankNodes"
+						                      [namedFragments]="namedFragments"
+						                      [documentURI]="rootNode['@id']"
+
+						                      (onOpenBlankNode)="openBlankNode($event)"
+						                      (onOpenNamedFragment)="openNamedFragment($event)"
+						                      (onChanges)="registerRootNodeChanges($event)">
+						</cw-document-resource>
+					</div>
+					<!-- END: Tab of Document -->
+
+
+					<!-- START: Tab of Blank Nodes -->
+					<div class="ui tab segment" data-tab="blankNodes">
+						<cw-blank-nodes class="column"
+						                [documentURI]="document['@id']"
+						                [blankNodes]="blankNodes"
+						                [namedFragments]="namedFragments"
+
+						                (onOpenBlankNode)="goToSection($event)"
+						                (onOpenNamedFragment)="openNamedFragment($event)"
+						                (onChanges)="registerBlankNodesChanges($event)">
+						</cw-blank-nodes>
+					</div>
+					<!-- END: Tab of Blank Nodes -->
+
+
+					<!-- START: Tab of Named Fragments -->
+					<div class="ui tab segment" data-tab="namedFragments">
+						<cw-named-fragments class="column"
+						                    [documentURI]="document['@id']"
+						                    [blankNodes]="blankNodes"
+						                    [namedFragments]="namedFragments"
+
+						                    (onOpenBlankNode)="openBlankNode($event)"
+						                    (onOpenNamedFragment)="goToSection($event)"
+						                    (onChanges)="registerNamedFragmentsChanges($event)">
+						</cw-named-fragments>
+					</div>
+					<!-- END: Tab of Named Fragments -->
+				</div>
+			</div>
+		</div>
+		<!-- END: Content of the Document -->
+	</div>
+</div>
+<!-- END: Content of the Document -->

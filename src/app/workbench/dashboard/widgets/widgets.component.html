@@ -1,0 +1,23 @@
+<!-- START: Instance widget -->
+<cw-instance-widget class="ui fluid card widget-container--platformInformation"
+                    (onErrorOccurs)="notifyErrorAreaService($event)">
+</cw-instance-widget>
+<!-- END: Instance widget -->
+
+
+<!-- START: Dashboard Widgets as cards -->
+<div class="ui cards">
+	<cw-documents-widget class="ui card widget-container widget-container--{{widgetsList[0].name}}"
+	                     [(widget)]="widgetsList[0]"
+	                     [class.hidden]="widgetsList[0].hide"
+	                     (onErrorOccurs)="notifyErrorAreaService($event)"
+	                     (onClose)="closeWidget($event)">
+	</cw-documents-widget>
+	<cw-triples-widget class="ui card widget-container widget-container--{{widgetsList[1].name}}"
+	                   [(widget)]="widgetsList[1]"
+	                   [class.hidden]="widgetsList[1].hide"
+	                   (onErrorOccurs)="notifyErrorAreaService($event)"
+	                   (onClose)="closeWidget($event)">
+	</cw-triples-widget>
+</div>
+<!-- END: Dashboard Widgets as cards -->

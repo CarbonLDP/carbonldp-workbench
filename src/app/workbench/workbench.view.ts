@@ -3,16 +3,22 @@ import { Router, Event, NavigationEnd } from "@angular/router";
 
 import { CarbonLDP } from "carbonldp";
 
-import { HeaderService } from "app/header/header.service";
-import { SidebarService } from "app/sidebar/sidebar.service";
+import { HeaderService } from "./layout/header/header.service";
+import { SidebarService } from "./layout/sidebar/sidebar.service";
 
 
+/*
+*   Contains the main layout of the Workbench.
+*   All the Workbench routes are displayed here.
+* */
 @Component( {
-	selector: "div.ng-view",
+	selector: "cw-workbench",
 	templateUrl: "./workbench.view.html",
 	styleUrls: [ "./workbench.view.scss" ],
 } )
 export class WorkbenchView {
+
+	public instance:any;
 
 	private headerService:HeaderService;
 	private sidebarService:SidebarService;
