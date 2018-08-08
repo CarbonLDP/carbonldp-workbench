@@ -1,22 +1,38 @@
 <div class="ui basic segment query-builder">
 	<div class="ui top attached menu">
 		<div class="right menu">
-			<a class="show-queries item" (click)="toggleSidebar()"><i class="sidebar icon"></i> Saved Queries</a>
+			<a class="show-queries item" (click)="toggleSidebar('queries')"><i class="sidebar icon"></i> Saved Queries</a>
+			<a class="show-queries item" (click)="toggleSidebar('widgets')"><i class="sidebar icon"></i> Saved Widgets</a>
 		</div>
 	</div>
 	<div class="ui middle attached segment pushable">
 		<div class="ui inverted right vertical wide dimmed sidebar menu queries-list">
-			<p *ngIf="savedQueries.length == 0">
-				No saved queries yet.
-			</p>
-			<a class="item" *ngFor="let query of savedQueries; let i = index" (click)="onClickSavedQuery( query )">
-				<button class="ui right floated circular icon mini inverted red button" (click)="onClickRemoveSavedQuery( i )">
-					<i class="icon remove"></i>
-				</button>
-				<span class="name">{{query.name}}</span>
-				<br/>
-				<span class="operation" [ngClass]="query.operation.toLowerCase()">{{query.operation.toLowerCase()}}</span>
-			</a>
+			<ng-container *ngIf="isQueryActive">
+				<p *ngIf="savedQueries.length == 0">
+					No saved queries yet.
+				</p>
+				<a class="item" *ngFor="let query of savedQueries; let i = index" (click)="onClickSavedQuery( query )">
+					<button class="ui right floated circular icon mini inverted red button" (click)="onClickRemoveSavedQuery( i )">
+						<i class="icon remove"></i>
+					</button>
+					<span class="name">{{query.name}}</span>
+					<br/>
+					<span class="operation" [ngClass]="query.operation.toLowerCase()">{{query.operation.toLowerCase()}}</span>
+				</a>
+			</ng-container>
+			<ng-container *ngIf="!isQueryActive">
+				<p *ngIf="savedQueries.length == 0">
+					No saved widgets yet.
+				</p>
+				<a class="item" *ngFor="let widget of savedWidgets; let i = index" (click)="onClickSavedWidget( widget )">
+					<button class="ui right floated circular icon mini inverted red button" (click)="onClickRemoveSavedWidget( i )">
+						<i class="icon remove"></i>
+					</button>
+					<span class="name">{{widget.title}}</span>
+					<br/>
+					<span class="operation" [ngClass]="widget.query.operation.toLowerCase()">{{widget.query.operation.toLowerCase()}}</span>
+				</a>
+			</ng-container>
 		</div>
 		<div class="ui pusher">
 			<div class="ui basic segment">
@@ -87,6 +103,7 @@
 		</div>
 		<!-- /pusher -->
 	</div>
+
 	<div class="ui attached error message" *ngFor="let message of messages">
 		<i class="close icon" (click)="closeMessage($event)"></i>
 		<div class="header">
@@ -131,11 +148,12 @@
 			</div>
 			<div class="two wide column field">
 				<button class="ui button"
-				        [ngClass]="{loading: isSavingWidget, disabled: !canSaveQuery() || currentQuery.type !== sparqlTypes.query}"
+				        [ngClass]="{loading: isSavingWidget, disabled: !canSaveQuery() || currentQuery.type !== sparqlTypes.query, teal: currentCustomWidget.title }"
 				        [disabled]="currentQuery.endpoint && !currentQuery.format && !currentQuery.content && currentQuery.type !== sparqlTypes.query"
 				        (click)="onClickOpenSaveWidgetModal()"
 				>
-					Create Widget
+					<i class="archive icon"></i>
+					Save Widget
 				</button>
 			</div>
 		</div>
@@ -194,7 +212,7 @@
 	</div>
 	<div class="image content">
 		<div class="description">
-			<div class="ui header">You are about to remove this query.</div>
+			<div class="ui header">You are about to remove this <span *ngIf="isQueryActive">query.</span><span *ngIf="!isQueryActive">Widget.</span></div>
 			<p>If you proceed your query will be deleted.</p>
 			<p>Do you want to proceed?</p>
 		</div>
@@ -203,10 +221,18 @@
 		<button class="ui black deny button">
 			No
 		</button>
-		<button class="ui positive right labeled icon button" (click)="onApproveQueryRemoval(askingQuery)">
-			Yes, proceed
-			<i class="checkmark icon"></i>
-		</button>
+		<ng-container *ngIf="isQueryActive; else delete_widget_button">
+			<button class="ui positive right labeled icon button" (click)="onApproveQueryRemoval(askingQuery)">
+				Yes, proceed
+				<i class="checkmark icon"></i>
+			</button>
+		</ng-container>
+		<ng-template #delete_widget_button>
+			<button class="ui positive right labeled icon button" (click)="onApproveWidgetRemoval(currentCustomWidget)">
+				Yes, proceed
+				<i class="checkmark icon"></i>
+			</button>
+		</ng-template>
 	</div>
 </div>
 
@@ -217,24 +243,50 @@
 	</div>
 	<div class="content">
 		<div class="description">
-			<!--<div class="ui header">You are about to remove this query.</div>-->
-			<!--<p>If you proceed your query will be deleted.</p>-->
-			<!--<p>Do you want to proceed?</p>-->
+
+			<div class="ui warning message" *ngIf="! isQueryCountType">
+				<div class="ui header">
+					Your query have an issue.
+				</div>
+				<p>We detected that your query is not a count query please check it.</p>
+				<p>We recommend that you use something like this:</p>
+				<pre><code>
+select ( COUNT(?p) as ?count ) where {{ '{' }}
+	?s ?o ?p
+{{'}'}}</code></pre>
+			</div>
 		</div>
-		<input type="text" [(ngModel)]="currentCustomWidget.title">
-		<label>Query (read only):</label>
-		<cw-code-mirror [mode]="codeMirrorMode.SPARQL" [readOnly]="true" [(value)]="currentCustomWidget.query.content" [showLineNumbers]="false"></cw-code-mirror>
+		<div class="ui grid form row">
+			<div class="eight wide column">
+				<label>Widget Title:</label>
+				<input placeholder="title of widget" type="text" [(ngModel)]="currentCustomWidget.title"/>
+			</div>
 
-		<code>
-			{{currentCustomWidget | json}}
-		</code>
+			<div class="eight wide column">
+				<label>Mandatory Variable?:</label>
+				<select class="ui dropdown" [(ngModel)]="currentCustomWidget.mainVariable"
+				        [disabled]="isSavingWidget">
+					<option *ngFor="let queryVariable of queryVariables" [value]="queryVariable.value">{{queryVariable.name}}</option>
+				</select>
+			</div>
+
+			<div class="eight wide column field" *ngIf="currentQuery.type == 'Query'">
+				<label>Output Format:</label>
+				<select class="ui dropdown" [(ngModel)]="currentCustomWidget.type"
+				        [disabled]="isSavingWidget">
+					<option *ngFor="let format of customWidgetsTypes" [value]="format.value">{{format.name}}</option>
+				</select>
+			</div>
+		</div>
 	</div>
-
 	<div class="actions">
 		<button class="ui black deny button">
 			No
 		</button>
-		<button class="ui positive right labeled icon button" (click)="onApproveQueryRemoval(askingQuery)">
+		<button
+			[ngClass]="{loading: isSavingWidget, disabled: !isCustomWidgetComplete()}"
+			[disabled]="!isCustomWidgetComplete() || isSavingWidget"
+			class="ui positive right labeled icon button" (click)="onSaveCustomWidget()">
 			Yes, proceed
 			<i class="checkmark icon"></i>
 		</button>
