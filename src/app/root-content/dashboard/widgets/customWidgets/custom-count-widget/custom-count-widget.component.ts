@@ -66,7 +66,7 @@ export class CustomCountWidgetComponent {
 	}
 
 	public getCustomCount() {
-		this.widgetsService.getCustomTotalCount( this.widget.query.content )
+		this.widgetsService.getCustomTotalCount( this.widget.query, this.widget.mainVariable )
 			.then( ( count ) => {
 				this.customTotalCount = count;
 				this.widgetElement.classList.remove( "error" );
