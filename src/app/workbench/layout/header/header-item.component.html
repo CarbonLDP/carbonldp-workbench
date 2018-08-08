@@ -1,0 +1,33 @@
+<!-- START: Header item for items with children -->
+<div *ngIf="item.children && item.children.length" class="ui top right pointing dropdown item">
+	{{item.name}} <i class="dropdown icon"></i>
+	<div class="menu">
+		<ng-template ngFor let-child [ngForOf]="item.children">
+			<a *ngIf="child.route" class="item" [routerLink]="child.route" [ngClass]="{ active: routerService.isActive( child.route ) }">
+				<i *ngIf="child.icon" [class]="child.icon"></i>
+				{{child.name}}
+			</a>
+			<a *ngIf="! child.route && child.onClick" class="item" (click)="child.onClick.emit( $event )">
+				<i *ngIf="child.icon" [class]="child.icon"></i>
+				{{child.name}}
+			</a>
+		</ng-template>
+	</div>
+</div>
+<!-- END: Header item for items with children -->
+
+
+<!-- START: Header item for route items without children -->
+<a *ngIf="(! ( item.children && item.children.length ) && (!!item.route))" class="item" [routerLink]="item.route" [ngClass]="{ active: routerService.isActive( item.route ) }">
+	<i *ngIf="item.icon" [class]="item.icon"></i>
+	{{item.name}}
+</a>
+<!-- END: Header item for route items without children -->
+
+
+<!-- START: Item for items without children and no routes -->
+<a *ngIf="! ( item.children && item.children.length ) && ! item.route && !!item.onClick" class="item" (click)="item.onClick.emit( $event )">
+	<i *ngIf="item.icon" [class]="item.icon"></i>
+	{{item.name}}
+</a>
+<!-- END: Item for items without children and no routes -->

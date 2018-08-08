@@ -1,0 +1,25 @@
+
+:host {
+	display: block;
+	padding-top: .5em;
+	padding-bottom: .5em;
+
+	.ui.striped.table tbody tr.modified-literal {
+		background-color: #FFFBB4;
+	}
+
+	.ui.striped.table tbody tr.added-literal {
+		background-color: #D9EEFF;
+	}
+
+	.ui[class*="very compact"].table th {
+		padding-top: .2em;
+		padding-bottom: .2em;
+	}
+
+	.ui.striped.table {
+		table-layout: fixed;
+	}
+}
+
+

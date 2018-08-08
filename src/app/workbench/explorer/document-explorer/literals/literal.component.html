@@ -1,0 +1,161 @@
+<!-- START: Value of the literal -->
+<td class="value">
+	<!-- START: READ mode-->
+	<div class="read-mode" *ngIf="mode===modes.READ">
+		<p class="value">{{value}}</p>
+	</div>
+	<!-- END: READ mode-->
+
+
+	<!-- START: EDIT mode-->
+	<div class="edit-mode ui error form" [hidden]="mode===modes.READ">
+		<div class="field" [ngClass]="{error:!valueInput.valid}">
+			<input type="text" name="valueInput"
+			       #valueInput="ngModel"
+			       [(ngModel)]="value"
+			       [control]="valueInput"
+			       [type]="type"
+			       required cw-literal-value
+			       (keyup.esc)="cancelEdit()"
+			       (keyup.enter)="valueInput.valid && typeInput.valid? save() : null">
+		</div>
+		<cw-error-label *ngIf="!valueInput.valid">
+			<p *ngIf="valueInput.control.hasError('required')">A value is required.</p>
+			<p *ngIf="valueInput.control.hasError('invalidTypeError') && !valueInput.control.hasError('required')">Invalid value type, please enter a valid {{type}}.</p>
+		</cw-error-label>
+	</div>
+	<!-- END: EDIT mode-->
+</td>
+<!-- END: Value of the literal -->
+
+
+<!-- START: Type of the literal -->
+<td class="type">
+	<!-- START: READ mode-->
+	<div class="read-mode" *ngIf="mode===modes.READ">
+		<p class="value">{{type}}</p>
+	</div>
+	<!-- END: READ mode-->
+
+
+	<!-- START: EDIT mode-->
+	<div class="edit-mode ui error form" [hidden]="mode===modes.READ">
+		<input type="text" name="typeInput"
+		       #typeInput="ngModel"
+		       [(ngModel)]="type"
+		       [hidden]="true"
+		       (keyup.esc)="cancelEdit()"
+		       (keyup.enter)="valueInput.valid && typeInput.valid? save() : null">
+		<select class="ui fluid search dropdown types">
+			<option value="empty">
+				Search or enter a type
+			</option>
+			<option class="item" *ngFor="let type of dataTypes;" value="{{type.value}}">
+				<span>
+					<span class="title">{{type.title}}</span>
+					<span class="description">{{type.description}}</span>
+				</span>
+			</option>
+		</select>
+		<cw-error-label *ngIf="!typeInput.valid">
+			<p *ngIf="typeInput.control.hasError('required')">Select a type or enter your own type.</p>
+		</cw-error-label>
+	</div>
+	<!-- END: EDIT mode-->
+</td>
+<!-- END: Type of the literal -->
+
+
+<!-- START: Language of the value -->
+<td class="language" [hidden]="!canDisplayLanguage && !language">
+	<!-- START: READ mode-->
+	<div class="read-mode" *ngIf="mode===modes.READ">
+		<p class="value">
+			<span *ngIf="isStringType">{{language}}</span>
+			<span *ngIf="!isStringType">-</span>
+		</p>
+	</div>
+	<!-- END: READ mode-->
+
+
+	<!-- START: EDIT mode-->
+	<div class="edit-mode" [hidden]="mode===modes.READ">
+		<p class="value" *ngIf="!isStringType">-</p>
+		<div class="ui error form" [hidden]="!isStringType">
+			<input type="text" name="languageInput"
+			       #languageInput
+			       [(ngModel)]="language"
+			       [hidden]="true">
+			<select class="ui fluid dropdown languages">
+				<option value="empty">
+					Select a language (opt)
+				</option>
+				<option class="item" *ngFor="let language of languages;" value="{{language.code}}">
+					<span>
+						<span class="title">{{language.code}}</span>
+						<span class="description">{{language.name}}</span>
+					</span>
+				</option>
+			</select>
+		</div>
+	</div>
+	<!-- END: EDIT mode-->
+</td>
+<!-- END: Language of the value -->
+
+
+<!-- START: Action buttons for the literal -->
+<td *ngIf="canEdit">
+	<!-- START: Buttons for READ mode -->
+	<div class="ui mini basic icon edit value buttons" *ngIf="mode===modes.READ">
+		<button #editButton
+		        class="ui icon edit button" title="Edit literal"
+		        *ngIf="mode===modes.READ"
+		        [ngClass]="{hidden:editButton.classList.contains('active')}"
+		        (click)="onEdit($event)">
+			<i class="pencil icon"></i>
+		</button>
+		<button #deleteButton
+		        class="ui icon button" title="Delete Literal"
+		        (click)="deleteLiteral()">
+			<i class="remove red icon"></i>
+		</button>
+	</div>
+	<!-- END: Buttons for READ mode -->
+
+
+	<!-- START: Buttons for EDIT mode -->
+	<div class="ui mini basic icon confirm buttons" *ngIf="mode===modes.EDIT">
+		<button #cancelButton
+		        class="ui icon button" title="Cancel"
+		        (click)="cancelEdit()">
+			<i class="reply icon"></i>
+		</button>
+		<button #confirmButton
+		        class="ui icon button" title="Save"
+		        [disabled]="!valueInput.valid || !typeInput.valid"
+		        (click)="save()">
+			<i class="checkmark green icon"></i>
+		</button>
+	</div>
+	<!-- END: Buttons for EDIT mode -->
+
+
+	<!-- START: Buttons in case literal is part of a list -->
+	<div class="ui mini basic icon vertical updown buttons" *ngIf="isPartOfList">
+		<button #moveUpButton
+		        class="ui icon button"
+		        [disabled]="isFirstItem"
+		        (click)="moveUp()">
+			<i class="up chevron icon"></i>
+		</button>
+		<button #moveDownButton
+		        class="ui icon button"
+		        [disabled]="isLastItem"
+		        (click)="moveDown()">
+			<i class="down chevron icon"></i>
+		</button>
+	</div>
+	<!-- START: Buttons in case literal is part of a list -->
+</td>
+<!-- END: Action buttons for the literal -->

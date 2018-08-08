@@ -1,0 +1,26 @@
+:host {
+	display: block;
+	height: 100%;
+	.jstree-container-ul {
+		li {
+			a.accesspoint > .icon {
+				color: orange;
+			}
+		}
+	}
+	> .treeview-content {
+		overflow: scroll;
+	}
+
+	> .treeview-options {
+		max-height: 58px;
+		margin-bottom: 0;
+		background-color: #f4f4f4;
+		border-right: 1px solid #d3d3d3;
+		border-bottom: 1px solid #d3d3d3;
+
+		> .ui.icon.button {
+			background-color: #FFFFFF;
+		}
+	}
+}

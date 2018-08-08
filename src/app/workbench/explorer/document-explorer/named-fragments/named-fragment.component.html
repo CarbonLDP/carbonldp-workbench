@@ -1,0 +1,34 @@
+<!-- START: Action buttons -->
+<button class="ui basic compact labeled right icon button" (click)="createProperty()" *ngIf="canEdit">
+	<i class="plus icon"></i>
+	Add Property
+</button>
+<!-- END: Action buttons -->
+
+<div class="ui divider" *ngIf="canEdit"></div>
+
+<!-- START: Properties of the Named Fragment -->
+<div class="ui divided items">
+	<ng-template ngFor let-propertyStatus="$implicit" [ngForOf]="properties" let-i="index">
+		<cw-property class="property item"
+		             [attr.data-tar]="propertyStatus.copy? propertyStatus.copy.name : propertyStatus.added.name"
+
+		             [isPartOfNamedFragment]="true"
+		             [canEdit]="true"
+		             [property]="propertyStatus"
+		             [blankNodes]="blankNodes"
+		             [namedFragments]="namedFragments"
+		             [documentURI]="documentURI"
+		             [existingProperties]="existingPropertiesNames"
+		             [mode]="propertyStatus.isBeingCreated? modes.EDIT : modes.READ"
+
+		             (onChangeProperty)="changeProperty(propertyStatus, i)"
+		             (onDeleteProperty)="deleteProperty(propertyStatus, i)"
+		             (onSaveNewProperty)="addProperty(propertyStatus, i)"
+
+		             (onGoToBlankNode)="openBlankNode( $event )"
+		             (onGoToNamedFragment)="openNamedFragment( $event )">
+		</cw-property>
+	</ng-template>
+</div>
+<!-- END: Properties of the Named Fragment -->
