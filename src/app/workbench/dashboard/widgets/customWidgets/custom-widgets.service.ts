@@ -26,7 +26,7 @@ export class CustomWidgetsService {
 	}
 
 	saveWidget( savedWidget: CustomWidget ):Promise<boolean> {
-		return this.saveLocalSavedWidgets( savedWidget );
+		return this.saveLocalWidgets( savedWidget );
 	}
 
 	removeWidget( widgettoDelete:CustomWidget ):Array<CustomWidget> {
@@ -38,7 +38,7 @@ export class CustomWidgetsService {
 			return <CustomWidget[]>JSON.parse( window.localStorage.getItem( "savedWidgets" ) );
 	}
 
-	saveLocalSavedWidgets( savedWidget:CustomWidget ):Promise<boolean> {
+	saveLocalWidgets( savedWidget:CustomWidget ):Promise<boolean> {
 		this.savedWidgets = this.getAllSavedWidgets() || [];
 		if(!!savedWidget.id){
 			let i:number = this.savedWidgets.findIndex((widget:CustomWidget)=>{
@@ -50,10 +50,8 @@ export class CustomWidgetsService {
 			this.savedWidgets.push( savedWidget );
 		}
 
-		return new Promise( ( resolve, reject ) => {
-			window.localStorage.setItem( "savedWidgets", JSON.stringify( this.savedWidgets ) );
-			resolve( true );
-		} );
+		return this.saveAllWidgets(this.savedWidgets);
+
 	}
 
 	removeLocalWidget(widgettoDelete:CustomWidget ): Array<CustomWidget>{
@@ -64,5 +62,12 @@ export class CustomWidgetsService {
 		this.savedWidgets.splice( index, 1 );
 		this.saveAllWidgets(this.savedWidgets);
 		return this.savedWidgets;
+	}
+
+	saveAllWidgets( savedWidgets:Array<CustomWidget> ): Promise<boolean> {
+		return new Promise( ( resolve, reject ) => {
+			window.localStorage.setItem( "savedWidgets", JSON.stringify( savedWidgets ) );
+			resolve( true );
+		} );
 	}
 }
