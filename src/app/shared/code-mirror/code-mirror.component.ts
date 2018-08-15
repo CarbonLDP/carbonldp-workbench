@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, AfterContentInit, OnChanges, OnDestroy } from "@angular/core";
+import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, AfterContentInit, OnChanges, OnDestroy, HostListener } from "@angular/core";
 
 import * as CodeMirror from "codemirror";
 
@@ -11,6 +11,7 @@ import "codemirror/mode/turtle/turtle";
 
 import "!style-loader!css-loader!codemirror/lib/codemirror.css";
 import "!style-loader!css-loader!codemirror/theme/mbo.css";
+import { ResizeBarService } from "app/shared/code-mirror/resize-bar/resize-bar.service";
 
 @Component( {
 	selector: "cw-code-mirror",
@@ -25,7 +26,6 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	@Input() noCursor:boolean = false;
 	@Input() showLineNumbers:boolean = true;
 	@Input() scroll:boolean = true;
-
 	@Input() value:string = "";
 	@Output() valueChange:EventEmitter<string> = new EventEmitter<string>();
 
@@ -34,10 +34,12 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 
 	private internallyChanged:boolean = false;
 	private lastUpdates:string[] = [];
-
-	constructor( element:ElementRef ) {
+	private resizeBar;
+	constructor( element:ElementRef, resizeBar: ResizeBarService) {
 		this.element = element;
+		this.resizeBar = resizeBar;
 	}
+
 
 	ngOnDestroy() {
 		this.element.nativeElement.innerHTML = this.codeMirror.getValue();
@@ -78,6 +80,10 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 			this.lastUpdates.push( lastUpdate );
 			this.valueChange.emit( lastUpdate );
 		} );
+
+		this.resizeBar.dataSource$.subscribe((value: number)=>{
+			this.setSize( value );
+		});
 	}
 
 	ngOnChanges( changeRecord:any ):void {
@@ -103,6 +109,10 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 			}
 		}
 
+	}
+
+	private setSize(value: number){
+		this.codeMirror.setSize(null, value+"px");
 	}
 
 	private normalizeTabs( value:string ):string {
