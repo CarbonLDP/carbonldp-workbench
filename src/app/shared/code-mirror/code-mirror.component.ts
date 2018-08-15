@@ -1,4 +1,5 @@
 import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, AfterContentInit, OnChanges, OnDestroy, HostListener } from "@angular/core";
+import { ResizeBarService } from "./resize-bar/resize-bar.service";
 
 import * as CodeMirror from "codemirror";
 
@@ -11,7 +12,6 @@ import "codemirror/mode/turtle/turtle";
 
 import "!style-loader!css-loader!codemirror/lib/codemirror.css";
 import "!style-loader!css-loader!codemirror/theme/mbo.css";
-import { ResizeBarService } from "app/shared/code-mirror/resize-bar/resize-bar.service";
 
 @Component( {
 	selector: "cw-code-mirror",

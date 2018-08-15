@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, AfterContentInit, OnChanges, OnDestroy, HostListener, Renderer2 } from "@angular/core";
-import { ResizeBarService } from "src/app/shared/code-mirror/resize-bar/resize-bar.service";
+import { Component, HostListener, Renderer2 } from "@angular/core";
+import { ResizeBarService } from "./resize-bar.service";
 
 
 @Component( {
@@ -14,9 +14,7 @@ export class ResizeBarComponent {
 	start_x;
 	start_y;
 	start_h;
-	shouldListenOrNot = false;
 	listener = null;
-	@Output() counterChange = new EventEmitter();
 
 	constructor( renderer: Renderer2 , resizeBarService: ResizeBarService) {
 		this.renderer = renderer;
@@ -29,7 +27,7 @@ export class ResizeBarComponent {
 	}
 
 
-	atatchDocumentEventsListener(): void{
+	attatchDocumentEventsListener(): void{
 		this.listener = this.renderer.listen('document', 'mousemove', (event) => {
 			this.resizeBarService.position =  Math.max(this.MIN_HEIGHT, (this.start_h + event.y - this.start_y));
 		});
@@ -45,8 +43,7 @@ export class ResizeBarComponent {
 		this.start_x = e.x;
 		this.start_y = e.y;
 		this. start_h = this.height_of(document.querySelector(".CodeMirror"));
-		this.atatchDocumentEventsListener();
+		this.attatchDocumentEventsListener();
 	}
-
 }
 
