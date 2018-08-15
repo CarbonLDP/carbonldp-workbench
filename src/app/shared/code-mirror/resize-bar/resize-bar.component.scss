@@ -1,0 +1,11 @@
+:host {
+	.handler{
+		background: #f7f7f7;
+		user-select: none;
+		cursor: row-resize;
+		border-top: 1px solid #ddd;
+		border-bottom: 1px solid #ddd;
+		color: black;
+		text-align: center;
+	}
+}
