@@ -79,9 +79,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	getDocumentTree():Promise<Document | void> {
-		return this.carbonldp.documents.$get( { ensureLatest: true } ).then( ( resolvedRoot:Document ) => {
-			return resolvedRoot.$refresh();
-		} ).then( ( updatedRoot:Document ) => {
+		return this.carbonldp.documents.$get( { ensureLatest: true } ).then( ( updatedRoot:Document ) => {
 
 			let isRequiredSystemDocument:boolean = updatedRoot.types.findIndex( ( type:string ) => type === `${C.namespace}RequiredSystemDocument` ) !== - 1;
 
