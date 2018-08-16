@@ -29,8 +29,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	$tree:JQuery;
 	nodeChildren:JSTreeNode[] = [];
 	canDelete:boolean = true;
+	page: number = 0;
 
 	private _selectedURI:string = "";
+	private _selectedNode:JSTreeNode;
 
 	set selectedURI( value:string ) {
 		this._selectedURI = value;
@@ -39,6 +41,14 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 	get selectedURI():string {
 		return this._selectedURI;
+	}
+
+	set selectedNode( node:JSTreeNode ) {
+		this._selectedNode = node;
+	}
+
+	get selectedNode():JSTreeNode {
+		return this._selectedNode;
 	}
 
 	public sortAscending:boolean = true;
@@ -139,6 +149,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.$tree.on( "select_node.jstree", (( e:Event, data:any ):void => {
 			let node:any = data.node;
 			this.selectedURI = node.id;
+			this.selectedNode = node;
 			this.canDelete = ! node.data.isRequiredSystemDocument;
 		}) as any );
 		this.$tree.on( "loaded.jstree", () => {
@@ -164,14 +175,14 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		if( node.id === "#" ) {
 			callBack( this.nodeChildren );
 		} else {
-			this.getNodeChildren( node.id )
+			this.getNodeChildren( node.id, this.page)
 				.then( ( children:JSTreeNode[] ) => {
 					callBack( children );
 				} );
 		}
 	}
 
-	getNodeChildren( uri:string ):Promise<JSTreeNode[]> {
+	getNodeChildren( uri:string, page: number ):Promise<JSTreeNode[]> {
 		let query:string = `
 			PREFIX c:<${C.namespace}>
 			PREFIX ldp:<${LDP.namespace}>
@@ -195,7 +206,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			        }
 			        BIND( EXISTS{ ?s a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
 			    }
-			}
+			}LIMIT ${(page + 1) * 10}
+			OFFSET ${page > 0 ? (page * 10) + 1 : page * 10}
 		`;
 		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
 			let nodes:Map<string, JSTreeNode> = new Map<string, JSTreeNode>();
@@ -206,6 +218,26 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} ).catch( ( error ) => {
 			return Promise.reject( error );
 		} );
+	}
+
+
+	nextPage(){
+		this.page = this.page + 1;
+		let obj = this.selectedNode;
+		let node:JSTreeNode = this.jsTree.get_node( obj );
+		this.jsTree.refresh_node( node );
+		this.jsTree.open_node( node );
+		this.onResolveUri.emit( node.id );
+	}
+
+	previousPage(){
+		this.page = this.page - 1;
+		let obj = this.selectedNode;
+
+		let node:JSTreeNode = this.jsTree.get_node( obj );
+		this.jsTree.refresh_node( node );
+		this.jsTree.open_node( node );
+		this.onResolveUri.emit( node.id );
 	}
 
 	refreshSelectedNode():void {
