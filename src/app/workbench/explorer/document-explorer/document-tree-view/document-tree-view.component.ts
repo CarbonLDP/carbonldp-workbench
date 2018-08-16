@@ -79,8 +79,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	getDocumentTree():Promise<Document | void> {
-		return this.carbonldp.documents.get( "" ).then( ( resolvedRoot:Document ) => {
-			return resolvedRoot.refresh();
+		return this.carbonldp.documents.$get( "" ).then( ( resolvedRoot:Document ) => {
+			return resolvedRoot.$refresh();
 		} ).then( ( updatedRoot:Document ) => {
 
 			let isRequiredSystemDocument:boolean = updatedRoot.types.findIndex( ( type:string ) => type === `${C.namespace}RequiredSystemDocument` ) !== - 1;
@@ -197,7 +197,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			    }
 			}
 		`;
-		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
+		return this.carbonldp.documents.$executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
 			let nodes:Map<string, JSTreeNode> = new Map<string, JSTreeNode>();
 
 			results.bindings.forEach( ( binding:SPARQLBindingObject & BindingResult ) => this.addBindingToNodes( nodes, binding ) );
