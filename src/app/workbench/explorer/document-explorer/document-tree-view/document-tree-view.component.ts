@@ -79,7 +79,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	getDocumentTree():Promise<Document | void> {
-		return this.carbonldp.documents.$get( "" ).then( ( resolvedRoot:Document ) => {
+		return this.carbonldp.documents.$get( { ensureLatest: true } ).then( ( resolvedRoot:Document ) => {
 			return resolvedRoot.$refresh();
 		} ).then( ( updatedRoot:Document ) => {
 
