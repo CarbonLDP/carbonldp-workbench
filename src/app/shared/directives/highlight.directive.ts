@@ -1,22 +1,24 @@
 import { Directive, ElementRef, AfterViewInit } from "@angular/core";
 
-import Highlight from "highlight.js";
-// import "!style-loader!css-loader!highlight.js/styles/tomorrow-night.css";
+import * as hljs from "highlight.js";
+
+import "!style-loader!css-loader!highlight.js/styles/obsidian.css";
 
 @Directive( {
 	selector: "[cwHighlight]",
 } )
 export class HighlightDirective implements AfterViewInit {
-	constructor( private element:ElementRef ) {}
+	constructor( private element:ElementRef) {}
 
 	ngAfterViewInit():void {
 		let html:string = this.element.nativeElement.innerHTML ? this.element.nativeElement.innerHTML : "";
 		this.element.nativeElement.innerHTML = this.normalizeTabs( html );
-
-		Highlight.configure( {
+		// @ts-ignore
+		hljs.configure( {
 			tabReplace: "    ",
 		} );
-		Highlight.highlightBlock( this.element.nativeElement );
+		// @ts-ignore
+		hljs.highlightBlock( this.element.nativeElement );
 	}
 
 	private normalizeTabs( value:string ):string {
