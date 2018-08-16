@@ -35,10 +35,19 @@
 	        [ngClass]="{disabled: (nodeChildren.length===0 || !canDelete) }"
 	        [disabled]="nodeChildren.length===0 || !canDelete"
 	        (click)="showDeleteChildForm()">
-		<i class="trash outline icon"></i>
+		<i class="trash icon"></i>
 	</button>
 	<!-- END: Delete Button -->
 
+	<div class="ui mini basic black right aligned icon button"
+	     (click)="previousPage()">
+		<i class="angle left icon"></i>
+	</div>
+
+	<div class="ui mini basic black right aligned icon button"
+	     (click)="nextPage()">
+		<i class="angle right icon"></i>
+	</div>
 
 	<!-- START: Sort & Order by options -->
 	<div class="ui top left pointing dropdown mini basic black icon right floated button treeview-sortByButton" title="Sort alphabetically"
