@@ -29,7 +29,7 @@ export class WidgetsService {
 			}
 		`;
 
-		return this.carbonldp.documents.$executeSELECTQuery( '', query )
+		return this.carbonldp.documents.$executeSELECTQuery( query )
 			.then( ( results:SPARQLSelectResults ) => {
 				results.bindings.forEach( ( binding ) => {
 					count = binding[ "count" ];
@@ -51,7 +51,7 @@ export class WidgetsService {
 			}
 		`;
 
-		return this.carbonldp.documents.$executeSELECTQuery( '', query )
+		return this.carbonldp.documents.$executeSELECTQuery( query )
 			.then( ( results:SPARQLSelectResults ) => {
 				results.bindings.forEach( ( binding ) => {
 					count = binding[ "count" ];
