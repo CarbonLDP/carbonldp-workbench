@@ -9,5 +9,6 @@ declare module "highlight.js" {
 	export default class {
 		static configure( configuration:HighlightConfiguration ):void;
 		static highlightBlock( block:HTMLElement ):void;
+		static registerLanguage( name:string, language:any):void
 	}
 }
