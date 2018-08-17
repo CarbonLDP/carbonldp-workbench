@@ -1,14 +1,14 @@
-import { Directive, ElementRef, AfterViewInit } from "@angular/core";
+import { Directive, ElementRef, AfterViewInit, OnInit } from "@angular/core";
 
 import * as hljs from "highlight.js";
 
-import "!style-loader!css-loader!highlight.js/styles/obsidian.css";
+import "!style-loader!css-loader!highlight.js/styles/darcula.css";
 
 @Directive( {
 	selector: "[cwHighlight]",
 } )
-export class HighlightDirective implements AfterViewInit {
-	constructor( private element:ElementRef) {}
+export class HighlightDirective implements OnInit, AfterViewInit {
+	constructor( private element:ElementRef ) {}
 
 	ngAfterViewInit():void {
 		let html:string = this.element.nativeElement.innerHTML ? this.element.nativeElement.innerHTML : "";
@@ -59,6 +59,64 @@ export class HighlightDirective implements AfterViewInit {
 			lines[ i ] = line.substring( indentation );
 		}
 		return lines;
+	}
+
+
+	ngOnInit():void {
+		let LITERALS = 'prefix PREFIX';
+
+		let keyName = '[a-zA-Z_]*';
+		let KEY = {
+			className: 'attr',
+			variants: [
+				{ begin: keyName + ":" },
+			]
+		};
+
+		let TEMPLATE_VARIABLES = {
+			className: 'template-variable',
+			variants: [
+				{ begin: '\<', end: '\>' },
+			]
+		};
+		let STRING = {
+			className: 'string',
+			relevance: 0,
+			variants: [
+				{ begin: /'/, end: /'/ },
+				{ begin: /"/, end: /"/ },
+				{ begin: /\S+/ }
+			],
+			contains: [
+				// @ts-ignore
+				hljs.BACKSLASH_ESCAPE,
+				TEMPLATE_VARIABLES
+			]
+		};
+		// @ts-ignore
+		hljs.registerLanguage( 'sparql', function(hljs){
+			return {
+			case_insensitive: false,
+			aliases: [ 'sparql' ],
+			contains: [
+				KEY,
+				{ // multi line string
+					className: 'string',
+					begin: '[\\|>] *$',
+					returnEnd: true,
+					contains: STRING.contains,
+					// very simple termination: next hash key
+					end: KEY.variants[ 0 ].begin
+				},
+				{
+					beginKeywords: LITERALS,
+					keywords: { literal: LITERALS }
+				},
+				// @ts-ignore
+				hljs.C_NUMBER_MODE,
+				STRING
+			]
+		}} );
 	}
 }
 
