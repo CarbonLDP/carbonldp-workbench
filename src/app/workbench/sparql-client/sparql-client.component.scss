@@ -49,4 +49,21 @@
 			}
 		}
 	}
+
+	::ng-deep{
+		.o-default-prefixes {
+			.sparql {
+				code {
+					.hljs-literal {
+						color: #ffb928;
+					}
+					.hljs-attr, .hljs-string{
+						color: #00a8c6;
+					}
+				}
+
+			}
+		}
+	}
 }
+
