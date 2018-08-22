@@ -428,7 +428,8 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 
 	executeSELECT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = (new Date()).valueOf();
-		return SPARQLService.executeRawSELECTQuery( query.endpoint, query.content ).then(
+		let requestOptions:RequestOptions = { headers: new Map().set( "Accept", new Header( SPARQLFormats.jsonLD ) ) };
+		return SPARQLService.executeRawSELECTQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ SPARQLRawResults, Response ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
@@ -466,7 +467,8 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 
 	executeASK( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = (new Date()).valueOf();
-		return SPARQLService.executeRawASKQuery( query.endpoint, query.content ).then(
+		let requestOptions:RequestOptions = { headers: new Map().set( "Accept", new Header( SPARQLFormats.jsonLD ) ) };
+		return SPARQLService.executeRawASKQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ SPARQLRawResults, Response ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
