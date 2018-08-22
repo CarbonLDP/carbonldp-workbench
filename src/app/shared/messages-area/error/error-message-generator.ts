@@ -27,8 +27,14 @@ export class ErrorMessageGenerator {
 			errorMessage.statusMessage = (<XMLHttpRequest>error.response.request).statusText;
 			errorMessage.title = errorMessage.statusMessage;
 			errorMessage.endpoint = (<any>error.response.request).responseURL;
-			if( ! ! error.response.data )
+			if( ! ! error.response.data ) {
+				this.getErrorMessagefromJSONLD( error ).then( ( errors ) => {
+					errorMessage.content = `Error Message: ${errors.errorMessage} <br>
+					Parser Error Message: ${errors.parserErrorMessage}
+					`;
+				} );
 				this.getErrors( error ).then( ( errors ) => { errorMessage[ "errors" ] = errors; } );
+			}
 		} else if( error.hasOwnProperty( "stack" ) ) {
 			// If it's an uncaught exception
 			errorMessage.title = error.message;
@@ -55,6 +61,37 @@ export class ErrorMessageGenerator {
 			} );
 			return errors;
 		} );
+	}
+
+	//parse the error message on JSONLD
+	private static getErrorMessagefromJSONLD( error:Errors.HTTPError ):Promise<any> {
+		let parser:JSONLDParser = new JSONLDParser();
+		let errors:any[] = [];
+		let parsedError = {};
+		const reducer = (accumulator, currentValue) => !!accumulator['@value'] ? currentValue['@value'] + " " + accumulator['@value'] : currentValue['@value'] + " " + accumulator;
+
+		return parser.parse( error.response.data ).then(errorResponse => {
+			errors = errorResponse.filter( ( subject ) => {
+				return (!!subject[ "@type" ] && subject[ "@type" ].indexOf( `${C.namespace}Error` ) !== - 1) || (!!subject[ `${C.namespace}key` ] && this.objectPropInArray(subject[ `${C.namespace}key` ], "@value", "parserErrorMessage"));
+			} );
+			errors.forEach( ( error ) => {
+				!!error[`${C.namespace}errorMessage`] ? parsedError["errorMessage"] =  error[`${C.namespace}errorMessage`].length > 1 ? error[`${C.namespace}errorMessage`].reduce(reducer) : error[`${C.namespace}errorMessage`][0]['@value'] : "";
+				!!error[`${C.namespace}value`] ? parsedError["parserErrorMessage"] =  error[`${C.namespace}value`].length > 1 ? error[`${C.namespace}value`].reduce(reducer) : error[`${C.namespace}value`][0]['@value'] : "";
+			});
+			return parsedError;
+		});
+	}
+
+
+	private static objectPropInArray(list, prop, val):boolean {
+		if (list.length > 0 ) {
+			for (let i in list) {
+				if (list[i][prop] === val) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	// Get the details of the validation
@@ -88,6 +125,7 @@ export class ErrorMessageGenerator {
 	}
 
 	private static getFriendlyHTTPMessage( error:Errors.HTTPError ):string {
+		debugger
 		let tempMessage:string = "";
 		switch( true ) {
 			case error instanceof Errors.ForbiddenError:
