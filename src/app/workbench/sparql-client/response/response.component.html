@@ -64,8 +64,8 @@
 						{{response.resultset?.title}}
 					</div>
 					<p>
-						<span *ngIf="response.resultset?.content" [innerHTML]="response.resultset?.content"><br></span>
-						<span *ngIf="response.resultset?.statusCode">Status: {{response.resultset?.statusCode}} - {{response.resultset?.statusMessage}}<br></span>
+						<span *ngIf="response.resultset?.content" [innerHTML]="response.resultset?.content"></span><br>
+						<span *ngIf="response.resultset?.statusCode">Status: {{response.resultset?.statusCode}} - {{response.resultset?.statusMessage}}</span><br>
 						<span *ngIf="response.resultset?.endpoint">URI: {{response.resultset?.endpoint}}</span>
 					</p>
 				</div>
