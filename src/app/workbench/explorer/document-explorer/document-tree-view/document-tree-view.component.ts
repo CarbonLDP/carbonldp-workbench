@@ -29,7 +29,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	$tree:JQuery;
 	nodeChildren:JSTreeNode[] = [];
 	canDelete:boolean = true;
-	page: number = 0;
+	page:number = 1;
 
 	private _selectedURI:string = "";
 	private _selectedNode:JSTreeNode;
@@ -110,7 +110,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			id: uri,
 			text: this.getSlug( uri ),
 			state: { "opened": false },
-			children: hasChildren,
+			children: !!hasChildren ? hasChildren : false,
 			data: {},
 		};
 		node.type = (nodeType === JSTreeNodeType.ACCESS_POINT) ? JSTreeNodeType.ACCESS_POINT : JSTreeNodeType.DEFAULT;
@@ -170,45 +170,58 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	resolveNodeData( node:JSTreeNode, callBack:( children:JSTreeNode[] ) => {} ):void {
-
 		// If the node doesn't have an id, load the first node, else load node's children
 		if( node.id === "#" ) {
 			callBack( this.nodeChildren );
 		} else {
-			this.getNodeChildren( node.id, this.page)
+			this.getNodeChildren( node.id, this.page )
 				.then( ( children:JSTreeNode[] ) => {
 					callBack( children );
 				} );
 		}
 	}
 
-	getNodeChildren( uri:string, page: number ):Promise<JSTreeNode[]> {
+	getNodeChildren( uri:string, page:number ):Promise<JSTreeNode[]> {
 		let query:string = `
 			PREFIX c:<${C.namespace}>
 			PREFIX ldp:<${LDP.namespace}>
 			
-			SELECT (STR(?p) AS ?parentPredicate) (STR(?s) AS ?subject) (STR(?p2) AS ?predicate) ?object ?isRequiredSystemDocument
+			SELECT (STR(?p) AS ?parentPredicate) (STR(?child) AS ?subject) (STR(?p2) AS ?predicate) (?childInfo as ?object) ?isRequiredSystemDocument
 			WHERE {
-			    <${uri}> ?p ?s 
-			    VALUES (?p) {
-			        (ldp:contains)
-			        (c:accessPoint)
-			        (c:created)
-			        (c:modified)
+			    {
+					select ?child ?p where {
+					<${uri}> ?p ?child
+					values (?p) {
+							(ldp:contains)
+						}
+
+					}limit ${ (page) * 10} offset ${ page > 1 ? ( (page - 1) * 10) + 1 : 0}
+				}
+				UNION
+				{
+				select  ?child ?p where {
+				  <${uri}> ?p ?child.
+				  values(?p){
+					  (c:accessPoint)
+					  (c:created)
+					  (c:modified)
+				  	}
+				}
+					
+				}
+		Optional{
+		?child ?p2 ?childInfo
+			values(?p2) {
+				(c:accessPoint)
+				(c:created)
+				(c:modified)
+				(ldp:contains)
+			}
+		BIND( EXISTS{ ?child a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
+		}
 			    }
-			    OPTIONAL {
-			        ?s ?p2 ?object    
-			        VALUES (?p2) {
-			            (ldp:contains)
-			            (c:accessPoint)
-				        (c:created)
-				        (c:modified)
-			        }
-			        BIND( EXISTS{ ?s a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
-			    }
-			}LIMIT ${(page + 1) * 10}
-			OFFSET ${page > 0 ? (page * 10) + 1 : page * 10}
 		`;
+
 		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
 			let nodes:Map<string, JSTreeNode> = new Map<string, JSTreeNode>();
 
@@ -221,7 +234,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 
-	nextPage(){
+	nextPage() {
 		this.page = this.page + 1;
 		let obj = this.selectedNode;
 		let node:JSTreeNode = this.jsTree.get_node( obj );
@@ -230,7 +243,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.onResolveUri.emit( node.id );
 	}
 
-	previousPage(){
+	previousPage() {
 		this.page = this.page - 1;
 		let obj = this.selectedNode;
 
@@ -337,7 +350,6 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		}
 
 		if( nodes.has( binding.subject ) ) {
-
 			node = nodes.get( binding.subject );
 			node.type = type ? type : node.type;
 			node.data.id = node.id;
@@ -345,8 +357,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			node.data.modified = modified ? modified : node.data.modified;
 			node.data.hasChildren = hasChildren;
 			node.data.isRequiredSystemDocument = isRequiredSystemDocument;
+			node.children = hasChildren || node.children;
 		} else {
-
 			node = this.buildNode( binding.subject, type, hasChildren, isRequiredSystemDocument, created, modified );
 		}
 		nodes.set( binding.subject, node );
