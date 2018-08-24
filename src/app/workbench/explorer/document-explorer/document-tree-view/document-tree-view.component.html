@@ -45,7 +45,7 @@
 	     (click)="previousPage()">
 		<i class="angle left icon"></i>
 	</button>
-	<div class="ui mini basic black right aligned icon button">{{page}}</div>
+	<input type="number" class="ui mini basic black right aligned icon button" (keydown.enter)="changePageByNumber($event)" [(ngModel)]="displayCurrentPage"/>
 	<button class="ui mini basic black right aligned icon button"
 	     [ngClass]="{disabled: !hasNext() }"
 	     [disabled]="!hasNext()"

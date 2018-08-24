@@ -30,6 +30,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	nodeChildren:JSTreeNode[] = [];
 	canDelete:boolean = true;
 	page:number = 1;
+	displayCurrentPage:number = 1;
 	elementPerPage:number = 10;
 	nodePagination: Map<string, any> = new Map<string, any>();
 
@@ -158,6 +159,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			this.selectedURI = node.id;
 			this.selectedNode = node;
 			this.page = this.nodePagination.get(node.id).currentPage;
+			this.displayCurrentPage = this.page;
 			this.canDelete = ! node.data.isRequiredSystemDocument;
 		}) as any );
 		this.$tree.on( "loaded.jstree", () => {
@@ -260,6 +262,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 	nextPage() {
 		this.page = this.page + 1;
+		this.displayCurrentPage = this.page;
 		let obj = this.selectedNode;
 		let node:JSTreeNode = this.jsTree.get_node( obj );
 		this.jsTree.refresh_node( node );
@@ -271,12 +274,35 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 	previousPage() {
 		this.page = this.page - 1;
+		this.displayCurrentPage = this.page;
 		let obj = this.selectedNode;
 		let node:JSTreeNode = this.jsTree.get_node( obj );
 		this.jsTree.refresh_node( node );
 		this.jsTree.open_node( node );
 		this.onResolveUri.emit( node.id );
 		this.nodePagination.get( node.id ).currentPage = this.page;
+	}
+
+	changePageByNumber(){
+		if ( !this.selectedNode || !this.selectedNode.state.opened ) {
+			this.displayCurrentPage = this.page;
+			return false;
+		}else if(this.displayCurrentPage <= this.availableNodePages()){
+			this.page = this.displayCurrentPage;
+			let obj = this.selectedNode;
+			let node:JSTreeNode = this.jsTree.get_node( obj );
+			this.jsTree.refresh_node( node );
+			this.jsTree.open_node( node );
+			this.onResolveUri.emit( node.id );
+			this.nodePagination.get( node.id ).currentPage = this.page;
+		}else{
+			this.displayCurrentPage = this.page;
+		}
+	}
+
+	availableNodePages():number{
+		let numOfChilds:number = this.nodePagination.get(this.selectedNode.id).childElements;
+		return Math.ceil(numOfChilds / this.elementPerPage);
 	}
 
 	hasNext():boolean{
