@@ -39,15 +39,19 @@
 	</button>
 	<!-- END: Delete Button -->
 
-	<div class="ui mini basic black right aligned icon button"
+	<button class="ui mini basic black right aligned icon button"
+	     [ngClass]="{disabled: !hasPrev() }"
+	     [disabled]="!hasPrev()"
 	     (click)="previousPage()">
 		<i class="angle left icon"></i>
-	</div>
-
-	<div class="ui mini basic black right aligned icon button"
+	</button>
+	<div class="ui mini basic black right aligned icon button">{{page}}</div>
+	<button class="ui mini basic black right aligned icon button"
+	     [ngClass]="{disabled: !hasNext() }"
+	     [disabled]="!hasNext()"
 	     (click)="nextPage()">
 		<i class="angle right icon"></i>
-	</div>
+	</button>
 
 	<!-- START: Sort & Order by options -->
 	<div class="ui top left pointing dropdown mini basic black icon right floated button treeview-sortByButton" title="Sort alphabetically"
