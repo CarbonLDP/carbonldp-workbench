@@ -30,6 +30,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	nodeChildren:JSTreeNode[] = [];
 	canDelete:boolean = true;
 	page:number = 1;
+	elementPerPage:number = 10;
+	nodePagination: Map<string, any> = new Map<string, any>();
 
 	private _selectedURI:string = "";
 	private _selectedNode:JSTreeNode;
@@ -118,6 +120,11 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		node.data.isRequiredSystemDocument = ! ! isRequiredSystemDocument;
 		node.data.created = created;
 		node.data.modified = modified;
+
+		this.nodePagination.set( uri , {
+			"currentPage": 1,
+			"childElements":0
+		});
 		return node;
 	}
 
@@ -150,6 +157,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			let node:any = data.node;
 			this.selectedURI = node.id;
 			this.selectedNode = node;
+			this.page = this.nodePagination.get(node.id).currentPage;
 			this.canDelete = ! node.data.isRequiredSystemDocument;
 		}) as any );
 		this.$tree.on( "loaded.jstree", () => {
@@ -160,6 +168,12 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.$tree.on( "dblclick.jstree", ( e:Event ) => {
 			this.loadNode( e.target );
 		} );
+		this.$tree.on( "after_open.jstree", ( e:Event ) => {
+			this.selectedNode = this.jsTree.get_node( this.selectedNode );
+		} );
+		this.$tree.on( "before_close.jstree", ( e:Event ) => {
+			this.selectedNode = this.jsTree.get_node( this.selectedNode );
+		} );
 	}
 
 	loadNode( obj:any ):void {
@@ -167,6 +181,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.jsTree.refresh_node( node );
 		this.jsTree.open_node( node );
 		this.onResolveUri.emit( node.id );
+		node.state.opened = true;
 	}
 
 	resolveNodeData( node:JSTreeNode, callBack:( children:JSTreeNode[] ) => {} ):void {
@@ -186,45 +201,54 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			PREFIX c:<${C.namespace}>
 			PREFIX ldp:<${LDP.namespace}>
 			
-			SELECT (STR(?p) AS ?parentPredicate) (STR(?child) AS ?subject) (STR(?p2) AS ?predicate) (?childInfo as ?object) ?isRequiredSystemDocument
+			SELECT ?nChild (STR(?p) AS ?parentPredicate) (STR(?child) AS ?subject) (STR(?p2) AS ?predicate) (?childInfo as ?object) ?isRequiredSystemDocument
 			WHERE {
-			    {
+				{
 					select ?child ?p where {
-					<${uri}> ?p ?child
-					values (?p) {
+						<${uri}> ?p ?child
+						values (?p) {
 							(ldp:contains)
 						}
-
-					}limit ${ (page) * 10} offset ${ page > 1 ? ( (page - 1) * 10) + 1 : 0}
+			
+						}limit ${ (page) * this.elementPerPage} offset ${ page > 1 ? ( (page - 1) * this.elementPerPage) + 1 : 0}
+					}
+					UNION
+					{
+						select  ?child ?p where {
+							<${uri}> ?p ?child.
+							values(?p){
+								(c:accessPoint)
+								(c:created)
+								(c:modified)
+							}
+						}
+			
+					}
+					Optional{
+						?child ?p2 ?childInfo
+						values(?p2) {
+							(c:accessPoint)
+							(c:created)
+							(c:modified)
+							(ldp:contains)
+						}
+						BIND( EXISTS{ ?child a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
+					}
+					{
+						SELECT (COUNT(?childs) as ?nChild) where {
+						  <${uri}> ?p ?childs
+						  values (?p) {
+							  (ldp:contains)
+						  }
+					    }
+					}
 				}
-				UNION
-				{
-				select  ?child ?p where {
-				  <${uri}> ?p ?child.
-				  values(?p){
-					  (c:accessPoint)
-					  (c:created)
-					  (c:modified)
-				  	}
-				}
-					
-				}
-		Optional{
-		?child ?p2 ?childInfo
-			values(?p2) {
-				(c:accessPoint)
-				(c:created)
-				(c:modified)
-				(ldp:contains)
-			}
-		BIND( EXISTS{ ?child a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
-		}
-			    }
 		`;
 
 		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
 			let nodes:Map<string, JSTreeNode> = new Map<string, JSTreeNode>();
 
+			this.nodePagination.get(uri).childElements = !!results.bindings[0] ? results.bindings[0].nChild : 0;
 			results.bindings.forEach( ( binding:SPARQLBindingObject & BindingResult ) => this.addBindingToNodes( nodes, binding ) );
 
 			return Array.from( nodes.values() );
@@ -241,16 +265,34 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.jsTree.refresh_node( node );
 		this.jsTree.open_node( node );
 		this.onResolveUri.emit( node.id );
+
+		this.nodePagination.get( node.id ).currentPage = this.page;
 	}
 
 	previousPage() {
 		this.page = this.page - 1;
 		let obj = this.selectedNode;
-
 		let node:JSTreeNode = this.jsTree.get_node( obj );
 		this.jsTree.refresh_node( node );
 		this.jsTree.open_node( node );
 		this.onResolveUri.emit( node.id );
+		this.nodePagination.get( node.id ).currentPage = this.page;
+	}
+
+	hasNext():boolean{
+		if ( !this.selectedNode || !this.selectedNode.state.opened )
+			return false;
+		let currentPage:number = this.nodePagination.get(this.selectedNode.id).currentPage;
+		let numOfChilds:number = this.nodePagination.get(this.selectedNode.id).childElements;
+
+		return currentPage * this.elementPerPage < numOfChilds;
+	}
+
+	hasPrev():boolean{
+		if ( !this.selectedNode || !this.selectedNode.state.opened )
+			return false;
+		let currentPage:number = this.nodePagination.get(this.selectedNode.id).currentPage;
+		return currentPage > 1;
 	}
 
 	refreshSelectedNode():void {
