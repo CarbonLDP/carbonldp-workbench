@@ -177,7 +177,6 @@ export class ErrorMessageGenerator {
 	}
 
 	private static getFriendlyHTTPMessage( error:Errors.HTTPError ):string {
-		debugger
 		let tempMessage:string = "";
 		switch( true ) {
 			case error instanceof Errors.ForbiddenError:
