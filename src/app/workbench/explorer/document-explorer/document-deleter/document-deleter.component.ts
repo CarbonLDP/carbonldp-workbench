@@ -51,9 +51,11 @@ export class DocumentDeleterComponent implements AfterViewInit {
 		this.documentsResolverService.delete( this.documentURI ).then( ( result ) => {
 			this.onSuccess.emit( DocumentExplorerLibrary.getParentURI( this.documentURI ) );
 			this.hide();
-		} ).catch( ( error:HTTPError ) => {
-			this.onError.emit( error );
-			this.errorMessage = ErrorMessageGenerator.getErrorMessage( error );
+		} ).catch( async ( error:HTTPError ) => {
+			ErrorMessageGenerator.getErrorMessage( error, this.carbonldp ).then( ( errorMessage ) => {
+				this.onError.emit( error );
+				this.errorMessage = errorMessage;
+			} );
 		} ).then( () => {
 			this.isDeleting = false;
 		} );

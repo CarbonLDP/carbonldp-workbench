@@ -72,7 +72,9 @@ export class InstanceWidgetComponent {
 				this.setValues( platformMetadata.instance.version, platformMetadata.instance.buildDate )
 			} ).catch( ( error:any ) => {
 				this.hasError = true;
-				this.onErrorOccurs.emit( ErrorMessageGenerator.getErrorMessage( error ) );
+				ErrorMessageGenerator.getErrorMessage( error, this.carbonldp ).then( ( errorMessage ) => {
+					this.onErrorOccurs.emit( errorMessage );
+				} );
 			} );
 	}
 
@@ -84,7 +86,9 @@ export class InstanceWidgetComponent {
 				this.setValues( platformMetadata.instance.version, platformMetadata.instance.buildDate )
 			} ).catch( ( error:any ) => {
 				this.hasError = true;
-				this.onErrorOccurs.emit( ErrorMessageGenerator.getErrorMessage( error ) );
+				ErrorMessageGenerator.getErrorMessage( error, this.carbonldp ).then( ( errorMessage ) => {
+					this.onErrorOccurs.emit( errorMessage );
+				} );
 			} );
 	}
 }

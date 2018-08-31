@@ -68,9 +68,11 @@ export class AccessPointCreatorComponent implements AfterViewInit {
 			this.onSuccess.emit( document );
 			form.resetForm();
 			this.hide();
-		} ).catch( ( error:Errors.HTTPError ) => {
-			this.onError.emit( error );
-			this.errorMessage = ErrorMessageGenerator.getErrorMessage( error );
+		} ).catch( async ( error:Errors.HTTPError ) => {
+			ErrorMessageGenerator.getErrorMessage( error, this.carbonldp ).then( ( errorMessage ) => {
+				this.onError.emit( error );
+				this.errorMessage = errorMessage;
+			} );
 		} );
 	}
 
