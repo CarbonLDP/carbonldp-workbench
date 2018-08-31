@@ -11,8 +11,9 @@ export class MessagesAreaService {
 
 	addMessage( message:Message ):void;
 	addMessage( title:string, content?:string, type?:string, statusCode?:string, statusMessage?:string, endpoint?:string, duration?:number ):void;
-	addMessage( titleOrMessage?:string|Message, content?:string, type?:string, statusCode?:string, statusMessage?:string, endpoint?:string, duration?:number ):void {
+	addMessage( titleOrMessage?:string | Message, content?:string, type?:string, statusCode?:string, statusMessage?:string, endpoint?:string, duration?:number ):void {
 		let message:Message = {};
+
 		if( typeof titleOrMessage === "string" ) {
 			message.title = titleOrMessage;
 			message.content = content;
@@ -21,7 +22,7 @@ export class MessagesAreaService {
 			message.statusMessage = statusMessage;
 			message.endpoint = endpoint;
 			message.duration = duration;
-		} else {
+		} else if( typeof titleOrMessage !== "undefined" ) {
 			message = titleOrMessage;
 		}
 		this.addMessageEmitter.emit( message );
