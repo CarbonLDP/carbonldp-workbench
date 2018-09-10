@@ -30,9 +30,14 @@ export class ErrorMessageGenerator {
 						if( this.hasErrorResponse( error ) ) {
 							parsedError.errors.forEach( ( errorElement ) => {
 								let parsedErrorMessage = this.pacerErrorMessage( errorElement );
-								errorMessage.content = parsedErrorMessage.errorMessage !== "" ? `${errorMessage.content} ${parsedErrorMessage.errorMessage}` : errorMessage.content;
-								errorMessage.content = parsedErrorMessage.parsedMessage !== "" ? `${errorMessage.content} ${parsedErrorMessage.parsedMessage}` : errorMessage.content;
-							} )
+								errorMessage.content = parsedErrorMessage.errorMessage !== ""
+									? `${errorMessage.content} ${parsedErrorMessage.errorMessage}`
+									: errorMessage.content;
+								errorMessage.content = parsedErrorMessage.parsedMessage !== ""
+									? `${errorMessage.content} ${parsedErrorMessage.parsedMessage}`
+									: errorMessage.content;
+							} );
+							this.getErrors( error );
 						}
 
 						return errorMessage;
@@ -73,9 +78,9 @@ export class ErrorMessageGenerator {
 				pacedErrorMessage.parsedMessage = error.errorParameters.entries
 					.filter( function getParserErrorMessage( entry ) {
 						return entry.entryKey === "parserErrorMessage";
-					} ).reduce( combineValues, "" );
+					} )
+					.reduce( combineValues, "" );
 				break;
-
 
 		}
 
@@ -84,25 +89,21 @@ export class ErrorMessageGenerator {
 	}
 
 	// FIXME(2018-08-29): This method includes logic that is only relevant to the Document Explorer. Move it to a more appropriate place.
-	/*private static getErrors( response:Response ):Promise<any[]> {
-		let parser:JSONLDParser = new JSONLDParser();
-		let errors:any[] = [];
-		return parser.parse( response.data ).then( ( errorResponse ) => {
+	private static getErrors( errorResponse:any ):any[] {
+		
+		let errors = errorResponse.filter( ( subject ) => { return subject[ "@type" ] && subject[ "@type" ].indexOf( `${C.namespace}Error` ) !== - 1} );
+		errors.forEach( ( error ) => {
+			if( error[ "@type" ].indexOf( `${C.namespace}ValidationError` ) !== - 1 ) {
 
-			errors = errorResponse.filter( ( subject ) => { return subject[ "@type" ] && subject[ "@type" ].indexOf( `${C.namespace}Error` ) !== - 1} );
-			errors.forEach( ( error ) => {
-				if( error[ "@type" ].indexOf( `${C.namespace}ValidationError` ) !== - 1 ) {
-
-					error.validationError = <ValidationError>{
-						errorCode: error[ `${C.namespace}errorCode` ][ 0 ][ "@value" ],
-						errorMessage: error[ `${C.namespace}errorMessage` ][ 0 ][ "@value" ],
-						errorDetails: this.getValidationDetails( error[ `${C.namespace}errorDetails` ][ 0 ][ "@id" ], errorResponse ),
-					};
-				}
-			} );
-			return errors;
+				error.validationError = <ValidationError>{
+					errorCode: error[ `${C.namespace}errorCode` ][ 0 ][ "@value" ],
+					errorMessage: error[ `${C.namespace}errorMessage` ][ 0 ][ "@value" ],
+					errorDetails: this.getValidationDetails( error[ `${C.namespace}errorDetails` ][ 0 ][ "@id" ], errorResponse ),
+				};
+			}
 		} );
-	}*/
+		return errors;
+	}
 
 	// Get the details of the validation
 	private static getValidationDetails( nodeID:string, errorResponse ):ValidationDetails {
