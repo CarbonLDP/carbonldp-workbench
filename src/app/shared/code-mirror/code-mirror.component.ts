@@ -1,6 +1,7 @@
-import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, AfterContentInit, OnChanges, OnDestroy } from "@angular/core";
+import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, AfterContentInit, OnChanges, OnDestroy, HostListener, Renderer2 } from "@angular/core";
 
 import * as CodeMirror from "codemirror";
+import * as SPARQL from "sparqljs";
 
 import "codemirror/mode/css/css";
 import "codemirror/mode/htmlmixed/htmlmixed";
@@ -32,11 +33,32 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	@Input() codeMirror:CodeMirror.Editor;
 	@Output() codeMirrorChange:EventEmitter<CodeMirror.Editor> = new EventEmitter<CodeMirror.Editor>();
 
+	@HostListener( 'keydown', [ '$event' ] ) onKeyDown( e ) {
+		if( e.shiftKey && e.ctrlKey && e.keyCode == 80 ) {
+			try {
+				let parsedQuery = this.parser.parse( this.value );
+				this.codeMirror.setValue( this.generator.stringify( parsedQuery ) );
+			} catch( e ) {
+
+			}
+
+		}
+	}
+
 	private internallyChanged:boolean = false;
 	private lastUpdates:string[] = [];
+	private parser;
+	private generator;
+	private textMarkers = [];
+	private renderer:Renderer2;
+	private eventListener;
 
-	constructor( element:ElementRef ) {
+	constructor( element:ElementRef, renderer:Renderer2 ) {
 		this.element = element;
+		this.parser = new SPARQL.Parser();
+		this.generator = new SPARQL.Generator();
+		this.renderer = renderer;
+
 	}
 
 	ngOnDestroy() {
@@ -94,6 +116,8 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 		}
 
 		if( "value" in changeRecord ) {
+			if( this.mode === Mode.SPARQL ) this.validateQuery( changeRecord.value.currentValue );
+
 			if( this.lastUpdates.length > 0 && this.lastUpdates[ 0 ] === changeRecord.value.currentValue ) {
 				this.lastUpdates.shift();
 			} else {
@@ -152,6 +176,40 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	private setNoCursor( noCursor:boolean ):void {
 		if( noCursor ) this.codeMirror.setOption( "readOnly", "nocursor" );
 		else this.setReadOnly( this.readOnly );
+	}
+
+	private validateQuery( currentString:string ) {
+		this.clearTextMarker();
+		try {
+			this.parser.parse( currentString );
+		} catch( error ) {
+			if( "message" in error && error.message.startsWith( "Parse error" ) ) {
+				this.displayParseError( error );
+			} else {
+				console.error( "Unexpected error while parsing the query", error );
+			}
+		}
+	}
+
+	private displayParseError( error ) {
+		let start = {
+			line: error.hash.loc.first_line - 1,
+			ch: error.hash.loc.first_column - 1
+		};
+		let end = {
+			line: error.hash.loc.last_line - 1,
+			ch: error.hash.loc.last_column + 1
+		};
+		// @ts-ignore
+		this.textMarkers.push( this.codeMirror.markText( start, end, { className: "cw-code-mirror--syntaxError" } ) );
+	}
+
+	private clearTextMarker():void {
+		if( typeof this.eventListener === "function" ) this.eventListener();
+		this.textMarkers.forEach( ( marker ) => {
+			return marker.clear();
+		} );
+		this.textMarkers = [];
 	}
 }
 
