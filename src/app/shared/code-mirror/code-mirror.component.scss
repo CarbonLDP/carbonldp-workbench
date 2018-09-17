@@ -2,4 +2,9 @@
 	display: block;
 	font-size: 14px;
 	line-height: 1.3em;
+
+	::ng-deep .cw-code-mirror--syntaxError {
+		border-bottom: 1px dashed red;
+	}
+
 }

@@ -12,6 +12,7 @@ import "codemirror/mode/turtle/turtle";
 
 import "!style-loader!css-loader!codemirror/lib/codemirror.css";
 import "!style-loader!css-loader!codemirror/theme/mbo.css";
+import { CodeMirrorErrorAreaService } from "app/shared/code-mirror/code-mirror-error-area.service";
 
 @Component( {
 	selector: "cw-code-mirror",
@@ -52,12 +53,14 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	private textMarkers = [];
 	private renderer:Renderer2;
 	private eventListener;
+	private codeMirrorErrorAreaService;
 
-	constructor( element:ElementRef, renderer:Renderer2 ) {
+	constructor( element:ElementRef, renderer:Renderer2, codeMirrorErrorAreaService:CodeMirrorErrorAreaService ) {
 		this.element = element;
 		this.parser = new SPARQL.Parser();
 		this.generator = new SPARQL.Generator();
 		this.renderer = renderer;
+		this.codeMirrorErrorAreaService = codeMirrorErrorAreaService;
 
 	}
 
@@ -182,6 +185,7 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 		this.clearTextMarker();
 		try {
 			this.parser.parse( currentString );
+			this.codeMirrorErrorAreaService.message = "";
 		} catch( error ) {
 			if( "message" in error && error.message.startsWith( "Parse error" ) ) {
 				this.displayParseError( error );
@@ -202,6 +206,7 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 		};
 		// @ts-ignore
 		this.textMarkers.push( this.codeMirror.markText( start, end, { className: "cw-code-mirror--syntaxError" } ) );
+		this.codeMirrorErrorAreaService.message = error.message;
 	}
 
 	private clearTextMarker():void {

@@ -76,6 +76,7 @@
 									<div class=" column field">
 										<label>Query:</label>
 										<cw-code-mirror [mode]="codeMirrorMode.SPARQL" [readOnly]="isSending" [(value)]="sparql" [showLineNumbers]="true"></cw-code-mirror>
+										<cw-code-mirror-error-area></cw-code-mirror-error-area>
 									</div>
 								</div>
 								<!-- END: Body of the query -->
