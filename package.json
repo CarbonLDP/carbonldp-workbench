@@ -1,6 +1,6 @@
 {
   "name": "carbonldp-workbench",
-  "version": "1.0.0-alpha.3",
+  "version": "5.0.0",
   "description": "Workbench to administer an on premise installation of Carbon LDP",
   "contributors": [
     {
@@ -10,6 +10,10 @@
     {
       "name": "Alvaro Contreras",
       "email": "alvaro.contreras@base22.com"
+    },
+    {
+      "name": "Alejandro Serrano",
+      "email": "alejandro.serrano@base22.com"
     }
   ],
   "license": "BSD-3-Clause",
