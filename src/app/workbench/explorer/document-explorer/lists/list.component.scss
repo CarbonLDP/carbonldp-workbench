@@ -1,0 +1,34 @@
+:host {
+	display: block;
+}
+
+.confirm-deletion.dimmer {
+	border: 1px solid lightgrey;
+}
+
+.right.menu {
+	&.modified {
+		background-color: #FFFBB4;
+	}
+	&.added {
+		background-color: #D9EEFF;
+	}
+}
+.ui.striped.table{
+	table-layout: fixed;
+}
+
+.cw-pointer{
+	.text{
+		width: 100%;
+	}
+}
+
+.ui.striped.table tbody tr {
+	&.modified-pointer, &.modified-literal {
+		background-color: #FFFBB4;
+	}
+	&.added-pointer, &.added-literal {
+		background-color: #D9EEFF;
+	}
+}

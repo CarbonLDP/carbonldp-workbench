@@ -1,0 +1,36 @@
+:host {
+	display: block;
+
+	.document-content-wrapper{
+		height: 96%;
+	}
+	.ui.segment {
+		color: #000000;
+	}
+	> .ui.divided.grid.segment {
+		height: 800px;
+		max-height: 800px;
+
+		> .stretched.row {
+			border: 1px solid lightgray;
+			margin: 1%;
+			padding: 0;
+
+			> .treeview-container {
+				padding: 0;
+			}
+		}
+	}
+	.createchild.form {
+
+		.ui.saving.error.message {
+			text-align: left;
+		}
+	}
+
+	.error.messages {
+		position: absolute;
+		z-index: 101;
+		width: 100%;
+	}
+}

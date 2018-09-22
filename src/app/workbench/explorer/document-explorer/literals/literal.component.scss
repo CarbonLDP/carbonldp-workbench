@@ -1,0 +1,50 @@
+:host {
+
+	td {
+		vertical-align: middle;
+	}
+
+	.edit-mode.ui.form {
+		.field {
+			margin: 0;
+		}
+	}
+
+	.type {
+
+		/deep/ .dropdown.types {
+			.text .description {
+				display: none;
+			}
+			.item {
+				.title {
+					line-height: 1em;
+					font-size: 1.2em;
+					display: block;
+				}
+				.description {
+					color: gray;
+					font-size: .8em;
+				}
+			}
+		}
+	}
+
+	/deep/ .updown.buttons {
+		max-height: 28px;
+		margin-top: 1px;
+		float: right;
+		.button {
+			max-height: 13px;
+			height: 13px;
+			padding: 1px;
+		}
+	}
+
+	td .read-mode:nth-child(1) p{
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		display: inherit;
+	}
+}

@@ -133,6 +133,8 @@ export class URIFragmentValidator implements Validator {
 		if( ! URI.hasFragment( control.value ) ) return;
 		if( control.value.split( "#" ).length > 2 ) return { "multipleFragment": true };
 		if( URI.getFragment( control.value ).trim().length === 0 ) return { "missingFragment": true };
+		let fragmentPart:string = control.value.split( "#" )[ 1 ];
+		if( ! fragmentPart.match( /^[a-z0-9]+(?:-[a-z0-9]*)*(?:\/*)$/ ) ) return { "invalidURIAddress": true };
 
 		return null;
 	}

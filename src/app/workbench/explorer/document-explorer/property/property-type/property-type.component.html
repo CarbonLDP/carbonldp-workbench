@@ -1,0 +1,29 @@
+<p class="header">
+	@type
+</p>
+<div class="description">
+
+	<!-- START: Icons for each type -->
+	<div class="ui horizontal list">
+		<div class="item" *ngFor="let type of types; let j = index;">
+			<div class="ui label">
+				<i [ngClass]="getTypeIcon(type)" class="icon"></i>
+				<!-- TODO: Create a pipe to display the slug instead of using a function to return it -->
+				{{getDisplayName(type)}}
+			</div>
+		</div>
+	</div>
+	<!-- END: Icons for each type -->
+
+
+	<!-- START: Table with URI type -->
+	<table class="ui very compact striped small celled table">
+		<tr class="center aligned">
+			<th>@type</th>
+		</tr>
+		<tr *ngFor="let type of types; let j = index;">
+			<td>{{type}}</td>
+		</tr>
+	</table>
+	<!-- END: Table with URI type -->
+</div>

@@ -2,36 +2,18 @@ import { ModuleWithProviders } from "@angular/core";
 import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
 
 // Guards
-import { AuthenticatedGuard, NotAuthenticatedGuard } from "app/authentication/guards";
-import { CarbonLDPProviderResolver } from "app/resolvers";
 
 // Components
-import { LoginView } from "./login/login.view";
-import { WorkbenchView } from "./workbench/workbench.view";
 import { ErrorView } from "./error-pages/error.view";
 import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
 
 const appRoutes:Routes = [
 	{
-		path: "login",
-		component: LoginView,
-		canActivate: [ NotAuthenticatedGuard ],
-		data: {
-			alias: "login",
-			title: "Log In | Workbench",
-
-			// NotAuthenticatedGuard cases
-			onReject: [ "/" ],
-			onError: [ "/error" ],
-		}
-	},
-	{
 		path: "",
-		component: WorkbenchView,
 		children: [
 			{
 				path: "",
-				loadChildren: "app/root-content/root-content.module#RootContentModule",
+				loadChildren: "app/workbench/workbench.module#WorkbenchModule",
 			},
 		]
 	},
@@ -52,10 +34,6 @@ const appRoutes:Routes = [
 ];
 
 
-export const appRoutingProviders:any[] = [
-	CarbonLDPProviderResolver,
-	AuthenticatedGuard,
-	NotAuthenticatedGuard,
-];
+export const appRoutingProviders:any[] = [];
 
 export const routing:ModuleWithProviders = RouterModule.forRoot( appRoutes, { preloadingStrategy: PreloadAllModules } );

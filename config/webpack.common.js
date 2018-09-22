@@ -98,12 +98,7 @@ module.exports = function( metadata ) {
 					from: "src/assets",
 					to: "assets",
 					toType: "dir",
-				},
-				{
-					from: "src/semantic",
-					to: "semantic",
-					toType: "dir",
-				},
+				}
 			] ),
 
 			// Webpack inject scripts and links for us with the HtmlWebpackPlugin and also
@@ -123,9 +118,9 @@ module.exports = function( metadata ) {
 					"baseUrl": JSON.stringify( metadata.baseUrl ),
 					"ENV": JSON.stringify( metadata.ENV ),
 					"NODE_ENV": JSON.stringify( metadata.ENV ),
-					"CARBON": {
-						"protocol": JSON.stringify( metadata.CARBON.protocol ),
-						"domain": JSON.stringify( metadata.CARBON.domain ),
+					"carbonldp": {
+						"protocol": JSON.stringify( metadata.carbonldp.protocol ),
+						"domain": JSON.stringify( metadata.carbonldp.domain ),
 					},
 					"PACKAGES": {
 						"carbonldp-workbench": JSON.stringify( workbench.version ),
@@ -139,6 +134,10 @@ module.exports = function( metadata ) {
 				entryModule: helpers.root( "src/app/app.module#AppModule" ),
 				mainPath: helpers.root( "src/main.ts" ),
 				sourceMap: true,
+				skipCodeGeneration: true,
+				genDir: "compiled",
+				skipMetadataEmit: true,
+				typeChecking: true
 			} ),
 		],
 	}
