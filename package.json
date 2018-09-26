@@ -1,6 +1,6 @@
 {
   "name": "carbonldp-workbench",
-  "version": "1.0.0-alpha.3",
+  "version": "5.0.0",
   "description": "Workbench to administer an on premise installation of Carbon LDP",
   "contributors": [
     {
@@ -10,6 +10,10 @@
     {
       "name": "Alvaro Contreras",
       "email": "alvaro.contreras@base22.com"
+    },
+    {
+      "name": "Alejandro Serrano",
+      "email": "alejandro.serrano@base22.com"
     }
   ],
   "license": "BSD-3-Clause",
@@ -81,7 +85,7 @@
     "@angular/platform-browser": "^6.1.0",
     "@angular/platform-browser-dynamic": "^6.1.0",
     "@angular/router": "^6.1.0",
-    "carbonldp": "^5.0.0-alpha.1",
+    "carbonldp": "5.0.0",
     "codemirror": "^5.39.2",
     "core-js": "^2.5.7",
     "highlight.js": "^9.12.0",
@@ -91,7 +95,7 @@
     "jstree": "^3.3.5",
     "rxjs": "^6.2.2",
     "semantic-ui": "2.3.3",
-    "sparqler": "^0.4.0",
+    "sparqler": "0.6.0",
     "webstomp-client": "^1.2.4",
     "zone.js": "^0.8.26"
   }
