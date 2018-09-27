@@ -30,15 +30,15 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	nodeChildren:JSTreeNode[] = [];
 	canDelete:boolean = true;
 
-	private _selectedURI:Array<string> = [""];
+	private _selectedURIs:Array<string> = [ "" ];
 
-	set selectedURI( value:Array<string> ) {
-		this._selectedURI = value;
-		this.onSelectDocument.emit( this.selectedURI );
+	set selectedURIs( value:Array<string> ) {
+		this._selectedURIs = value;
+		this.onSelectDocuments.emit( this.selectedURIs );
 	}
 
-	get selectedURI():Array<string> {
-		return this._selectedURI;
+	get selectedURIs():Array<string> {
+		return this._selectedURIs;
 	}
 
 	public sortAscending:boolean = true;
@@ -53,7 +53,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	@Output() onShowCreateChildForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onShowDeleteChildForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onShowCreateAccessPointForm:EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Output() onSelectDocument:EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
+	@Output() onSelectDocuments:EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
 
 	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
 		this.element = element;
@@ -70,18 +70,23 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			this.onLoadingDocument.emit( false );
 		} );
 		this.refreshNode.subscribe( ( nodeIds:Array<string> ) => {
-			if(! Array.isArray(nodeIds) ){
-				nodeIds = [nodeIds];
+			if( ! Array.isArray( nodeIds ) ) {
+				nodeIds = [ nodeIds ];
 			}
-			nodeIds.forEach((nodeId)=>{
+			nodeIds = this.removeDuplicatedIds( nodeIds );
+			nodeIds.forEach( ( nodeId ) => {
 				this.loadNode( nodeId );
-			});
-			this.jsTree.select_node( nodeIds[0] );
-			this.selectedURI = [nodeIds[0]];
+			} );
+			this.jsTree.select_node( nodeIds );
+			this.selectedURIs = nodeIds;
 		} );
 		this.openNode.subscribe( ( nodeId:string ) => {
 			this.jsTree.select_node( nodeId );
 		} );
+	}
+
+	removeDuplicatedIds( nodeIds ):Array<string> {
+		return nodeIds.filter( ( nodeId, index, nodeIds ) => index === nodeIds.indexOf( nodeId ) )
 	}
 
 	getDocumentTree():Promise<Document | void> {
@@ -142,8 +147,9 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} ).jstree( true );
 		this.$tree.on( "select_node.jstree", (( e:Event, data:any ):void => {
 			let node:any = data.node;
-			this.selectedURI = data.selected;
-			this.canDelete = data.selected.length > 1 ? (!node.data.isRequiredSystemDocument && this.canDelete) : ! node.data.isRequiredSystemDocument;
+			this.selectedURIs = data.selected;
+			//canDelete uses a ternary operator because check if the node selected is part of a multiple selection or is a simple selection (data.selected is an Array of nodes and node.data is the current selected node)
+			this.canDelete = data.selected.length > 1 ? (! node.data.isRequiredSystemDocument && this.canDelete) : ! node.data.isRequiredSystemDocument;
 		}) as any );
 		this.$tree.on( "loaded.jstree", () => {
 			this.jsTree.select_node( this.nodeChildren[ 0 ].id );
@@ -213,9 +219,9 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	refreshSelectedNode():void {
-		this.selectedURI.forEach( selectedURI =>{
+		this.selectedURIs.forEach( selectedURI => {
 			this.jsTree.refresh_node( selectedURI );
-		});
+		} );
 	}
 
 	getSlug( node:Document | string ):string {
@@ -246,12 +252,12 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	reorderBranch():void {
-		this.selectedURI.forEach(selectedURI => {
+		this.selectedURIs.forEach( selectedURI => {
 			let node:JSTreeNode = this.jsTree.get_node( selectedURI );
 
 			this.jsTree.sort( node, true );
 			this.jsTree.redraw_node( node, true, false, false );
-		});
+		} );
 	}
 
 	private sort( nodeAId?:string, nodeBId?:string ):number {

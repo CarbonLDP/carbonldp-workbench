@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { HTTPError } from "carbonldp/HTTP/Errors";
@@ -30,7 +30,7 @@ export class DocumentDeleterComponent implements AfterViewInit {
 	isDeleting:boolean = false;
 
 
-	@Input() documentURI:Array<string> = [""];
+	@Input() documentURIs:Array<string> = [ "" ];
 	@Output() onSuccess:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
 
@@ -42,20 +42,21 @@ export class DocumentDeleterComponent implements AfterViewInit {
 	}
 
 	ngAfterViewInit():void {
+
 		this.$element = $( this.element.nativeElement );
 		this.$deleteDocumentModal = this.$element.find( ".delete.document.modal" ).modal( { closable: false } );
 	}
 
 	public onSubmitDeleteDocument( data:{}, $event:any ):void {
 		this.isDeleting = true;
-		let deletePromises = this.documentURI.map((documentURI)=>{
-			return this.documentsResolverService.delete(documentURI);
-		});
+		let deletePromises = this.documentURIs.map( ( documentURI ) => {
+			return this.documentsResolverService.delete( documentURI );
+		} );
 
 		Promise.all( deletePromises ).then( ( result ) => {
-			let parentURIs = this.documentURI.map((documentURI)=>{
-				return DocumentExplorerLibrary.getParentURI(documentURI);
-			});
+			let parentURIs = this.documentURIs.map( ( documentURI ) => {
+				return DocumentExplorerLibrary.getParentURI( documentURI );
+			} );
 			this.onSuccess.emit( parentURIs );
 			this.hide();
 		} ).catch( ( error:HTTPError ) => {
@@ -85,6 +86,16 @@ export class DocumentDeleterComponent implements AfterViewInit {
 
 	public toggle():void {
 		this.$deleteDocumentModal.modal( "toggle" );
+	}
+
+	public pluralize(phrase):string{
+		let tempPhrase;
+		switch( phrase ) {
+			case 'following document':
+				tempPhrase = this.documentURIs.length > 1 ? 'following documents' : 'following document';
+				break;
+		}
+		return tempPhrase;
 	}
 
 }

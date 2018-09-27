@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { Document } from "carbonldp/Document";
@@ -36,7 +36,7 @@ export class DocumentCreatorComponent implements AfterViewInit {
 			isMemberOfRelation: ""
 		}
 	};
-	@Input() parentURI:Array<string> = [""];
+	@Input() parentURI:string = "";
 	@Output() onSuccess:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
 
@@ -63,7 +63,7 @@ export class DocumentCreatorComponent implements AfterViewInit {
 		};
 		if( ! ! data.advancedOptions.isMemberOfRelation ) childContent[ "isMemberOfRelation" ] = data.advancedOptions.isMemberOfRelation;
 
-		this.documentsResolverService.createChild( this.parentURI[0], childContent, childSlug ).then( ( createdChild:Document ) => {
+		this.documentsResolverService.createChild( this.parentURI, childContent, childSlug ).then( ( createdChild:Document ) => {
 			this.onSuccess.emit( createdChild );
 			this.hide();
 		} ).catch( ( error:HTTPError ) => {
