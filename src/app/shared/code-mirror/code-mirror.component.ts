@@ -34,10 +34,10 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 
 	private internallyChanged:boolean = false;
 	private lastUpdates:string[] = [];
-	private resizeBar;
-	constructor( element:ElementRef, resizeBar: ResizeBarService) {
+	private resizeBarService;
+	constructor( element:ElementRef, resizeBarService: ResizeBarService) {
 		this.element = element;
-		this.resizeBar = resizeBar;
+		this.resizeBarService = resizeBarService;
 	}
 
 
@@ -81,7 +81,7 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 			this.valueChange.emit( lastUpdate );
 		} );
 
-		this.resizeBar.dataSource$.subscribe((value: number)=>{
+		this.resizeBarService.dataSource$.subscribe((value: number)=>{
 			this.setSize( value );
 		});
 	}
