@@ -88,11 +88,11 @@ export class DocumentDeleterComponent implements AfterViewInit {
 		this.$deleteDocumentModal.modal( "toggle" );
 	}
 
-	public pluralize(phrase):string{
+	public pluralize( word ):string {
 		let tempPhrase;
-		switch( phrase ) {
-			case 'following document':
-				tempPhrase = this.documentURIs.length > 1 ? 'following documents' : 'following document';
+		switch( word ) {
+			default:
+				tempPhrase = this.documentURIs.length > 1 ? `${word}s` : word;
 				break;
 		}
 		return tempPhrase;
