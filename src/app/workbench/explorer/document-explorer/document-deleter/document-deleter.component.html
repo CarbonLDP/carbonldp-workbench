@@ -8,12 +8,18 @@
 
 	<!-- START: Content of document deleter -->
 	<div class="content">
-		<p class="ui description">
-			<span>You are about to delete the following document:</span><br><br>
-			<span>'{{documentURI.join(", ")}}'</span><br><br>
+		<div class="ui description">
+			<span>You are about to delete the following {{pluralize('document')}}:</span><br><br>
+			<div class="document-deleter-list">
+				<span *ngFor="let documentURI of documentURIs">
+					{{documentURI}}<br>
+				</span>
+			</div>
+			<br>
+			<br>
 			<span>If you delete it, all its children and its access points will also be deleted.</span><br>
 			<span>Do you really want to proceed?</span>
-		</p>
+		</div>
 		<cw-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage($event)" *ngIf="!!errorMessage"></cw-message>
 	</div>
 	<!-- END: Content of document deleter -->
