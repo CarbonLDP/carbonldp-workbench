@@ -17,4 +17,6 @@ export class ResizeBarService {
 	get position() {
 		return this.bar_position;
 	}
+
+	//TODO: search a method to do that this service works for a multiple instances of the codemirror
 }

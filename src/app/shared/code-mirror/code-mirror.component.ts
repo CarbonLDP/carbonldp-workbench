@@ -27,6 +27,7 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	@Input() showLineNumbers:boolean = true;
 	@Input() scroll:boolean = true;
 	@Input() value:string = "";
+	@Input() resizable:boolean = false;
 	@Output() valueChange:EventEmitter<string> = new EventEmitter<string>();
 
 	@Input() codeMirror:CodeMirror.Editor;
@@ -83,7 +84,8 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 		} );
 
 		this.resizeBarService.dataSource$.subscribe( ( value:number ) => {
-			this.setSize( value );
+			if( this.resizable )
+				this.setSize( value );
 		} );
 	}
 
