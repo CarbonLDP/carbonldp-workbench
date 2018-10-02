@@ -29,7 +29,7 @@ export class ErrorMessageGenerator {
 
 						if( this.hasErrorResponse( error ) ) {
 							parsedError.errors.forEach( ( errorElement ) => {
-								let parsedErrorMessage = this.pacerErrorMessage( errorElement );
+								let parsedErrorMessage = this.parseErrorMessage( errorElement );
 								errorMessage.content = parsedErrorMessage.errorMessage !== ""
 									? `${errorMessage.content} ${parsedErrorMessage.errorMessage}`
 									: errorMessage.content;
@@ -64,18 +64,18 @@ export class ErrorMessageGenerator {
 		return contentType.hasValue( "application/ld+json" );
 	}
 
-	private static pacerErrorMessage( error ):{ errorMessage:string, parsedMessage:string } {
+	private static parseErrorMessage( error ):{ errorMessage:string, parsedMessage:string } {
 		const combineValues = ( accumulator, currentValue ) => accumulator.entryValue
 			? currentValue.entryValue + " " + accumulator.entryValue
 			: currentValue.entryValue + " " + accumulator;
 
-		let pacedErrorMessage = { errorMessage: "", parsedMessage: "" };
+		let parsedErrorMessage = { errorMessage: "", parsedMessage: "" };
 
 		switch( error.errorCode ) {
 
 			case "0x87C8":
-				pacedErrorMessage.errorMessage = error.errorMessage;
-				pacedErrorMessage.parsedMessage = error.errorParameters.entries
+				parsedErrorMessage.errorMessage = error.errorMessage;
+				parsedErrorMessage.parsedMessage = error.errorParameters.entries
 					.filter( function getParserErrorMessage( entry ) {
 						return entry.entryKey === "parserErrorMessage";
 					} )
@@ -84,13 +84,13 @@ export class ErrorMessageGenerator {
 
 		}
 
-		return pacedErrorMessage;
+		return parsedErrorMessage;
 
 	}
 
 	// FIXME(2018-08-29): This method includes logic that is only relevant to the Document Explorer. Move it to a more appropriate place.
 	private static getErrors( errorResponse:any ):any[] {
-		
+
 		let errors = errorResponse.filter( ( subject ) => { return subject[ "@type" ] && subject[ "@type" ].indexOf( `${C.namespace}Error` ) !== - 1} );
 		errors.forEach( ( error ) => {
 			if( error[ "@type" ].indexOf( `${C.namespace}ValidationError` ) !== - 1 ) {
