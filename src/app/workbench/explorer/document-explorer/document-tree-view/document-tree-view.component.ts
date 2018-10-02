@@ -29,13 +29,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	$tree:JQuery;
 	nodeChildren:JSTreeNode[] = [];
 	canDelete:boolean = true;
-	page:number = 1;
-	displayCurrentPage:number = 1;
-	elementPerPage:number = 10;
-	nodePagination: Map<string, any> = new Map<string, any>();
 
 	private _selectedURI:string = "";
-	private _selectedNode:JSTreeNode;
 
 	set selectedURI( value:string ) {
 		this._selectedURI = value;
@@ -44,14 +39,6 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 	get selectedURI():string {
 		return this._selectedURI;
-	}
-
-	set selectedNode( node:JSTreeNode ) {
-		this._selectedNode = node;
-	}
-
-	get selectedNode():JSTreeNode {
-		return this._selectedNode;
 	}
 
 	public sortAscending:boolean = true;
@@ -92,9 +79,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	getDocumentTree():Promise<Document | void> {
-		return this.carbonldp.documents.get( "" ).then( ( resolvedRoot:Document ) => {
-			return resolvedRoot.refresh();
-		} ).then( ( updatedRoot:Document ) => {
+		return this.carbonldp.documents.$get( { ensureLatest: true } ).then( ( updatedRoot:Document ) => {
 
 			let isRequiredSystemDocument:boolean = updatedRoot.types.findIndex( ( type:string ) => type === `${C.namespace}RequiredSystemDocument` ) !== - 1;
 
@@ -113,7 +98,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			id: uri,
 			text: this.getSlug( uri ),
 			state: { "opened": false },
-			children: !!hasChildren ? hasChildren : false,
+			children: hasChildren,
 			data: {},
 		};
 		node.type = (nodeType === JSTreeNodeType.ACCESS_POINT) ? JSTreeNodeType.ACCESS_POINT : JSTreeNodeType.DEFAULT;
@@ -121,11 +106,6 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		node.data.isRequiredSystemDocument = ! ! isRequiredSystemDocument;
 		node.data.created = created;
 		node.data.modified = modified;
-
-		this.nodePagination.set( uri , {
-			"currentPage": 1,
-			"childElements":0
-		});
 		return node;
 	}
 
@@ -157,9 +137,6 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.$tree.on( "select_node.jstree", (( e:Event, data:any ):void => {
 			let node:any = data.node;
 			this.selectedURI = node.id;
-			this.selectedNode = node;
-			this.page = this.nodePagination.get(node.id).currentPage;
-			this.displayCurrentPage = this.page;
 			this.canDelete = ! node.data.isRequiredSystemDocument;
 		}) as any );
 		this.$tree.on( "loaded.jstree", () => {
@@ -170,12 +147,6 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.$tree.on( "dblclick.jstree", ( e:Event ) => {
 			this.loadNode( e.target );
 		} );
-		this.$tree.on( "after_open.jstree", ( e:Event ) => {
-			this.selectedNode = this.jsTree.get_node( this.selectedNode );
-		} );
-		this.$tree.on( "before_close.jstree", ( e:Event ) => {
-			this.selectedNode = this.jsTree.get_node( this.selectedNode );
-		} );
 	}
 
 	loadNode( obj:any ):void {
@@ -183,142 +154,56 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.jsTree.refresh_node( node );
 		this.jsTree.open_node( node );
 		this.onResolveUri.emit( node.id );
-		node.state.opened = true;
 	}
 
 	resolveNodeData( node:JSTreeNode, callBack:( children:JSTreeNode[] ) => {} ):void {
+
 		// If the node doesn't have an id, load the first node, else load node's children
 		if( node.id === "#" ) {
 			callBack( this.nodeChildren );
 		} else {
-			this.getNodeChildren( node.id, this.page )
+			this.getNodeChildren( node.id )
 				.then( ( children:JSTreeNode[] ) => {
 					callBack( children );
 				} );
 		}
 	}
 
-	getNodeChildren( uri:string, page:number ):Promise<JSTreeNode[]> {
+	getNodeChildren( uri:string ):Promise<JSTreeNode[]> {
 		let query:string = `
 			PREFIX c:<${C.namespace}>
 			PREFIX ldp:<${LDP.namespace}>
 			
-			SELECT ?nChild (STR(?p) AS ?parentPredicate) (STR(?child) AS ?subject) (STR(?p2) AS ?predicate) (?childInfo as ?object) ?isRequiredSystemDocument
+			SELECT (STR(?p) AS ?parentPredicate) (STR(?s) AS ?subject) (STR(?p2) AS ?predicate) ?object ?isRequiredSystemDocument
 			WHERE {
-				{
-					select ?child ?p where {
-						<${uri}> ?p ?child
-						values (?p) {
-							(ldp:contains)
-						}
-			
-						}limit ${ (page) * this.elementPerPage} offset ${ page > 1 ? ( (page - 1) * this.elementPerPage) + 1 : 0}
-					}
-					UNION
-					{
-						select  ?child ?p where {
-							<${uri}> ?p ?child.
-							values(?p){
-								(c:accessPoint)
-								(c:created)
-								(c:modified)
-							}
-						}
-			
-					}
-					Optional{
-						?child ?p2 ?childInfo
-						values(?p2) {
-							(c:accessPoint)
-							(c:created)
-							(c:modified)
-							(ldp:contains)
-						}
-						BIND( EXISTS{ ?child a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
-					}
-					{
-						SELECT (COUNT(?childs) as ?nChild) where {
-						  <${uri}> ?p ?childs
-						  values (?p) {
-							  (ldp:contains)
-						  }
-					    }
-					}
-				}
+			    <${uri}> ?p ?s 
+			    VALUES (?p) {
+			        (ldp:contains)
+			        (c:accessPoint)
+			        (c:created)
+			        (c:modified)
+			    }
+			    OPTIONAL {
+			        ?s ?p2 ?object    
+			        VALUES (?p2) {
+			            (ldp:contains)
+			            (c:accessPoint)
+				        (c:created)
+				        (c:modified)
+			        }
+			        BIND( EXISTS{ ?s a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
+			    }
+			}
 		`;
-
-		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
+		return this.carbonldp.documents.$executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
 			let nodes:Map<string, JSTreeNode> = new Map<string, JSTreeNode>();
 
-			this.nodePagination.get(uri).childElements = !!results.bindings[0] ? results.bindings[0].nChild : 0;
 			results.bindings.forEach( ( binding:SPARQLBindingObject & BindingResult ) => this.addBindingToNodes( nodes, binding ) );
 
 			return Array.from( nodes.values() );
 		} ).catch( ( error ) => {
 			return Promise.reject( error );
 		} );
-	}
-
-
-	nextPage() {
-		this.page = this.page + 1;
-		this.displayCurrentPage = this.page;
-		let obj = this.selectedNode;
-		let node:JSTreeNode = this.jsTree.get_node( obj );
-		this.jsTree.refresh_node( node );
-		this.jsTree.open_node( node );
-		this.onResolveUri.emit( node.id );
-
-		this.nodePagination.get( node.id ).currentPage = this.page;
-	}
-
-	previousPage() {
-		this.page = this.page - 1;
-		this.displayCurrentPage = this.page;
-		let obj = this.selectedNode;
-		let node:JSTreeNode = this.jsTree.get_node( obj );
-		this.jsTree.refresh_node( node );
-		this.jsTree.open_node( node );
-		this.onResolveUri.emit( node.id );
-		this.nodePagination.get( node.id ).currentPage = this.page;
-	}
-
-	changePageByNumber(){
-		if ( !this.selectedNode || !this.selectedNode.state.opened ) {
-			this.displayCurrentPage = this.page;
-			return false;
-		}else if(this.displayCurrentPage <= this.availableNodePages()){
-			this.page = this.displayCurrentPage;
-			let obj = this.selectedNode;
-			let node:JSTreeNode = this.jsTree.get_node( obj );
-			this.jsTree.refresh_node( node );
-			this.jsTree.open_node( node );
-			this.onResolveUri.emit( node.id );
-			this.nodePagination.get( node.id ).currentPage = this.page;
-		}else{
-			this.displayCurrentPage = this.page;
-		}
-	}
-
-	availableNodePages():number{
-		let numOfChilds:number = this.nodePagination.get(this.selectedNode.id).childElements;
-		return Math.ceil(numOfChilds / this.elementPerPage);
-	}
-
-	hasNext():boolean{
-		if ( !this.selectedNode || !this.selectedNode.state.opened )
-			return false;
-		let currentPage:number = this.nodePagination.get(this.selectedNode.id).currentPage;
-		let numOfChilds:number = this.nodePagination.get(this.selectedNode.id).childElements;
-
-		return currentPage * this.elementPerPage < numOfChilds;
-	}
-
-	hasPrev():boolean{
-		if ( !this.selectedNode || !this.selectedNode.state.opened )
-			return false;
-		let currentPage:number = this.nodePagination.get(this.selectedNode.id).currentPage;
-		return currentPage > 1;
 	}
 
 	refreshSelectedNode():void {
@@ -418,6 +303,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		}
 
 		if( nodes.has( binding.subject ) ) {
+
 			node = nodes.get( binding.subject );
 			node.type = type ? type : node.type;
 			node.data.id = node.id;
@@ -425,8 +311,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			node.data.modified = modified ? modified : node.data.modified;
 			node.data.hasChildren = hasChildren;
 			node.data.isRequiredSystemDocument = isRequiredSystemDocument;
-			node.children = hasChildren || node.children;
 		} else {
+
 			node = this.buildNode( binding.subject, type, hasChildren, isRequiredSystemDocument, created, modified );
 		}
 		nodes.set( binding.subject, node );
