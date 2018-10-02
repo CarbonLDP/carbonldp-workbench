@@ -50,7 +50,6 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	private generator;
 	private textMarkers = [];
 	private renderer:Renderer2;
-	private eventListener;
 
 	constructor( element:ElementRef, renderer:Renderer2 ) {
 		this.element = element;
@@ -204,7 +203,6 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	}
 
 	private clearTextMarker():void {
-		if( typeof this.eventListener === "function" ) this.eventListener();
 		this.textMarkers.forEach( ( marker ) => {
 			return marker.clear();
 		} );
