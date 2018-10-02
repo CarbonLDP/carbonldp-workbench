@@ -33,17 +33,16 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	@Input() codeMirror:CodeMirror.Editor;
 	@Output() codeMirrorChange:EventEmitter<CodeMirror.Editor> = new EventEmitter<CodeMirror.Editor>();
 
-	@HostListener( 'keydown', [ '$event' ] ) onKeyDown( e ) {
+	//TODO: this is a shortcut that could be enable to prettify, at this moment we decide disabled.
+	/*@HostListener( 'keydown', [ '$event' ] ) onKeyDown( e ) {
 		if( e.shiftKey && e.ctrlKey && e.keyCode == 80 ) {
 			try {
 				let parsedQuery = this.parser.parse( this.value );
 				this.codeMirror.setValue( this.generator.stringify( parsedQuery ) );
 			} catch( e ) {
-
 			}
-
 		}
-	}
+	}*/
 
 	private internallyChanged:boolean = false;
 	private lastUpdates:string[] = [];
