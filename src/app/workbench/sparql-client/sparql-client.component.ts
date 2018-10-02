@@ -491,7 +491,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	executeUPDATE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		this.isSending = true;
 		let beforeTimestamp:number = (new Date()).valueOf();
-		return this.carbonldp.documents.executeUPDATE( query.endpoint, query.content ).then(
+		return this.carbonldp.documents.$executeUPDATE( query.endpoint, query.content ).then(
 			():SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				// return this.buildResponse( duration, (<XMLHttpRequest>result.request).status + " - " + (<XMLHttpRequest>result.request).statusText, <string> SPARQLResponseType.success, query );
