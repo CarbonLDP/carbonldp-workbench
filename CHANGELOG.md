@@ -2,15 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog]
+and this project adheres to [Semantic Versioning].
 
-## 1.0.0-alpha.4 (2018/04/12)
+<!--## [Unreleased]-->
+<!--### Added-->
+
+<!--### Fixed-->
+
+<!--### Breaking Changes -->
+
+## [5.0.0] - 2018-09-22
+
+This major version adds and removes a lot of functionalities... So many that we forgot to take track them. You'll have to discover them
+on your own this time. We promise next version will have proper CHANGELOG entries :)
+
+## [1.0.0-alpha.4] - 2018-04-12
 
 - [#93](https://github.com/CarbonLDP/carbonldp-workbench/issues/93) - Property types dropdown is empty
 - Changed `http://example.com` to Carbon.baseURI +`vocabularies/main/` when creating new properties on a property name
 
-## 1.0.0-alpha.3 (2018/03/27)
+## [1.0.0-alpha.3] - 2018-03-27
 
 - Resolved #87 - Use SDK's refactored version
 - Resolved #85 - Change sidebar size
@@ -30,7 +42,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 None
 
-## 1.0.0-alpha.2 (2017/09/28)
+## [1.0.0-alpha.2] - 2017-09-28
 
 ### Added
 
@@ -65,7 +77,7 @@ None
 
 Everything
 
-## 0.8.0 (2017/03/28)
+## [0.8.0] - 2017-03-28
 
 - Completed #21 - Migrated to Webpack so it now bundles and serves the project
 - Completed #10 - Added a way to display version numbers for Platform, Workbench and SDK 
@@ -75,7 +87,7 @@ Everything
 - Updated `angular2-carbonldp` to `v.0.5.0`
 - Updated `@angular` packages to `v.2.4.9`
 
-## 0.7.1 (2017/02/23)
+## [0.7.1] - 2017-02-23
 
 - Completed #19 - Upgrade carbonldp SDK to `0.40.0`
 - Updated the following angular libraries:
@@ -88,13 +100,13 @@ Everything
     - @angular/platform-browser-dynamic `2.4.2`
     - @angular/router `3.4.2`
 
-## 0.6.0 (2016/12/19)
+## [0.6.0] - 2016-12-19
 
 - Updated `@angular` packages to v2.4.1
 - Updated `carbonldp-panel` to v0.6.0
 - Fixed compilation
 
-## 0.5.0 (2016/11/09)
+## [0.5.0] - 2016-11-09
 
 - Updated `carbonldp-panel` to v0.5.0
 - Updated `@angular` packages to v2.1.0
@@ -102,20 +114,20 @@ Everything
 - Added minifying step to build task
 - Enabled gzip compression in nginx server
 
-## 0.4.2 (2016/10/17)
+## [0.4.2] - 2016-10-17
 
 - Fixed gulp `copy:node-dependencies` task
 
-## 0.4.1 (2016/10/17)
+## [0.4.1] - 2016-10-17
 
 - Fixed `node-sass` installation bug
 
-## 0.4.0 (2016/10/17)
+## [0.4.0] - 2016-10-17
 
 - Updated carbonldp-panel to v0.4.0
 - Updated angular2 to 2.0.2
 
-## 0.3.0 (2016/09/02)
+## [0.3.0] - 2016-09-02
 
 - Update JSPM to beta.25 and install angular-RC5
 - Migrate code to @angular RC5.
@@ -129,11 +141,18 @@ Everything
 - Add LICENSE file
 - Rename project to `carbonldp-workbench`
 
-## 0.2.0 (2016/08/07)
+## [0.2.0] - 2016-08-07
 
 - Add registration section to login view
 
-## 0.1.0 (2016/07/19)
+## [0.1.0] - 2016-07-19
 
 - Initial commit
 - Mirror `app-dev` functionality
+
+[Unreleased]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v5.0.0...HEAD
+
+[5.0.0]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v0.8.0...v5.0.0
+
+[Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
+[Semantic Versioning]: https://semver.org/spec/v2.0.0.html
