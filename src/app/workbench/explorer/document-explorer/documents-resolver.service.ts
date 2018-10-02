@@ -54,7 +54,7 @@ export class DocumentsResolverService {
 	}
 
 	createChild( parentURI:string, content:any, childSlug?:string ):Promise<Document> {
-		return this.carbonldp.documents.create( parentURI, content, childSlug ).then(
+		return this.carbonldp.documents.$create( parentURI, content, childSlug ).then(
 			( createdChild:Document ) => {
 				return createdChild;
 			}
@@ -62,14 +62,14 @@ export class DocumentsResolverService {
 	}
 
 	createAccessPoint( document:Document, accessPoint:BaseAccessPoint, slug?:string ):Promise<Document> {
-		return document.create( accessPoint, slug ).then(
+		return document.$create( accessPoint, slug ).then(
 			( createdChild:Document ) => {
 				return createdChild;
 			} );
 	}
 
 	getAccessPointsHasMemberRelationProperties( documentURI:string ):Promise<string[]> {
-		return this.carbonldp.documents.executeSELECTQuery( documentURI,
+		return this.carbonldp.documents.$executeSELECTQuery( documentURI,
 			`SELECT ?accessPointURI ?propertyName 
 						WHERE {
 						      ?accessPointURI <${LDP.membershipResource}> <${documentURI}>.
@@ -82,7 +82,7 @@ export class DocumentsResolverService {
 	}
 
 	delete( documentURI:string ):Promise<void> {
-		return this.carbonldp.documents.delete( documentURI );
+		return this.carbonldp.documents.$delete( documentURI );
 	}
 
 	update( uri:string, body:string ):Promise<RDFDocument> {
