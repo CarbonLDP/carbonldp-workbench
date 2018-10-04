@@ -79,6 +79,10 @@ export class PropertyIDComponent implements AfterViewInit {
 		return r.test( uri );
 	}
 
+	hasFragment(uri): boolean{
+		return URI.hasFragment(uri);
+	}
+
 	onEditId():void {
 		this.mode = Modes.EDIT;
 		this.existingFragments = [];

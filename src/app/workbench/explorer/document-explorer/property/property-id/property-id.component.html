@@ -15,7 +15,7 @@
 		<p *ngIf="isUrl(value)">
 			<i class="file outline icon"></i>
 			<a class="name" [attr.href]="value" target="_blank">
-				<span class="parent-uri">{{getParentURI(value)}}</span><span class="slug">{{getSlug(value)}}</span>
+			<span class="parent-uri">{{getParentURI(value)}}</span><span class="slug">{{getSlug(value)}}</span><span *ngIf="!hasFragment(value)">/</span>
 			</a>
 		</p>
 	</div>
