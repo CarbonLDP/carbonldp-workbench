@@ -212,7 +212,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 							(ldp:contains)
 						}
 			
-						}limit ${ (page) * this.elementPerPage} offset ${ page > 1 ? ((page - 1) * this.elementPerPage) + 1 : 0}
+						}limit ${ (page) * this.elementsPerPage} offset ${ page > 1 ? ((page - 1) * this.elementsPerPage) + 1 : 0}
 					}
 					UNION
 					{
@@ -302,7 +302,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 	availableNodePages():number {
 		let numOfChilds:number = this.nodePagination.get( this.selectedNode.id ).childElements;
-		return Math.ceil( numOfChilds / this.elementPerPage );
+		return Math.ceil( numOfChilds / this.elementsPerPage );
 	}
 
 	hasNext():boolean {
@@ -311,7 +311,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		let currentPage:number = this.nodePagination.get( this.selectedNode.id ).currentPage;
 		let numOfChilds:number = this.nodePagination.get( this.selectedNode.id ).childElements;
 
-		return currentPage * this.elementPerPage < numOfChilds;
+		return currentPage * this.elementsPerPage < numOfChilds;
 	}
 
 	hasPrev():boolean {
