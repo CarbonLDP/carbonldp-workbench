@@ -31,7 +31,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	canDelete:boolean = true;
 	page:number = 1;
 	displayCurrentPage:number = 1;
-	elementPerPage:number = 10;
+	elementsPerPage:number = 10;
 	nodePagination:Map<string, any> = new Map<string, any>();
 
 	private _selectedURI:string = "";
