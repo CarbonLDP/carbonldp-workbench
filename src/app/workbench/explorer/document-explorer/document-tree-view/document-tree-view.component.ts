@@ -29,10 +29,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	$tree:JQuery;
 	nodeChildren:JSTreeNode[] = [];
 	canDelete:boolean = true;
-	page:number = 1;
-	displayCurrentPage:number = 1;
-	elementsPerPage:number = 10;
-	nodePagination:Map<string, any> = new Map<string, any>();
+	currentPage:number = 0;
+	_displayCurrentPage:number = 1;
+	maxElementsPerPage:number = 10;
+	nodesPaginationData:Map<string, NodePaginationInfo> = new Map<string, NodePaginationInfo>();
 
 	private _selectedURI:string = "";
 	private _selectedNode:JSTreeNode;
@@ -52,6 +52,14 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 	get selectedNode():JSTreeNode {
 		return this._selectedNode;
+	}
+
+	set displayCurrentPage( currentPage:number ) {
+		this._displayCurrentPage = currentPage + 1;
+	}
+
+	get displayCurrentPage() {
+		return this._displayCurrentPage;
 	}
 
 	public sortAscending:boolean = true;
@@ -122,10 +130,14 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		node.data.created = created;
 		node.data.modified = modified;
 
-		this.nodePagination.set( uri, {
-			"currentPage": 1,
-			"childElements": 0
+		//This Map is create bc we need keep the pagination node by node,
+		//the key of the map is de document URI,
+		//and the object has the info of this node.
+		this.nodesPaginationData.set( uri, <NodePaginationInfo>{
+			currentPage: 0,
+			childElements: 0
 		} );
+
 		return node;
 	}
 
@@ -158,8 +170,8 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			let node:any = data.node;
 			this.selectedURI = node.id;
 			this.selectedNode = node;
-			this.page = this.nodePagination.get( node.id ).currentPage;
-			this.displayCurrentPage = this.page;
+			this.currentPage = this.nodesPaginationData.get( node.id ).currentPage;
+			this.displayCurrentPage = this.currentPage;
 			this.canDelete = ! node.data.isRequiredSystemDocument;
 		}) as any );
 		this.$tree.on( "loaded.jstree", () => {
@@ -191,7 +203,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		if( node.id === "#" ) {
 			callBack( this.nodeChildren );
 		} else {
-			this.getNodeChildren( node.id, this.page )
+			this.getNodeChildren( node.id, this.currentPage )
 				.then( ( children:JSTreeNode[] ) => {
 					callBack( children );
 				} );
@@ -212,7 +224,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 							(ldp:contains)
 						}
 			
-						}limit ${ (page) * this.elementsPerPage} offset ${ page > 1 ? ((page - 1) * this.elementsPerPage) + 1 : 0}
+						}limit ${this.maxElementsPerPage} offset ${this.maxElementsPerPage * this.currentPage}
 					}
 					UNION
 					{
@@ -250,7 +262,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		return this.carbonldp.documents.$executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
 			let nodes:Map<string, JSTreeNode> = new Map<string, JSTreeNode>();
 
-			this.nodePagination.get( uri ).childElements = ! ! results.bindings[ 0 ] ? results.bindings[ 0 ].nChild : 0;
+			this.nodesPaginationData.get( uri ).childElements = ! ! results.bindings[ 0 ] ? Number( results.bindings[ 0 ].nChild ) : 0;
 			results.bindings.forEach( ( binding:SPARQLBindingObject & BindingResult ) => this.addBindingToNodes( nodes, binding ) );
 
 			return Array.from( nodes.values() );
@@ -261,63 +273,64 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 
 	nextPage() {
-		this.page = this.page + 1;
-		this.displayCurrentPage = this.page;
+		this.currentPage = this.currentPage + 1;
+		this.displayCurrentPage = this.currentPage;
 		let obj = this.selectedNode;
 		let node:JSTreeNode = this.jsTree.get_node( obj );
 		this.jsTree.refresh_node( node );
 		this.jsTree.open_node( node );
 		this.onResolveUri.emit( node.id );
 
-		this.nodePagination.get( node.id ).currentPage = this.page;
+		this.nodesPaginationData.get( node.id ).currentPage = this.currentPage;
 	}
 
 	previousPage() {
-		this.page = this.page - 1;
-		this.displayCurrentPage = this.page;
+		this.currentPage = this.currentPage - 1;
+		this.displayCurrentPage = this.currentPage;
 		let obj = this.selectedNode;
 		let node:JSTreeNode = this.jsTree.get_node( obj );
 		this.jsTree.refresh_node( node );
 		this.jsTree.open_node( node );
 		this.onResolveUri.emit( node.id );
-		this.nodePagination.get( node.id ).currentPage = this.page;
+		this.nodesPaginationData.get( node.id ).currentPage = this.currentPage;
 	}
 
 	changePageByNumber() {
 		if( ! this.selectedNode || ! this.selectedNode.state.opened ) {
-			this.displayCurrentPage = this.page;
+			this.displayCurrentPage = this.currentPage;
 			return false;
 		} else if( this.displayCurrentPage <= this.availableNodePages() ) {
-			this.page = this.displayCurrentPage;
 			let obj = this.selectedNode;
 			let node:JSTreeNode = this.jsTree.get_node( obj );
 			this.jsTree.refresh_node( node );
 			this.jsTree.open_node( node );
 			this.onResolveUri.emit( node.id );
-			this.nodePagination.get( node.id ).currentPage = this.page;
+			this.nodesPaginationData.get( node.id ).currentPage = this.currentPage;
 		} else {
-			this.displayCurrentPage = this.page;
+			this.displayCurrentPage = this.currentPage;
 		}
 	}
 
 	availableNodePages():number {
-		let numOfChilds:number = this.nodePagination.get( this.selectedNode.id ).childElements;
-		return Math.ceil( numOfChilds / this.elementsPerPage );
+		let numOfChilds:number = this.nodesPaginationData.get( this.selectedNode.id ).childElements;
+		return Math.ceil( numOfChilds / this.maxElementsPerPage );
 	}
 
 	hasNext():boolean {
+		//TODO: when the PR https://github.com/CarbonLDP/carbonldp-workbench/pull/118 be approved this function should return false if more than one nodes are selected
 		if( ! this.selectedNode || ! this.selectedNode.state.opened )
 			return false;
-		let currentPage:number = this.nodePagination.get( this.selectedNode.id ).currentPage;
-		let numOfChilds:number = this.nodePagination.get( this.selectedNode.id ).childElements;
+		let currentPage:number = this.displayCurrentPage;
+		let numOfChilds:number = this.nodesPaginationData.get( this.selectedNode.id ).childElements;
 
-		return currentPage * this.elementsPerPage < numOfChilds;
+		return currentPage * this.maxElementsPerPage < numOfChilds;
 	}
 
 	hasPrev():boolean {
+		//TODO: when the PR https://github.com/CarbonLDP/carbonldp-workbench/pull/118 be approved this function should return false if more than one nodes are selected
 		if( ! this.selectedNode || ! this.selectedNode.state.opened )
 			return false;
-		let currentPage:number = this.nodePagination.get( this.selectedNode.id ).currentPage;
+		let currentPage:number = this.displayCurrentPage;
 		return currentPage > 1;
 	}
 
@@ -459,4 +472,9 @@ export interface JSTreeNode {
 	children:any;
 	data:any;
 	type?:any;
+}
+
+export interface NodePaginationInfo {
+	currentPage:number;
+	childElements:number;
 }
