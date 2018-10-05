@@ -35,10 +35,9 @@
 	        [ngClass]="{disabled: (nodeChildren.length===0 || !canDelete) }"
 	        [disabled]="nodeChildren.length===0 || !canDelete"
 	        (click)="showDeleteChildForm()">
-		<i class="trash outline icon"></i>
+		<i class="trash icon"></i>
 	</button>
 	<!-- END: Delete Button -->
-
 
 	<!-- START: Sort & Order by options -->
 	<div class="ui top left pointing dropdown mini basic black icon right floated button treeview-sortByButton" title="Sort alphabetically"
@@ -114,3 +113,24 @@
 <div class="treeview-content">
 	<ul></ul>
 </div>
+
+<!-- START: Pagination -->
+<div class="ui centered grid node-pagination">
+	<div class="centered row">
+		<button class="ui mini basic black right aligned icon button"
+		        [ngClass]="{disabled: !hasPrev() }"
+		        [disabled]="!hasPrev()"
+		        (click)="previousPage()">
+			<i class="angle left icon"></i>
+		</button>
+		<input type="number" class="ui mini basic black right aligned icon button" (keydown.enter)="changePageByNumber($event)" [(ngModel)]="displayCurrentPage"/>
+		<button class="ui mini basic black right aligned icon button"
+		        [ngClass]="{disabled: !hasNext() }"
+		        [disabled]="!hasNext()"
+		        (click)="nextPage()">
+			<i class="angle right icon"></i>
+		</button>
+	</div>
+</div>
+
+<!-- START: Pagination -->
