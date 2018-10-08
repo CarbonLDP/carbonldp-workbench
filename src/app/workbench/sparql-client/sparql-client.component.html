@@ -12,16 +12,18 @@
 	<div class="ui middle attached segment pushable">
 		<!-- START: List of the saved queries -->
 		<div class="ui inverted right vertical wide dimmed sidebar menu queries-list">
-			<p *ngIf="savedQueries.length == 0">
+			<p *ngIf="savedQueriesKeys.length == 0">
 				No saved queries yet.
 			</p>
-			<a class="item" *ngFor="let query of savedQueries; let i = index" (click)="onClickSavedQuery( query )">
-				<button class="ui right floated circular icon mini inverted red button" (click)="onClickRemoveSavedQuery( i )">
+			<a class="item" *ngFor="let key of savedQueriesKeys">
+				<button class="ui right floated circular icon mini inverted red button" (click)="onClickRemoveSavedQuery( key )">
 					<i class="icon remove"></i>
 				</button>
-				<span class="name">{{query.name}}</span>
-				<br/>
-				<span class="operation" [ngClass]="query.operation.toLowerCase()">{{query.operation.toLowerCase()}}</span>
+				<div (click)="onClickSavedQuery( savedQueries[key] )">
+					<span class="name">{{savedQueries[key].name}}</span>
+					<br/>
+					<span class="operation" [ngClass]="savedQueries[key].operation.toLowerCase()">{{savedQueries[key].operation.toLowerCase()}}</span>
+				</div>
 			</a>
 		</div>
 		<!-- END: List of the saved queries -->
