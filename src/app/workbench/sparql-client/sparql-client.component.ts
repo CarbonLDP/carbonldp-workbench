@@ -575,21 +575,30 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.toggleReplaceQueryConfirmationModal();
 	}
 
-	onClickRemoveSavedQuery( index:number ):void {
+	askConfirmationToOverwrite( selectedQuery:SPARQLQuery ):void {
+		this.askingQuery = Object.assign( {}, selectedQuery );
+		this.toggleOverwriteQueryConfirmationModal();
+	}
+
+	onClickRemoveSavedQuery( key:string ):void {
 		this.savedQueries = this.getLocalSavedQueries();
-		this.askingQuery = this.savedQueries[ index ];
+		this.askingQuery = this.savedQueries[ key ];
 		this.toggleDeleteQueryConfirmationModal();
 	}
 
 	removeQuery( query:SPARQLQuery ):void {
 		this.savedQueries = this.getLocalSavedQueries();
-		let index:number = this.savedQueries.indexOf( query );
-		this.savedQueries.splice( index, 1 );
+		let key:string = query.name;
+		delete this.savedQueries[ key ];
+		this.currentQueryName = '';
 		this.updateLocalSavedQueries();
+		this.savedQueries = this.getLocalSavedQueries();
+		this.savedQueriesKeys = this.getKeysFromSavedQueries();
 	}
 
 	loadQuery( query:SPARQLQuery ):void {
 		this.currentQuery = Object.assign( {}, query );
+		this.currentQueryName = query.name;
 		this.askingQuery = Object.assign( {}, query );
 		this.endpoint = query.endpoint;
 		this.sparql = query.content;
