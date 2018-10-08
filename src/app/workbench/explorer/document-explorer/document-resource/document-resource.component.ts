@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp"
 import { RDFNode } from "carbonldp/RDF/Node"
@@ -101,10 +101,19 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 
 		// Animates created property
 		setTimeout( () => {
+			this.scrollToByClass( 'added-property' );
 			let createdPropertyComponent:JQuery = this.$element.find( "cw-property.added-property" ).first();
 			createdPropertyComponent.addClass( "transition hidden" );
+			createdPropertyComponent.find( 'input' ).focus();
 			createdPropertyComponent.transition( { animation: "drop" } );
+
 		} );
+	}
+
+	scrollToByClass( className:string ):void {
+		const elementList = document.querySelectorAll( '.' + className );
+		const element = elementList[ 0 ] as HTMLElement;
+		element.scrollIntoView( { behavior: 'smooth' } );
 	}
 
 	updateExistingProperties():void {
