@@ -218,6 +218,30 @@
 <!-- END: Modal to confirm the replacement of the working query  -->
 
 
+<!-- START: Modal to confirm the overwrite of the saved query -->
+<div class="ui overwrite-query-confirmation modal">
+	<div class="header">
+		Overwrite Query
+	</div>
+	<div class="image content">
+		<div class="description">
+			<div class="ui header">You currently have a saved query named: <strong>{{askingQuery.name}}</strong>.</div>
+			<p>If you proceed your saved query will be overwrite.</p>
+			<p>Do you want to proceed?</p>
+		</div>
+	</div>
+	<div class="actions">
+		<button class="ui black deny button">
+			No
+		</button>
+		<button class="ui positive right labeled icon button" (click)="onApproveQueryOverwrite()">
+			Yes, proceed
+			<i class="checkmark icon"></i>
+		</button>
+	</div>
+</div>
+<!-- END: Modal to confirm the replacement of the working query  -->
+
 <!-- START: Modal to confirm query deletion -->
 <div class="ui delete-query-confirmation modal">
 	<div class="header">
