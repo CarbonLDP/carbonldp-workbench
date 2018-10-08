@@ -620,10 +620,20 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.deleteQueryConfirmationModal.modal( "toggle" );
 	}
 
+	toggleOverwriteQueryConfirmationModal():void {
+		this.overwriteQueryConfirmationModal.modal( "toggle" );
+	}
+
+
 	onApproveQueryReplacement( approvedQuery:SPARQLQuery ):void {
 		this.askingQuery = <SPARQLQuery>{};
 		this.loadQuery( approvedQuery );
 		this.hideSidebar();
+	}
+
+	onApproveQueryOverwrite():void {
+		this.askingQuery = <SPARQLQuery>{};
+		this.handleSaveQueries();
 	}
 
 	onApproveQueryRemoval( approvedQuery:SPARQLQuery ):void {
@@ -631,10 +641,10 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.askingQuery = <SPARQLQuery>{};
 	}
 
-	getLocalSavedQueries():SPARQLQuery[] {
+	getLocalSavedQueries():SavedSPARQLQueries {
 		if( ! window.localStorage.getItem( "savedQueries" ) )
 			this.updateLocalSavedQueries();
-		return <SPARQLQuery[]>JSON.parse( window.localStorage.getItem( "savedQueries" ) );
+		return <SavedSPARQLQueries>JSON.parse( window.localStorage.getItem( "savedQueries" ) );
 	}
 
 	updateLocalSavedQueries():void {
