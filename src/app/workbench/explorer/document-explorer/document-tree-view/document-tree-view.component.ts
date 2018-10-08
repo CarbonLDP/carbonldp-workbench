@@ -45,7 +45,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	public orderBy:OrderBy.CREATED | OrderBy.MODIFIED | OrderBy.SLUG = OrderBy.CREATED;
 	public orderOptions:typeof OrderBy = OrderBy;
 
-	@Input() refreshNode:EventEmitter<string> = new EventEmitter<string>();
+	@Input() refreshNodes:EventEmitter<string | string[]> = new EventEmitter<string | string[]>();
 	@Input() openNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onResolveUri:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onError:EventEmitter<Errors.HTTPError> = new EventEmitter<Errors.HTTPError>();
@@ -63,30 +63,16 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.$tree = this.$element.find( ".treeview-content" );
+
+		// Initialize Semantic UI elements
 		this.initializeOptionsButton();
 		this.initalizeSortByButton();
-		this.onLoadingDocument.emit( true );
-		this.getDocumentTree().then( () => {
-			this.onLoadingDocument.emit( false );
-		} );
-		this.refreshNode.subscribe( ( nodeIds:Array<string> ) => {
-			if( ! Array.isArray( nodeIds ) ) {
-				nodeIds = [ nodeIds ];
-			}
-			nodeIds = this.removeDuplicatedIds( nodeIds );
-			nodeIds.forEach( ( nodeId ) => {
-				this.loadNode( nodeId );
-			} );
-			this.jsTree.select_node( nodeIds );
-			this.selectedURIs = nodeIds;
-		} );
-		this.openNode.subscribe( ( nodeId:string ) => {
-			this.jsTree.select_node( nodeId );
-		} );
-	}
 
-	removeDuplicatedIds( nodeIds ):Array<string> {
-		return nodeIds.filter( ( nodeId, index, nodeIds ) => index === nodeIds.indexOf( nodeId ) )
+		this.onLoadingDocument.emit( true );
+		this.getDocumentTree().then( () => this.onLoadingDocument.emit( false ) );
+
+		this.refreshNodes.subscribe( this.handleRefreshNodes.bind( this ) );
+		this.openNode.subscribe( this.handleOpenNode.bind( this ) );
 	}
 
 	getDocumentTree():Promise<Document | void> {
@@ -161,6 +147,24 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} );
 	}
 
+	handleRefreshNodes( nodeIDs:string | string[] ) {
+		nodeIDs = ! Array.isArray( nodeIDs ) ? [ nodeIDs ] : nodeIDs;
+		// Remove duplicates
+		nodeIDs = Array.from( new Set( nodeIDs ) );
+
+		for( let nodeID of nodeIDs ) {
+			this.loadNode( nodeID );
+		}
+
+		this.jsTree.select_node( nodeIDs );
+
+		this.selectedURIs = nodeIDs;
+	}
+
+	handleOpenNode( nodeID:string ) {
+		this.jsTree.select_node( nodeID );
+	}
+
 	loadNode( obj:any ):void {
 		let node:JSTreeNode = this.jsTree.get_node( obj );
 		this.jsTree.refresh_node( node );
@@ -169,7 +173,6 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	resolveNodeData( node:JSTreeNode, callBack:( children:JSTreeNode[] ) => {} ):void {
-
 		// If the node doesn't have an id, load the first node, else load node's children
 		if( node.id === "#" ) {
 			callBack( this.nodeChildren );
@@ -218,10 +221,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} );
 	}
 
-	refreshSelectedNode():void {
-		this.selectedURIs.forEach( selectedURI => {
+	refreshSelectedNodes():void {
+		for( let selectedURI of this.selectedURIs ) {
 			this.jsTree.refresh_node( selectedURI );
-		} );
+		}
 	}
 
 	getSlug( node:Document | string ):string {
@@ -252,12 +255,12 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	reorderBranch():void {
-		this.selectedURIs.forEach( selectedURI => {
+		for( let selectedURI of this.selectedURIs ) {
 			let node:JSTreeNode = this.jsTree.get_node( selectedURI );
 
 			this.jsTree.sort( node, true );
 			this.jsTree.redraw_node( node, true, false, false );
-		} );
+		}
 	}
 
 	private sort( nodeAId?:string, nodeBId?:string ):number {
