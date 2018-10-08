@@ -48,11 +48,16 @@ export class DocumentDeleterComponent implements AfterViewInit {
 
 	public onSubmitDeleteDocument( data:{}, $event:any ):void {
 		this.isDeleting = true;
+
+		/*
+			2018-10-08 @MiguelAraCo
+			TODO[performance]: Refactor this to use a queue instead of sending all requests at once
+		*/
 		let deletePromises = this.documentURIs.map( ( documentURI ) => {
 			return this.documentsResolverService.delete( documentURI );
 		} );
 
-		Promise.all( deletePromises ).then( ( result ) => {
+		Promise.all( deletePromises ).then( () => {
 			let parentURIs = this.documentURIs.map( ( documentURI ) => {
 				return DocumentExplorerLibrary.getParentURI( documentURI );
 			} );
