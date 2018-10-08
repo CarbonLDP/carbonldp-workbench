@@ -1,11 +1,11 @@
-import { Component, ElementRef, Input, Output, EventEmitter, OnInit, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { SPARQLRawResults } from "carbonldp/SPARQL/RawResults";
-import { Errors, Header, Response, RequestOptions } from "carbonldp/HTTP";
+import { Errors, Header, RequestOptions, Response } from "carbonldp/HTTP";
 import { SPARQLService } from "carbonldp/SPARQL";
 
-import { SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from "./response/response.component";
+import { SPARQLClientResponse, SPARQLFormats, SPARQLQuery, SPARQLResponseType } from "./response/response.component";
 import * as CodeMirrorComponent from "app/shared/code-mirror/code-mirror.component";
 import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
@@ -132,7 +132,9 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		name: "",
 	};
 	formatsAvailable:any = [];
-	savedQueries:SPARQLQuery[] = [];
+	savedQueries:SavedSPARQLQueries = {};
+	savedQueriesKeys:Array<string> = [];
+	currentQueryName:string = '';
 	messages:any[] = [];
 
 	// Buttons
@@ -145,6 +147,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	// Modals
 	replaceQueryConfirmationModal:JQuery;
 	deleteQueryConfirmationModal:JQuery;
+	overwriteQueryConfirmationModal:JQuery;
 
 	// Regex
 	regExpSelect:RegExp = new RegExp( "((.|\n)+)?SELECT((.|\n)+)?", "i" );
@@ -745,4 +748,8 @@ export interface SPARQLQueryOperations {
 export interface SPARQLTypes {
 	query:string;
 	update:string;
+}
+
+export interface SavedSPARQLQueries {
+	[ name:string ]:SPARQLQuery
 }
