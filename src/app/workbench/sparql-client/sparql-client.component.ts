@@ -335,6 +335,10 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		}
 	}
 
+	getKeysFromSavedQueries() {
+		return Object.keys( this.savedQueries );
+	}
+
 	onReExecute( originalResponse:SPARQLClientResponse ):void {
 		originalResponse.isReExecuting = true;
 		this.execute( originalResponse.query, originalResponse ).then(
