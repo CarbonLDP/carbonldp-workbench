@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { HTTPError } from "carbonldp/HTTP/Errors";
@@ -30,7 +30,7 @@ export class DocumentDeleterComponent implements AfterViewInit {
 	isDeleting:boolean = false;
 
 
-	@Input() documentURI:string = "";
+	@Input() documentURIs:Array<string> = [ "" ];
 	@Output() onSuccess:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
 
@@ -48,8 +48,20 @@ export class DocumentDeleterComponent implements AfterViewInit {
 
 	public onSubmitDeleteDocument( data:{}, $event:any ):void {
 		this.isDeleting = true;
-		this.documentsResolverService.delete( this.documentURI ).then( ( result ) => {
-			this.onSuccess.emit( DocumentExplorerLibrary.getParentURI( this.documentURI ) );
+
+		/*
+			2018-10-08 @MiguelAraCo
+			TODO[performance]: Refactor this to use a queue instead of sending all requests at once
+		*/
+		let deletePromises = this.documentURIs.map( ( documentURI ) => {
+			return this.documentsResolverService.delete( documentURI );
+		} );
+
+		Promise.all( deletePromises ).then( () => {
+			let parentURIs = this.documentURIs.map( ( documentURI ) => {
+				return DocumentExplorerLibrary.getParentURI( documentURI );
+			} );
+			this.onSuccess.emit( parentURIs );
 			this.hide();
 		} ).catch( ( error:HTTPError ) => {
 			this.onError.emit( error );
@@ -79,6 +91,5 @@ export class DocumentDeleterComponent implements AfterViewInit {
 	public toggle():void {
 		this.$deleteDocumentModal.modal( "toggle" );
 	}
-
 }
 
