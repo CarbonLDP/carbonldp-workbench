@@ -134,8 +134,11 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.$tree.on( "select_node.jstree", (( e:Event, data:any ):void => {
 			let node:any = data.node;
 			this.selectedURIs = data.selected;
-			//canDelete uses a ternary operator because check if the node selected is part of a multiple selection or is a simple selection (data.selected is an Array of nodes and node.data is the current selected node)
-			this.canDelete = data.selected.length > 1 ? (! node.data.isRequiredSystemDocument && this.canDelete) : ! node.data.isRequiredSystemDocument;
+			this.canDelete = node.data.isRequiredSystemDocument
+				? false
+				: data.selected.length === 1
+					? true
+					: this.canDelete;
 		}) as any );
 		this.$tree.on( "loaded.jstree", () => {
 			this.jsTree.select_node( this.nodeChildren[ 0 ].id );
