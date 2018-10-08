@@ -232,10 +232,13 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.endpointChanged();
 	}
 
+
 	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
 		this.element = element;
 		this.isSending = false;
-		this.savedQueries = this.getLocalSavedQueries() || [];
+		this.savedQueries = this.getLocalSavedQueries() || {};
+		//FIXME: change this for a function
+		this.savedQueriesKeys = this.getKeysFromSavedQueries();
 		this.carbonldp = carbonldp;
 	}
 
@@ -253,6 +256,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		this.sidebar = this.$element.find( ".query-builder .ui.sidebar" );
 		this.btnsGroupSaveQuery.find( ".dropdown" ).dropdown();
 		this.replaceQueryConfirmationModal = this.$element.find( ".ui.replace-query-confirmation.modal" );
+		this.overwriteQueryConfirmationModal = this.$element.find( ".ui.overwrite-query-confirmation.modal" );
 		this.deleteQueryConfirmationModal = this.$element.find( ".ui.delete-query-confirmation.modal" );
 		this.initializeSavedQueriesSidebar();
 		this.initializeModal();
