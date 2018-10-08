@@ -80,8 +80,8 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 	canDisplay( propertyName:any ):boolean {
 		if( typeof propertyName === "undefined" ) return false;
 		if( this.displayOnly.length === 0 && this.hiddenProperties.length === 0 ) return true;
-		if( this.displayOnly.length > 0 ) return this.displayOnly.indexOf( propertyName ) !== - 1 ? true : false;
-		return this.hiddenProperties.indexOf( propertyName ) !== - 1 ? false : true;
+		if( this.displayOnly.length > 0 ) return this.displayOnly.indexOf( propertyName ) !== - 1;
+		return this.hiddenProperties.indexOf( propertyName ) === - 1;
 	}
 
 	changeProperty( property:PropertyStatus, index:number ):void {
