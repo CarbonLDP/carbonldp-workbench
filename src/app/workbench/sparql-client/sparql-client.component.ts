@@ -540,47 +540,9 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	}
 
 	onClickSaveQuery():void {
-		let query:SPARQLQuery = <SPARQLQuery>{
-			endpoint: this.currentQuery.endpoint,
-			type: this.currentQuery.type,
-			content: this.currentQuery.content,
-			operation: this.currentQuery.operation,
-			format: this.currentQuery.format,
-			name: this.currentQuery.name,
-			id: this.savedQueries.length,
-		};
-		this.isSaving = true;
-		this.savedQueries = this.getLocalSavedQueries();
-		this.savedQueries.push( query );
-		this.updateLocalSavedQueries();
-		setInterval( () => {
-			this.isSaving = false;
-		}, 500 );
-	}
-
-	onClickSaveExistingQuery():void {
-		this.savedQueries = this.getLocalSavedQueries();
-		let queryIdx:number = - 1;
-		this.savedQueries.forEach( ( iteratingQuery:SPARQLQuery, index:number ) => {
-			if( iteratingQuery.id === this.currentQuery.id ) {
-				queryIdx = index;
-			}
-		} );
-		if( queryIdx > - 1 ) {
-			this.savedQueries[ queryIdx ] = <SPARQLQuery> {
-				endpoint: this.currentQuery.endpoint,
-				type: this.currentQuery.type,
-				content: this.currentQuery.content,
-				operation: this.currentQuery.operation,
-				format: this.currentQuery.format,
-				name: this.currentQuery.name,
-				id: this.currentQuery.id,
-			};
-		} else {
-			this.currentQuery.id = this.savedQueries.length;
-			this.savedQueries.push( this.currentQuery );
-		}
-		this.updateLocalSavedQueries();
+		typeof this.savedQueries[ this.currentQuery.name ] === "undefined"
+			? this.handleSaveQueries()
+			: this.askConfirmationToOverwrite( this.currentQuery );
 	}
 
 	onClickSavedQuery( selectedQuery:SPARQLQuery ):void {
@@ -727,6 +689,30 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 			return this.buildResponse( duration, errorMessage, SPARQLResponseType.error, query );
 		}
 		return errorMessage;
+	}
+
+	handleSaveQueries() {
+		this.isSaving = true;
+		let query:SPARQLQuery = <SPARQLQuery>{
+			endpoint: this.currentQuery.endpoint,
+			type: this.currentQuery.type,
+			content: this.currentQuery.content,
+			operation: this.currentQuery.operation,
+			format: this.currentQuery.format,
+			name: this.currentQuery.name,
+			id: this.getKeysFromSavedQueries().length,
+		};
+
+		this.savedQueries = this.getLocalSavedQueries();
+		this.savedQueries[ query.name ] = query;
+		this.updateLocalSavedQueries();
+		setInterval( () => {
+			this.isSaving = false;
+			this.savedQueries = this.getLocalSavedQueries();
+			this.savedQueriesKeys = this.getKeysFromSavedQueries();
+			this.currentQuery = query;
+			this.currentQueryName = query.name;
+		}, 500 );
 	}
 }
 
