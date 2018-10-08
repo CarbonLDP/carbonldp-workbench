@@ -9,7 +9,7 @@
 	<!-- START: Content of document deleter -->
 	<div class="content">
 		<div class="ui description">
-			<span>You are about to delete the following {{pluralize('document')}}:</span><br><br>
+			<span>You are about to delete the following {{ documentURIs.length === 1 ? 'document' : 'documents' }}:</span><br><br>
 			<div class="document-deleter-list-elements">
 				<span *ngFor="let documentURI of documentURIs">
 					{{documentURI}}<br>
@@ -17,7 +17,7 @@
 			</div>
 			<br>
 			<br>
-			<span>If you delete it, all its children and its access points will also be deleted.</span><br>
+			<span>If you delete {{ documentURIs.length === 1 ? 'it' : 'them' }}, all of {{ documentURIs.length === 1 ? 'its' : 'their' }} children and access points will also be deleted.</span><br>
 			<span>Do you really want to proceed?</span>
 		</div>
 		<cw-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage($event)" *ngIf="!!errorMessage"></cw-message>

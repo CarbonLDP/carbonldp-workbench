@@ -42,7 +42,6 @@ export class DocumentDeleterComponent implements AfterViewInit {
 	}
 
 	ngAfterViewInit():void {
-
 		this.$element = $( this.element.nativeElement );
 		this.$deleteDocumentModal = this.$element.find( ".delete.document.modal" ).modal( { closable: false } );
 	}
@@ -87,16 +86,5 @@ export class DocumentDeleterComponent implements AfterViewInit {
 	public toggle():void {
 		this.$deleteDocumentModal.modal( "toggle" );
 	}
-
-	public pluralize( word ):string {
-		let tempPhrase;
-		switch( word ) {
-			default:
-				tempPhrase = this.documentURIs.length > 1 ? `${word}s` : word;
-				break;
-		}
-		return tempPhrase;
-	}
-
 }
 
