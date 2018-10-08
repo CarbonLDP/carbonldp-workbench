@@ -27,10 +27,15 @@
 	}
 }
 
+// Semantic UI overrides
 .ui.delete.document.modal {
 	> .header,
 	> .actions,
 	> .content .description {
 		text-align: center;
 	}
+}
+// Remove the first button's left margin so buttons can be truly centered
+.ui.modal .actions > .button:first-child {
+	margin-left: 0;
 }

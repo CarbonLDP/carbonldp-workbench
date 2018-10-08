@@ -16,10 +16,8 @@
 			<p>If you delete {{ documentURIs.length === 1 ? 'it' : 'them' }}, all of {{ documentURIs.length === 1 ? 'its' : 'their' }} children and access points will also be deleted.</p>
 			<p>Do you want to proceed?</p>
 		</div>
-		<cw-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage($event)" *ngIf="!!errorMessage"></cw-message>
 	</div>
 	<!-- END: Content of document deleter -->
-
 
 	<!-- START: Action buttons of document deleter -->
 	<div class="actions">
@@ -34,4 +32,6 @@
 		</div>
 	</div>
 	<!-- END: Action buttons of document deleter -->
+
+	<cw-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage($event)" *ngIf="!!errorMessage"></cw-message>
 </form>
