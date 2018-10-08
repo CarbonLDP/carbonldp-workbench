@@ -49,4 +49,12 @@
 			}
 		}
 	}
+
+	.saveButton {
+		.star.icon {
+			&.saved {
+				color: #ff7600;
+			}
+		}
+	}
 }
