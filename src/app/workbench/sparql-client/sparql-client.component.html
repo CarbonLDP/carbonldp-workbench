@@ -134,30 +134,13 @@
 				<input placeholder="name of the query" type="text" [(ngModel)]="currentQuery.name">
 			</div>
 			<div class="seven wide column field">
-				<button class="ui button"
+				<button class="ui button saveButton"
 				        [ngClass]="{loading: isSaving, disabled: !canSaveQuery()}"
 				        [disabled]="currentQuery.endpoint && !currentQuery.format && !currentQuery.content"
-				        (click)="onClickSaveQuery()"
-				        *ngIf="currentQuery.id==null">
-					<i class="star icon"></i>
+				        (click)="onClickSaveQuery()">
+					<i class="star icon" [ngClass]="{saved: currentQuery.id != null && currentQuery.id != undefined && currentQuery.name === currentQueryName}"></i>
 					<span>Save Query</span>
 				</button>
-				<div class="ui teal buttons btnsGroupSaveQuery"
-				     [style.display]="currentQuery.id != null && currentQuery.id != undefined? '':'none'">
-					<button class="ui button btnSave"
-					        (click)="onClickSaveExistingQuery()">
-						<span>Save Query</span>
-					</button>
-					<div class="ui floating dropdown icon button">
-						<i class="dropdown icon"></i>
-						<div class="menu">
-							<button class="ui basic button item btnSaveAs"
-							        (click)="onClickSaveQuery()">
-								<i class="save icon"></i> Save As "{{currentQuery.name}}"
-							</button>
-						</div>
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>
