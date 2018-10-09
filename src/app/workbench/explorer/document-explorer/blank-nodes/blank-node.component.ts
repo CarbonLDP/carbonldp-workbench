@@ -23,6 +23,8 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 	$element:JQuery;
 
 	modes:Modes = Modes;
+	canCreateNewProperty:boolean = true;
+
 	nonEditableProperties:string[] = [ JsonLDKeyword.ID ];
 
 	private _blankNodeHasChanged:boolean;
@@ -47,6 +49,7 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 
 	private _blankNode:BlankNodeStatus;
 	@Input() set blankNode( blankNode:BlankNodeStatus ) {
+		this.canCreateNewProperty = true;
 		this._blankNode = blankNode;
 		this.rootNode = blankNode.copy;
 		if( ! ! blankNode.records ) this.records = blankNode.records;
@@ -88,9 +91,11 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 
 	addProperty( property:PropertyStatus, index:number ):void {
 		super.addProperty( property, index );
+		this.canCreateNewProperty = true;
 	}
 
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
+		this.canCreateNewProperty = true;
 		super.createProperty( property, propertyStatus );
 
 		// Animates created property
