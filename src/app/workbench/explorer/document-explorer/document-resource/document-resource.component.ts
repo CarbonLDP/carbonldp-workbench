@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp"
 import { RDFNode } from "carbonldp/RDF/Node"
@@ -25,6 +25,8 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 
 	modes:Modes = Modes;
 
+	canCreateNewProperty:boolean = true;
+
 	private _rootHasChanged:boolean;
 	set rootHasChanged( hasChanged:boolean ) {
 		this._rootHasChanged = hasChanged;
@@ -44,6 +46,7 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 	set rootNode( value:RDFNode ) {
 		this._rootNode = value;
 		this.records = new ResourceRecords();
+		this.canCreateNewProperty = true;
 		this.getProperties()
 			.then( () => { this.updateExistingProperties();} );
 	}
@@ -94,9 +97,11 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 
 	addProperty( property:PropertyStatus, index:number ):void {
 		super.addProperty( property, index );
+		this.canCreateNewProperty = true;
 	}
 
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
+		this.canCreateNewProperty = false;
 		super.createProperty( property, propertyStatus );
 
 		// Animates created property
