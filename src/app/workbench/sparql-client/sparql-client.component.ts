@@ -1,11 +1,11 @@
-import { Component, ElementRef, Input, Output, EventEmitter, OnInit, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { SPARQLRawResults } from "carbonldp/SPARQL/RawResults";
-import { Errors, Header, Response, RequestOptions } from "carbonldp/HTTP";
+import { Errors, Header, RequestOptions, Response } from "carbonldp/HTTP";
 import { SPARQLService } from "carbonldp/SPARQL";
 
-import { SPARQLResponseType, SPARQLFormats, SPARQLClientResponse, SPARQLQuery } from "./response/response.component";
+import { SPARQLClientResponse, SPARQLFormats, SPARQLQuery, SPARQLResponseType } from "./response/response.component";
 import * as CodeMirrorComponent from "app/shared/code-mirror/code-mirror.component";
 import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
@@ -239,6 +239,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	ngOnInit():void {
 		this.isCarbonContext = true;
 		this.currentQuery.endpoint = this.carbonldp.baseURI;
+		this.retrieveQueryInProgress();
 	}
 
 	ngAfterViewInit():void {
@@ -669,7 +670,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 			this.loadQuery( <SPARQLQuery>JSON.parse( window.localStorage.getItem( "lastQuery" ) ) );
 	}
 
-	saveQueryInProgress():void{
+	saveQueryInProgress():void {
 		window.localStorage.setItem( "lastQuery", JSON.stringify( this.currentQuery ) );
 	}
 
@@ -725,6 +726,10 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 			return this.buildResponse( duration, errorMessage, SPARQLResponseType.error, query );
 		}
 		return errorMessage;
+	}
+
+	ngOnDestroy() {
+		this.saveQueryInProgress();
 	}
 }
 
