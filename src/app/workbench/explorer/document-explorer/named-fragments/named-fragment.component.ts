@@ -1,11 +1,11 @@
-import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp/CarbonLDP";
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { Property, PropertyStatus } from "../property/property.component";
-import { Modes, JsonLDKeyword, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
+import { JsonLDKeyword, Modes, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
 
 /*
 *  Displays the contents of a Named Fragment with all its properties
@@ -23,6 +23,9 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 	carbonldp:CarbonLDP;
 
 	modes:Modes = Modes;
+
+	canCreateNewProperty:boolean = true;
+
 
 	private _namedFragmentHasChanged:boolean;
 	set namedFragmentHasChanged( hasChanged:boolean ) {
@@ -51,6 +54,7 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 		this.rootNode = namedFragment.copy;
 		if( ! ! namedFragment.records ) this.records = namedFragment.records;
 		this.updateExistingProperties();
+		this.canCreateNewProperty = true;
 	}
 
 	get namedFragment():NamedFragmentStatus { return this._namedFragment; }
@@ -88,9 +92,11 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 
 	addProperty( property:PropertyStatus, index:number ):void {
 		super.addProperty( property, index );
+		this.canCreateNewProperty = true;
 	}
 
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
+		this.canCreateNewProperty = false;
 		super.createProperty( property, propertyStatus );
 
 		// Animates created property
