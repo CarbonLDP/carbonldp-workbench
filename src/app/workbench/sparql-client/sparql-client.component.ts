@@ -664,6 +664,15 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		return <SPARQLQuery[]>JSON.parse( window.localStorage.getItem( "savedQueries" ) );
 	}
 
+	retrieveQueryInProgress():void {
+		if( window.localStorage.getItem( "lastQuery" ) )
+			this.loadQuery( <SPARQLQuery>JSON.parse( window.localStorage.getItem( "lastQuery" ) ) );
+	}
+
+	saveQueryInProgress():void{
+		window.localStorage.setItem( "lastQuery", JSON.stringify( this.currentQuery ) );
+	}
+
 	updateLocalSavedQueries():void {
 		window.localStorage.setItem( "savedQueries", JSON.stringify( this.savedQueries ) );
 	}
