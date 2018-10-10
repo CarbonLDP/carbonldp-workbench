@@ -119,7 +119,7 @@ export class ResourceFeatures {
 		let newProperty:PropertyStatus = {
 			added: <Property>{
 				id: "",
-				name: `${this.carbonldp.baseURI}vocabularies/main/#New_Property_${numberOfProperty}`,
+				name: `${this.carbonldp.baseURI}vocabularies/main/#newProperty${numberOfProperty}`,
 				value: []
 			},
 			isBeingCreated: true
