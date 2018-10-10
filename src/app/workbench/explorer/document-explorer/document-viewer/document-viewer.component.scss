@@ -4,6 +4,8 @@
 	height: 100%;
 	.saving-message {
 		z-index: 1;
+		position: sticky;
+		position: -webkit-sticky;
 	}
 	.document-content {
 		overflow-y: scroll;
