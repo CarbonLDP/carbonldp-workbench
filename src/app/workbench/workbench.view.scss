@@ -7,6 +7,8 @@
 	background-color: #90959A;
 	color: #ffffff;
 
+	min-height: 0; //this is necessary to fix issue in firefox related with flexbox overflow
+
 	cw-header.ui.navigation.inverted.menu {
 		background-color: #363f48;
 		border-radius: 0;
@@ -36,6 +38,7 @@
 		display: flex;
 		flex-direction: row;
 		width: 100%;
+		min-height: 0; //this is necessary to fix issue in firefox related with flexbox overflow
 	}
 
 	.page-content {
@@ -46,6 +49,7 @@
 
 		display: flex;
 		flex-direction: column;
+		min-height: 0; //this is necessary to fix issue in firefox related with flexbox overflow
 	}
 
 	.scrollable-content {
