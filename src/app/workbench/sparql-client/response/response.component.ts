@@ -1,4 +1,4 @@
-import { Component, Input, Output, ElementRef, EventEmitter, AfterViewInit, OnInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output } from "@angular/core";
 
 import * as CodeMirrorComponent from "app/shared/code-mirror/code-mirror.component";
 
@@ -12,7 +12,7 @@ import "semantic-ui/semantic";
 @Component( {
 	selector: "cw-sparql-response",
 	templateUrl: "./response.component.html",
-	styleUrls: [  "./response.component.scss"  ],
+	styleUrls: [ "./response.component.scss" ],
 } )
 export class ResponseComponent implements AfterViewInit, OnInit {
 	element:ElementRef;
@@ -128,6 +128,7 @@ export class ResponseComponent implements AfterViewInit, OnInit {
 		}
 	}
 }
+
 export class SPARQLResponseType {
 	static success:string = "success";
 	static default:string = "default";

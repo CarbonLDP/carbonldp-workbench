@@ -1,4 +1,4 @@
-import { TestBed, inject, async } from "@angular/core/testing";
+import { async, inject, TestBed } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 
 import { Message, Types } from "./message.component";

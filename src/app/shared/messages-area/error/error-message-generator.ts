@@ -2,7 +2,7 @@ import { Errors } from "carbonldp/HTTP";
 import { JSONLDParser } from "carbonldp/JSONLD";
 import { C } from "carbonldp/Vocabularies";
 
-import { Message, ValidationResult, ValidationDetails, ValidationError, Types } from "../message.component";
+import { Message, Types, ValidationDetails, ValidationError, ValidationResult } from "../message.component";
 
 
 export class ErrorMessageGenerator {

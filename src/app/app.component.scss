@@ -5,3 +5,11 @@ app {
 	display: flex;
 	flex-direction: column;
 }
+
+// === START: Global styles
+* {
+	// A lot of components don't respect this by default which tends to force developers to write 'width: 100%' explicitly for that component
+	max-width: 100%;
+}
+
+// === END: Global styles

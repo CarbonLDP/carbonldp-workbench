@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, NgZone } from "@angular/core";
+import { Component, EventEmitter, Input, NgZone, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { RDFDocument } from "carbonldp/RDF/Document";

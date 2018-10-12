@@ -1,11 +1,11 @@
-import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp/CarbonLDP";
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { Property, PropertyStatus } from "../property/property.component";
-import { Modes, JsonLDKeyword, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
+import { JsonLDKeyword, Modes, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
 
 /*
 *  Displays the contents of a Named Fragment with all its properties

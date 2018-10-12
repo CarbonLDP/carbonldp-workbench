@@ -1,9 +1,8 @@
-import { Component, ViewChild, AfterContentInit } from "@angular/core";
+import { AfterContentInit, Component, DebugElement, ViewChild } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
-import { By }              from "@angular/platform-browser";
-import { DebugElement }    from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 
 import { EmailValidator } from "./custom-validators";
 import { InputValidationDirective } from "./input-validation.directive";

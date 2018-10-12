@@ -1,7 +1,5 @@
-import { NgModule, ModuleWithProviders } from "@angular/core";
+import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-
-
 // Components
 import { MessageComponent } from "./messages-area/message.component";
 import { MessagesAreaComponent } from "./messages-area/messages-area.component";
@@ -9,17 +7,15 @@ import { ErrorLabelComponent } from "./messages-area/error/error-label.component
 import { PaginatorComponent } from "./paginator/paginator.component";
 import { VersionsPresenterComponent } from "./versions-presenter/versions-presenter.component";
 import * as CodeMirrorComponent from "./code-mirror/code-mirror.component";
-
-// Pipes
-
 // Modules
 import { PipesModule } from "./pipes/pipes.module";
 import { DirectivesModule } from "./directives/directives.module";
 import { SemanticModule } from "./semantic/semantic.module";
-
 // Services
 import { RouterService } from "./router.service";
 import { MessagesAreaService } from "./messages-area/messages-area.service";
+
+// Pipes
 
 @NgModule( {
 	imports: [

@@ -1,4 +1,4 @@
-import { Component, ElementRef, AfterContentInit } from "@angular/core";
+import { AfterContentInit, Component, ElementRef } from "@angular/core";
 
 import { HeaderService } from "./header.service";
 

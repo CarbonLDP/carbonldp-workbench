@@ -1,7 +1,7 @@
-import { Component, ViewChild, DebugElement, ElementRef } from "@angular/core";
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
+import { Component, DebugElement, ElementRef, ViewChild } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { CollapsibleDirective, CollapsibleTitleDirective, CollapsibleContentDirective } from "./collapsible.directive";
+import { CollapsibleContentDirective, CollapsibleDirective, CollapsibleTitleDirective } from "./collapsible.directive";
 
 export function collapsibleSpecs() {
 

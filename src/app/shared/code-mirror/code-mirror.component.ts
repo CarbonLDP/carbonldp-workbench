@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, AfterContentInit, OnChanges, OnDestroy } from "@angular/core";
+import { AfterContentInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChange } from "@angular/core";
 
 import * as CodeMirror from "codemirror";
 

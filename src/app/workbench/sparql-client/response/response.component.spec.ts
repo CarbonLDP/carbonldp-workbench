@@ -1,10 +1,9 @@
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
-import { By }              from "@angular/platform-browser";
-import { DebugElement }    from "@angular/core";
-import { ResponseComponent, SPARQLResponseType } from "./response.component";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
+import { DebugElement } from "@angular/core";
+import { ResponseComponent, SPARQLClientResponse, SPARQLResponseType } from "./response.component";
 
 import { SharedModule } from "app/shared/shared.module";
-import { SPARQLClientResponse } from "./response.component";
 import { ResultsetTableComponent } from "./../resultset-table/resultset-table.component";
 import { RelativizeURIPipe } from "./../resultset-table/relativize-uri.pipe";
 import { PrefixURIPipe } from "./../resultset-table/prefix-uri.pipe";

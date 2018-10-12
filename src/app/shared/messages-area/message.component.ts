@@ -1,4 +1,4 @@
-import { Component, Input, Output, OnChanges, AfterViewInit, ViewChild, ElementRef, SimpleChange, EventEmitter } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild } from "@angular/core";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
@@ -33,7 +33,7 @@ export class MessageComponent implements OnChanges, AfterViewInit {
 		this.$element = $( this.element.nativeElement );
 	}
 
-	ngOnChanges( changes:{ [propName:string]:SimpleChange } ):void {
+	ngOnChanges( changes:{ [ propName:string ]:SimpleChange } ):void {
 		if( ! ! changes[ "message" ].currentValue && changes[ "message" ].currentValue !== changes[ "message" ].previousValue ) {
 			this.decomposeMessage();
 		}

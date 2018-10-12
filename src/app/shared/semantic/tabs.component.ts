@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ContentChildren, QueryList, AfterContentInit, OnChanges, SimpleChange } from "@angular/core";
+import { AfterContentInit, Component, ContentChildren, EventEmitter, Input, OnChanges, Output, QueryList, SimpleChange } from "@angular/core";
 
 import { TabComponent } from "./tab.component";
 
@@ -23,7 +23,7 @@ export class TabsComponent implements AfterContentInit, OnChanges {
 		this.tabs.changes.subscribe( this.reloadTitles );
 	}
 
-	ngOnChanges( changes:{ [key:string]:SimpleChange; } ):void {
+	ngOnChanges( changes:{ [ key:string ]:SimpleChange; } ):void {
 		if( "activeTab" in changes ) {
 			this.justChanged = true;
 			this.activateTab( changes[ "activeTab" ].currentValue );

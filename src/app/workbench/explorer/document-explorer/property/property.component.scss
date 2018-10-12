@@ -1,15 +1,6 @@
 :host {
 	display: block;
 	/deep/ .content {
-		.meta {
-			.parent-uri {
-				margin-right: 0;
-			}
-			.slug {
-				color: #FF4500;
-				margin-right: 0;
-			}
-		}
 		.description {
 			.ui.accordion {
 				width: 100%;
