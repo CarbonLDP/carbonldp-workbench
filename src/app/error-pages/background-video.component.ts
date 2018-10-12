@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, HostListener, Input } from "@angular/core";
+import { AfterViewInit, Component, HostListener, Input } from "@angular/core";
 
 interface YoutubePlayerOptions {
 	videoId:string;
@@ -10,7 +10,7 @@ interface YoutubePlayerOptions {
 }
 
 interface YoutubePlayer {
-	new ( tagID:string, options?:YoutubePlayerOptions ):YoutubePlayer;
+	new( tagID:string, options?:YoutubePlayerOptions ):YoutubePlayer;
 }
 
 interface Youtube {
@@ -103,7 +103,7 @@ export class BackgroundVideoComponent implements AfterViewInit {
 			this.screenElement.style.left = "0";
 		} else {
 			this.player.setSize( height / 9 * 16, height ).then( () => {
-				this.screenElement.style.left = ( - ( this.screenElement.offsetWidth - width ) / 2 ) + "px";
+				this.screenElement.style.left = (- (this.screenElement.offsetWidth - width) / 2) + "px";
 			} );
 		}
 	}
@@ -137,12 +137,12 @@ export class BackgroundVideoComponent implements AfterViewInit {
 						window[ "onYouTubeIframeAPIReady" ] = function() {
 							originalEventHandler.apply( this, arguments );
 
-							if( ! ( "YT" in window ) ) reject( new Error( "Youtube script was loaded, but the 'YT' object couldn't be found in the window object" ) );
+							if( ! ("YT" in window) ) reject( new Error( "Youtube script was loaded, but the 'YT' object couldn't be found in the window object" ) );
 							else resolve( window[ "YT" ] );
 						}
 					} else {
 						window[ "onYouTubeIframeAPIReady" ] = function() {
-							if( ! ( "YT" in window ) ) reject( new Error( "Youtube script was loaded, but the 'YT' object couldn't be found in the window object" ) );
+							if( ! ("YT" in window) ) reject( new Error( "Youtube script was loaded, but the 'YT' object couldn't be found in the window object" ) );
 							else resolve( window[ "YT" ] );
 						}
 					}
@@ -158,7 +158,7 @@ export class BackgroundVideoComponent implements AfterViewInit {
 			script.async = true;
 			script.src = "https://www.youtube.com/iframe_api";
 
-			if( ! ( "onload" in script ) ) {
+			if( ! ("onload" in script) ) {
 				// IE
 				script[ "onreadystatechange" ] = function() {
 					if( this.readyState != 'complete' && this.readyState != 'loaded' ) return;
@@ -174,7 +174,7 @@ export class BackgroundVideoComponent implements AfterViewInit {
 			};
 
 			window[ "onYouTubeIframeAPIReady" ] = function() {
-				if( ! ( "YT" in window ) ) reject( new Error( "Youtube script was loaded, but the 'YT' object couldn't be found in the window object" ) );
+				if( ! ("YT" in window) ) reject( new Error( "Youtube script was loaded, but the 'YT' object couldn't be found in the window object" ) );
 				else resolve( window[ "YT" ] );
 			};
 

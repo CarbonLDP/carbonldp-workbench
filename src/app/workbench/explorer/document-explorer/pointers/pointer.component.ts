@@ -1,10 +1,10 @@
-import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, OnChanges } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChange } from "@angular/core";
 
 import { URI } from "carbonldp/RDF/URI";
 
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
-import { Modes, JsonLDKeyword } from "../document-explorer-library";
+import { JsonLDKeyword, Modes } from "../document-explorer-library";
 
 
 /*

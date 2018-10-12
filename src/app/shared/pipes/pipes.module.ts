@@ -1,25 +1,20 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 // Pipes
-import { FragmentPipe } from "./fragment.pipe";
+import { GetSlugPipe } from "./get-slug.pipe";
 import { DecodeURIPipe } from "./decode-uri.pipe";
-import { URIToSlugPipe } from "./uri-to-slug.pipe";
-
 
 @NgModule( {
 	imports: [
 		CommonModule,
 	],
 	declarations: [
-		FragmentPipe,
+		GetSlugPipe,
 		DecodeURIPipe,
-		URIToSlugPipe
 	],
 	exports: [
-		FragmentPipe,
+		GetSlugPipe,
 		DecodeURIPipe,
-		URIToSlugPipe
 	],
 	providers: []
 } )

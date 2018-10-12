@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChange } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChange } from "@angular/core";
 
 @Component( {
 	selector: "cw-paginator",
@@ -28,9 +28,9 @@ export class PaginatorComponent implements OnChanges {
 
 	constructor() {}
 
-	ngOnChanges( changes:{ [propName:string]:SimpleChange } ):void {
-		if( ( ! ! changes[ "totalElements" ] && changes[ "totalElements" ].currentValue !== changes[ "totalElements" ].previousValue ) ||
-			( ! ! changes[ "elementsPerPage" ] && changes[ "elementsPerPage" ].currentValue !== changes[ "elementsPerPage" ].previousValue ) ) {
+	ngOnChanges( changes:{ [ propName:string ]:SimpleChange } ):void {
+		if( (! ! changes[ "totalElements" ] && changes[ "totalElements" ].currentValue !== changes[ "totalElements" ].previousValue) ||
+			(! ! changes[ "elementsPerPage" ] && changes[ "elementsPerPage" ].currentValue !== changes[ "elementsPerPage" ].previousValue) ) {
 			this.updatePages();
 		}
 	}

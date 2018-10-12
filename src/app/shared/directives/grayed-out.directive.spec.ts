@@ -1,7 +1,6 @@
-import { Component } from "@angular/core";
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
-import { By }              from "@angular/platform-browser";
-import { DebugElement }    from "@angular/core";
+import { Component, DebugElement } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
 
 import { GrayedOutDirective } from "./grayed-out.directive";
 
@@ -56,6 +55,7 @@ function rgbToHex( rgb ) {
 	if( /^#[0-9A-F]{6}$/i.test( rgb ) ) return rgb;
 
 	rgb = rgb.match( /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/ );
+
 	function hex( x ) {
 		return ("0" + parseInt( x ).toString( 16 )).slice( - 2 );
 	}

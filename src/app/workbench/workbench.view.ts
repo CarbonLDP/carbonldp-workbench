@@ -1,5 +1,5 @@
 import { Component, EventEmitter } from "@angular/core";
-import { Router, Event, NavigationEnd } from "@angular/router";
+import { Event, NavigationEnd, Router } from "@angular/router";
 
 import { CarbonLDP } from "carbonldp";
 

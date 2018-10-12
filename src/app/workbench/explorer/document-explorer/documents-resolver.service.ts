@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { RequestService, RequestUtils, RequestOptions, Response } from "carbonldp/HTTP";
+import { RequestOptions, RequestService, RequestUtils, Response } from "carbonldp/HTTP";
 import { LDP } from "carbonldp/Vocabularies";
 import { RDFDocument } from "carbonldp/RDF/Document";
 import { JSONLDParser } from "carbonldp/JSONLD";

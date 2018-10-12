@@ -10,7 +10,6 @@ import { RelativizeURIPipe } from "./resultset-table/relativize-uri.pipe";
 import { PrefixURIPipe } from "./resultset-table/prefix-uri.pipe";
 
 import { ResultsetTableComponent } from "./resultset-table/resultset-table.component";
-
 // Modules
 import { SharedModule } from "app/shared/shared.module";
 
