@@ -20,6 +20,7 @@ import "semantic-ui/semantic";
 export class DocumentExplorerComponent {
 
 	selectedDocumentURI:string = "";
+	selectedDocumentURIs:Array<string> = [ "" ];
 	loadingDocument:boolean = false;
 	savingDocument:boolean = false;
 	inspectingDocument:RDFDocument;
@@ -73,8 +74,9 @@ export class DocumentExplorerComponent {
 		this.onOpenNode.emit( nodeId );
 	}
 
-	public changeSelection( documentURI:string ) {
-		this.selectedDocumentURI = documentURI;
+	public changeSelection( documentURIs:Array<string> ) {
+		this.selectedDocumentURIs = documentURIs;
+		this.selectedDocumentURI = documentURIs[ 0 ];
 	}
 
 	public onSuccessAccessPoint( $event:any ):void {

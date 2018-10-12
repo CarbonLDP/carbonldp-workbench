@@ -62,6 +62,7 @@ export class DocumentCreatorComponent implements AfterViewInit {
 			hasMemberRelation: data.advancedOptions.hasMemberRelation
 		};
 		if( ! ! data.advancedOptions.isMemberOfRelation ) childContent[ "isMemberOfRelation" ] = data.advancedOptions.isMemberOfRelation;
+
 		this.documentsResolverService.createChild( this.parentURI, childContent, childSlug ).then( ( createdChild:Document ) => {
 			this.onSuccess.emit( createdChild );
 			this.hide();
