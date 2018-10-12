@@ -1,4 +1,5 @@
-import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, AfterContentInit, OnChanges, OnDestroy } from "@angular/core";
+import { AfterContentInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChange } from "@angular/core";
+import { ResizeBarService } from "./resize-bar/resize-bar.service";
 
 import * as CodeMirror from "codemirror";
 
@@ -25,8 +26,8 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	@Input() noCursor:boolean = false;
 	@Input() showLineNumbers:boolean = true;
 	@Input() scroll:boolean = true;
-
 	@Input() value:string = "";
+	@Input() resizable:boolean = false;
 	@Output() valueChange:EventEmitter<string> = new EventEmitter<string>();
 
 	@Input() codeMirror:CodeMirror.Editor;
@@ -34,10 +35,13 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 
 	private internallyChanged:boolean = false;
 	private lastUpdates:string[] = [];
+	private resizeBarService;
 
-	constructor( element:ElementRef ) {
+	constructor( element:ElementRef, resizeBarService:ResizeBarService ) {
 		this.element = element;
+		this.resizeBarService = resizeBarService;
 	}
+
 
 	ngOnDestroy() {
 		this.element.nativeElement.innerHTML = this.codeMirror.getValue();
@@ -78,6 +82,11 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 			this.lastUpdates.push( lastUpdate );
 			this.valueChange.emit( lastUpdate );
 		} );
+
+		this.resizeBarService.dataSource$.subscribe( ( value:number ) => {
+			if( this.resizable )
+				this.setSize( value );
+		} );
 	}
 
 	ngOnChanges( changeRecord:any ):void {
@@ -103,6 +112,10 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 			}
 		}
 
+	}
+
+	private setSize( value:number ) {
+		this.codeMirror.setSize( null, value + "px" );
 	}
 
 	private normalizeTabs( value:string ):string {

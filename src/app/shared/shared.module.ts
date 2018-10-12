@@ -1,7 +1,5 @@
-import { NgModule, ModuleWithProviders } from "@angular/core";
+import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-
-
 // Components
 import { MessageComponent } from "./messages-area/message.component";
 import { MessagesAreaComponent } from "./messages-area/messages-area.component";
@@ -9,17 +7,17 @@ import { ErrorLabelComponent } from "./messages-area/error/error-label.component
 import { PaginatorComponent } from "./paginator/paginator.component";
 import { VersionsPresenterComponent } from "./versions-presenter/versions-presenter.component";
 import * as CodeMirrorComponent from "./code-mirror/code-mirror.component";
-
-// Pipes
-
+import { ResizeBarComponent } from "./code-mirror/resize-bar/resize-bar.component";
 // Modules
 import { PipesModule } from "./pipes/pipes.module";
 import { DirectivesModule } from "./directives/directives.module";
 import { SemanticModule } from "./semantic/semantic.module";
-
 // Services
 import { RouterService } from "./router.service";
 import { MessagesAreaService } from "./messages-area/messages-area.service";
+import { ResizeBarService } from "./code-mirror/resize-bar/resize-bar.service";
+
+// Pipes
 
 @NgModule( {
 	imports: [
@@ -32,8 +30,11 @@ import { MessagesAreaService } from "./messages-area/messages-area.service";
 		ErrorLabelComponent,
 		PaginatorComponent,
 		VersionsPresenterComponent,
+		ResizeBarComponent,
 	],
-	providers: [],
+	providers: [
+		ResizeBarService
+	],
 	exports: [
 		MessageComponent,
 		MessagesAreaComponent,
@@ -41,6 +42,7 @@ import { MessagesAreaService } from "./messages-area/messages-area.service";
 		ErrorLabelComponent,
 		PaginatorComponent,
 		VersionsPresenterComponent,
+		ResizeBarComponent,
 
 		PipesModule,
 		DirectivesModule,
@@ -53,7 +55,7 @@ export class SharedModule {
 	static forRoot():ModuleWithProviders {
 		return {
 			ngModule: SharedModule,
-			providers: [ MessagesAreaService, RouterService ]
+			providers: [ MessagesAreaService, RouterService, ResizeBarService ]
 		};
 	}
 
