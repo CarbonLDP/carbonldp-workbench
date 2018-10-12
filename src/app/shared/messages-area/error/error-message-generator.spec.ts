@@ -47,7 +47,7 @@ export function errorMessageGeneratorSpecs() {
 		} );
 
 		it( "Should return Message object", async () => {
-			let errorMessage:Message = ErrorMessageGenerator.getErrorMessage( notFoundError );
+			let errorMessage:Message = await <Message> ErrorMessageGenerator.getErrorMessage( notFoundError, this.carbonldp );
 			expect( errorMessage ).toBeDefined();
 			expect( errorMessage ).toEqual( {
 				title: "",
@@ -57,7 +57,7 @@ export function errorMessageGeneratorSpecs() {
 				endpoint: null,
 				type: Types.ERROR,
 			} );
-			errorMessage = ErrorMessageGenerator.getErrorMessage( internalError );
+			errorMessage = await <Message> ErrorMessageGenerator.getErrorMessage( internalError, this.carbonldp );
 			expect( errorMessage ).toBeDefined();
 			expect( errorMessage ).toEqual( {
 				title: "",
@@ -70,8 +70,8 @@ export function errorMessageGeneratorSpecs() {
 		} );
 
 		it( "Should have type set to Error", async () => {
-			let errorMessage1:Message = ErrorMessageGenerator.getErrorMessage( notFoundError );
-			let errorMessage2:Message = ErrorMessageGenerator.getErrorMessage( internalError );
+			let errorMessage1:Message = await <Message> ErrorMessageGenerator.getErrorMessage( notFoundError, this.carbonldp );
+			let errorMessage2:Message = await <Message> ErrorMessageGenerator.getErrorMessage( internalError, this.carbonldp );
 			expect( errorMessage1 ).toBeDefined();
 			expect( errorMessage2 ).toBeDefined();
 			expect( errorMessage1.type ).toEqual( Types.ERROR );

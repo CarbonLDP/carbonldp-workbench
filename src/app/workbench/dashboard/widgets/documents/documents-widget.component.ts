@@ -69,7 +69,7 @@ export class DocumentsWidgetComponent {
 			} )
 			.catch( ( error:any ) => {
 				this.hasError = true;
-				this.onErrorOccurs.emit( ErrorMessageGenerator.getErrorMessage( error ) );
+				this.onErrorOccurs.emit( ErrorMessageGenerator.getErrorMessage( error , this.carbonldp) );
 			} );
 	}
 }

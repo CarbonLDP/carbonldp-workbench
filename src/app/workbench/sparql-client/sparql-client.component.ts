@@ -422,19 +422,24 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				return this.executeASK( query );
 			default:
 				// Unsupported Operation
-				return Promise.reject( this.getMessage( "Unsupported Operation" ) );
+				this.getMessage( "Unsupported Operation" ).then( errorMessage => {
+					return Promise.reject( errorMessage );
+				} );
 		}
 	}
 
 	executeSELECT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = (new Date()).valueOf();
-		return SPARQLService.executeRawSELECTQuery( query.endpoint, query.content ).then(
+		let requestOptions:RequestOptions = { headers: new Map().set( "Accept", new Header( SPARQLFormats.jsonLD ) ) };
+		return SPARQLService.executeRawSELECTQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ SPARQLRawResults, Response ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
+				return this.handleError( error, query, beforeTimestamp ).then( errorMessage => {
+					return Promise.reject( errorMessage );
+				} );
 			} );
 	}
 
@@ -447,7 +452,9 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
+				return this.handleError( error, query, beforeTimestamp ).then( errorMessage => {
+					return Promise.reject( errorMessage );
+				} );
 			} );
 	}
 
@@ -460,19 +467,24 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
+				return this.handleError( error, query, beforeTimestamp ).then( errorMessage => {
+					return Promise.reject( errorMessage );
+				} );
 			} );
 	}
 
 	executeASK( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = (new Date()).valueOf();
-		return SPARQLService.executeRawASKQuery( query.endpoint, query.content ).then(
+		let requestOptions:RequestOptions = { headers: new Map().set( "Accept", new Header( SPARQLFormats.jsonLD ) ) };
+		return SPARQLService.executeRawASKQuery( query.endpoint, query.content, requestOptions ).then(
 			( [ result, response ]:[ SPARQLRawResults, Response ] ):SPARQLClientResponse => {
 				let duration:number = (new Date()).valueOf() - beforeTimestamp;
 				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
+				return this.handleError( error, query, beforeTimestamp ).then( errorMessage => {
+					return Promise.reject( errorMessage );
+				} );
 			} );
 	}
 
@@ -486,7 +498,9 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				return this.buildResponse( duration, "200 - OK", <string> SPARQLResponseType.success, query );
 			},
 			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
+				return this.handleError( error, query, beforeTimestamp ).then( errorMessage => {
+					return Promise.reject( errorMessage );
+				} );
 			} );
 	}
 
@@ -680,19 +694,19 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		$( evt.srcElement ).closest( ".ui.message" ).transition( "fade" );
 	}
 
-	getMessage( error:any ):Message {
+	getMessage( error:any ):Promise<Message> {
 		switch( typeof error ) {
 			case "string":
-				return <Message>{
+				return Promise.resolve( <Message>{
 					title: error,
 					content: "",
 					statusCode: "",
 					statusMessage: "",
 					endpoint: "",
 					type: "error",
-				};
+				} );
 			default:
-				return ErrorMessageGenerator.getErrorMessage( error );
+				return ErrorMessageGenerator.getErrorMessage( error, this.carbonldp );
 		}
 	}
 
@@ -706,16 +720,18 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		return clientResponse;
 	}
 
-	handleError( error:Error | Errors.HTTPError, query:SPARQLQuery, beforeTimestamp:number ):SPARQLClientResponse | Message {
+	handleError( error:Error | Errors.HTTPError, query:SPARQLQuery, beforeTimestamp:number ):Promise<SPARQLClientResponse | Message> {
 		let duration:number = (new Date()).valueOf() - beforeTimestamp;
 
-		let errorMessage:Message = this.getMessage( error );
-		let stackErrors:number[] = [ 400, 403, 404, 413, 414, 429 ];
-		// TODO implement login modal when 401
-		if( error instanceof Errors.HTTPError && stackErrors.indexOf( error.response.status ) > - 1 ) {
-			return this.buildResponse( duration, errorMessage, SPARQLResponseType.error, query );
-		}
-		return errorMessage;
+		return this.getMessage( error ).then( ( errorMessage:Message ) => {
+			let stackErrors:number[] = [ 400, 403, 404, 413, 414, 429 ];
+			// TODO implement login modal when 401
+			if( error instanceof Errors.HTTPError && stackErrors.indexOf( error.response.status ) > - 1 ) {
+				return this.buildResponse( duration, errorMessage, SPARQLResponseType.error, query );
+			}
+			return errorMessage;
+		} );
+
 	}
 }
 

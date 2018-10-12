@@ -66,9 +66,11 @@ export class DocumentCreatorComponent implements AfterViewInit {
 		this.documentsResolverService.createChild( this.parentURI, childContent, childSlug ).then( ( createdChild:Document ) => {
 			this.onSuccess.emit( createdChild );
 			this.hide();
-		} ).catch( ( error:HTTPError ) => {
-			this.onError.emit( error );
-			this.errorMessage = ErrorMessageGenerator.getErrorMessage( error );
+		} ).catch( async ( error:HTTPError ) => {
+			ErrorMessageGenerator.getErrorMessage( error, this.carbonldp ).then( ( errorMessage ) => {
+				this.onError.emit( error );
+				this.errorMessage = errorMessage;
+			} );
 		} );
 	}
 

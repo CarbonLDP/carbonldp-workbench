@@ -94,7 +94,9 @@ export class DocumentExplorerComponent {
 	}
 
 	public handleExternalError( error:HTTPError | Error ):void {
-		this.messages.push( ErrorMessageGenerator.getErrorMessage( error ) );
+		ErrorMessageGenerator.getErrorMessage( error, this.carbonldp ).then( errorMessage => {
+			this.messages.push( errorMessage );
+		} );
 	}
 
 }
