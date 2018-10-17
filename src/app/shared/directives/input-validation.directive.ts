@@ -1,5 +1,5 @@
-import { Directive, HostListener, Optional, Host } from "@angular/core";
-import { NgModel, AbstractControl } from "@angular/forms";
+import { Directive, Host, HostListener, Optional } from "@angular/core";
+import { AbstractControl, NgModel } from "@angular/forms";
 
 /**
  * This directive gives you a valid state that takes into consideration the user's interaction with the control.

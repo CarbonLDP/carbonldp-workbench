@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders } from "@angular/core";
+import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 // Components
@@ -23,15 +23,12 @@ import { DocumentExplorerComponent } from "./document-explorer.component";
 import { AccessPointCreatorComponent } from "./access-point-creator/access-point-creator.component";
 import { DocumentCreatorComponent } from "./document-creator/document-creator.component";
 import { DocumentDeleterComponent } from "./document-deleter/document-deleter.component";
-
 // Modules
 import { SharedModule } from "app/shared/shared.module";
-
 // Services
 import { DocumentsResolverService } from "./documents-resolver.service";
-
 // Directives
-import { IdValidator, PropertyNameValidator, LiteralValueValidator, PointerValidator } from "./document-explorer-validators";
+import { IdValidator, LiteralValueValidator, PointerValidator, PropertyNameValidator } from "./document-explorer-validators";
 
 @NgModule( {
 	imports: [

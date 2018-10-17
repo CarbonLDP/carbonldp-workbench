@@ -1,4 +1,4 @@
-import { Directive, ElementRef, ContentChild, HostBinding, HostListener, Input, Output, EventEmitter, AfterContentInit } from "@angular/core";
+import { AfterContentInit, ContentChild, Directive, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output } from "@angular/core";
 
 @Directive( {
 	selector: ".title"
@@ -11,6 +11,7 @@ export class CollapsibleTitleDirective {
 		this.element = element;
 	}
 }
+
 @Directive( {
 	selector: ".content"
 } )

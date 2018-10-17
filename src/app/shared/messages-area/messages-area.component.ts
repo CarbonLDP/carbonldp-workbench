@@ -1,4 +1,4 @@
-import { Component, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component } from "@angular/core";
 
 import { MessagesAreaService } from "./messages-area.service";
 import { Message } from "./message.component";
@@ -25,10 +25,10 @@ export class MessagesAreaComponent implements AfterViewInit {
 				this.messages.push( message );
 
 				function messageExists( messageAux ) {
-					return ( message.statusCode === messageAux.statusCode
+					return (message.statusCode === messageAux.statusCode
 						&& message.title === messageAux.title &&
 						message.content === messageAux.content &&
-						message.statusMessage === messageAux.statusMessage );
+						message.statusMessage === messageAux.statusMessage);
 				}
 			}
 		);

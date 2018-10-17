@@ -1,16 +1,13 @@
-import { NgModule, ModuleWithProviders } from "@angular/core";
+import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-
 // Components
 import { DocumentsWidgetComponent } from "./widgets/documents/documents-widget.component";
 import { TriplesWidgetComponent } from "./widgets/triples/triples-widget.component";
 import { InstanceWidgetComponent } from "./widgets/instance/instance-widget.component"
 import { WidgetsComponent } from "./widgets/widgets.component";
 import { WidgetsMenu } from "./widgets/widgets-menu/widgets-menu.component"
-
 // Modules
 import { SharedModule } from "app/shared/shared.module";
-
 // Services
 import { WidgetsService } from "./widgets/widgets.service";
 

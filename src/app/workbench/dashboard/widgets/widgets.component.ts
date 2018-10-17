@@ -3,7 +3,6 @@ import { Component, Input } from "@angular/core";
 import { MessagesAreaService } from "app/shared/messages-area/messages-area.service";
 
 
-
 /*
 *  Displays all the Dashboard's Widgets
 * */

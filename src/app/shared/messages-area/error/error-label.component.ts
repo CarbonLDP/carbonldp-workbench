@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef } from "@angular/core";
+import { Component, ElementRef, Input } from "@angular/core";
 
 @Component( {
 	selector: "cw-error-label",
@@ -13,7 +13,7 @@ export class ErrorLabelComponent {
 
 	private element:ElementRef;
 	private $element:JQuery;
-	@Input() message:string|string[];
+	@Input() message:string | string[];
 
 	constructor( element:ElementRef ) {
 		this.element = element;

@@ -1,4 +1,4 @@
-import { Component, Output, HostBinding, ElementRef, EventEmitter } from "@angular/core";
+import { Component, EventEmitter, HostBinding, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { PlatformMetadata } from "carbonldp/System/PlatformMetadata";

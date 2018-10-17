@@ -1,6 +1,6 @@
 import { Injector } from "@angular/core";
 import { FormControl, NgControl } from "@angular/forms";
-import { EmailValidator, SlugValidator, MatchValidator, DomainValidator, URIValidator, FragmentValidator, URIFragmentValidator, RequiredIfValidator } from "./custom-validators";
+import { DomainValidator, EmailValidator, FragmentValidator, MatchValidator, RequiredIfValidator, SlugValidator, URIFragmentValidator, URIValidator } from "./custom-validators";
 
 
 export function customValidatorsSpecs() {

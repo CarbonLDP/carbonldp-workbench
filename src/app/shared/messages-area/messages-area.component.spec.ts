@@ -1,5 +1,5 @@
-import { Component, ViewChild, ContentChild, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
+import { Component, ContentChild, DebugElement, ViewChild } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 
 import { MessagesAreaService } from "./messages-area.service";

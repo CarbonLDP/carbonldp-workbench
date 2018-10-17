@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
 
 import { Message } from "./message.component";
 
@@ -11,7 +11,7 @@ export class MessagesAreaService {
 
 	addMessage( message:Message ):void;
 	addMessage( title:string, content?:string, type?:string, statusCode?:string, statusMessage?:string, endpoint?:string, duration?:number ):void;
-	addMessage( titleOrMessage?:string|Message, content?:string, type?:string, statusCode?:string, statusMessage?:string, endpoint?:string, duration?:number ):void {
+	addMessage( titleOrMessage?:string | Message, content?:string, type?:string, statusCode?:string, statusMessage?:string, endpoint?:string, duration?:number ):void {
 		let message:Message = {};
 		if( typeof titleOrMessage === "string" ) {
 			message.title = titleOrMessage;

@@ -1,4 +1,4 @@
-import { Component, Input, ElementRef } from "@angular/core";
+import { Component, ElementRef, Input } from "@angular/core";
 
 import * as $ from "jquery";
 

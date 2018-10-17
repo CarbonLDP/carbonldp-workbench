@@ -1,6 +1,7 @@
-import { Directive, ElementRef, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Directive, ElementRef } from "@angular/core";
 
 import Highlight from "highlight.js";
+
 // import "!style-loader!css-loader!highlight.js/styles/tomorrow-night.css";
 
 @Directive( {

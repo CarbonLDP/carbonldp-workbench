@@ -1,5 +1,5 @@
-import { Directive, Input, OnChanges, SimpleChanges, Injector } from "@angular/core";
-import { AbstractControl, Validator, NgModel, NG_VALIDATORS, NgControl, FormControl } from "@angular/forms";
+import { Directive, Injector, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { AbstractControl, FormControl, NG_VALIDATORS, NgControl, NgModel, Validator } from "@angular/forms";
 import { URI } from "carbonldp/RDF/URI";
 
 @Directive( {

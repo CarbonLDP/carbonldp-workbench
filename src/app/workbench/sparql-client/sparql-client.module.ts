@@ -13,7 +13,6 @@ import { PrefixPipe } from "./resultset-table/prefix.pipe";
 import { URIPipe } from "./resultset-table/uri.pipe";
 
 import { ResultsetTableComponent } from "./resultset-table/resultset-table.component";
-
 // Modules
 import { SharedModule } from "app/shared/shared.module";
 

@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { Router, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
+import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from "@angular/router";
 
 import { RouterService } from "app/shared/router.service";
 import { SidebarService } from "../sidebar/sidebar.service";

@@ -1,12 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 // Components
 import { HighlightDirective } from "./highlight.directive";
-import { EmailValidator, MatchValidator } from "./custom-validators";
-import { SlugValidator, DomainValidator } from "./custom-validators";
-import { URIValidator, FragmentValidator, URIFragmentValidator } from "./custom-validators";
-import { RequiredIfValidator, RequiredDirective } from "./custom-validators";
+import { DomainValidator, EmailValidator, FragmentValidator, MatchValidator, RequiredDirective, RequiredIfValidator, SlugValidator, URIFragmentValidator, URIValidator } from "./custom-validators";
 import { InputValidationDirective } from "./input-validation.directive";
 import { GrayedOutDirective } from "./grayed-out.directive";
 
