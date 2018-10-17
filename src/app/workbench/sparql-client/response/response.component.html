@@ -14,16 +14,23 @@
 		<!-- STARt: Action buttons of the response -->
 		<div class="right menu">
 			<div class="ui small basic icon buttons" style="border:none;">
-				<button (click)="toggleAccordion()" class="ui button btn-collapse" title="Collapse Response">
+				<button class="ui button btn-collapse" title="Collapse Response"
+				        [disabled]="response.isReExecuting"
+				        (click)="toggleAccordion()" >
 					<i class="caret icon" [ngClass]="{ down: accordionOpen, right: ! accordionOpen }"></i>
 				</button>
-				<button (click)="onConfigureResponse($event)" class="ui button btn-edit" title="Edit Query">
+				<button class="ui button btn-edit" title="Edit Query"
+				        [disabled]="response.isReExecuting"
+				        (click)="onConfigureResponse($event)" >
 					<i class="write icon"></i>
 				</button>
-				<button (click)="onReExecuteResponse($event)" class="ui button btn-refresh" title="Re-Execute Query">
+				<button class="ui button btn-refresh" title="Re-Execute Query"
+				        [disabled]="response.isReExecuting"
+				        (click)="onReExecuteResponse($event)">
 					<i class="refresh icon"></i>
 				</button>
-				<button (click)="onRemoveResponse($event)" class="ui button btn-close" title="Remove Response">
+				<button class="ui button btn-close" title="Remove Response"
+				        (click)="onRemoveResponse($event)">
 					<i class="remove icon"></i>
 				</button>
 			</div>

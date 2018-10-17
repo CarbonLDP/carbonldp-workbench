@@ -1,435 +1,464 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { Observable } from "rxjs";
+import { map, share } from "rxjs/operators";
+import { isEqual, sortBy } from "lodash";
 
 import { CarbonLDP } from "carbonldp";
 import { SPARQLRawResults } from "carbonldp/SPARQL/RawResults";
 import { Errors, Header, RequestOptions, Response } from "carbonldp/HTTP";
 import { SPARQLService } from "carbonldp/SPARQL";
 
-import { SPARQLClientResponse, SPARQLFormats, SPARQLQuery, SPARQLResponseType } from "./response/response.component";
-import * as CodeMirrorComponent from "app/shared/code-mirror/code-mirror.component";
+import { SPARQLClientResponse, SPARQLResponseType } from "./response/response.component";
 import { Message } from "app/shared/messages-area/message.component";
 import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
+import { SavedQueryService } from "app/workbench/sparql-client/saved-query.service";
+import { QueryType, SPARQLQuery, SPARQLType } from "app/workbench/sparql-client/models";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
+import { QueryBuilderComponent } from "app/workbench/sparql-client/query-builder/query-builder.component";
 
+class ModalControl<RESULT> {
+	promise:Promise<RESULT>;
+	resolve:( result:RESULT ) => void;
+	reject:( error:any ) => void;
 
-/*
-*   A component that allows users to create their own SPARQL queries.
-* */
+	constructor() {
+		this.promise = new Promise( ( resolve, reject ) => {
+			this.resolve = resolve;
+			this.reject = reject;
+		} );
+	}
+}
+
+class ActionCanceled {}
+
 @Component( {
 	selector: "cw-sparql-client",
 	templateUrl: "./sparql-client.component.html",
 	styleUrls: [ "./sparql-client.component.scss" ],
+	providers: [ SavedQueryService ],
 } )
 export class SPARQLClientComponent implements OnInit, AfterViewInit {
+	@Input() emitErrors:boolean = false;
+	@Output() errorOccurs:EventEmitter<any> = new EventEmitter();
 
-	sparqlTypes:SPARQLTypes = <SPARQLTypes>{
-		query: "Query",
-		update: "Update",
-	};
-	sparqlQueryOperations:SPARQLQueryOperations = <SPARQLQueryOperations>{
-		select: {
-			name: "SELECT",
-			formats: [
-				{ value: SPARQLFormats.table, name: "Friendly Table" },
-				// {value: SPARQLFormats.xml, name: "XML"},
-				// {value: SPARQLFormats.csv, name: "CSV"},
-				// {value: SPARQLFormats.tsv, name: "TSV"},
-			],
-		},
-		describe: {
-			name: "DESCRIBE",
-			formats: [
-				{ value: SPARQLFormats.jsonLD, name: "JSON-LD" },
-				{ value: SPARQLFormats.turtle, name: "TURTLE" },
-				{ value: SPARQLFormats.jsonRDF, name: "RDF/JSON" },
-				{ value: SPARQLFormats.rdfXML, name: "RDF/XML" },
-				{ value: SPARQLFormats.n3, name: "N3" },
-			],
-		},
-		construct: {
-			name: "CONSTRUCT",
-			formats: [
-				{ value: SPARQLFormats.jsonLD, name: "JSON-LD" },
-				{ value: SPARQLFormats.turtle, name: "TURTLE" },
-				{ value: SPARQLFormats.jsonRDF, name: "RDF/JSON" },
-				{ value: SPARQLFormats.rdfXML, name: "RDF/XML" },
-				{ value: SPARQLFormats.n3, name: "N3" },
-			],
-		},
-		ask: {
-			name: "ASK",
-			formats: [
-				{ value: SPARQLFormats.boolean, name: "Boolean" },
-			],
-		},
-		update: {
-			name: "UPDATE",
-			formats: [
-				{ value: SPARQLFormats.text, name: "Text" },
-			]
-		},
-		clear: {
-			name: "CLEAR",
-			formats: [
-				{ value: SPARQLFormats.text, name: "Text" },
-			]
-		},
-		insert: {
-			name: "INSERT",
-			formats: [
-				{ value: SPARQLFormats.text, name: "Text" },
-			]
-		},
-		"delete": {
-			name: "DELETE",
-			formats: [
-				{ value: SPARQLFormats.text, name: "Text" },
-			]
-		},
-		drop: {
-			name: "DROP",
-			formats: [
-				{ value: SPARQLFormats.text, name: "Text" },
-			]
-		},
-		load: {
-			name: "LOAD",
-			formats: [
-				{ value: SPARQLFormats.text, name: "Text" },
-			]
-		},
-		create: {
-			name: "CREATE",
-			formats: [
-				{ value: SPARQLFormats.text, name: "Text" },
-			]
-		}
-	};
+	@ViewChild( "queryBuilder" ) queryBuilder:QueryBuilderComponent;
 
 	isQueryType:boolean = true;
 	isSending:boolean = false;
 	isSaving:boolean = false;
-	isCarbonContext:boolean = false;
+
+	query:SPARQLQuery;
 	responses:SPARQLClientResponse[] = [];
+	savedQueries$:Observable<SPARQLQuery[]>;
 
-
-	currentQuery:SPARQLQuery = <SPARQLQuery>{
-		endpoint: "",
-		type: this.sparqlTypes.query,
-		content: "",
-		operation: null,
-		format: null,
-		name: "",
-	};
-	askingQuery:SPARQLQuery = <SPARQLQuery>{
-		endpoint: "",
-		type: this.sparqlTypes.query,
-		content: "",
-		operation: null,
-		format: null,
-		name: "",
-	};
-	formatsAvailable:any = [];
-	savedQueries:SavedSPARQLQueries = {};
-	savedQueriesKeys:Array<string> = [];
-	currentQueryName:string = '';
 	messages:any[] = [];
 
-	// Buttons
-	btnsGroupSaveQuery:JQuery;
-	btnSaveQuery:JQuery;
-	btnSave:JQuery;
-	btnSaveAs:JQuery;
-	// Sidebar
-	sidebar:JQuery;
-	// Modals
-	replaceQueryConfirmationModal:JQuery;
-	deleteQueryConfirmationModal:JQuery;
-	overwriteQueryConfirmationModal:JQuery;
+	// Expose SPARQLType to the template
+	readonly SPARQLType:typeof SPARQLType = SPARQLType;
 
-	// Regex
-	regExpSelect:RegExp = new RegExp( "((.|\n)+)?SELECT((.|\n)+)?", "i" );
-	regExpConstruct:RegExp = new RegExp( "((.|\n)+)?CONSTRUCT((.|\n)+)?", "i" );
-	regExpAsk:RegExp = new RegExp( "((.|\n)+)?ASK((.|\n)+)?", "i" );
-	regExpDescribe:RegExp = new RegExp( "((.|\n)+)?DESCRIBE((.|\n)+)?", "i" );
-	regExpURL:RegExp = new RegExp( "(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})" );
-	regExpInsert:RegExp = new RegExp( "((.|\n)+)?INSERT((.|\n)+)?", "i" );
-	regExpDelete:RegExp = new RegExp( "((.|\n)+)?DELETE((.|\n)+)?", "i" );
-	regExpClear:RegExp = new RegExp( "((.|\n)+)?CLEAR((.|\n)+)?", "i" );
-	regExpCreate:RegExp = new RegExp( "((.|\n)+)?CREATE((.|\n)+)?", "i" );
-	regExpDrop:RegExp = new RegExp( "((.|\n)+)?DROP((.|\n)+)?", "i" );
-	regExpLoad:RegExp = new RegExp( "((.|\n)+)?LOAD((.|\n)+)?", "i" );
-
-	// Inputs and Outputs
-	@Input() emitErrors:boolean = false;
-	@Output() errorOccurs:EventEmitter<any> = new EventEmitter();
-
-	private element:ElementRef;
 	// TODO: Make them configurable
-	private prefixes:{ [ prefix:string ]:string } = {
-		"acl": "http://www.w3.org/ns/auth/acl#",
-		"api": "http://purl.org/linked-data/api/vocab#",
-		"c": "https://carbonldp.com/ns/v1/platform#",
-		"cs": "https://carbonldp.com/ns/v1/security#",
-		"cw": "https://carbonldp.com/ns/v1/patch#",
-		"cc": "http://creativecommons.org/ns#",
-		"cert": "http://www.w3.org/ns/auth/cert#",
-		"dbp": "http://dbpedia.org/property/",
-		"dc": "http://purl.org/dc/terms/",
-		"dc11": "http://purl.org/dc/elements/1.1/",
-		"dcterms": "http://purl.org/dc/terms/",
-		"doap": "http://usefulinc.com/ns/doap#",
-		"example": "http://example.org/ns#",
-		"ex": "http://example.org/ns#",
-		"exif": "http://www.w3.org/2003/12/exif/ns#",
-		"fn": "http://www.w3.org/2005/xpath-functions#",
-		"foaf": "http://xmlns.com/foaf/0.1/",
-		"geo": "http://www.w3.org/2003/01/geo/wgs84_pos#",
-		"geonames": "http://www.geonames.org/ontology#",
-		"gr": "http://purl.org/goodrelations/v1#",
-		"http": "http://www.w3.org/2006/http#",
-		"ldp": "http://www.w3.org/ns/ldp#",
-		"log": "http://www.w3.org/2000/10/swap/log#",
-		"owl": "http://www.w3.org/2002/07/owl#",
-		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-		"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-		"rei": "http://www.w3.org/2004/06/rei#",
-		"rsa": "http://www.w3.org/ns/auth/rsa#",
-		"rss": "http://purl.org/rss/1.0/",
-		"sd": "http://www.w3.org/ns/sparql-service-description#",
-		"sfn": "http://www.w3.org/ns/sparql#",
-		"sioc": "http://rdfs.org/sioc/ns#",
-		"skos": "http://www.w3.org/2004/02/skos/core#",
-		"swrc": "http://swrc.ontoware.org/ontology#",
-		"types": "http://rdfs.org/sioc/types#",
-		"vcard": "http://www.w3.org/2001/vcard-rdf/3.0#",
-		"wot": "http://xmlns.com/wot/0.1/",
-		"xhtml": "http://www.w3.org/1999/xhtml#",
-		"xsd": "http://www.w3.org/2001/XMLSchema#",
-	};
+	private prefixes:Map<string, string> = new Map( [
+		[ "acl", "http://www.w3.org/ns/auth/acl#" ],
+		[ "api", "http://purl.org/linked-data/api/vocab#" ],
+		[ "c", "https://carbonldp.com/ns/v1/platform#" ],
+		[ "cs", "https://carbonldp.com/ns/v1/security#" ],
+		[ "cw", "https://carbonldp.com/ns/v1/patch#" ],
+		[ "cc", "http://creativecommons.org/ns#" ],
+		[ "cert", "http://www.w3.org/ns/auth/cert#" ],
+		[ "dbp", "http://dbpedia.org/property/" ],
+		[ "dc", "http://purl.org/dc/terms/" ],
+		[ "dc11", "http://purl.org/dc/elements/1.1/" ],
+		[ "dcterms", "http://purl.org/dc/terms/" ],
+		[ "doap", "http://usefulinc.com/ns/doap#" ],
+		[ "example", "http://example.org/ns#" ],
+		[ "ex", "http://example.org/ns#" ],
+		[ "exif", "http://www.w3.org/2003/12/exif/ns#" ],
+		[ "fn", "http://www.w3.org/2005/xpath-functions#" ],
+		[ "foaf", "http://xmlns.com/foaf/0.1/" ],
+		[ "geo", "http://www.w3.org/2003/01/geo/wgs84_pos#" ],
+		[ "geonames", "http://www.geonames.org/ontology#" ],
+		[ "gr", "http://purl.org/goodrelations/v1#" ],
+		[ "http", "http://www.w3.org/2006/http#" ],
+		[ "ldp", "http://www.w3.org/ns/ldp#" ],
+		[ "log", "http://www.w3.org/2000/10/swap/log#" ],
+		[ "owl", "http://www.w3.org/2002/07/owl#" ],
+		[ "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#" ],
+		[ "rdfs", "http://www.w3.org/2000/01/rdf-schema#" ],
+		[ "rei", "http://www.w3.org/2004/06/rei#" ],
+		[ "rsa", "http://www.w3.org/ns/auth/rsa#" ],
+		[ "rss", "http://purl.org/rss/1.0/" ],
+		[ "sd", "http://www.w3.org/ns/sparql-service-description#" ],
+		[ "sfn", "http://www.w3.org/ns/sparql#" ],
+		[ "sioc", "http://rdfs.org/sioc/ns#" ],
+		[ "shacl", "http://www.w3.org/ns/shacl#" ],
+		[ "skos", "http://www.w3.org/2004/02/skos/core#" ],
+		[ "swrc", "http://swrc.ontoware.org/ontology#" ],
+		[ "types", "http://rdfs.org/sioc/types#" ],
+		[ "vcard", "http://www.w3.org/2001/vcard-rdf/3.0#" ],
+		[ "wot", "http://xmlns.com/wot/0.1/" ],
+		[ "xhtml", "http://www.w3.org/1999/xhtml#" ],
+		[ "xsd", "http://www.w3.org/2001/XMLSchema#" ],
+	] );
+
 	private $element:JQuery;
-	private carbonldp:CarbonLDP;
-	private _sparql:string = "";
-	private _endpoint:string = "";
+	private $savedQueriesSidebar:JQuery;
 
-	// Getters and Setters
-	get codeMirrorMode():typeof CodeMirrorComponent.Mode { return CodeMirrorComponent.Mode; }
+	private $deleteQueryConfirmationModal:JQuery;
+	private deleteQueryConfirmationControl:ModalControl<boolean>;
 
-	get sparql():string { return this._sparql; }
+	private $saveQueryModal:JQuery;
+	private saveQueryControl:ModalControl<SPARQLQuery> | null;
 
-	set sparql( value:string ) {
-		this._sparql = value;
-		this.currentQuery.content = value;
-		this.sparqlChanged();
+	private $overwriteQueryConfirmationModal:JQuery;
+	private overwriteConfirmationControl:ModalControl<SPARQLQuery> | null;
+
+	private $replaceQueryConfirmationModal:JQuery;
+	private replaceQueryConfirmationControl:ModalControl<boolean> | null;
+
+	private queryBeingSaved:SPARQLQuery;
+	private queryBeingOverwritten:SPARQLQuery;
+
+	constructor( private element:ElementRef, private carbonldp:CarbonLDP, private savedQueryService:SavedQueryService ) {}
+
+	ngOnInit() {
+		this.resetQuery();
+
+		this.savedQueries$ = this.savedQueryService
+			.getAll()
+			// Sort by name in ascending order
+			.pipe( map( queries => sortBy( queries, query => query.name.toLowerCase() ) ) )
+			.pipe( share() );
 	}
 
-	get endpoint():string { return this._endpoint; }
-
-	set endpoint( value:string ) {
-		this._endpoint = value;
-		this.endpointChanged();
-	}
-
-
-	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
-		this.element = element;
-		this.isSending = false;
-		this.savedQueries = this.getLocalSavedQueries() || {};
-		//FIXME: change this for a function
-		this.savedQueriesKeys = this.getKeysFromSavedQueries();
-		this.carbonldp = carbonldp;
-	}
-
-	ngOnInit():void {
-		this.isCarbonContext = true;
-		this.currentQuery.endpoint = this.carbonldp.baseURI;
-	}
-
-	ngAfterViewInit():void {
+	ngAfterViewInit() {
 		this.$element = $( this.element.nativeElement );
-		this.btnSaveQuery = this.$element.find( ".btnSaveQuery" );
-		this.btnsGroupSaveQuery = this.$element.find( ".btnsGroupSaveQuery" );
-		this.btnSave = this.btnsGroupSaveQuery.find( ".btnSave" );
-		this.btnSaveAs = this.btnsGroupSaveQuery.find( ".btnSaveAs" );
-		this.sidebar = this.$element.find( ".query-builder .ui.sidebar" );
-		this.btnsGroupSaveQuery.find( ".dropdown" ).dropdown();
-		this.replaceQueryConfirmationModal = this.$element.find( ".ui.replace-query-confirmation.modal" );
-		this.overwriteQueryConfirmationModal = this.$element.find( ".ui.overwrite-query-confirmation.modal" );
-		this.deleteQueryConfirmationModal = this.$element.find( ".ui.delete-query-confirmation.modal" );
-		this.initializeSavedQueriesSidebar();
-		this.initializeModal();
+
+		this.initializeSemanticUIElements();
 	}
 
-	onChangeQueryType( $event:JQueryEventObject ):void {
-		let type:string = (<HTMLInputElement>$event.target).value;
-		this.isQueryType = type === this.sparqlTypes.query;
+	initializeSemanticUIElements() {
+		const defaultModalConfiguration = {
+			// Return false to prevent the modal from closing by default so the logic can be handled by Angular
+			onApprove: () => false,
+			onDeny: () => false,
+		};
+
+		// Save modal
+		this.$saveQueryModal = this.$element.find( ".cw-saveQueryModal" );
+		this.$saveQueryModal.modal( defaultModalConfiguration );
+
+		// Overwrite modal
+		this.$overwriteQueryConfirmationModal = this.$element.find( ".cw-overwriteQueryConfirmationModal" );
+		this.$overwriteQueryConfirmationModal.modal( defaultModalConfiguration );
+
+		// Replace modal
+		this.$replaceQueryConfirmationModal = this.$element.find( ".cw-replaceQueryConfirmationModal" );
+		this.$replaceQueryConfirmationModal.modal( defaultModalConfiguration );
+
+		// Delete modal
+		this.$deleteQueryConfirmationModal = this.$element.find( ".cw-deleteQueryConfirmationModal" );
+		this.$deleteQueryConfirmationModal.modal( defaultModalConfiguration );
+
+		// Saved queries sidebar
+		this.$savedQueriesSidebar = this.$element.find( ".cw-savedQueries" );
+		this.$savedQueriesSidebar.sidebar( {
+			context: this.$element.find( ".cw-queryBuilderCard" ),
+		} );
 	}
 
-	/**
-	 * Updates the currentQuery and the available formats depending on the SPARQL Query Operation
-	 * Triggered whenever the user writes code inside the CodeMirror text area.
-	 */
-	sparqlChanged():void {
-		let operation:string = this.getSPARQLOperation( this.sparql );
-		if( operation !== null && this.sparqlQueryOperations[ operation.toLowerCase() ] ) {
-			operation = operation.toLowerCase();
-			this.formatsAvailable = this.sparqlQueryOperations[ operation ].formats;
-			if( this.formatsAvailable.indexOf( this.currentQuery.format ) === - 1 ) {
-				this.currentQuery.format = this.sparqlQueryOperations[ operation ].formats[ 0 ].value;
+	toggleSidebar() {
+		this.$savedQueriesSidebar.sidebar( "toggle" );
+	}
+
+	showSidebar() {
+		this.$savedQueriesSidebar.sidebar( "show" );
+	}
+
+	hideSidebar() {
+		this.$savedQueriesSidebar.sidebar( "hide" );
+	}
+
+	async on_queryBuilder_execute( query:SPARQLQuery ) {
+		let response:SPARQLClientResponse;
+		try {
+			response = await this.disableInteractions( () =>
+				this.execute( query )
+			);
+		} catch( error ) {
+			if( error instanceof SPARQLClientResponse ) {
+				response = error  as SPARQLClientResponse;
+			} else if( this.emitErrors ) {
+				this.errorOccurs.emit( error );
+				return;
+			} else {
+				this.messages.push( error );
+				return;
 			}
-			this.currentQuery.type = this.sparqlTypes.query;
-			let queryOperations:string[] = [ "select", "describe", "construct", "ask" ];
-			if( queryOperations.indexOf( operation ) === - 1 ) this.currentQuery.type = this.sparqlTypes.update;
-			this.currentQuery.operation = operation.toUpperCase();
-		} else {
-			this.currentQuery.format = null;
-			this.currentQuery.operation = "update";
-			this.formatsAvailable = <any>[];
 		}
+
+		this.addResponse( response );
+	}
+
+	on_queryBuilder_clean( query:SPARQLQuery ) {
+		this.resetQuery();
+	}
+
+	@HostListener( "document:keydown", [ "$event" ] )
+	async handleSaveShortcut( event:KeyboardEvent ) {
+		if( (event.metaKey || event.ctrlKey) && event.code === "KeyS" ) {
+			// Prevent the browser from trying to save the web page
+			event.preventDefault();
+
+			await this.on_queryBuilder_save();
+		}
+	}
+
+	async on_queryBuilder_save() {
+		if( ! this.queryBuilder.hasUnsavedChanges() ) return;
+		// Create a copy of the query to replace the one being used by the UI
+		const query:SPARQLQuery = Object.assign( {}, this.query );
+		this.queryBeingSaved = query;
+
+		if( query.id ) {
+			// The user is saving an already saved query
+			this.query = await this.save( query );
+		} else {
+			// The user is saving a new query
+			try {
+				this.query = await this.askQueryDetailsAndThenSave();
+			} catch( error ) {
+				if( error instanceof ActionCanceled ) return;
+			}
+		}
+	}
+
+	async askQueryDetailsAndThenSave():Promise<SPARQLQuery> {
+		this.saveQueryControl = new ModalControl<SPARQLQuery>();
+
+		this.$saveQueryModal.modal( "show" );
+
+		return this.saveQueryControl.promise;
+	}
+
+	async on_saveQueryModal_cancel() {
+		// Clean state that the save modal could have left
+		delete this.query.name;
+
+		this.saveQueryControl.reject( new ActionCanceled() );
+		this.$saveQueryModal.modal( "hide" );
+	}
+
+	async on_saveQueryModal_submit() {
+		try {
+			this.saveQueryControl.resolve( await this.save( this.query ) );
+		} catch( error ) {
+			this.saveQueryControl.reject( error );
+		} finally {
+			this.$saveQueryModal.modal( "hide" );
+		}
+	}
+
+	async save( query:SPARQLQuery ):Promise<SPARQLQuery> {
+		const existingQuery = await this.disableInteractions( () =>
+			this.savedQueryService.findByName( query.name )
+		);
+		if(
+			// There's no query with the same name
+			! existingQuery ||
+			// or the query being saved shares its name only with itself
+			query.id && query.id === existingQuery.id
+		) {
+			return await this.disableInteractions( () =>
+				this.savedQueryService.save( query )
+			);
+		} else {
+			return this.askConfirmationToOverwrite( existingQuery, query );
+		}
+	}
+
+	async askConfirmationToOverwrite( original:SPARQLQuery, replacement:SPARQLQuery ):Promise<SPARQLQuery> {
+		this.overwriteConfirmationControl = new ModalControl<SPARQLQuery>();
+
+		this.queryBeingOverwritten = original;
+		this.$overwriteQueryConfirmationModal.modal( "show" );
+
+		return this.overwriteConfirmationControl.promise;
+	}
+
+	async on_overwriteQueryConfirmationModal_cancel() {
+		this.queryBeingOverwritten = null;
+		this.overwriteConfirmationControl.reject( new ActionCanceled() );
+		this.$overwriteQueryConfirmationModal.modal( "hide" );
+	}
+
+	async on_overwriteQueryConfirmationModal_submit() {
+		try {
+			this.overwriteConfirmationControl.resolve( await this.overwriteQuery() );
+		} catch( error ) {
+			this.overwriteConfirmationControl.reject( error );
+		} finally {
+			this.$overwriteQueryConfirmationModal.modal( "hide" );
+		}
+	}
+
+	async overwriteQuery():Promise<SPARQLQuery> {
+		return this.disableInteractions( () =>
+			this.savedQueryService.replace( this.queryBeingOverwritten, this.query )
+		);
+	}
+
+	async on_savedQuery_select( query:SPARQLQuery ) {
+		this.hideSidebar();
+
+		if( this.queryBuilder.hasUnsavedChanges() ) {
+			if( ! await this.getConfirmationForReplacement() ) {
+				return;
+			}
+		}
+
+		this.loadQuery( query );
+	}
+
+	getConfirmationForReplacement():Promise<boolean> {
+		this.replaceQueryConfirmationControl = new ModalControl<boolean>();
+
+		this.$replaceQueryConfirmationModal.modal( "show" );
+
+		return this.replaceQueryConfirmationControl.promise;
+	}
+
+	on_replaceQueryConfirmationModal_cancel() {
+		this.replaceQueryConfirmationControl.resolve( false );
+		this.$replaceQueryConfirmationModal.modal( "hide" );
+	}
+
+	on_replaceQueryConfirmationModal_submit() {
+		this.replaceQueryConfirmationControl.resolve( true );
+		this.$replaceQueryConfirmationModal.modal( "hide" );
+	}
+
+	async on_savedQuery_delete( query:SPARQLQuery ) {
+		if( await this.getConfirmationForDeletion() ) {
+			await this.disableInteractions( () =>
+				this.savedQueryService.delete( query )
+			);
+
+			// Was the current query the one that was deleted?
+			if( this.query.id === query.id ) this.resetQuery();
+		}
+	}
+
+	async getConfirmationForDeletion():Promise<boolean> {
+		this.deleteQueryConfirmationControl = new ModalControl();
+
+		this.$deleteQueryConfirmationModal.modal( "show" );
+
+		return this.deleteQueryConfirmationControl.promise;
+	}
+
+	on_deleteQueryConfirmationModal_cancel() {
+		this.deleteQueryConfirmationControl.resolve( false );
+	}
+
+	on_deleteQueryConfirmationModal_submit() {
+		this.deleteQueryConfirmationControl.resolve( true );
+	}
+
+	loadQuery( query:SPARQLQuery ) {
+		this.query = Object.assign( {}, query );
 	}
 
 	/**
-	 * Updates the currentQuery endpoints according to the context in which the editor is working.
-	 * Triggered whenever the user writes the endpoint URI.
+	 * Executes the callback after disabling UI interactions and re-enables them after the callback finishes or errors out
+	 * @param callback
 	 */
-	endpointChanged():void {
-		if( this.regExpURL.test( this.endpoint ) ) {
-			this.currentQuery.endpoint = this.endpoint;
+	async disableInteractions<RESULT>( callback:() => RESULT ):Promise<RESULT> {
+		this.isSending = true;
+		try {
+			const result = callback();
+
+			if( result instanceof Promise ) return await result;
+			else return result;
+		} finally {
+			this.isSending = false;
+		}
+	}
+
+	resetQuery() {
+		this.query = {
+			endpoint: "",
+			content: "",
+		};
+	}
+
+	async on_response_load( response:SPARQLClientResponse ) {
+		const query = Object.assign( {}, response.query );
+
+		// Make the endpoint relative if it shares the platform's base
+		const base = this.carbonldp.resolve( "" );
+		query.endpoint = query.endpoint.startsWith( base )
+			? query.endpoint.substring( base.length )
+			: query.endpoint;
+
+		// Delete name as the new configuration needs to be treated independently
+		delete query.name;
+
+		if( this.queryBuilder.hasUnsavedChanges() && ! isEqual( this.query, query ) ) {
+			if( await this.getConfirmationForReplacement() ) {
+				this.loadQuery( query );
+			}
 		} else {
-			this.currentQuery.endpoint = this.carbonldp.baseURI + this.endpoint;
+			this.loadQuery( query );
 		}
 	}
 
-	/**
-	 * Identifies which SPARL Query Operation will be called
-	 * @param query  String. The content of the Code Mirror plugin.
-	 * @returns      String. The name of the main SPARQL Query Operation.
-	 */
-	getSPARQLOperation( query:string ):string {
-
-		let queryForms:string[] = query.match( /\bCONSTRUCT\b|\bASK\b|\bSELECT\b|\bDESCRIBE\b|\bINSERT\b|\bDELETE\b|\bCLEAR\b|\bCREATE\b|\bDROP\b|\bLOAD\b/gi );
-
-		if( ! queryForms ) return null;
-
-		switch( true ) {
-			case (this.regExpConstruct.test( queryForms[ 0 ] )):
-				return this.sparqlQueryOperations.construct.name;
-			case (this.regExpAsk.test( queryForms[ 0 ] )):
-				return this.sparqlQueryOperations.ask.name;
-			case (this.regExpSelect.test( queryForms[ 0 ] )):
-				return this.sparqlQueryOperations.select.name;
-			case (this.regExpDescribe.test( queryForms[ 0 ] )):
-				return this.sparqlQueryOperations.describe.name;
-			case (this.regExpInsert.test( queryForms[ 0 ] )):
-				return this.sparqlQueryOperations.insert.name;
-			case (this.regExpDelete.test( queryForms[ 0 ] )):
-				return this.sparqlQueryOperations.delete.name;
-			case (this.regExpClear.test( queryForms[ 0 ] )):
-				return this.sparqlQueryOperations.clear.name;
-			case (this.regExpCreate.test( queryForms[ 0 ] )):
-				return this.sparqlQueryOperations.create.name;
-			case (this.regExpDrop.test( queryForms[ 0 ] )):
-				return this.sparqlQueryOperations.drop.name;
-			case (this.regExpLoad.test( queryForms[ 0 ] )):
-				return this.sparqlQueryOperations.load.name;
-			default:
-				return null;
-		}
-	}
-
-	getKeysFromSavedQueries() {
-		return Object.keys( this.savedQueries );
-	}
-
-	onReExecute( originalResponse:SPARQLClientResponse ):void {
+	async on_response_rerun( originalResponse:SPARQLClientResponse ) {
 		originalResponse.isReExecuting = true;
-		this.execute( originalResponse.query, originalResponse ).then(
-			( newResponse:SPARQLClientResponse ) => {
-				originalResponse.duration = newResponse.duration;
-				originalResponse.resultset = Object.assign( {}, newResponse.resultset );
-				originalResponse.setData = Object.assign( {}, newResponse.resultset );
-				originalResponse.query = Object.assign( {}, newResponse.query );
-				originalResponse.isReExecuting = false;
-			}
-		).catch(
-			( error:any ) => {
-				originalResponse.isReExecuting = false;
-				throw error;
-			}
-		);
-	}
-
-	onExecute():void {
-		this.isSending = true;
-		let query:SPARQLQuery = Object.assign( {}, this.currentQuery );
-
-		this.execute( query, null ).then(
-			( response:SPARQLClientResponse ) => {
-				this.addResponse( response );
-				return response;
-			}
-		).catch(
-			( error:any ) => {
-				if( error instanceof SPARQLClientResponse ) {
-					this.addResponse( error );
-				} else if( this.emitErrors ) {
-					this.errorOccurs.emit( error );
-				} else {
-					this.messages.push( error );
-				}
-			} );
-	}
-
-	onErase():void {
-		this.currentQuery.type = this.sparqlTypes.query;
-		this.sparql = "";
-		this.endpoint = "";
-	}
-
-	execute( query:SPARQLQuery, activeResponse?:SPARQLClientResponse ):Promise<SPARQLClientResponse> {
-		let type:string = query.type;
-		if( activeResponse ) {
-			query = activeResponse.query;
+		let newResponse:SPARQLClientResponse;
+		try {
+			newResponse = await this.execute( originalResponse.query );
+		} finally {
+			originalResponse.isReExecuting = false;
 		}
-		let promise:Promise<SPARQLClientResponse> = null;
-		switch( type ) {
-			case this.sparqlTypes.query:
-				promise = this.executeQuery( query );
-				break;
-			case this.sparqlTypes.update:
-				promise = this.executeUPDATE( query );
-				break;
+
+		// FIXME: Abstract to another method
+		originalResponse.duration = newResponse.duration;
+		originalResponse.resultset = Object.assign( {}, newResponse.resultset );
+		originalResponse.setData = Object.assign( {}, newResponse.resultset );
+		originalResponse.query = Object.assign( {}, newResponse.query );
+	}
+
+	async execute( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
+		// Copy the query to make the response a-temporal
+		const _query = Object.assign( {}, query );
+		// Remove its saved state
+		delete _query.id;
+
+		// Resolve the endpoint against Carbon LDP in case the endpoint is relative
+		_query.endpoint = this.carbonldp.resolve( _query.endpoint );
+
+		switch( _query.type ) {
+			case SPARQLType.QUERY:
+				return this.executeQuery( _query );
+			case SPARQLType.UPDATE:
+				return this.executeUPDATE( _query );
 			default:
-				// Unsupported Operation
-				promise = Promise.reject( this.getMessage( "Unsupported Operation" ) );
+				throw this.getMessage( "Unsupported Operation" );
 		}
-
-		return promise.then(
-			( response:SPARQLClientResponse ) => {
-				// Response Success
-				this.isSending = false;
-				return response;
-			},
-			( error:SPARQLClientResponse | Message ) => {
-				// Response Fail
-				this.isSending = false;
-				return Promise.reject( error );
-			}
-		);
 	}
 
+	// FIXME
 	executeQuery( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		this.isSending = true;
 		switch( query.operation ) {
-			case this.sparqlQueryOperations.select.name:
+			case QueryType.SELECT:
 				return this.executeSELECT( query );
-			case this.sparqlQueryOperations.describe.name:
+			case QueryType.DESCRIBE:
 				return this.executeDESCRIBE( query );
-			case this.sparqlQueryOperations.construct.name:
+			case QueryType.CONSTRUCT:
 				return this.executeCONSTRUCT( query );
-			case this.sparqlQueryOperations.ask.name:
+			case QueryType.ASK:
 				return this.executeASK( query );
 			default:
 				// Unsupported Operation
@@ -437,6 +466,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		}
 	}
 
+	// FIXME
 	executeSELECT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		let beforeTimestamp:number = (new Date()).valueOf();
 		return SPARQLService.executeRawSELECTQuery( query.endpoint, query.content ).then(
@@ -488,7 +518,6 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	}
 
 	executeUPDATE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		this.isSending = true;
 		let beforeTimestamp:number = (new Date()).valueOf();
 		return this.carbonldp.documents.$executeUPDATE( query.endpoint, query.content ).then(
 			():SPARQLClientResponse => {
@@ -501,18 +530,6 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 			} );
 	}
 
-	canExecute():boolean {
-		return ! ! (this.currentQuery.type && this.currentQuery.content && this.currentQuery.operation && this.currentQuery.format);
-	}
-
-	canSaveQuery():boolean {
-		return ! ! (this.currentQuery.type && this.currentQuery.content && this.currentQuery.operation && this.currentQuery.format && this.currentQuery.name);
-	}
-
-	canErase():boolean {
-		return (! ! this.endpoint || ! ! this.sparql);
-	}
-
 	onEmptyStack():void {
 		this.responses = [];
 	}
@@ -522,150 +539,12 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		if( idx > - 1 ) this.responses.splice( idx, 1 );
 	}
 
-	onConfigureResponse( response:SPARQLClientResponse ):void {
-		let configureQuery:SPARQLQuery = this.askingQuery = Object.assign( {}, response.query );
-		if( JSON.stringify( this.currentQuery ) !== JSON.stringify( configureQuery ) ) {
-			this.toggleReplaceQueryConfirmationModal();
-		} else {
-			this.loadQuery( configureQuery );
-		}
-	}
-
 	addResponse( response:SPARQLClientResponse ):void {
 		let responsesLength:number = this.responses.length, i:number;
 		for( i = responsesLength; i > 0; i -- ) {
 			this.responses[ i ] = this.responses[ i - 1 ];
 		}
 		this.responses[ 0 ] = response;
-	}
-
-	onClickSaveQuery():void {
-		typeof this.savedQueries[ this.currentQuery.name ] === "undefined"
-			? this.handleSaveQueries()
-			: this.askConfirmationToOverwrite( this.currentQuery );
-	}
-
-	onClickSavedQuery( selectedQuery:SPARQLQuery ):void {
-		if( ! ! this.currentQuery.endpoint || ! ! this.currentQuery.content ) {
-			if( ! ! this.currentQuery.endpoint && ! ! this.currentQuery.content ) {
-				if( JSON.stringify( this.currentQuery ) !== JSON.stringify( selectedQuery ) ) {
-					this.askConfirmationToReplace( selectedQuery );
-				} else {
-					this.loadQuery( selectedQuery );
-					this.toggleSidebar();
-				}
-			} else {
-				if( (! ! this.currentQuery.endpoint && this.currentQuery.endpoint === selectedQuery.endpoint) ||
-					(! ! this.currentQuery.content && this.currentQuery.content === selectedQuery.content) ) {
-					this.loadQuery( selectedQuery );
-					this.toggleSidebar();
-				} else {
-					this.askConfirmationToReplace( selectedQuery );
-				}
-			}
-
-		} else {
-			this.loadQuery( selectedQuery );
-			this.toggleSidebar();
-		}
-	}
-
-	askConfirmationToReplace( selectedQuery:SPARQLQuery ):void {
-		this.askingQuery = Object.assign( {}, selectedQuery );
-		this.toggleReplaceQueryConfirmationModal();
-	}
-
-	askConfirmationToOverwrite( selectedQuery:SPARQLQuery ):void {
-		this.askingQuery = Object.assign( {}, selectedQuery );
-		this.toggleOverwriteQueryConfirmationModal();
-	}
-
-	onClickRemoveSavedQuery( key:string ):void {
-		this.savedQueries = this.getLocalSavedQueries();
-		this.askingQuery = this.savedQueries[ key ];
-		this.toggleDeleteQueryConfirmationModal();
-	}
-
-	removeQuery( query:SPARQLQuery ):void {
-		this.savedQueries = this.getLocalSavedQueries();
-		let key:string = query.name;
-		delete this.savedQueries[ key ];
-		this.currentQueryName = '';
-		this.updateLocalSavedQueries();
-		this.savedQueries = this.getLocalSavedQueries();
-		this.savedQueriesKeys = this.getKeysFromSavedQueries();
-	}
-
-	loadQuery( query:SPARQLQuery ):void {
-		this.currentQuery = Object.assign( {}, query );
-		this.currentQueryName = query.name;
-		this.askingQuery = Object.assign( {}, query );
-		this.endpoint = query.endpoint;
-		this.sparql = query.content;
-	}
-
-	initializeSavedQueriesSidebar():void {
-		this.sidebar.sidebar( {
-			context: this.$element.find( ".query-builder .pushable" ),
-		} );
-	}
-
-	initializeModal():void {
-		this.deleteQueryConfirmationModal.modal( {
-			closable: false,
-			blurring: true,
-		} );
-		this.replaceQueryConfirmationModal.modal( {
-			closable: false,
-			blurring: true,
-		} );
-	}
-
-	toggleReplaceQueryConfirmationModal():void {
-		this.replaceQueryConfirmationModal.modal( "toggle" );
-	}
-
-	toggleDeleteQueryConfirmationModal():void {
-		this.deleteQueryConfirmationModal.modal( "toggle" );
-	}
-
-	toggleOverwriteQueryConfirmationModal():void {
-		this.overwriteQueryConfirmationModal.modal( "toggle" );
-	}
-
-
-	onApproveQueryReplacement( approvedQuery:SPARQLQuery ):void {
-		this.askingQuery = <SPARQLQuery>{};
-		this.loadQuery( approvedQuery );
-		this.hideSidebar();
-	}
-
-	onApproveQueryOverwrite():void {
-		this.askingQuery = <SPARQLQuery>{};
-		this.handleSaveQueries();
-	}
-
-	onApproveQueryRemoval( approvedQuery:SPARQLQuery ):void {
-		this.removeQuery( approvedQuery );
-		this.askingQuery = <SPARQLQuery>{};
-	}
-
-	getLocalSavedQueries():SavedSPARQLQueries {
-		if( ! window.localStorage.getItem( "savedQueries" ) )
-			this.updateLocalSavedQueries();
-		return <SavedSPARQLQueries>JSON.parse( window.localStorage.getItem( "savedQueries" ) );
-	}
-
-	updateLocalSavedQueries():void {
-		window.localStorage.setItem( "savedQueries", JSON.stringify( this.savedQueries ) );
-	}
-
-	toggleSidebar():void {
-		this.sidebar.sidebar( "toggle" );
-	}
-
-	hideSidebar():void {
-		this.sidebar.sidebar( "hide" );
 	}
 
 	closeMessage( evt:any ):void {
@@ -689,7 +568,7 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	}
 
 	buildResponse( duration:number, resultset:SPARQLRawResults | string | Message, responseType:string, query:SPARQLQuery ):SPARQLClientResponse {
-		let clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
+		const clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
 		clientResponse.duration = duration;
 		clientResponse.resultset = resultset;
 		clientResponse.setData( resultset );
@@ -709,60 +588,4 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		}
 		return errorMessage;
 	}
-
-	handleSaveQueries() {
-		this.isSaving = true;
-		let query:SPARQLQuery = <SPARQLQuery>{
-			endpoint: this.currentQuery.endpoint,
-			type: this.currentQuery.type,
-			content: this.currentQuery.content,
-			operation: this.currentQuery.operation,
-			format: this.currentQuery.format,
-			name: this.currentQuery.name,
-			id: this.getKeysFromSavedQueries().length,
-		};
-
-		this.savedQueries = this.getLocalSavedQueries();
-		this.savedQueries[ query.name ] = query;
-		this.updateLocalSavedQueries();
-		setInterval( () => {
-			this.isSaving = false;
-			this.savedQueries = this.getLocalSavedQueries();
-			this.savedQueriesKeys = this.getKeysFromSavedQueries();
-			this.currentQuery = query;
-			this.currentQueryName = query.name;
-		}, 500 );
-	}
-}
-
-export interface SPARQLQueryOperationFormat {
-	name:string;
-	value:string;
-}
-
-export interface SPARQLQueryOperation {
-	name:string;
-	formats:SPARQLQueryOperationFormat[];
-}
-
-export interface SPARQLQueryOperations {
-	select:SPARQLQueryOperation;
-	describe:SPARQLQueryOperation;
-	construct:SPARQLQueryOperation;
-	ask:SPARQLQueryOperation;
-	insert:SPARQLQueryOperation;
-	"delete":SPARQLQueryOperation;
-	clear:SPARQLQueryOperation;
-	create:SPARQLQueryOperation;
-	drop:SPARQLQueryOperation;
-	load:SPARQLQueryOperation;
-}
-
-export interface SPARQLTypes {
-	query:string;
-	update:string;
-}
-
-export interface SavedSPARQLQueries {
-	[ name:string ]:SPARQLQuery
 }

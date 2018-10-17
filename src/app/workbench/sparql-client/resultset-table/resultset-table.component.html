@@ -14,10 +14,10 @@
 		<tbody>
 			<tr *ngFor="let binding of bindings">
 				<td *ngFor="let value of binding" [ngClass]="{
-						positive: value?.type === 'literal' && value?.datatype !== null,
+						literal: value?.type === 'literal' && value?.datatype !== null,
 						warning: value?.type === 'literal' && value?.datatype === null
 					}">
-					<span *ngIf="value?.type === 'uri'">{{ value.value | relative:query.endpoint | prefix:prefixes }}</span>
+					<span *ngIf="value?.type === 'uri'">{{ value.value | relative:query.endpoint | prefix:prefixes | uri }}</span>
 					<span *ngIf="value?.type === 'bnode'">{{ value.value }}</span>
 					<span *ngIf="value?.type === 'literal'">{{ value.value }}</span>
 				</td>
