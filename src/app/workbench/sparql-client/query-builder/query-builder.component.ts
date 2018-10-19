@@ -22,6 +22,7 @@ export class QueryBuilderComponent implements OnInit, OnChanges {
 	@Output() execute:EventEmitter<SPARQLQuery> = new EventEmitter<SPARQLQuery>();
 	@Output() clean:EventEmitter<SPARQLQuery> = new EventEmitter<SPARQLQuery>();
 	@Output() save:EventEmitter<SPARQLQuery> = new EventEmitter<SPARQLQuery>();
+	@Output() clone:EventEmitter<SPARQLQuery> = new EventEmitter<SPARQLQuery>();
 
 	@ViewChild( "nameInput" ) nameInput:ElementRef;
 

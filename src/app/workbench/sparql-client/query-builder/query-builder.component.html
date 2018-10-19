@@ -81,6 +81,13 @@
 				<i class="save icon"></i>
 				Save
 			</button>
+			<button class="ui basic button"
+			        *ngIf="isSavedQuery()"
+			        (click)="clone.emit( query )"
+			        [disabled]="loading">
+				<i class="copy icon"></i>
+				Clone
+			</button>
 		</div>
 	</div>
 	<!-- END: Action buttons -->

@@ -234,6 +234,15 @@ export class SPARQLClientComponent implements OnInit {
 		}
 	}
 
+	async on_queryBuilder_clone( query:SPARQLQuery ) {
+		const _clone:SPARQLQuery = Object.assign( {}, query );
+		// Delete saved properties
+		delete _clone.id;
+		delete _clone.name;
+
+		this.loadQuery( _clone );
+	}
+
 	async on_savedQuery_select( query:SPARQLQuery ) {
 		this.hideSidebar();
 
