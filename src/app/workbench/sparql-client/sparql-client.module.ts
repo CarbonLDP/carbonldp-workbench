@@ -9,18 +9,20 @@ import { QueryBuilderComponent } from "./query-builder/query-builder.component";
 import { ResponseComponent } from "./response/response.component";
 
 import { RelativePipe } from "./resultset-table/relative.pipe";
+import { BNodePipe } from "app/workbench/sparql-client/resultset-table/bnode.pipe";
 import { PrefixPipe } from "./resultset-table/prefix.pipe";
 import { URIPipe } from "./resultset-table/uri.pipe";
 
 import { ResultsetTableComponent } from "./resultset-table/resultset-table.component";
 // Modules
-import { SharedModule } from "app/shared/shared.module";
+import { AppCommonModule } from "app/common/app-common.module";
+
 
 @NgModule( {
 	imports: [
 		CommonModule,
 		RouterModule,
-		SharedModule,
+		AppCommonModule,
 		FormsModule
 	],
 	declarations: [
@@ -28,8 +30,8 @@ import { SharedModule } from "app/shared/shared.module";
 		QueryBuilderComponent,
 		ResponseComponent,
 		ResultsetTableComponent,
+		BNodePipe,
 		RelativePipe,
-		PrefixPipe,
 		PrefixPipe,
 		URIPipe,
 	],

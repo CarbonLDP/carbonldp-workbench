@@ -1,23 +1,22 @@
 import { Component, Input, Output, ElementRef, EventEmitter, AfterViewInit, OnInit } from "@angular/core";
 
-import * as CodeMirrorComponent from "app/shared/code-mirror/code-mirror.component";
+import * as CodeMirrorComponent from "app/common/components/code-mirror/code-mirror.component";
 
-import { SPARQLFormats, SPARQLQuery } from "../models";
+import { SPARQLFormats, SPARQLQuery, SPARQLType } from "../models";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
 
-export class SPARQLResponseType {
-	static success:string = "success";
-	static default:string = "default";
-	static error:string = "error";
+export enum SPARQLResponseType {
+	Success = "Success",
+	Error = "Error",
 }
 
 export class SPARQLClientResponse {
 	duration:number = null;
-	resultset:any = null;
+	resultSet:any = null;
 	query:SPARQLQuery = null;
-	result:string = null;
+	result:SPARQLResponseType = null;
 	isReExecuting:boolean = false;
 	data:string = null;
 
@@ -51,13 +50,15 @@ export class ResponseComponent implements AfterViewInit, OnInit {
 
 	sparqlFormats:typeof SPARQLFormats = SPARQLFormats;
 
-	get codeMirrorMode():typeof CodeMirrorComponent.Mode { return CodeMirrorComponent.Mode; }
+	readonly codeMirrorMode:typeof CodeMirrorComponent.Mode = CodeMirrorComponent.Mode;
+
+	readonly SPARQLType:typeof SPARQLType = SPARQLType;
 
 	accordion:any;
 	accordionOpen:boolean = true;
 	menu:any;
 
-	get responseType():typeof SPARQLResponseType { return SPARQLResponseType; }
+	readonly SPARQLResponseType:typeof SPARQLResponseType = SPARQLResponseType;
 
 	constructor( element:ElementRef ) {
 		this.element = element;

@@ -3,8 +3,9 @@
 	<div class="ui top attached menu">
 		<div class="right menu">
 			<button class="show-queries ui button item"
-			        [disabled]="isSending"
-			        (click)="toggleSidebar()"><i class="sidebar icon"></i> Saved Queries</button>
+			        [disabled]="loading"
+			        (click)="toggleSidebar()"><i class="sidebar icon"></i> Saved Queries
+			</button>
 		</div>
 	</div>
 	<!-- END: Header of the query builder -->
@@ -13,6 +14,10 @@
 	<div class="cw-queryBuilderCard ui middle attached segment pushable">
 		<!-- START: List of the saved queries -->
 		<div class="cw-savedQueries ui inverted right vertical wide dimmed sidebar menu queries-list">
+			<!--
+				2018-10-19 @MiguelAraCo
+				TODO[feature]: Add text: "Queries are saved in your browser's local storage"
+			-->
 			<ng-container *ngIf="savedQueries$ | async; let savedQueries; else loadingSavedQueries">
 				<ng-container *ngIf="savedQueries.length === 0">
 					<!-- Content to show when there are no saved queries -->
@@ -32,7 +37,7 @@
 						</div>
 					</div>
 					<i class="cw-savedQuery-deleteButton icon close"
-					   (click)="onDeleteSavedQuery( savedQuery )"></i>
+					   (click)="on_savedQuery_delete( savedQuery )"></i>
 				</div>
 			</ng-container>
 			<ng-template #loadingSavedQueries>
@@ -44,6 +49,23 @@
 		<!-- START: Form of the query builder -->
 		<div class="ui pusher">
 			<div class="ui basic segment">
+				<div class="ui inverted dimmer"
+				     [ngClass]="{ active: loading }">
+					<div class="ui text loader">
+						<div class="cw-duration-label"
+						      *ngIf="queryExecutionState === QueryExecutionState.EXECUTING && queryExecutionDuration === 0">Sending...</div>
+						<code class="cw-duration-label"
+						      *ngIf="queryExecutionState === QueryExecutionState.EXECUTING && queryExecutionDuration !== 0">{{queryExecutionDuration | formatDuration:'{ "decimals": 0, "fixedLength": true }'}}</code>
+						<div class="cw-duration-label"
+						     *ngIf="queryExecutionState === QueryExecutionState.PROCESSING_RESPONSE">Rendering...</div>
+						<div class="cw-duration-label"
+						     *ngIf="queryExecutionState === QueryExecutionState.CANCELING">Canceling...</div>
+						<button type="button" class="ui negative right labeled icon button"
+						        [class.loading]="queryExecutionState === QueryExecutionState.CANCELING"
+						        [disabled]="! ( queryExecutionState === QueryExecutionState.PREPARING || queryExecutionState === QueryExecutionState.EXECUTING )"
+						        (click)="on_queryBuilder_cancel()">Cancel<i class="cancel icon"></i></button>
+					</div>
+				</div>
 				<div class="ui grid">
 					<div class="row">
 						<div class="column">
@@ -52,7 +74,7 @@
 								(execute)="on_queryBuilder_execute( $event )"
 								(clean)="on_queryBuilder_clean( $event )"
 								(save)="on_queryBuilder_save( $event )"
-								[loading]="isSending"
+								[loading]="loading"
 								[query]="query"></cw-query-builder>
 							<!-- /basi segment -->
 						</div>
@@ -64,21 +86,6 @@
 		<!-- START: Form of the query builder -->
 	</div>
 	<!-- END: Body of the query builder -->
-
-
-	<!-- START: Displays error message -->
-	<div class="ui attached error message" *ngFor="let message of messages">
-		<i class="close icon" (click)="closeMessage($event)"></i>
-		<div class="header">
-			{{message.title}}
-		</div>
-		<p>
-			{{message.content}}<br>
-			<span *ngIf="message.statusCode">Status: {{message.statusCode}} - {{message.statusMessage}}</span><br>
-			<span *ngIf="message.endpoint">URI: {{message.endpoint}}</span>
-		</p>
-	</div>
-	<!-- END: Displays error message -->
 </div>
 
 
@@ -89,9 +96,9 @@
 			<h3>Response Stack</h3>
 		</div>
 		<div class="column right aligned">
-			<button class="ui inverted white button"
+			<button type="button" class="ui inverted white button"
 			        [disabled]="responses.length <= 0"
-			        (click)="onEmptyStack()">
+			        (click)="on_responseStack_empty()">
 				<i class="trash outline icon"></i>
 				Empty Stack <span *ngIf="responses.length>0">({{responses.length}})</span>
 			</button>
@@ -102,7 +109,7 @@
 		                    *ngFor="let response of responses; let i = index"
 		                    [response]="response"
 		                    [prefixes]="prefixes"
-		                    (onRemove)="onRemove($event)"
+		                    (onRemove)="on_response_remove($event)"
 		                    (onConfigure)="on_response_load($event)"
 		                    (onReExecute)="on_response_rerun($event)"></cw-sparql-response>
 	</div>
@@ -112,7 +119,7 @@
 <!--TODO: build a modal component to replace this code below -->
 
 <form class="cw-saveQueryModal ui tiny modal"
-      [ngClass]="{loading: isSaving}"
+      [ngClass]="{loading: loading}"
       (submit)="on_saveQueryModal_submit()">
 	<div class="header">
 		Save query

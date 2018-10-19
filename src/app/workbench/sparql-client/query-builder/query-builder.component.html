@@ -1,4 +1,4 @@
-<form class="ui form" [ngClass]="{loading: loading}">
+<form class="ui form">
 	<!-- START: Query name -->
 	<div class="cw-name" *ngIf="query.id">
 		<i class="star icon"></i>
@@ -52,6 +52,7 @@
 	<div class="field" *ngIf="query.type === SPARQLType.QUERY && availableFormats.length > 1">
 		<label>Output Format:</label>
 		<select class="ui dropdown" name="format" title="Output format"
+		        [disabled]="loading"
 		        [(ngModel)]="query.format">
 			<option *ngFor="let format of availableFormats" [value]="format">{{format}}</option>
 		</select>
@@ -62,20 +63,21 @@
 	<div class="fields row">
 		<div class="column field">
 			<button class="ui blue button"
+			        [ngClass]="{ loading: loading }"
 			        (click)="execute.emit( query )"
-			        [disabled]="! isValid()">
+			        [disabled]="loading || ! isValid()">
 				<i class="play icon"></i>
 				Execute
 			</button>
 			<button class="ui basic button"
 			        (click)="clean.emit( query )"
-			        [disabled]="! isSavedQuery() && isEmpty()">
+			        [disabled]="loading || ! isSavedQuery() && isEmpty()">
 				<i class="erase icon"></i>
 				Clean
 			</button>
 			<button class="ui basic button"
 			        (click)="save.emit( query )"
-			        [disabled]="( isSavedQuery() && ! hasUnsavedChanges() ) || ( ! isSavedQuery() && isEmpty() )">
+			        [disabled]="loading || ( isSavedQuery() && ! hasUnsavedChanges() ) || ( ! isSavedQuery() && isEmpty() )">
 				<i class="save icon"></i>
 				Save
 			</button>

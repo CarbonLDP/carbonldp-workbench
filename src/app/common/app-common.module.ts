@@ -1,19 +1,19 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 // Components
-import { MessageComponent } from "./messages-area/message.component";
-import { MessagesAreaComponent } from "./messages-area/messages-area.component";
-import { ErrorLabelComponent } from "./messages-area/error/error-label.component";
-import { PaginatorComponent } from "./paginator/paginator.component";
-import { VersionsPresenterComponent } from "./versions-presenter/versions-presenter.component";
-import * as CodeMirrorComponent from "./code-mirror/code-mirror.component";
+import { MessageComponent } from "./components/messages-area/message.component";
+import { MessagesAreaComponent } from "./components/messages-area/messages-area.component";
+import { ErrorLabelComponent } from "./components/messages-area/error/error-label.component";
+import { PaginatorComponent } from "./components/paginator/paginator.component";
+import { VersionsPresenterComponent } from "./components/versions-presenter/versions-presenter.component";
+import * as CodeMirrorComponent from "./components/code-mirror/code-mirror.component";
 // Modules
 import { PipesModule } from "./pipes/pipes.module";
 import { DirectivesModule } from "./directives/directives.module";
-import { SemanticModule } from "./semantic/semantic.module";
+import { SemanticModule } from "./components/semantic/semantic.module";
 // Services
 import { RouterService } from "./router.service";
-import { MessagesAreaService } from "./messages-area/messages-area.service";
+import { MessagesAreaService } from "./components/messages-area/messages-area.service";
 
 // Pipes
 
@@ -44,11 +44,11 @@ import { MessagesAreaService } from "./messages-area/messages-area.service";
 	]
 } )
 
-export class SharedModule {
+export class AppCommonModule {
 
 	static forRoot():ModuleWithProviders {
 		return {
-			ngModule: SharedModule,
+			ngModule: AppCommonModule,
 			providers: [ MessagesAreaService, RouterService ]
 		};
 	}

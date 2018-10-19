@@ -13,12 +13,9 @@
 		</thead>
 		<tbody>
 			<tr *ngFor="let binding of bindings">
-				<td *ngFor="let value of binding" [ngClass]="{
-						literal: value?.type === 'literal' && value?.datatype !== null,
-						warning: value?.type === 'literal' && value?.datatype === null
-					}">
+				<td *ngFor="let value of binding" [ngClass]="'cw-value--' + value.type">
 					<span *ngIf="value?.type === 'uri'">{{ value.value | relative:query.endpoint | prefix:prefixes | uri }}</span>
-					<span *ngIf="value?.type === 'bnode'">{{ value.value }}</span>
+					<span *ngIf="value?.type === 'bnode'">{{ value.value | bnode }}</span>
 					<span *ngIf="value?.type === 'literal'">{{ value.value }}</span>
 				</td>
 			</tr>

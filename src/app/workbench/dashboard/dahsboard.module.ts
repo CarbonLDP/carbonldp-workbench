@@ -7,7 +7,7 @@ import { InstanceWidgetComponent } from "./widgets/instance/instance-widget.comp
 import { WidgetsComponent } from "./widgets/widgets.component";
 import { WidgetsMenu } from "./widgets/widgets-menu/widgets-menu.component"
 // Modules
-import { SharedModule } from "app/shared/shared.module";
+import { AppCommonModule } from "app/common/app-common.module";
 // Services
 import { WidgetsService } from "./widgets/widgets.service";
 
@@ -15,7 +15,7 @@ import { WidgetsService } from "./widgets/widgets.service";
 @NgModule( {
 	imports: [
 		CommonModule,
-		SharedModule,
+		AppCommonModule,
 	],
 	declarations: [
 		DocumentsWidgetComponent,

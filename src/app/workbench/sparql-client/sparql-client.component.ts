@@ -1,22 +1,24 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { Component, ElementRef, EventEmitter, HostListener, OnInit, Output, ViewChild } from "@angular/core";
 import { Observable } from "rxjs";
 import { map, share } from "rxjs/operators";
 import { isEqual, sortBy } from "lodash";
 
 import { CarbonLDP } from "carbonldp";
 import { SPARQLRawResults } from "carbonldp/SPARQL/RawResults";
-import { Errors, Header, RequestOptions, Response } from "carbonldp/HTTP";
+import { Errors, Header, RequestOptions } from "carbonldp/HTTP";
 import { SPARQLService } from "carbonldp/SPARQL";
 
 import { SPARQLClientResponse, SPARQLResponseType } from "./response/response.component";
-import { Message } from "app/shared/messages-area/message.component";
-import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
+import { Message } from "app/common/components/messages-area/message.component";
+import { ErrorMessageGenerator } from "app/common/components/messages-area/error/error-message-generator";
 import { SavedQueryService } from "app/workbench/sparql-client/saved-query.service";
 import { QueryType, SPARQLQuery, SPARQLType } from "app/workbench/sparql-client/models";
 
 import * as $ from "jquery";
 import "semantic-ui/semantic";
 import { QueryBuilderComponent } from "app/workbench/sparql-client/query-builder/query-builder.component";
+import { Profile, profile } from "app/common/fns";
+import { ActionCanceled } from "app/common/models";
 
 class ModalControl<RESULT> {
 	promise:Promise<RESULT>;
@@ -31,7 +33,13 @@ class ModalControl<RESULT> {
 	}
 }
 
-class ActionCanceled {}
+enum QueryExecutionState {
+	IDLE,
+	PREPARING,
+	EXECUTING,
+	PROCESSING_RESPONSE,
+	CANCELING,
+}
 
 @Component( {
 	selector: "cw-sparql-client",
@@ -39,24 +47,24 @@ class ActionCanceled {}
 	styleUrls: [ "./sparql-client.component.scss" ],
 	providers: [ SavedQueryService ],
 } )
-export class SPARQLClientComponent implements OnInit, AfterViewInit {
-	@Input() emitErrors:boolean = false;
-	@Output() errorOccurs:EventEmitter<any> = new EventEmitter();
+export class SPARQLClientComponent implements OnInit {
+	@Output() error:EventEmitter<any> = new EventEmitter();
 
 	@ViewChild( "queryBuilder" ) queryBuilder:QueryBuilderComponent;
 
-	isQueryType:boolean = true;
-	isSending:boolean = false;
-	isSaving:boolean = false;
+	loading:boolean = false;
+
+	queryExecutionState:QueryExecutionState = QueryExecutionState.IDLE;
+	queryExecutionDuration:number;
 
 	query:SPARQLQuery;
 	responses:SPARQLClientResponse[] = [];
 	savedQueries$:Observable<SPARQLQuery[]>;
 
-	messages:any[] = [];
-
 	// Expose SPARQLType to the template
 	readonly SPARQLType:typeof SPARQLType = SPARQLType;
+
+	readonly QueryExecutionState:typeof QueryExecutionState = QueryExecutionState;
 
 	// TODO: Make them configurable
 	private prefixes:Map<string, string> = new Map( [
@@ -123,61 +131,16 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 	constructor( private element:ElementRef, private carbonldp:CarbonLDP, private savedQueryService:SavedQueryService ) {}
 
 	ngOnInit() {
-		this.resetQuery();
+		this.$element = $( this.element.nativeElement );
 
+		this.resetQuery();
 		this.savedQueries$ = this.savedQueryService
 			.getAll()
 			// Sort by name in ascending order
 			.pipe( map( queries => sortBy( queries, query => query.name.toLowerCase() ) ) )
 			.pipe( share() );
-	}
-
-	ngAfterViewInit() {
-		this.$element = $( this.element.nativeElement );
 
 		this.initializeSemanticUIElements();
-	}
-
-	initializeSemanticUIElements() {
-		const defaultModalConfiguration = {
-			// Return false to prevent the modal from closing by default so the logic can be handled by Angular
-			onApprove: () => false,
-			onDeny: () => false,
-		};
-
-		// Save modal
-		this.$saveQueryModal = this.$element.find( ".cw-saveQueryModal" );
-		this.$saveQueryModal.modal( defaultModalConfiguration );
-
-		// Overwrite modal
-		this.$overwriteQueryConfirmationModal = this.$element.find( ".cw-overwriteQueryConfirmationModal" );
-		this.$overwriteQueryConfirmationModal.modal( defaultModalConfiguration );
-
-		// Replace modal
-		this.$replaceQueryConfirmationModal = this.$element.find( ".cw-replaceQueryConfirmationModal" );
-		this.$replaceQueryConfirmationModal.modal( defaultModalConfiguration );
-
-		// Delete modal
-		this.$deleteQueryConfirmationModal = this.$element.find( ".cw-deleteQueryConfirmationModal" );
-		this.$deleteQueryConfirmationModal.modal( defaultModalConfiguration );
-
-		// Saved queries sidebar
-		this.$savedQueriesSidebar = this.$element.find( ".cw-savedQueries" );
-		this.$savedQueriesSidebar.sidebar( {
-			context: this.$element.find( ".cw-queryBuilderCard" ),
-		} );
-	}
-
-	toggleSidebar() {
-		this.$savedQueriesSidebar.sidebar( "toggle" );
-	}
-
-	showSidebar() {
-		this.$savedQueriesSidebar.sidebar( "show" );
-	}
-
-	hideSidebar() {
-		this.$savedQueriesSidebar.sidebar( "hide" );
 	}
 
 	async on_queryBuilder_execute( query:SPARQLQuery ) {
@@ -187,18 +150,21 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 				this.execute( query )
 			);
 		} catch( error ) {
-			if( error instanceof SPARQLClientResponse ) {
-				response = error  as SPARQLClientResponse;
-			} else if( this.emitErrors ) {
-				this.errorOccurs.emit( error );
+			if( error instanceof ActionCanceled ) {
 				return;
+			} else if( error instanceof SPARQLClientResponse ) {
+				response = error as SPARQLClientResponse;
 			} else {
-				this.messages.push( error );
+				this.error.emit( error );
 				return;
 			}
 		}
 
 		this.addResponse( response );
+	}
+
+	on_queryBuilder_cancel() {
+		if( this.queryExecutionState !== QueryExecutionState.IDLE ) this.queryExecutionState = QueryExecutionState.CANCELING;
 	}
 
 	on_queryBuilder_clean( query:SPARQLQuery ) {
@@ -234,14 +200,6 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	async askQueryDetailsAndThenSave():Promise<SPARQLQuery> {
-		this.saveQueryControl = new ModalControl<SPARQLQuery>();
-
-		this.$saveQueryModal.modal( "show" );
-
-		return this.saveQueryControl.promise;
-	}
-
 	async on_saveQueryModal_cancel() {
 		// Clean state that the save modal could have left
 		delete this.query.name;
@@ -260,33 +218,6 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	async save( query:SPARQLQuery ):Promise<SPARQLQuery> {
-		const existingQuery = await this.disableInteractions( () =>
-			this.savedQueryService.findByName( query.name )
-		);
-		if(
-			// There's no query with the same name
-			! existingQuery ||
-			// or the query being saved shares its name only with itself
-			query.id && query.id === existingQuery.id
-		) {
-			return await this.disableInteractions( () =>
-				this.savedQueryService.save( query )
-			);
-		} else {
-			return this.askConfirmationToOverwrite( existingQuery, query );
-		}
-	}
-
-	async askConfirmationToOverwrite( original:SPARQLQuery, replacement:SPARQLQuery ):Promise<SPARQLQuery> {
-		this.overwriteConfirmationControl = new ModalControl<SPARQLQuery>();
-
-		this.queryBeingOverwritten = original;
-		this.$overwriteQueryConfirmationModal.modal( "show" );
-
-		return this.overwriteConfirmationControl.promise;
-	}
-
 	async on_overwriteQueryConfirmationModal_cancel() {
 		this.queryBeingOverwritten = null;
 		this.overwriteConfirmationControl.reject( new ActionCanceled() );
@@ -303,30 +234,14 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	async overwriteQuery():Promise<SPARQLQuery> {
-		return this.disableInteractions( () =>
-			this.savedQueryService.replace( this.queryBeingOverwritten, this.query )
-		);
-	}
-
 	async on_savedQuery_select( query:SPARQLQuery ) {
 		this.hideSidebar();
 
 		if( this.queryBuilder.hasUnsavedChanges() ) {
-			if( ! await this.getConfirmationForReplacement() ) {
-				return;
-			}
+			if( ! await this.getConfirmationForReplacement() ) return;
 		}
 
 		this.loadQuery( query );
-	}
-
-	getConfirmationForReplacement():Promise<boolean> {
-		this.replaceQueryConfirmationControl = new ModalControl<boolean>();
-
-		this.$replaceQueryConfirmationModal.modal( "show" );
-
-		return this.replaceQueryConfirmationControl.promise;
 	}
 
 	on_replaceQueryConfirmationModal_cancel() {
@@ -348,14 +263,8 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 			// Was the current query the one that was deleted?
 			if( this.query.id === query.id ) this.resetQuery();
 		}
-	}
 
-	async getConfirmationForDeletion():Promise<boolean> {
-		this.deleteQueryConfirmationControl = new ModalControl();
-
-		this.$deleteQueryConfirmationModal.modal( "show" );
-
-		return this.deleteQueryConfirmationControl.promise;
+		this.$deleteQueryConfirmationModal.modal( "hide" );
 	}
 
 	on_deleteQueryConfirmationModal_cancel() {
@@ -364,33 +273,6 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 
 	on_deleteQueryConfirmationModal_submit() {
 		this.deleteQueryConfirmationControl.resolve( true );
-	}
-
-	loadQuery( query:SPARQLQuery ) {
-		this.query = Object.assign( {}, query );
-	}
-
-	/**
-	 * Executes the callback after disabling UI interactions and re-enables them after the callback finishes or errors out
-	 * @param callback
-	 */
-	async disableInteractions<RESULT>( callback:() => RESULT ):Promise<RESULT> {
-		this.isSending = true;
-		try {
-			const result = callback();
-
-			if( result instanceof Promise ) return await result;
-			else return result;
-		} finally {
-			this.isSending = false;
-		}
-	}
-
-	resetQuery() {
-		this.query = {
-			endpoint: "",
-			content: "",
-		};
 	}
 
 	async on_response_load( response:SPARQLClientResponse ) {
@@ -406,12 +288,10 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		delete query.name;
 
 		if( this.queryBuilder.hasUnsavedChanges() && ! isEqual( this.query, query ) ) {
-			if( await this.getConfirmationForReplacement() ) {
-				this.loadQuery( query );
-			}
-		} else {
-			this.loadQuery( query );
+			if( ! await this.getConfirmationForReplacement() ) return;
 		}
+
+		this.loadQuery( query );
 	}
 
 	async on_response_rerun( originalResponse:SPARQLClientResponse ) {
@@ -423,138 +303,240 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 			originalResponse.isReExecuting = false;
 		}
 
-		// FIXME: Abstract to another method
 		originalResponse.duration = newResponse.duration;
-		originalResponse.resultset = Object.assign( {}, newResponse.resultset );
-		originalResponse.setData = Object.assign( {}, newResponse.resultset );
+		originalResponse.resultSet = Object.assign( {}, newResponse.resultSet );
+		originalResponse.setData( Object.assign( {}, newResponse.resultSet ) );
 		originalResponse.query = Object.assign( {}, newResponse.query );
 	}
 
-	async execute( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		// Copy the query to make the response a-temporal
-		const _query = Object.assign( {}, query );
-		// Remove its saved state
-		delete _query.id;
-
-		// Resolve the endpoint against Carbon LDP in case the endpoint is relative
-		_query.endpoint = this.carbonldp.resolve( _query.endpoint );
-
-		switch( _query.type ) {
-			case SPARQLType.QUERY:
-				return this.executeQuery( _query );
-			case SPARQLType.UPDATE:
-				return this.executeUPDATE( _query );
-			default:
-				throw this.getMessage( "Unsupported Operation" );
-		}
-	}
-
-	// FIXME
-	executeQuery( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		switch( query.operation ) {
-			case QueryType.SELECT:
-				return this.executeSELECT( query );
-			case QueryType.DESCRIBE:
-				return this.executeDESCRIBE( query );
-			case QueryType.CONSTRUCT:
-				return this.executeCONSTRUCT( query );
-			case QueryType.ASK:
-				return this.executeASK( query );
-			default:
-				// Unsupported Operation
-				return Promise.reject( this.getMessage( "Unsupported Operation" ) );
-		}
-	}
-
-	// FIXME
-	executeSELECT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		let beforeTimestamp:number = (new Date()).valueOf();
-		return SPARQLService.executeRawSELECTQuery( query.endpoint, query.content ).then(
-			( [ result, response ]:[ SPARQLRawResults, Response ] ):SPARQLClientResponse => {
-				let duration:number = (new Date()).valueOf() - beforeTimestamp;
-				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
-			},
-			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
-			} );
-	}
-
-	executeDESCRIBE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		let beforeTimestamp:number = (new Date()).valueOf();
-		let requestOptions:RequestOptions = { headers: new Map().set( "Accept", new Header( query.format ) ) };
-		return SPARQLService.executeRawDESCRIBEQuery( query.endpoint, query.content, requestOptions ).then(
-			( [ result, response ]:[ string, Response ] ):SPARQLClientResponse => {
-				let duration:number = (new Date()).valueOf() - beforeTimestamp;
-				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
-			},
-			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
-			} );
-	}
-
-	executeCONSTRUCT( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		let beforeTimestamp:number = (new Date()).valueOf();
-		let requestOptions:RequestOptions = { headers: new Map().set( "Accept", new Header( query.format ) ) };
-		return SPARQLService.executeRawCONSTRUCTQuery( query.endpoint, query.content, requestOptions ).then(
-			( [ result, response ]:[ string, Response ] ):SPARQLClientResponse => {
-				let duration:number = (new Date()).valueOf() - beforeTimestamp;
-				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
-			},
-			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
-			} );
-	}
-
-	executeASK( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		let beforeTimestamp:number = (new Date()).valueOf();
-		return SPARQLService.executeRawASKQuery( query.endpoint, query.content ).then(
-			( [ result, response ]:[ SPARQLRawResults, Response ] ):SPARQLClientResponse => {
-				let duration:number = (new Date()).valueOf() - beforeTimestamp;
-				return this.buildResponse( duration, result, <string> SPARQLResponseType.success, query );
-			},
-			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
-			} );
-	}
-
-	executeUPDATE( query:SPARQLQuery ):Promise<SPARQLClientResponse> {
-		let beforeTimestamp:number = (new Date()).valueOf();
-		return this.carbonldp.documents.$executeUPDATE( query.endpoint, query.content ).then(
-			():SPARQLClientResponse => {
-				let duration:number = (new Date()).valueOf() - beforeTimestamp;
-				// return this.buildResponse( duration, (<XMLHttpRequest>result.request).status + " - " + (<XMLHttpRequest>result.request).statusText, <string> SPARQLResponseType.success, query );
-				return this.buildResponse( duration, "200 - OK", <string> SPARQLResponseType.success, query );
-			},
-			( error:Errors.HTTPError ):Promise<SPARQLClientResponse> => {
-				return Promise.reject( this.handleError( error, query, beforeTimestamp ) );
-			} );
-	}
-
-	onEmptyStack():void {
+	on_responseStack_empty() {
 		this.responses = [];
 	}
 
-	onRemove( response:any ):void {
-		let idx:number = this.responses.indexOf( response );
-		if( idx > - 1 ) this.responses.splice( idx, 1 );
+	on_response_remove( response:SPARQLClientResponse ) {
+		this.responses = this.responses.filter( _response => _response !== response );
 	}
 
-	addResponse( response:SPARQLClientResponse ):void {
-		let responsesLength:number = this.responses.length, i:number;
-		for( i = responsesLength; i > 0; i -- ) {
-			this.responses[ i ] = this.responses[ i - 1 ];
+	private initializeSemanticUIElements() {
+		const defaultModalConfiguration = {
+			// Return false to prevent the modal from closing by default so the logic can be handled by Angular
+			onApprove: () => false,
+			onDeny: () => false,
+		};
+
+		// Save modal
+		this.$saveQueryModal = this.$element.find( ".cw-saveQueryModal" );
+		this.$saveQueryModal.modal( defaultModalConfiguration );
+
+		// Overwrite modal
+		this.$overwriteQueryConfirmationModal = this.$element.find( ".cw-overwriteQueryConfirmationModal" );
+		this.$overwriteQueryConfirmationModal.modal( defaultModalConfiguration );
+
+		// Replace modal
+		this.$replaceQueryConfirmationModal = this.$element.find( ".cw-replaceQueryConfirmationModal" );
+		this.$replaceQueryConfirmationModal.modal( defaultModalConfiguration );
+
+		// Delete modal
+		this.$deleteQueryConfirmationModal = this.$element.find( ".cw-deleteQueryConfirmationModal" );
+		this.$deleteQueryConfirmationModal.modal( defaultModalConfiguration );
+
+		// Saved queries sidebar
+		this.$savedQueriesSidebar = this.$element.find( ".cw-savedQueries" );
+		this.$savedQueriesSidebar.sidebar( {
+			context: this.$element.find( ".cw-queryBuilderCard" ),
+		} );
+	}
+
+	private toggleSidebar() {
+		this.$savedQueriesSidebar.sidebar( "toggle" );
+	}
+
+	private showSidebar() {
+		this.$savedQueriesSidebar.sidebar( "show" );
+	}
+
+	private hideSidebar() {
+		this.$savedQueriesSidebar.sidebar( "hide" );
+	}
+
+	private async askQueryDetailsAndThenSave():Promise<SPARQLQuery> {
+		this.saveQueryControl = new ModalControl<SPARQLQuery>();
+
+		this.$saveQueryModal.modal( "show" );
+
+		return this.saveQueryControl.promise;
+	}
+
+	private async save( query:SPARQLQuery ):Promise<SPARQLQuery> {
+		const existingQuery = await this.disableInteractions( () =>
+			this.savedQueryService.findByName( query.name )
+		);
+		if(
+			// There's no query with the same name
+			! existingQuery ||
+			// or the query being saved shares its name only with itself
+			query.id && query.id === existingQuery.id
+		) {
+			return await this.disableInteractions( () =>
+				this.savedQueryService.save( query )
+			);
+		} else {
+			return this.askConfirmationToOverwrite( existingQuery, query );
 		}
-		this.responses[ 0 ] = response;
 	}
 
-	closeMessage( evt:any ):void {
-		$( evt.srcElement ).closest( ".ui.message" ).transition( "fade" );
+	private async askConfirmationToOverwrite( original:SPARQLQuery, replacement:SPARQLQuery ):Promise<SPARQLQuery> {
+		this.overwriteConfirmationControl = new ModalControl<SPARQLQuery>();
+
+		this.queryBeingOverwritten = original;
+		this.$overwriteQueryConfirmationModal.modal( "show" );
+
+		return this.overwriteConfirmationControl.promise;
 	}
 
-	getMessage( error:any ):Message {
+	private async overwriteQuery():Promise<SPARQLQuery> {
+		return this.disableInteractions( () =>
+			this.savedQueryService.replace( this.queryBeingOverwritten, this.query )
+		);
+	}
+
+	private getConfirmationForReplacement():Promise<boolean> {
+		this.replaceQueryConfirmationControl = new ModalControl<boolean>();
+
+		this.$replaceQueryConfirmationModal.modal( "show" );
+
+		return this.replaceQueryConfirmationControl.promise;
+	}
+
+	private async getConfirmationForDeletion():Promise<boolean> {
+		this.deleteQueryConfirmationControl = new ModalControl();
+
+		this.$deleteQueryConfirmationModal.modal( "show" );
+
+		return this.deleteQueryConfirmationControl.promise;
+	}
+
+	private loadQuery( query:SPARQLQuery ) {
+		this.query = Object.assign( {}, query );
+	}
+
+	/**
+	 * Executes the callback after disabling UI interactions and re-enables them after the callback finishes or errors out
+	 * @param callback
+	 */
+	private async disableInteractions<RESULT>( callback:() => RESULT ):Promise<RESULT> {
+		this.loading = true;
+		try {
+			const result = callback();
+
+			if( result instanceof Promise ) return await result;
+			else return result;
+		} finally {
+			this.loading = false;
+		}
+	}
+
+	private resetQuery() {
+		this.query = {
+			endpoint: "",
+			content: "",
+		};
+	}
+
+	private async execute( _query:SPARQLQuery ):Promise<SPARQLClientResponse> {
+		this.queryExecutionState = QueryExecutionState.PREPARING;
+
+		try {
+			// Copy the query to make the response a-temporal
+			const query = Object.assign( {}, _query );
+			// Remove its saved state
+			delete query.id;
+
+			// Resolve the endpoint against Carbon LDP in case the endpoint is relative
+			query.endpoint = this.carbonldp.resolve( query.endpoint );
+
+			let executeFn:() => any;
+			if( query.type === SPARQLType.QUERY ) {
+				if( query.operation === QueryType.ASK ) {
+					executeFn = this.executeASKFn( query );
+				} else if( query.operation === QueryType.CONSTRUCT ) {
+					executeFn = this.executeCONSTRUCTFn( query );
+				} else if( query.operation === QueryType.DESCRIBE ) {
+					executeFn = this.executeDESCRIBEFn( query );
+				} else if( query.operation === QueryType.SELECT ) {
+					executeFn = this.executeSELECTFn( query );
+				}
+			} else if( query.type === SPARQLType.UPDATE ) {
+				executeFn = this.executeUPDATEFn( query );
+			} else {
+				throw this.buildErrorMessage( "Unsupported Operation" );
+			}
+
+			this.queryExecutionDuration = 0;
+			this.queryExecutionState = QueryExecutionState.EXECUTING;
+
+			const _profile:Profile<any> = await profile( executeFn, ( duration ) => {
+				if( this.queryExecutionState === QueryExecutionState.CANCELING ) throw new ActionCanceled();
+
+				this.queryExecutionDuration = duration;
+			}, 50 );
+
+			let result;
+			try {
+				[ result ] = await _profile.result;
+			} catch( error ) {
+				if( error instanceof ActionCanceled ) throw error;
+
+				throw this.handleError( error, query, _profile.duration );
+			}
+
+			this.queryExecutionState = QueryExecutionState.PROCESSING_RESPONSE;
+
+			// To let Angular update the UI before rendering the results, the renderization needs to be executed asynchronously
+			return await new Promise<SPARQLClientResponse>( resolve => {
+				setTimeout( () =>  {
+					resolve( this.buildResponse( _profile.duration, result, SPARQLResponseType.Success, query ) );
+				}, 0 )
+			} );
+		} finally {
+			this.queryExecutionState = QueryExecutionState.IDLE;
+		}
+	}
+
+	private executeASKFn( query:SPARQLQuery ):() => any {
+		return () => SPARQLService.executeRawASKQuery( query.endpoint, query.content );
+	}
+
+	private executeCONSTRUCTFn( query:SPARQLQuery ):() => any {
+		return () => {
+			const requestOptions:RequestOptions = { headers: new Map().set( "Accept", new Header( query.format ) ) };
+			return SPARQLService.executeRawCONSTRUCTQuery( query.endpoint, query.content, requestOptions )
+		};
+	}
+
+	private executeDESCRIBEFn( query:SPARQLQuery ):() => any {
+		return () => {
+			const requestOptions:RequestOptions = { headers: new Map().set( "Accept", new Header( query.format ) ) };
+			return SPARQLService.executeRawDESCRIBEQuery( query.endpoint, query.content, requestOptions )
+		};
+	}
+
+	private executeSELECTFn( query:SPARQLQuery ):() => any {
+		return () => SPARQLService.executeRawSELECTQuery( query.endpoint, query.content );
+	}
+
+	private executeUPDATEFn( query:SPARQLQuery ):() => any {
+		return () => this.carbonldp.documents.$executeUPDATE( query.endpoint, query.content );
+	}
+
+	private addResponse( response:SPARQLClientResponse ) {
+		this.responses = [ response, ...this.responses ];
+	}
+
+	private buildErrorMessage( error:any ):Message {
 		switch( typeof error ) {
 			case "string":
-				return <Message>{
+				return {
 					title: error,
 					content: "",
 					statusCode: "",
@@ -567,24 +549,22 @@ export class SPARQLClientComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	buildResponse( duration:number, resultset:SPARQLRawResults | string | Message, responseType:string, query:SPARQLQuery ):SPARQLClientResponse {
+	private buildResponse( duration:number, resultSet:SPARQLRawResults | string | Message, responseType:SPARQLResponseType, query:SPARQLQuery ):SPARQLClientResponse {
 		const clientResponse:SPARQLClientResponse = new SPARQLClientResponse();
 		clientResponse.duration = duration;
-		clientResponse.resultset = resultset;
-		clientResponse.setData( resultset );
+		clientResponse.resultSet = resultSet;
+		clientResponse.setData( resultSet );
 		clientResponse.query = query;
 		clientResponse.result = responseType;
 		return clientResponse;
 	}
 
-	handleError( error:Error | Errors.HTTPError, query:SPARQLQuery, beforeTimestamp:number ):SPARQLClientResponse | Message {
-		let duration:number = (new Date()).valueOf() - beforeTimestamp;
-
-		let errorMessage:Message = this.getMessage( error );
-		let stackErrors:number[] = [ 400, 403, 404, 413, 414, 429 ];
-		// TODO implement login modal when 401
+	private handleError( error:Error | Errors.HTTPError, query:SPARQLQuery, duration:number ):SPARQLClientResponse | Message {
+		const errorMessage:Message = this.buildErrorMessage( error );
+		const stackErrors:number[] = [ 400, 403, 404, 413, 414, 429 ];
+		// TODO: Implement login modal for 401 errors
 		if( error instanceof Errors.HTTPError && stackErrors.indexOf( error.response.status ) > - 1 ) {
-			return this.buildResponse( duration, errorMessage, SPARQLResponseType.error, query );
+			return this.buildResponse( duration, errorMessage, SPARQLResponseType.Error, query );
 		}
 		return errorMessage;
 	}

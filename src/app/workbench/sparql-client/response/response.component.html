@@ -1,12 +1,12 @@
 <div class="ui sixteen wide column accordion">
 	<!-- START: Header of the Response -->
-	<div class="ui top attached menu title" [ngClass]="[ response.result ]">
+	<div class="ui top attached menu title" [ngClass]="[ response.result.toLowerCase() ]">
 
 		<!-- START: Header of the Response -->
 		<div class="header item">
-			<span *ngIf="response.query.operation === 'ASK'"> <i [ngClass]="{ checkmark: response.resultset.boolean, remove: !response.resultset.boolean }" class="icon"></i> </span>
-			<span>{{response.query.operation}}</span>
-			<span> <i>({{response.duration}} ms)</i></span>
+			<span *ngIf="response.query.operation === 'ASK'"> <i [ngClass]="{ checkmark: response.resultSet.boolean, remove: !response.resultSet.boolean }" class="icon"></i> </span>
+			<span *ngIf="response.query.type === SPARQLType.QUERY">{{response.query.operation}} <i>{{response.duration | formatDuration}}</i></span>
+			<span *ngIf="response.query.type === SPARQLType.UPDATE">UPDATE <i>({{formatDuration( response.duration )}})</i></span>
 		</div>
 		<!-- END: Header of the Response -->
 
@@ -44,19 +44,19 @@
 	<div class="ui bottom attached segment content {{response.result}}" [ngClass]="{loading:response.isReExecuting}">
 		<div class="ui pointing secondary tabular menu">
 			<a class="item active" data-tab="first">Results</a>
-			<a *ngIf="response.result == responseType.success" class="item" data-tab="second">Raw Data</a>
+			<a *ngIf="response.result === SPARQLResponseType.Success" class="item" data-tab="second">Raw Data</a>
 			<a class="item" data-tab="third">SPARQL Request</a>
 		</div>
 		<div class="tabs">
 			<!-- START: Tab containing the data of the response when response is successful -->
-			<div *ngIf="response.result == responseType.success" class="ui active tab" data-tab="first">
+			<div *ngIf="response.result === SPARQLResponseType.Success" class="ui active tab" data-tab="first">
 				<cw-code-mirror *ngIf="!!outputformat && outputformat != sparqlFormats.table"
 				                [mode]="outputformat"
 				                [readOnly]="'nocursor'"
 				                [(value)]="response.data">
 				</cw-code-mirror>
 				<cw-resultset-table *ngIf="outputformat === sparqlFormats.table"
-				                    [(resultset)]="response.resultset"
+				                    [(resultset)]="response.resultSet"
 				                    [query]="response.query"
 				                    [prefixes]="prefixes">
 				</cw-resultset-table>
@@ -65,15 +65,15 @@
 
 
 			<!-- START: Tab containing the error of the response when response is unsuccessful -->
-			<div *ngIf="response.result == responseType.error" class="ui active tab" data-tab="first">
+			<div *ngIf="response.result === SPARQLResponseType.Error" class="ui active tab" data-tab="first">
 				<div class="ui error message transition">
 					<div class="header">
-						{{response.resultset?.title}}
+						{{response.resultSet?.title}}
 					</div>
 					<p>
-						<span *ngIf="response.resultset?.content" [innerHTML]="response.resultset?.content"><br></span>
-						<span *ngIf="response.resultset?.statusCode">Status: {{response.resultset?.statusCode}} - {{response.resultset?.statusMessage}}<br></span>
-						<span *ngIf="response.resultset?.endpoint">URI: {{response.resultset?.endpoint}}</span>
+						<span *ngIf="response.resultSet?.content" [innerHTML]="response.resultSet?.content"><br></span>
+						<span *ngIf="response.resultSet?.statusCode">Status: {{response.resultSet?.statusCode}} - {{response.resultSet?.statusMessage}}<br></span>
+						<span *ngIf="response.resultSet?.endpoint">URI: {{response.resultSet?.endpoint}}</span>
 					</p>
 				</div>
 			</div>
@@ -81,7 +81,7 @@
 
 
 			<!-- START: Tab containing the raw data -->
-			<pre *ngIf="response.result == responseType.success" class="ui tab secondary segment raw-data-tab" data-tab="second">{{response.data}}</pre>
+			<pre *ngIf="response.result === SPARQLResponseType.Success" class="ui tab secondary segment raw-data-tab" data-tab="second">{{response.data}}</pre>
 			<!-- END: Tab containing the raw data -->
 
 

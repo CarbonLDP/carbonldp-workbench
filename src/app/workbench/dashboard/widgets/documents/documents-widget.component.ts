@@ -4,7 +4,7 @@ import { CarbonLDP } from "carbonldp";
 
 import { Widget } from "../widgets.component";
 import { WidgetsService } from "../widgets.service";
-import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
+import { ErrorMessageGenerator } from "app/common/components/messages-area/error/error-message-generator";
 
 
 /*

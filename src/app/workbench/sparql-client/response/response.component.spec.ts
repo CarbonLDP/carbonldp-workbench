@@ -3,7 +3,7 @@ import { By } from "@angular/platform-browser";
 import { DebugElement } from "@angular/core";
 import { ResponseComponent, SPARQLClientResponse, SPARQLResponseType } from "./response.component";
 
-import { SharedModule } from "app/shared/shared.module";
+import { AppCommonModule } from "app/common/app-common.module";
 import { ResultsetTableComponent } from "./../resultset-table/resultset-table.component";
 import { RelativePipe } from "../resultset-table/relative.pipe";
 import { PrefixPipe } from "../resultset-table/prefix.pipe";
@@ -21,7 +21,7 @@ describe( "ResponseComponent", () => {
 	beforeEach( async( () => {
 		TestBed.configureTestingModule( {
 			imports: [
-				SharedModule.forRoot()
+				AppCommonModule.forRoot()
 			],
 			declarations: [
 				ResponseComponent,
@@ -38,7 +38,7 @@ describe( "ResponseComponent", () => {
 		de = fixture.debugElement;
 
 		mockedResponse.duration = 102;
-		mockedResponse.resultset = {
+		mockedResponse.resultSet = {
 			"head": {
 				"vars": [
 					"s",
@@ -276,9 +276,9 @@ describe( "ResponseComponent", () => {
 			operation: QueryType.SELECT,
 			type: SPARQLType.QUERY,
 		};
-		mockedResponse.result = SPARQLResponseType.success;
+		mockedResponse.result = SPARQLResponseType.Success;
 		mockedResponse.isReExecuting = false;
-		mockedResponse.setData( mockedResponse.resultset );
+		mockedResponse.setData( mockedResponse.resultSet );
 		let prefixes:{ [ prefix:string ]:string } = {
 			"acl": "http://www.w3.org/ns/auth/acl#",
 			"api": "http://purl.org/linked-data/api/vocab#",
@@ -387,7 +387,7 @@ describe( "ResponseComponent", () => {
 			de = fixture.debugElement;
 
 			mockedResponse.duration = 102;
-			mockedResponse.resultset = {
+			mockedResponse.resultSet = {
 				content: "There was a problem processing the request. Error: 400",
 				endpoint: "http://localhost:8083/",
 				statusCode: "400",
@@ -404,9 +404,9 @@ describe( "ResponseComponent", () => {
 				operation: QueryType.SELECT,
 				type: SPARQLType.QUERY,
 			};
-			mockedResponse.result = SPARQLResponseType.error;
+			mockedResponse.result = SPARQLResponseType.Error;
 			mockedResponse.isReExecuting = false;
-			mockedResponse.setData( mockedResponse.resultset );
+			mockedResponse.setData( mockedResponse.resultSet );
 			let prefixes:{ [ prefix:string ]:string } = {
 				"acl": "http://www.w3.org/ns/auth/acl#",
 				"api": "http://purl.org/linked-data/api/vocab#",

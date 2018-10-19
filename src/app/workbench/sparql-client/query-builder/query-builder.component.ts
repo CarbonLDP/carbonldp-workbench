@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from "@angular/core";
 import { isEqual } from "lodash";
 
-import * as CodeMirrorComponent from "app/shared/code-mirror/code-mirror.component";
+import * as CodeMirrorComponent from "app/common/components/code-mirror/code-mirror.component";
 
 import { QueryType, SPARQLFormats, SPARQLQuery, SPARQLType } from "app/workbench/sparql-client/models";
 
