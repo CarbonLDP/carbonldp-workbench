@@ -2,6 +2,14 @@ import { Pipe, PipeTransform } from "@angular/core";
 
 import { URI } from "carbonldp/RDF/URI";
 
+/**
+ * Prefixes URIs based with the provided prefixes
+ *
+ * @usageNotes
+ * ```
+ * {{ "http://example.org/ns#Something" | prefix:prefixes }} => "ex:Something"
+ * ```
+ */
 @Pipe( { name: "prefix" } )
 export class PrefixPipe implements PipeTransform {
 	transform( value:string, prefixes:Map<string, string> ):string {

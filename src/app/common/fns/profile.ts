@@ -13,10 +13,15 @@ export interface Profile<RESULT> {
  * Execute an action (sync or async) and profile its execution time. This function returns a promise that will ALWAYS be resolved (even if the callback fails)
  * with the profiling information and the result (or error) of the callback.
  * @param callback
- * @param progressCallback
- * @param interval
+ * @param progressCallback - Callback function that will be executed periodically based on the provided interval. If this function throws an error, the profiling function will immediately resolve with the error as the result
+ * @param interval - Period of time to call the progressCallback (in ms)
  */
 export async function profile<RESULT>( callback:() => RESULT, progressCallback:( duration:number ) => void, interval:number );
+/**
+ * Execute an action (sync or async) and profile its execution time. This function returns a promise that will ALWAYS be resolved (even if the callback fails)
+ * with the profiling information and the result (or error) of the callback.
+ * @param callback
+ */
 export async function profile<RESULT>( callback:() => RESULT );
 export async function profile<RESULT>( callback:() => RESULT, progressCallback?:( duration:number ) => void, interval?:number ):Promise<Profile<RESULT>> {
 	const startTimestamp = performance.now();

@@ -2,6 +2,9 @@ import { Pipe, PipeTransform } from "@angular/core";
 
 import { URI } from "carbonldp/RDF/URI";
 
+/**
+ * If the provided URI has the provided base, returns its relative URI
+ */
 @Pipe( { name: "relative" } )
 export class RelativePipe implements PipeTransform {
 	transform( value:string, base:string ):string {

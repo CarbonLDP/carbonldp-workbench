@@ -14,10 +14,13 @@ export class SavedQueryService {
 		return "sparqlClient-savedQueries";
 	}
 
+	// Internal map to store the queries
 	private readonly savedQueries:Map<string, SPARQLQuery>;
+	// Observable to notify of changes to the query list
 	private readonly savedQueries$:BehaviorSubject<SPARQLQuery[]>;
 
 	constructor( @Inject( PLATFORM_ID ) private platformID:Object ) {
+		// Use a LocalStorageMap if the environment is the browser, otherwise a regular Map
 		this.savedQueries = isPlatformBrowser( this.platformID )
 			? new LocalStorageMap( SavedQueryService.LOCAL_STORAGE_ID )
 			: isPlatformServer( this.platformID )

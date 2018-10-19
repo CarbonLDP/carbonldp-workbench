@@ -1,10 +1,26 @@
 import { Pipe, PipeTransform } from "@angular/core";
 
-class Options {
+export class FormatDurationPipeOptions {
+	/**
+	 * Number of decimals to return for milliseconds
+	 */
 	decimals?:number = 3;
+	/**
+	 * Whether to maintain a fixed length or a more compact representation
+	 */
 	fixedLength?:boolean = false;
 }
 
+/**
+ * Formats duration values (milliseconds) into a more human-friendly representation.
+ *
+ * Output example: 1hr 25min 2s 12ms
+ *
+ * @usageNotes
+ * ```
+ * {{ duration | formatDuration:'{ "decimals": 2, "fixedLength": false }' }}
+ * ```
+ */
 @Pipe( {
 	name: "formatDuration"
 } )
@@ -13,7 +29,7 @@ export class FormatDurationPipe implements PipeTransform {
 		if( Number.isNaN( value ) ) return value as any;
 		if( value < 0 ) return `${value}`;
 
-		const options:Options = optionsString ? Object.assign( new Options(), JSON.parse( optionsString ) ) : new Options();
+		const options:FormatDurationPipeOptions = optionsString ? Object.assign( new FormatDurationPipeOptions(), JSON.parse( optionsString ) ) : new FormatDurationPipeOptions();
 
 		let messageParts = [];
 		if( value >= 3600000 ) {
