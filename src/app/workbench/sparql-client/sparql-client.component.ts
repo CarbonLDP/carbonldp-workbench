@@ -167,7 +167,11 @@ export class SPARQLClientComponent implements OnInit {
 		if( this.queryExecutionState !== QueryExecutionState.IDLE ) this.queryExecutionState = QueryExecutionState.CANCELING;
 	}
 
-	on_queryBuilder_clean( query:SPARQLQuery ) {
+	async on_queryBuilder_clean( query:SPARQLQuery ) {
+		if( this.queryBuilder.hasUnsavedChanges() ) {
+			if( ! await this.getConfirmationForReplacement() ) return;
+		}
+
 		this.resetQuery();
 	}
 
