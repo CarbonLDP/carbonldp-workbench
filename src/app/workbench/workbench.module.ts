@@ -9,7 +9,7 @@ import { DashboardView } from "./dashboard/dashboard.view";
 import { SPARQLClientView } from "./sparql-client/sparql-client.view";
 import { ExplorerView } from "./explorer/explorer.view";
 // Modules
-import { SharedModule } from "app/shared/shared.module";
+import { AppCommonModule } from "app/common/app-common.module";
 import { SPARQLClientModule } from "./sparql-client/sparql-client.module";
 import { DocumentExplorerModule } from "./explorer/document-explorer/document-explorer.module";
 import { DashboardModule } from "./dashboard/dahsboard.module";
@@ -24,7 +24,7 @@ import { DocumentsResolverService } from "./explorer/document-explorer/documents
 		FormsModule,
 
 		routing,
-		SharedModule,
+		AppCommonModule,
 		SPARQLClientModule,
 		DocumentExplorerModule,
 		DashboardModule,

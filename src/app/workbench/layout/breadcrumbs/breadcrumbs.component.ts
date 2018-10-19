@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from "@angular/router";
 
-import { RouterService } from "app/shared/router.service";
+import { RouterService } from "app/common/router.service";
 import { SidebarService } from "../sidebar/sidebar.service";
 
 import "semantic-ui/semantic";

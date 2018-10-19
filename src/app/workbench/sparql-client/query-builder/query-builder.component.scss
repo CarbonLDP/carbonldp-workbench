@@ -1,0 +1,65 @@
+:host {
+
+}
+
+// Show the message only when the endpoint input is focused
+.cw-endpointMessage {
+	display: none;
+}
+.cw-endpointInput:focus {
+	border-bottom-left-radius: 0 !important;
+	border-bottom-right-radius: 0 !important;
+
+	~ .cw-endpointMessage {
+		display: block;
+
+		margin-top: 0;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+}
+
+.cw-name {
+	// Center child items vertically
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	margin-bottom: 1em;
+	height: 30px;
+
+	font-size: 1.1em;
+	font-weight: bold;
+	// Reset line-height. Semantic UI's line-height doesn't let icons be aligned with other elements
+	line-height: normal;
+
+	color: rgba(0, 0, 0, 0.87);
+
+	> * {
+		// !important is required since Semantic UI rules are more specific
+		margin-right: 5px !important;
+	}
+
+	// Show the edit button on hover
+	&:hover .cw-nameEditButton {
+		display: inline;
+	}
+}
+.cw-nameLabel {
+	// Margin to align label's text with input's text
+	margin-left: 6px;
+}
+.cw-nameEditButton {
+	display: none;
+}
+.cw-nameInput {
+	display: inline;
+
+	padding: 5px !important;
+
+	// !important is required since Semantic UI rules are more specific
+	width: 200px !important;
+}
+.cw-nameEditButton {
+	cursor: pointer;
+}

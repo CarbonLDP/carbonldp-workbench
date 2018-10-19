@@ -24,7 +24,7 @@ import { AccessPointCreatorComponent } from "./access-point-creator/access-point
 import { DocumentCreatorComponent } from "./document-creator/document-creator.component";
 import { DocumentDeleterComponent } from "./document-deleter/document-deleter.component";
 // Modules
-import { SharedModule } from "app/shared/shared.module";
+import { AppCommonModule } from "app/common/app-common.module";
 // Services
 import { DocumentsResolverService } from "./documents-resolver.service";
 // Directives
@@ -34,7 +34,7 @@ import { IdValidator, LiteralValueValidator, PointerValidator, PropertyNameValid
 	imports: [
 		CommonModule,
 		FormsModule,
-		SharedModule,
+		AppCommonModule,
 	],
 	declarations: [
 		LiteralComponent,

@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnChanges, Output, SimpleChange } from 
 
 import "semantic-ui/semantic";
 
-
 /*
 *   Displays the results of a response in a table format
 * */

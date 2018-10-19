@@ -12,7 +12,7 @@ import { ErrorView } from "./error-pages/error.view";
 import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
 import { BackgroundVideoComponent } from "./error-pages/background-video.component";
 // Modules
-import { SharedModule } from "./shared/shared.module";
+import { AppCommonModule } from "./common/app-common.module";
 
 // Services
 
@@ -22,7 +22,7 @@ import { SharedModule } from "./shared/shared.module";
 		BrowserModule,
 		FormsModule,
 		routing,
-		SharedModule.forRoot(),
+		AppCommonModule.forRoot(),
 	],
 	declarations: [
 		AppComponent,
