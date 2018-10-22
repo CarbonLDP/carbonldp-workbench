@@ -1,0 +1,30 @@
+<!-- START: Icons for each type -->
+<div class="ui horizontal list">
+	<div class="item" *ngFor="let type of types; let j = index;">
+		<div class="ui label">
+			<i [ngClass]="getTypeIcon(type)" class="icon"></i>
+			{{ type | getSlug }}
+		</div>
+	</div>
+</div>
+<!-- END: Icons for each type -->
+
+<!-- START: Table with URI type -->
+<table class="ui very compact striped small celled table">
+	<thead>
+		<tr class="center aligned">
+			<th>@type</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		<ng-template ngFor let-type="$implicit" [ngForOf]="types" let-i="index">
+			<tr class="cw-type"
+			    [element]="type"
+			    (onTypeChange)="on_type_change($event, i)"
+			    (onTypeRemoved)="on_type_removed($event)"
+			>
+			</tr>
+		</ng-template>
+	</tbody>
+</table>
