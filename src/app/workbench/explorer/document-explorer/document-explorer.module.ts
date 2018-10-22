@@ -23,6 +23,8 @@ import { DocumentExplorerComponent } from "./document-explorer.component";
 import { AccessPointCreatorComponent } from "./access-point-creator/access-point-creator.component";
 import { DocumentCreatorComponent } from "./document-creator/document-creator.component";
 import { DocumentDeleterComponent } from "./document-deleter/document-deleter.component";
+import { TypeComponent } from "./types/type.component";
+import { TypesComponent } from "./types/types.component";
 // Modules
 import { AppCommonModule } from "app/common/app-common.module";
 // Services
@@ -37,6 +39,9 @@ import { IdValidator, LiteralValueValidator, PointerValidator, PropertyNameValid
 		AppCommonModule,
 	],
 	declarations: [
+		TypesComponent,
+		TypeComponent,
+
 		LiteralComponent,
 		LiteralsComponent,
 
