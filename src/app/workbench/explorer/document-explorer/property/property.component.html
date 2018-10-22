@@ -22,7 +22,8 @@
 	<!-- START: Property @type  -->
 	<cw-property-type *ngSwitchCase="'@type'"
 	                  class="content"
-	                  [property]="property">
+	                  [property]="property"
+	                  (onChangeTypes)="changeProperty( $event )">
 	</cw-property-type>
 	<!-- END: Property @Id  -->
 
