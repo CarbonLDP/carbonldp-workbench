@@ -144,6 +144,10 @@ export class SPARQLClientComponent implements OnInit {
 		this.initializeSemanticUIElements();
 	}
 
+	ngOnDestroy() {
+		this.wipQueryService.saveWipQuery( this.query );
+	}
+
 	async on_queryBuilder_execute( query:SPARQLQuery ) {
 		let response:SPARQLClientResponse;
 		try {
