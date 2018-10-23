@@ -19,6 +19,7 @@ import "semantic-ui/semantic";
 import { QueryBuilderComponent } from "app/workbench/sparql-client/query-builder/query-builder.component";
 import { Profile, profile } from "app/common/fns";
 import { ActionCanceled } from "app/common/models";
+import { WIPQueryService } from "./query-working-progress.store.service";
 
 class ModalControl<RESULT> {
 	promise:Promise<RESULT>;
@@ -45,7 +46,7 @@ enum QueryExecutionState {
 	selector: "cw-sparql-client",
 	templateUrl: "./sparql-client.component.html",
 	styleUrls: [ "./sparql-client.component.scss" ],
-	providers: [ SavedQueryService ],
+	providers: [ SavedQueryService, WIPQueryService ],
 } )
 export class SPARQLClientComponent implements OnInit {
 	@Output() error:EventEmitter<any> = new EventEmitter();
@@ -128,12 +129,12 @@ export class SPARQLClientComponent implements OnInit {
 	private queryBeingSaved:SPARQLQuery;
 	private queryBeingOverwritten:SPARQLQuery;
 
-	constructor( private element:ElementRef, private carbonldp:CarbonLDP, private savedQueryService:SavedQueryService ) {}
+	constructor( private element:ElementRef, private carbonldp:CarbonLDP, private savedQueryService:SavedQueryService, private wipQueryService:WIPQueryService ) {}
 
 	ngOnInit() {
 		this.$element = $( this.element.nativeElement );
 
-		this.resetQuery();
+		this.restoreWipQuery();
 		this.savedQueries$ = this.savedQueryService
 			.getAll()
 			// Sort by name in ascending order
