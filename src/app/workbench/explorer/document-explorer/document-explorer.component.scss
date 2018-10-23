@@ -1,7 +1,7 @@
 :host {
 	display: block;
-	min-height: 0; //this is necessary to fix issue in firefox related with flexbox overflow
-	.document-content-wrapper{
+	.document-content-wrapper {
+		min-height: 0; //this is necessary to fix issue in firefox related with flexbox overflow
 		height: 96%;
 	}
 	.ui.segment {

@@ -4,9 +4,9 @@ import { CarbonLDP } from "carbonldp";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "../documents-resolver.service"
-import { Message } from "app/shared/messages-area/message.component";
+import { Message } from "app/common/components/messages-area/message.component";
 import { DocumentExplorerLibrary } from "app/workbench/explorer/document-explorer/document-explorer-library";
-import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
+import { ErrorMessageGenerator } from "app/common/components/messages-area/error/error-message-generator";
 
 import "semantic-ui/semantic";
 
@@ -15,25 +15,20 @@ import "semantic-ui/semantic";
 	templateUrl: "./document-deleter.component.html",
 	styleUrls: [ "./document-deleter.component.scss" ],
 } )
-
 export class DocumentDeleterComponent implements AfterViewInit {
-
 	private carbonldp:CarbonLDP;
 	private element:ElementRef;
 	private documentsResolverService:DocumentsResolverService;
 	private $element:JQuery;
-
 
 	$deleteDocumentModal:JQuery;
 	errorMessage:Message;
 	deleteDocumentFormModel:{ value?:any } = {};
 	isDeleting:boolean = false;
 
-
 	@Input() documentURIs:Array<string> = [ "" ];
 	@Output() onSuccess:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
-
 
 	constructor( element:ElementRef, carbonldp:CarbonLDP, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
@@ -46,7 +41,7 @@ export class DocumentDeleterComponent implements AfterViewInit {
 		this.$deleteDocumentModal = this.$element.find( ".delete.document.modal" ).modal( { closable: false } );
 	}
 
-	public onSubmitDeleteDocument( data:{}, $event:any ):void {
+	public onSubmitDeleteDocument():void {
 		this.isDeleting = true;
 
 		/*
@@ -80,10 +75,6 @@ export class DocumentDeleterComponent implements AfterViewInit {
 	}
 
 	public hide():void {
-		this.hideDeleteDocumentForm();
-	}
-
-	public hideDeleteDocumentForm():void {
 		this.$deleteDocumentModal.modal( "hide" );
 		this.clearErrorMessage();
 	}

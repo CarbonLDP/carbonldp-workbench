@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ElementRef } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { RDFNode } from "carbonldp/RDF/Node"
 

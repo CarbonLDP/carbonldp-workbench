@@ -3,20 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 
 import { routing } from "./workbench.routing";
-
 // Components
 import { WorkbenchView } from "./workbench.view";
 import { DashboardView } from "./dashboard/dashboard.view";
 import { SPARQLClientView } from "./sparql-client/sparql-client.view";
 import { ExplorerView } from "./explorer/explorer.view";
-
 // Modules
-import { SharedModule } from "app/shared/shared.module";
+import { AppCommonModule } from "app/common/app-common.module";
 import { SPARQLClientModule } from "./sparql-client/sparql-client.module";
 import { DocumentExplorerModule } from "./explorer/document-explorer/document-explorer.module";
 import { DashboardModule } from "./dashboard/dahsboard.module";
 import { LayoutModule } from "./layout/layout.module";
-
 // Services
 import { DocumentsResolverService } from "./explorer/document-explorer/documents-resolver.service";
 
@@ -27,7 +24,7 @@ import { DocumentsResolverService } from "./explorer/document-explorer/documents
 		FormsModule,
 
 		routing,
-		SharedModule,
+		AppCommonModule,
 		SPARQLClientModule,
 		DocumentExplorerModule,
 		DashboardModule,

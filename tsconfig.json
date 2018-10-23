@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"target": "es5",
+		"target": "es2015",
 		"module": "commonjs",
 		"noImplicitAny": false,
 		"allowSyntheticDefaultImports": true,
@@ -9,7 +9,7 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"moduleResolution": "node",
-		"lib": [ "es2015", "dom" ],
+		"lib": [ "es2015", "es2016", "dom", "es2018.promise" ],
 		"baseUrl": ".",
 		"paths": {
 			"app/*": [ "src/app/*" ],

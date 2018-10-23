@@ -1,23 +1,28 @@
 <!-- START: Display friendly name -->
 <div class="header">
-	<p>{{value | decodeURI | fragment}}</p>
+	<p>{{value | decodeURI | getSlug}}</p>
 </div>
 <!-- END: Display friendly name -->
 
-
 <!-- START: EDIT and READ modes -->
 <div class="meta">
-
 	<!-- START: READ mode -->
 	<div [hidden]="mode === modes.EDIT">
 		<p *ngIf="!isUrl(value)">
-			<i class="file outline icon"></i> {{value}}</p>
-		<p *ngIf="isUrl(value)">
-			<i class="file outline icon"></i>
-			<a class="name" [attr.href]="value" target="_blank">
-				<span class="parent-uri">{{getParentURI(value)}}</span><span class="slug">{{getSlug(value)}}</span>
-			</a>
+			<i class="file outline icon"></i> {{value}}
 		</p>
+		<div class="cw-url"
+		     *ngIf="isUrl(value)">
+			<i class="cw-url-icon file outline icon"></i>
+			<div class="cw-url-linkContainer">
+				<a class="name" [attr.href]="value" target="_blank">
+					<span>{{getParentURI(value)}}</span>
+					<span *ngIf="URI.hasFragment( value )">#</span>
+					<span class="cw-slug">{{value | getSlug}}</span>
+					<span *ngIf="value.endsWith( '/' )">/</span>
+				</a>
+			</div>
+		</div>
 	</div>
 	<!-- END: READ mode -->
 
