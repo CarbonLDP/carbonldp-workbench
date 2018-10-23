@@ -14,30 +14,19 @@
 
 <!-- START: Displays property id as friendly name -->
 <div class="header">
-	<p>{{propertyName | decodeURI | getSlug}}</p>
-</div>
-<!-- END: Displays property id as friendly name -->
-
-
-<!-- START: READ and EDIT modes for property id/name -->
-<div class="meta">
-
-
-	<!-- START: READ mode for property id -->
-	<div [hidden]="mode === modes.EDIT">
-		<a [attr.href]="propertyName" target="_blank">{{propertyName}}</a>
+	<div [hidden]="mode === modes.EDIT" (dblclick)="onEditName()" class="cw-name">
+		<span class="cw-nameLabel">{{propertyName | decodeURI | getSlug}}</span>
+		<i class="cw-nameEditButton pencil small icon"
+		   (click)="onEditName()"></i>
+		<i class="cw-nameEditButton trash red small icon"
+		   (click)="askToConfirmDeletion()"></i>
 	</div>
-	<!-- END: READ mode for property id -->
-
-
 	<!-- START: EDIT mode for property id -->
 	<div [hidden]="mode === modes.READ">
-		<div class="ui error form">
-
-
-			<!-- Name form -->
-			<div class="ui fluid action input">
-				<input type="text"
+		<div class="ui error form cw-propContent-formWrapper">
+			<form class="ui form cw-nameForm"
+			      (submit)="save( $event )">
+				<input class="cw-nameInput" type="text" name="name" title="Query name"
 				       [existingProperties]="existingProperties"
 				       [property]="property"
 				       [id]="id"
@@ -47,34 +36,40 @@
 				       name="nameInput"
 				       #nameInput="ngModel"
 				       [(ngModel)]="propertyName"
-				       (keyup.escape)="cancelModification()"
-				       (keyup.enter)="nameInput.valid? save() : null">
-				<div class="ui save-cancel buttons">
-					<button class="ui button"
-					        [disabled]="!nameInput.valid"
-					        (click)="save(nameInput.value)">Save
-					</button>
-					<div class="ui dropdown icon button">
-						<i class="dropdown icon"></i>
-						<div class="menu">
-							<div class="item" (click)="cancelModification()">Cancel</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-
-			<!-- Error messages -->
-			<cw-error-label *ngIf="!nameInput.valid">
-				<p *ngIf="nameInput.control.hasError('required')">Enter a name for the property.</p>
-				<p *ngIf="nameInput.control.hasError('emptyName')">Enter a name for the property.</p>
-				<p *ngIf="nameInput.control.hasError('invalidName')">Enter a valid URL. Only alphanumeric values (a-z, A-Z, 0..9)</p>
-				<p *ngIf="nameInput.control.hasError('duplicatedHashtag')">Use only one hashtag (#) symbol.</p>
-				<p *ngIf="nameInput.control.hasError('duplicatedPropertyName')">A property with that name already exists.</p>
-			</cw-error-label>
+				       (keyup.escape)="cancelNameEdition()"
+				       (keyup.enter)="nameInput.valid? save() : null"
+				       (keydown.escape)="cancelModification()"
+				       [(ngModel)]="propertyName">
+			</form>
+			<i class="cw-nameCancelButton small reply icon"
+			   *ngIf="mode === modes.EDIT"
+			   (click)="cancelModification()"></i>
+			<i class="cw-nameCancelButton small check icon"
+			   *ngIf="mode === modes.EDIT"
+			   (click)="save($event)"></i>
 		</div>
+		<!-- Error messages -->
+		<cw-error-label *ngIf="!nameInput.valid">
+			<p *ngIf="nameInput.control.hasError('required')">Enter a name for the property.</p>
+			<p *ngIf="nameInput.control.hasError('emptyName')">Enter a name for the property.</p>
+			<p *ngIf="nameInput.control.hasError('invalidName')">Enter a valid URL. Only alphanumeric values (a-z, A-Z, 0..9)</p>
+			<p *ngIf="nameInput.control.hasError('duplicatedHashtag')">Use only one hashtag (#) symbol.</p>
+			<p *ngIf="nameInput.control.hasError('duplicatedPropertyName')">A property with that name already exists.</p>
+		</cw-error-label>
 	</div>
 	<!-- END: EDIT mode for property id -->
+
+</div>
+<!-- END: Displays property id as friendly name -->
+
+
+<!-- START: READ and EDIT modes for property id/name -->
+<div class="meta">
+	<!-- START: READ mode for property id -->
+	<div [hidden]="mode === modes.EDIT">
+		<a [attr.href]="propertyName" target="_blank">{{propertyName}}</a>
+	</div>
+	<!-- END: READ mode for property id -->
 </div>
 <!-- END: READ and EDIT modes for property id -->
 
@@ -103,19 +98,6 @@
 			<i class="plus icon"></i>
 			Add List
 		</button>
-
-		<!-- Buttons to Edit or Delete the property -->
-		<div class="ui icon bottom left pointing dropdown basic mini button options" title="Options">
-			<i class="ellipsis horizontal icon"></i>
-			<div class="menu">
-				<div class="item" title="Edit Property's name" (click)="onEditName()">
-					<i class="edit icon"></i> Edit Name
-				</div>
-				<div class="item" title="Options" (click)="askToConfirmDeletion()">
-					<i class="trash outline red icon"></i> Delete Property
-				</div>
-			</div>
-		</div>
 	</div>
 	<!-- END: Actions buttons for a normal property -->
 

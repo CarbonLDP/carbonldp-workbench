@@ -1,6 +1,46 @@
 <!-- START: Display friendly name -->
 <div class="header">
-	<p>{{value | decodeURI | getSlug}}</p>
+	<div [hidden]="mode === modes.EDIT" (dblclick)="onEditId()" class="cw-name">
+		<span class="cw-nameLabel">{{value | decodeURI | getSlug}}</span>
+		<i class="cw-nameEditButton pencil small icon"
+		   (click)="onEditId()" *ngIf="canEdit && isPartOfNamedFragment"></i>
+	</div>
+	<!-- START: EDIT mode for property id -->
+	<div [hidden]="mode === modes.READ">
+		<div class="ui error form cw-propContent-formWrapper">
+			<form class="ui form cw-nameForm"
+			      (submit)="saveId()">
+				<input type="text" required
+				       [existingFragments]="existingFragments"
+				       [property]="property"
+				       [id]="id"
+				       [documentURI]="documentURI"
+				       [originalId]="originalId"
+				       [control]="idInput"
+				       cw-property-id
+				       cw-uri
+				       name="idInput"
+				       [(ngModel)]="value" #idInput="ngModel"
+				       (keyup.escape)="cancelModification()"
+				       (keyup.enter)="idInput.valid? saveId() : null">
+			</form>
+			<i class="cw-nameCancelButton small reply icon"
+			   *ngIf="mode === modes.EDIT"
+			   (click)="cancelModification()"></i>
+			<i class="cw-nameCancelButton small check icon"
+			   *ngIf="mode === modes.EDIT"
+			   (click)="saveId()"></i>
+		</div>
+		<!-- Error messages -->
+		<cw-error-label *ngIf="!idInput.valid">
+			<p *ngIf="idInput.control.hasError('required')">Enter an id.</p>
+			<p *ngIf="idInput.control.hasError('invalidParent')">Enter a valid name for a Named Fragment. A name must contains the parent URI ({{documentURI}}<- Your fragment name ->).</p>
+			<p *ngIf="idInput.control.hasError('invalidURIAddress')">Enter a valid URL. Only alphanumeric values (a-z, A-Z, 0..9)</p>
+			<p *ngIf="idInput.control.hasError('duplicatedHashtag')">Use only one hashtag (#) symbol.</p>
+			<p *ngIf="idInput.control.hasError('duplicatedNamedFragmentName')">A Fragment with that name already exists.</p>
+		</cw-error-label>
+	</div>
+	<!-- END: EDIT mode for property id -->
 </div>
 <!-- END: Display friendly name -->
 
@@ -28,7 +68,7 @@
 
 
 	<!-- START: EDIT mode -->
-	<div [hidden]="mode === modes.READ">
+	<!--<div [hidden]="mode === modes.READ">
 		<div class="ui error form">
 			<div class="ui fluid action input">
 				<input type="text" required
@@ -65,21 +105,7 @@
 				<p *ngIf="idInput.control.hasError('duplicatedNamedFragmentName')">A Fragment with that name already exists.</p>
 			</cw-error-label>
 		</div>
-	</div>
+	</div>-->
 	<!-- END: EDIT mode -->
 </div>
 <!-- END: EDIT and READ modes -->
-
-
-<!-- START: options buttons -->
-<div class="description" *ngIf="canEdit && isPartOfNamedFragment">
-	<div class="ui icon bottom left pointing dropdown basic mini button options" title="Options">
-		<i class="ellipsis horizontal icon"></i>
-		<div class="menu">
-			<div class="item" title="Edit Fragment's name" (click)="onEditId()">
-				<i class="edit icon"></i> Edit
-			</div>
-		</div>
-	</div>
-</div>
-<!-- END: options buttons -->
