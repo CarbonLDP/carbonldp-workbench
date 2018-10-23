@@ -461,6 +461,12 @@ export class SPARQLClientComponent implements OnInit {
 		};
 	}
 
+	private restoreWipQuery(){
+		this.wipQueryService
+			.getWipQuery()
+			.subscribe( wipQuery => this.query = wipQuery );
+	}
+
 	private async execute( _query:SPARQLQuery ):Promise<SPARQLClientResponse> {
 		this.queryExecutionState = QueryExecutionState.PREPARING;
 
@@ -512,7 +518,7 @@ export class SPARQLClientComponent implements OnInit {
 
 			// To let Angular update the UI before rendering the results, the renderization needs to be executed asynchronously
 			return await new Promise<SPARQLClientResponse>( resolve => {
-				setTimeout( () =>  {
+				setTimeout( () => {
 					resolve( this.buildResponse( _profile.duration, result, SPARQLResponseType.Success, query ) );
 				}, 0 )
 			} );
