@@ -1,3 +1,46 @@
 :host {
 	display: block;
+
+	.cw-name[hidden]{
+		display: none;
+	}
+
+	.cw-name, .cw-propContent-formWrapper {
+		// Center child items vertically
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		margin-bottom: 0.5em;
+		height: 30px;
+
+		font-size: 1.1em;
+		font-weight: bold;
+		// Reset line-height. Semantic UI's line-height doesn't let icons be aligned with other elements
+		line-height: normal;
+
+		> * {
+			// !important is required since Semantic UI rules are more specific
+			margin-right: 5px !important;
+		}
+
+		// Show the edit button on hover
+		&:hover .cw-nameEditButton {
+			display: inline;
+		}
+	}
+
+	.cw-nameEditButton {
+		display: none;
+	}
+	.cw-nameInput {
+		display: inline;
+		padding: 5px !important;
+
+		// !important is required since Semantic UI rules are more specific
+		width: 400px !important;
+	}
+	.cw-nameEditButton, .cw-nameCancelButton {
+		cursor: pointer;
+	}
 }
