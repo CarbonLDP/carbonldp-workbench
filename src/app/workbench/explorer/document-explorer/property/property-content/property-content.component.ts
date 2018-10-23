@@ -34,6 +34,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	id:string;
 	propertyName:string;
 	originalName:string;
+	tempOriginalName:string;
 	value:any[] = [];
 
 	addNewLiteral:EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -117,6 +118,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 
 	onEditName():void {
 		this.mode = Modes.EDIT;
+		this.tempOriginalName = this.propertyName;
 	}
 
 	cancelDeletion():void {
@@ -124,8 +126,11 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	}
 
 	cancelModification():void {
-		if( this.nameInputControl.valid ) this.mode = Modes.READ;
+		//check if has changes or is an empty string
+		if( this.tempOriginalName !== this.propertyName || this.propertyName.trim() === "" ) this.propertyName = this.tempOriginalName;
 		if( this.property.isBeingCreated ) this.onDeleteProperty.emit( this.property );
+		this.mode = Modes.READ;
+
 	}
 
 	askToConfirmDeletion():void {

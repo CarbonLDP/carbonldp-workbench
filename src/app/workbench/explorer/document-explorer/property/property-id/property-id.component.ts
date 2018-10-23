@@ -49,6 +49,7 @@ export class PropertyIDComponent implements AfterViewInit {
 
 	id:string;
 	originalId:string;
+	tempOriginalId:string;
 	value:any[] | string = [];
 
 	modes:Modes = Modes;
@@ -90,10 +91,12 @@ export class PropertyIDComponent implements AfterViewInit {
 		this.existingFragments = [];
 		this.namedFragments.forEach( ( nameFragment:NamedFragmentStatus ) => { this.existingFragments.push( nameFragment.name ); } );
 		this.value = this.unescape( <string>this.value );
+		this.tempOriginalId = this.value;
 	}
 
 	cancelModification():void {
-		if( ! this.idInputControl.valid ) return;
+		//check if has changes or the value is an empty string to back down the changes.
+		if( this.tempOriginalId !== this.value || this.value.trim() === "" ) this.value = this.tempOriginalId;
 		this.mode = Modes.READ;
 	}
 
