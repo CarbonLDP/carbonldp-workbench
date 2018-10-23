@@ -1,11 +1,11 @@
 import { XSD } from "carbonldp/Vocabularies";
-import { isDate, isString, isInteger, isNumber } from "carbonldp/Utils";
+import { isDate, isInteger, isNumber, isString } from "carbonldp/Utils";
 import { RDFLiteral } from "carbonldp/RDF/Literal";
 import { URI } from "carbonldp/RDF/URI";
 import { DocumentExplorerLibrary } from "./document-explorer-library";
 
 import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { AbstractControl, Validator, NG_VALIDATORS } from "@angular/forms";
+import { AbstractControl, NG_VALIDATORS, Validator } from "@angular/forms";
 
 @Directive( {
 	selector: "[cw-property-name]",

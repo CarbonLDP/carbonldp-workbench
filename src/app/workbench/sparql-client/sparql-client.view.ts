@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 
-import { MessagesAreaService } from "app/shared/messages-area/messages-area.service";
+import { MessagesAreaService } from "app/common/components/messages-area/messages-area.service";
 
 @Component( {
 	selector: "cw-sparql-client-view",

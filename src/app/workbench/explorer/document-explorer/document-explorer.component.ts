@@ -5,8 +5,8 @@ import { RDFDocument } from "carbonldp/RDF/Document";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "./documents-resolver.service";
-import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
-import { Message } from "app/shared/messages-area/message.component";
+import { ErrorMessageGenerator } from "app/common/components/messages-area/error/error-message-generator";
+import { Message } from "app/common/components/messages-area/message.component";
 
 import "semantic-ui/semantic";
 

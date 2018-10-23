@@ -1,5 +1,5 @@
 import { Component, ViewEncapsulation } from "@angular/core";
-import { Router, Event, NavigationEnd, ActivatedRoute, ActivatedRouteSnapshot } from "@angular/router";
+import { ActivatedRoute, ActivatedRouteSnapshot, Event, NavigationEnd, Router } from "@angular/router";
 import { Title } from "@angular/platform-browser";
 
 

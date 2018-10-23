@@ -1,4 +1,4 @@
-import { ElementRef, Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 
 import { RDFLiteral } from "carbonldp/RDF/Literal";

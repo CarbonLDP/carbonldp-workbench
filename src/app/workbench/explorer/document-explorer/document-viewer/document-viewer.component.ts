@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, ViewChild, AfterViewInit, OnChanges } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node"
@@ -49,12 +49,15 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 
 	get documentContentHasChanged() { return this.rootNodeHasChanged || this.blankNodesHaveChanged || this.namedFragmentsHaveChanged; }
 
-
 	documentsResolverService:DocumentsResolverService;
+
 	@Input() uri:string;
 	@Input() displaySuccessMessage:EventEmitter<string> = new EventEmitter<string>();
+
 	private _document:RDFDocument;
-	@Input() set document( value:RDFDocument ) {
+
+	@Input()
+	set document( value:RDFDocument ) {
 		this._document = value;
 		this.receiveDocument( value );
 	}

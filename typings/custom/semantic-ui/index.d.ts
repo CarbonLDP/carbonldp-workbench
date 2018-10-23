@@ -156,7 +156,8 @@ interface SemanticModalArguments extends SemanticDebugSettings {
 	closable?:boolean;
 	blurring?:boolean;
 	// TODO: Check onApprove real signature
-	onApprove?:() => any;
+	onApprove?:( element:JQuery ) => boolean | void;
+	onDeny?:( element:JQuery ) => boolean | void;
 }
 
 interface SemanticProgressArguments extends SemanticDebugSettings {

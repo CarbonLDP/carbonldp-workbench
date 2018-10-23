@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, OnChanges, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChange } from "@angular/core";
 
 import { URI } from "carbonldp/RDF/URI";
 
