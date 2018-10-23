@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from "@angular/core";
+import { EventEmitter, Injectable } from "@angular/core";
 
 /*
 *   Service used to add/remove items to the Sidebar of the Workbench

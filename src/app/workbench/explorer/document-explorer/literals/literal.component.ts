@@ -1,10 +1,10 @@
-import { Component, ElementRef, Input, Output, AfterViewChecked, EventEmitter, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 
 import { XSD } from "carbonldp/Vocabularies/XSD";
 import { forEachOwnProperty } from "carbonldp/Utils";
 import { URI } from "carbonldp/RDF/URI";
 
-import { Modes, JsonLDKeyword } from "../document-explorer-library";
+import { JsonLDKeyword, Modes } from "../document-explorer-library";
 
 
 /*

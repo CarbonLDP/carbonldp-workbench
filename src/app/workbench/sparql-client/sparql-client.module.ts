@@ -3,31 +3,37 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 
-import { ResponseComponent } from "./response/response.component";
 import { SPARQLClientComponent } from "./sparql-client.component";
+import { QueryBuilderComponent } from "./query-builder/query-builder.component";
 
-import { RelativizeURIPipe } from "./resultset-table/relativize-uri.pipe";
-import { PrefixURIPipe } from "./resultset-table/prefix-uri.pipe";
+import { ResponseComponent } from "./response/response.component";
+
+import { RelativePipe } from "./resultset-table/relative.pipe";
+import { BNodePipe } from "app/workbench/sparql-client/resultset-table/bnode.pipe";
+import { PrefixPipe } from "./resultset-table/prefix.pipe";
+import { URIPipe } from "./resultset-table/uri.pipe";
 
 import { ResultsetTableComponent } from "./resultset-table/resultset-table.component";
-
 // Modules
-import { SharedModule } from "app/shared/shared.module";
+import { AppCommonModule } from "app/common/app-common.module";
+
 
 @NgModule( {
 	imports: [
 		CommonModule,
 		RouterModule,
-		SharedModule,
+		AppCommonModule,
 		FormsModule
 	],
 	declarations: [
 		SPARQLClientComponent,
+		QueryBuilderComponent,
 		ResponseComponent,
 		ResultsetTableComponent,
-		RelativizeURIPipe,
-		PrefixURIPipe,
-		PrefixURIPipe,
+		BNodePipe,
+		RelativePipe,
+		PrefixPipe,
+		URIPipe,
 	],
 	exports: [
 		SPARQLClientComponent,

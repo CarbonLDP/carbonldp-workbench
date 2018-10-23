@@ -1,11 +1,10 @@
 import { ModuleWithProviders } from "@angular/core";
-import { Routes, RouterModule, PreloadAllModules } from "@angular/router";
-
-// Guards
-
+import { PreloadAllModules, RouterModule, Routes } from "@angular/router";
 // Components
 import { ErrorView } from "./error-pages/error.view";
 import { NotFoundErrorView } from "./error-pages/not-found-error/not-found-error.view";
+
+// Guards
 
 const appRoutes:Routes = [
 	{

@@ -1,14 +1,14 @@
-import { Component, EventEmitter, ViewChild, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
+import { Component, DebugElement, ViewChild } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { FormsModule } from "@angular/forms";
 
 import { ListsComponent } from "./../lists/lists.component";
-import { ListStatus, ListComponent } from "./../lists/list.component";
+import { ListComponent, ListStatus } from "./../lists/list.component";
 import { LiteralComponent } from "./../literals/literal.component";
 import { PointerComponent } from "./../pointers/pointer.component";
 import { JsonLDKeyword } from "./../document-explorer-library";
-import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
+import { LiteralValueValidator, PointerValidator } from "./../document-explorer-validators";
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
 

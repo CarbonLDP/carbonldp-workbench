@@ -1,7 +1,6 @@
-import { Component, Input, Output, SimpleChange, EventEmitter, OnChanges } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChange } from "@angular/core";
 
 import "semantic-ui/semantic";
-
 
 /*
 *   Displays the results of a response in a table format
@@ -9,7 +8,7 @@ import "semantic-ui/semantic";
 @Component( {
 	selector: "cw-resultset-table",
 	templateUrl: "./resultset-table.component.html",
-	styleUrls: [  "./resultset-table.component.scss"  ],
+	styleUrls: [ "./resultset-table.component.scss" ],
 } )
 
 export class ResultsetTableComponent implements OnChanges {
@@ -40,8 +39,8 @@ export class ResultsetTableComponent implements OnChanges {
 
 		let index:number = this.resultset.head.vars.indexOf( columnName );
 		this.bindings.sort( ( bindingA, bindingB ) => {
-			if( ! bindingA[ index ] )return this.ascending ? 1 : - 1;
-			if( ! bindingB[ index ] )return this.ascending ? - 1 : 1;
+			if( ! bindingA[ index ] ) return this.ascending ? 1 : - 1;
+			if( ! bindingB[ index ] ) return this.ascending ? - 1 : 1;
 			if( bindingA[ index ].value > bindingB[ index ].value ) return this.ascending ? - 1 : 1;
 			if( bindingA[ index ].value < bindingB[ index ].value ) return this.ascending ? 1 : - 1;
 			return 0;
