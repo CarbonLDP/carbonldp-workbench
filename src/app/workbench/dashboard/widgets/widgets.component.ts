@@ -1,7 +1,6 @@
 import { Component, Input } from "@angular/core";
 
-import { MessagesAreaService } from "app/shared/messages-area/messages-area.service";
-
+import { MessagesAreaService } from "app/common/components/messages-area/messages-area.service";
 
 
 /*
