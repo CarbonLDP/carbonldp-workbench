@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input } from "@angular/core";
 
 @Component( {
-	selector: "cw-error-label",
+	selector: "app-error-label",
 	templateUrl: "./error-label.component.html",
 	styleUrls: [ "./error-label.component.scss" ],
 	host: {

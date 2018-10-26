@@ -7,68 +7,61 @@
 	background-color: #90959A;
 	color: #ffffff;
 
-	cw-header.ui.navigation.inverted.menu {
+	app-header.ui.navigation.inverted.menu {
 		background-color: #363f48;
 		border-radius: 0;
 		padding: 0;
 		margin: 0;
 	}
 
-	cw-sidebar.ui.vertical.menu {
+	app-sidebar.ui.vertical.menu {
 		flex: 0 0 auto;
 
 		margin: 0;
 		border-radius: 0;
-		width: 182px;
 		border-top: 1px solid rgba(255, 255, 255, 0.0784314);
 		border-right: 1px solid rgba(255, 255, 255, 0.0784314);
 		background-color: #363f48;
 	}
 
-	cw-messages-area {
+	app-messages-area {
 		z-index: 2;
 		max-height: 0;
 	}
 
 	.page-layout {
-		flex: 1;
-
 		display: flex;
 		flex-direction: row;
-		width: 100%;
+
+		// Full height minus header's height
+		height: calc(100vh - 60px);
+
+		// This div should never overflow
+		overflow: hidden;
 	}
 
 	.page-content {
-		flex: 1;
-		max-height: 100%;
+		flex: 1 1 auto;
 		width: 62%;
-		min-width: 400px;
+		max-height: 100%;
 
 		display: flex;
 		flex-direction: column;
 	}
 
 	.scrollable-content {
-		flex: 1;
+		flex: 1 1 auto;
 
 		display: flex;
 		flex-direction: column;
 
-		overflow-x: hidden;
-
-		> * {
-			flex: 1;
-		}
-
 		> .rendered-content {
-			flex: 0 0 auto;
-			padding: 3% 2% 5% 3%;
-			margin-bottom: 10%;
+			flex: 1 1 auto;
+			padding: 15px 30px;
 		}
 
-		> footer {
+		.footer {
 			flex: 0 0 auto;
-			height: 69px;
 		}
 	}
 

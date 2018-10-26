@@ -12,7 +12,7 @@ import { SidebarService } from "./layout/sidebar/sidebar.service";
 *   All the Workbench routes are displayed here.
 * */
 @Component( {
-	selector: "cw-workbench",
+	selector: "app-workbench",
 	templateUrl: "./workbench.view.html",
 	styleUrls: [ "./workbench.view.scss" ],
 } )

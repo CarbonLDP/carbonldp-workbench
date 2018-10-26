@@ -11,9 +11,9 @@
 	<!-- END: Header of the query builder -->
 
 	<!-- START: Body of the query builder -->
-	<div class="cw-queryBuilderCard ui middle attached segment pushable">
+	<div class="app-queryBuilderCard ui middle attached segment pushable">
 		<!-- START: List of the saved queries -->
-		<div class="cw-savedQueries ui inverted right vertical wide dimmed sidebar menu queries-list">
+		<div class="app-savedQueries ui inverted right vertical wide dimmed sidebar menu queries-list">
 			<!--
 				2018-10-19 @MiguelAraCo
 				TODO[feature]: Add text: "Queries are saved in your browser's local storage"
@@ -22,21 +22,21 @@
 				<ng-container *ngIf="savedQueries.length === 0">
 					<!-- Content to show when there are no saved queries -->
 				</ng-container>
-				<div class="cw-savedQuery" *ngFor="let savedQuery of savedQueries">
-					<div class="cw-savedQuery-label"
+				<div class="app-savedQuery" *ngFor="let savedQuery of savedQueries">
+					<div class="app-savedQuery-label"
 					     (click)="on_savedQuery_select( savedQuery )">
-						<div class="cw-savedQuery-name">{{ savedQuery.name }}</div>
-						<div class="cw-savedQuery-operation"
+						<div class="app-savedQuery-name">{{ savedQuery.name }}</div>
+						<div class="app-savedQuery-operation"
 						     *ngIf="savedQuery.type === SPARQLType.QUERY"
-						     [ngClass]="'cw-savedQuery-operation--' + savedQuery.operation.toLowerCase()">
+						     [ngClass]="'app-savedQuery-operation--' + savedQuery.operation.toLowerCase()">
 							{{ savedQuery.operation.toLowerCase() }}
 						</div>
-						<div class="cw-savedQuery-operation cw-savedQuery-operation--update"
+						<div class="app-savedQuery-operation app-savedQuery-operation--update"
 						     *ngIf="savedQuery.type === SPARQLType.UPDATE">
 							{{ savedQuery.type.toLowerCase() }}
 						</div>
 					</div>
-					<i class="cw-savedQuery-deleteButton icon close"
+					<i class="app-savedQuery-deleteButton icon close"
 					   (click)="on_savedQuery_delete( savedQuery )"></i>
 				</div>
 			</ng-container>
@@ -52,14 +52,17 @@
 				<div class="ui inverted dimmer"
 				     [ngClass]="{ active: loading }">
 					<div class="ui text loader">
-						<div class="cw-duration-label"
-						      *ngIf="queryExecutionState === QueryExecutionState.EXECUTING && queryExecutionDuration === 0">Sending...</div>
-						<code class="cw-duration-label"
+						<div class="app-duration-label"
+						     *ngIf="queryExecutionState === QueryExecutionState.EXECUTING && queryExecutionDuration === 0">Sending...
+						</div>
+						<code class="app-duration-label"
 						      *ngIf="queryExecutionState === QueryExecutionState.EXECUTING && queryExecutionDuration !== 0">{{queryExecutionDuration | formatDuration:'{ "decimals": 0, "fixedLength": true }'}}</code>
-						<div class="cw-duration-label"
-						     *ngIf="queryExecutionState === QueryExecutionState.PROCESSING_RESPONSE">Rendering...</div>
-						<div class="cw-duration-label"
-						     *ngIf="queryExecutionState === QueryExecutionState.CANCELING">Canceling...</div>
+						<div class="app-duration-label"
+						     *ngIf="queryExecutionState === QueryExecutionState.PROCESSING_RESPONSE">Rendering...
+						</div>
+						<div class="app-duration-label"
+						     *ngIf="queryExecutionState === QueryExecutionState.CANCELING">Canceling...
+						</div>
 						<button type="button" class="ui negative right labeled icon button"
 						        [class.loading]="queryExecutionState === QueryExecutionState.CANCELING"
 						        [disabled]="! ( queryExecutionState === QueryExecutionState.PREPARING || queryExecutionState === QueryExecutionState.EXECUTING )"
@@ -69,14 +72,14 @@
 				<div class="ui grid">
 					<div class="row">
 						<div class="column">
-							<cw-query-builder
+							<app-query-builder
 								#queryBuilder
-								(execute)="on_queryBuilder_execute( $event )"
-								(clean)="on_queryBuilder_clean( $event )"
-								(save)="on_queryBuilder_save( $event )"
-								(clone)="on_queryBuilder_clone( $event )"
+								(execute)="on_queryBuilder_execute()"
+								(clean)="on_queryBuilder_clean()"
+								(save)="on_queryBuilder_save()"
+								(clone)="on_queryBuilder_clone()"
 								[loading]="loading"
-								[query]="query"></cw-query-builder>
+								[query]="query"></app-query-builder>
 							<!-- /basi segment -->
 						</div>
 						<!-- /row -->
@@ -106,20 +109,20 @@
 		</div>
 	</div>
 	<div class="ui list responses-list">
-		<cw-sparql-response class="item"
+		<app-sparql-response class="item"
 		                    *ngFor="let response of responses; let i = index"
 		                    [response]="response"
 		                    [prefixes]="prefixes"
 		                    (onRemove)="on_response_remove($event)"
 		                    (onConfigure)="on_response_load($event)"
-		                    (onReExecute)="on_response_rerun($event)"></cw-sparql-response>
+		                    (onReExecute)="on_response_rerun($event)"></app-sparql-response>
 	</div>
 </div>
 <!-- END: Container of Query responses -->
 
 <!--TODO: build a modal component to replace this code below -->
 
-<form class="cw-saveQueryModal ui tiny modal"
+<form class="app-saveQueryModal ui tiny modal"
       [ngClass]="{loading: loading}"
       (submit)="on_saveQueryModal_submit()">
 	<div class="header">
@@ -148,7 +151,7 @@
 <!-- END: Modal to confirm query deletion -->
 
 <!-- START: Modal to confirm the replacement of the working query -->
-<form class="cw-replaceQueryConfirmationModal ui modal"
+<form class="app-replaceQueryConfirmationModal ui modal"
       (submit)="on_replaceQueryConfirmationModal_submit()">
 	<div class="header">
 		Unsaved changes
@@ -170,7 +173,7 @@
 	</div>
 </form>
 
-<form class="cw-overwriteQueryConfirmationModal ui modal"
+<form class="app-overwriteQueryConfirmationModal ui modal"
       (submit)="on_overwriteQueryConfirmationModal_submit()">
 	<div class="header">
 		Overwrite query
@@ -197,7 +200,7 @@
 	</div>
 </form>
 
-<form class="cw-deleteQueryConfirmationModal ui modal"
+<form class="app-deleteQueryConfirmationModal ui modal"
       (submit)="on_deleteQueryConfirmationModal_submit()">
 	<div class="header">
 		Delete query

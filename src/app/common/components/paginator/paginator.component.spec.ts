@@ -13,7 +13,7 @@ export function paginatorSpecs() {
 		let de:DebugElement;
 
 		@Component( {
-			template: `<cw-paginator [activePage]="0" [elementsPerPage]="elementsPerPage" [totalElements]="totalElements"></cw-paginator>`
+			template: `<app-paginator [activePage]="0" [elementsPerPage]="elementsPerPage" [totalElements]="totalElements"></app-paginator>`
 		} )
 		class TestComponent {
 
@@ -51,7 +51,7 @@ export function paginatorSpecs() {
 			expect( comp.paginator.pages.length ).toEqual( totalPages );
 			expect( comp.paginator.totalElements ).toEqual( comp.totalElements );
 			expect( comp.paginator.elementsPerPage ).toEqual( comp.elementsPerPage );
-			pages = Array.prototype.slice.call( fixture.nativeElement.querySelectorAll( "cw-paginator a" ) );
+			pages = Array.prototype.slice.call( fixture.nativeElement.querySelectorAll( "app-paginator a" ) );
 			backBtn = pages.splice( 0, 1 )[ 0 ];
 			nextBtn = pages.splice( pages.length - 1, 1 )[ 0 ];
 			expect( pages.length ).toEqual( totalPages );
@@ -64,13 +64,13 @@ export function paginatorSpecs() {
 			expect( comp.paginator.pages.length ).toEqual( totalPages );
 			expect( comp.paginator.totalElements ).toEqual( comp.totalElements );
 			expect( comp.paginator.elementsPerPage ).toEqual( comp.elementsPerPage );
-			pages = Array.prototype.slice.call( fixture.nativeElement.querySelectorAll( "cw-paginator a" ) );
+			pages = Array.prototype.slice.call( fixture.nativeElement.querySelectorAll( "app-paginator a" ) );
 			backBtn = pages.splice( 0, 1 )[ 0 ];
 			nextBtn = pages.splice( pages.length - 1, 1 )[ 0 ];
 			expect( pages.length ).toEqual( totalPages );
 
 
-			// let paginatorDiv:HTMLElement = fixture.nativeElement.querySelector( "cw-paginator .pagination.menu" );
+			// let paginatorDiv:HTMLElement = fixture.nativeElement.querySelector( "app-paginator .pagination.menu" );
 		} );
 
 		it( "Should change the active page number", () => {
@@ -79,7 +79,7 @@ export function paginatorSpecs() {
 			comp.totalElements = 15;
 			comp.paginator.activePage = 0;
 			fixture.detectChanges();
-			let pages:HTMLElement[] = Array.prototype.slice.call( fixture.nativeElement.querySelectorAll( "cw-paginator a" ) );
+			let pages:HTMLElement[] = Array.prototype.slice.call( fixture.nativeElement.querySelectorAll( "app-paginator a" ) );
 			let backBtn:HTMLElement = pages.splice( 0, 1 )[ 0 ];
 			let nextBtn:HTMLElement = pages.splice( pages.length - 1, 1 )[ 0 ];
 
@@ -106,7 +106,7 @@ export function paginatorSpecs() {
 			comp.totalElements = 15;
 			comp.paginator.activePage = 0;
 			fixture.detectChanges();
-			let pages:HTMLElement[] = Array.prototype.slice.call( fixture.nativeElement.querySelectorAll( "cw-paginator a" ) );
+			let pages:HTMLElement[] = Array.prototype.slice.call( fixture.nativeElement.querySelectorAll( "app-paginator a" ) );
 			let nextBtn:HTMLElement = pages.splice( pages.length - 1, 1 )[ 0 ];
 
 			comp.paginator.onPageChange.subscribe( ( pageNumber:number ) => {

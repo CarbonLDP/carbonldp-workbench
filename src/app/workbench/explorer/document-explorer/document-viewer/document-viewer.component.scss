@@ -2,22 +2,27 @@
 	display: block;
 	padding: 0;
 	height: 100%;
+
 	.saving-message {
 		z-index: 1;
 	}
+
 	.document-content {
 		overflow-y: scroll;
 		overflow-x: hidden;
 	}
+
 	.document.options {
 		padding: 0;
 		width: 100%;
 	}
+
 	.success.message {
 		position: absolute;
 		z-index: 1;
 		right: 0;
 	}
+
 	.unsaved.prompt.warning.message {
 		min-height: 100px;
 		position: absolute;
@@ -28,6 +33,7 @@
 
 .ui.secondary.menu.document.tabs .item {
 	border: 1px solid #d3d3d3;
+
 	.marker .icon {
 		margin-right: 0;
 	}

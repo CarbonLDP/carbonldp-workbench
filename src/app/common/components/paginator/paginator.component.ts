@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChange } from "@angular/core";
 
 @Component( {
-	selector: "cw-paginator",
+	selector: "app-paginator",
 	templateUrl: "./paginator.component.html",
 	styles: [ ":host{ display:block; }" ],
 } )

@@ -19,7 +19,7 @@ export function literalSpecs() {
 		@Component( {
 			template: `
 				<table>
-					<tr class="cw-literal" [literal]="literalStatus" [partOfList]="partOfList"></tr>
+					<tr class="app-literal" [literal]="literalStatus" [partOfList]="partOfList"></tr>
 				</table>`
 		} )
 		class TestComponent {

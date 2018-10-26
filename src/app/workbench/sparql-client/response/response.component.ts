@@ -1,11 +1,9 @@
-import { Component, Input, Output, ElementRef, EventEmitter, AfterViewInit, OnInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output } from "@angular/core";
 
 import * as CodeMirrorComponent from "app/common/components/code-mirror/code-mirror.component";
 
 import { SPARQLFormats, SPARQLQuery, SPARQLType } from "../models";
 
-import * as $ from "jquery";
-import "semantic-ui/semantic";
 
 export enum SPARQLResponseType {
 	Success = "Success",
@@ -32,9 +30,9 @@ export class SPARQLClientResponse {
 *   Contains and displays the response of a SPARQL query
 * */
 @Component( {
-	selector: "cw-sparql-response",
+	selector: "app-sparql-response",
 	templateUrl: "./response.component.html",
-	styleUrls: [  "./response.component.scss"  ],
+	styleUrls: [ "./response.component.scss" ],
 } )
 export class ResponseComponent implements AfterViewInit, OnInit {
 	element:ElementRef;

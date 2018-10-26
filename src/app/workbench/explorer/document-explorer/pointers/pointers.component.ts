@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 
-import { RDFNode } from "carbonldp/RDF/Node"
+import { RDFNode } from "carbonldp/RDF/Node";
 
 import { Modes } from "../document-explorer-library";
 import { Pointer, PointerStatus } from "./pointer.component";
@@ -10,14 +10,13 @@ import { Pointer, PointerStatus } from "./pointer.component";
 *  Contains all the pointers of a property.
 * */
 @Component( {
-	selector: "cw-pointers",
+	selector: "app-pointers",
 	templateUrl: "./pointers.component.html",
-	styleUrls: [ "./pointers.component.scss" ],
+	styleUrls: [ "./pointers.component.scss" ]
 } )
 
 export class PointersComponent implements OnInit {
-
-	modes:Modes = Modes;
+	modes:typeof Modes = Modes;
 	tempPointers:Pointer[] = [];
 	canDisplayPointers:boolean = false;
 
@@ -32,7 +31,8 @@ export class PointersComponent implements OnInit {
 	@Output() onGoToBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
-	constructor() { }
+	constructor() {
+	}
 
 	ngOnInit():void {
 		this.onAddNewPointer.subscribe( () => {
