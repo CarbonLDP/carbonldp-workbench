@@ -8,7 +8,6 @@ const GLOBAL_CONFIG:Window = window[ "__GLOBAL_CONFIG" ];
 
 export const CARBONLDP_PROTOCOL:string = globalConfigIsSet( "CARBONLDP_PROTOCOL" ) ? GLOBAL_CONFIG[ "CARBONLDP_PROTOCOL" ] : environment.carbonldp.protocol;
 export const CARBONLDP_HOST:string = globalConfigIsSet( "CARBONLDP_HOST" ) ? GLOBAL_CONFIG[ "CARBONLDP_HOST" ] : environment.carbonldp.host;
-// FIXME: Change the way debug mode is activated
 export const ENV:string = globalConfigIsSet( "ENV" ) ? GLOBAL_CONFIG[ "ENV" ] : environment.production ? "production" : "debug";
 export const BASE_URL:string = globalConfigIsSet( "BASE_URL" ) ? GLOBAL_CONFIG[ "BASE_URL" ] : environment.baseURL;
 
