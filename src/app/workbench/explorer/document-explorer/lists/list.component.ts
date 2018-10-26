@@ -1,4 +1,4 @@
-import { ElementRef, Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 
 import { RDFLiteral } from "carbonldp/RDF/Literal";
@@ -15,7 +15,7 @@ import { JsonLDKeyword } from "../document-explorer-library";
 *   pointers in the right order
 * */
 @Component( {
-	selector: "cw-list",
+	selector: "app-list",
 	templateUrl: "./list.component.html",
 	styleUrls: [ "./list.component.scss" ],
 	host: {

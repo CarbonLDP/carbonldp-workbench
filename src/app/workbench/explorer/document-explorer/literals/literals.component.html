@@ -9,7 +9,7 @@
 	</thead>
 	<tbody>
 		<ng-template ngFor let-literal="$implicit" [ngForOf]="literals" let-i="index">
-			<tr class="cw-literal top aligned" [ngClass]="{'modified-literal':!!literal.modified, 'added-literal':!!literal.added}" *ngIf="!literal.deleted"
+			<tr class="app-literal top aligned" [ngClass]="{'modified-literal':!!literal.modified, 'added-literal':!!literal.added}" *ngIf="!literal.deleted"
 			    [literal]="literal"
 			    [canEdit]="canEdit"
 			    [canDisplayLanguage]="canDisplayLanguage"

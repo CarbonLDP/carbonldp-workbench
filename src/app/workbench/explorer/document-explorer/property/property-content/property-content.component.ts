@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 
 import { RDFLiteral } from "carbonldp/RDF/Literal";
 import { RDFList } from "carbonldp/RDF/List";
@@ -10,10 +10,10 @@ import { PointerStatus } from "./../../pointers/pointer.component";
 import { ListStatus } from "./../../lists/list.component";
 import { NamedFragmentStatus } from "./../../named-fragments/named-fragment.component";
 import { Property, PropertyStatus } from "./../property.component";
-import { Modes, JsonLDKeyword } from "./../../document-explorer-library";
+import { JsonLDKeyword, Modes } from "./../../document-explorer-library";
 
 @Component( {
-	selector: "cw-property-content",
+	selector: "app-property-content",
 	templateUrl: "./property-content.component.html",
 	styleUrls: [ "./property-content.component.scss" ],
 } )
@@ -39,7 +39,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	addNewLiteral:EventEmitter<boolean> = new EventEmitter<boolean>();
 	addNewPointer:EventEmitter<boolean> = new EventEmitter<boolean>();
 	addNewList:EventEmitter<boolean> = new EventEmitter<boolean>();
-	modes:Modes = Modes;
+	modes:typeof Modes = Modes;
 	@ViewChild( "nameInput" ) nameInputControl;
 
 	@Input() mode:string = Modes.READ;

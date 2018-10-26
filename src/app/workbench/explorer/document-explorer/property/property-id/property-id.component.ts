@@ -1,36 +1,18 @@
-import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 
 import { URI } from "carbonldp/RDF/URI";
-import { RDFNode } from "carbonldp/RDF/Node"
+import { RDFNode } from "carbonldp/RDF/Node";
 
 import { Modes } from "../../document-explorer-library";
 import { Property, PropertyStatus } from "./../property.component";
 import { NamedFragmentStatus } from "../../named-fragments/named-fragment.component";
 
-
 @Component( {
-	selector: "cw-property-id",
+	selector: "app-property-id",
 	templateUrl: "./property-id.component.html",
-	styleUrls: [ "./property-id.component.scss" ],
+	styleUrls: [ "./property-id.component.scss" ]
 } )
-
 export class PropertyIDComponent implements AfterViewInit {
-
-	element:ElementRef;
-	$element:JQuery;
-
-
-	status:string;
-	existingFragments:string[] = [];
-	tempProperty:Property = <Property>{};
-
-	id:string;
-	originalId:string;
-	value:any[] | string = [];
-
-	modes:Modes = Modes;
-	@ViewChild( "idInput" ) idInputControl;
-
 	@Input() mode:string = Modes.READ;
 	@Input() documentURI:string = "";
 	@Input() blankNodes:RDFNode[] = [];
@@ -38,10 +20,12 @@ export class PropertyIDComponent implements AfterViewInit {
 	@Input() isPartOfNamedFragment:boolean = false;
 	@Input() canEdit:boolean = true;
 	@Input() accessPointsHasMemberRelationProperties:string[] = [];
+
 	private _property:PropertyStatus;
-	@Input() set property( property:PropertyStatus ) {
+	@Input()
+	set property( property:PropertyStatus ) {
 		this._property = property;
-		this.status = (! ! property.modified) ? "modified" : (! ! property.copy) ? "copy" : "added";
+		this.status = property.modified ? "modified" : property.copy ? "copy" : "added";
 
 		this.id = property[ this.status ].id;
 		this.tempProperty.id = property[ this.status ].id;
@@ -49,12 +33,32 @@ export class PropertyIDComponent implements AfterViewInit {
 		this.value = property[ this.status ].value;
 	}
 
-	get property():PropertyStatus { return this._property; }
+	get property():PropertyStatus {
+		return this._property;
+	}
 
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 
-	get valueHasChanged():boolean { return ! ! this.property.copy && this.property.copy.value !== this.tempProperty.value; };
+	// Make URI utility accessible to template
+	URI:typeof URI = URI;
 
+	element:ElementRef;
+	$element:JQuery;
+
+	status:string;
+	existingFragments:string[] = [];
+	tempProperty:Property = {} as any;
+
+	id:string;
+	originalId:string;
+	value:string = "";
+
+	modes:typeof Modes = Modes;
+	@ViewChild( "idInput" ) idInputControl;
+
+	get valueHasChanged():boolean {
+		return this.property.copy && this.property.copy.value !== this.tempProperty.value;
+	};
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -66,12 +70,18 @@ export class PropertyIDComponent implements AfterViewInit {
 	}
 
 	getParentURI( uri:string ):string {
-		let slug:string = this.getSlug( uri );
-		return uri.substr( 0, uri.indexOf( slug ) );
-	}
+		if( URI.hasFragment( uri ) ) {
+			return URI.getDocumentURI( uri );
+		} else {
+			// Remove ending slash if present
+			let parentURI:string = uri.endsWith( "/" )
+				? uri.substring( 0, uri.length - 1 )
+				: uri;
 
-	getSlug( uri:string ) {
-		return URI.getSlug( uri );
+			parentURI = parentURI.substring( 0, parentURI.lastIndexOf( "/" ) + 1 );
+
+			return parentURI;
+		}
 	}
 
 	isUrl( uri:string ):boolean {
@@ -82,8 +92,10 @@ export class PropertyIDComponent implements AfterViewInit {
 	onEditId():void {
 		this.mode = Modes.EDIT;
 		this.existingFragments = [];
-		this.namedFragments.forEach( ( nameFragment:NamedFragmentStatus ) => { this.existingFragments.push( nameFragment.name ); } );
-		this.value = this.unescape( <string>this.value );
+		this.namedFragments.forEach( ( nameFragment:NamedFragmentStatus ) => {
+			this.existingFragments.push( nameFragment.name );
+		} );
+		this.value = this.unescape( this.value );
 	}
 
 	cancelModification():void {
@@ -92,7 +104,8 @@ export class PropertyIDComponent implements AfterViewInit {
 	}
 
 	saveId():void {
-		this.checkForChangesOnId( this.sanitize( <string>this.value ) ); //check changes on idInput
+		// Check changes on idInput
+		this.checkForChangesOnId( this.sanitize( this.value ) );
 		this.mode = Modes.READ;
 	}
 
@@ -105,7 +118,7 @@ export class PropertyIDComponent implements AfterViewInit {
 
 	private sanitize( value:string ):string {
 		let sanitized:string = value;
-		let slug:string = this.getSlug( value );
+		let slug:string = URI.getSlug( value );
 		let parts:string[] = value.split( slug );
 		if( parts.length > 0 ) sanitized = parts[ 0 ] + this.escape( slug );
 		return sanitized;
@@ -127,11 +140,11 @@ export class PropertyIDComponent implements AfterViewInit {
 
 		this.property.isBeingCreated = false;
 
-		if( ! ! this.property.copy ) {
+		if( this.property.copy ) {
 			if( this.valueHasChanged ) {
 				this.property.modified = this.tempProperty;
 			}
-		} else if( ! ! this.property.added ) {
+		} else if( this.property.added ) {
 			this.property.added = this.tempProperty;
 		}
 		this.onChangeProperty.emit( this.tempProperty );

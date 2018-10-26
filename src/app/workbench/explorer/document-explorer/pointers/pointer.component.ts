@@ -1,23 +1,22 @@
-import { Component, ElementRef, Input, Output, SimpleChange, EventEmitter, OnChanges } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChange } from "@angular/core";
 
 import { URI } from "carbonldp/RDF/URI";
 
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
-import { Modes, JsonLDKeyword } from "../document-explorer-library";
+import { JsonLDKeyword, Modes } from "../document-explorer-library";
 
 
 /*
 *  Displays the id of a pointer
 * */
 @Component( {
-	selector: "tr.cw-pointer",
+	selector: "tr.app-pointer",
 	templateUrl: "./pointer.component.html",
-	styleUrls: [ "./pointer.component.scss" ],
+	styleUrls: [ "./pointer.component.scss" ]
 } )
 
 export class PointerComponent implements OnChanges {
-
 	$element:JQuery;
 	element:ElementRef;
 
@@ -33,7 +32,7 @@ export class PointerComponent implements OnChanges {
 	existsOnPointers:boolean = false;
 
 	private _mode = Modes.READ;
-	@Input() set mode( value:string ) {
+	@Input() set mode( value:Modes ) {
 		setTimeout( () => {
 			this._mode = value;
 			this.onEditMode.emit( this.mode === Modes.EDIT );
@@ -42,18 +41,24 @@ export class PointerComponent implements OnChanges {
 		}, 0 );
 	}
 
-	get mode() { return this._mode; }
+	get mode() {
+		return this._mode;
+	}
 
 	modes:typeof Modes = Modes;
 
 
 	// Inputs and Outputs
 	private _pointer = <PointerStatus>{};
-	get pointer() { return this._pointer; }
+	get pointer() {
+		return this._pointer;
+	}
 
 	@Input() set pointer( value:PointerStatus ) {
 		this._pointer = value;
-		if( this.pointer.added ) { this.mode = Modes.EDIT; }
+		if( this.pointer.added ) {
+			this.mode = Modes.EDIT;
+		}
 
 		/**
 		 *  Check if its going to use the modified,
@@ -87,7 +92,9 @@ export class PointerComponent implements OnChanges {
 
 	// Pointer Value;
 	private _id:string = "";
-	get id():string { return this._id; }
+	get id():string {
+		return this._id;
+	}
 
 	set id( id:string ) {
 		this._id = id;
@@ -123,7 +130,9 @@ export class PointerComponent implements OnChanges {
 			[
 				...this.blankNodes,
 				...this.namedFragments
-			].findIndex( ( nfOrBN ) => { return nfOrBN[ "name" ] === this.id || nfOrBN[ "id" ] === this.id; } );
+			].findIndex( ( nfOrBN ) => {
+				return nfOrBN[ "name" ] === this.id || nfOrBN[ "id" ] === this.id;
+			} );
 		this.isBlankNode = URI.isBNodeID( <string>this.id );
 		this.isNamedFragment = URI.isFragmentOf( this.id, this.documentURI );
 		this.existsOnPointers = idx !== - 1;
@@ -191,13 +200,17 @@ export class PointerComponent implements OnChanges {
 	}
 
 	goToBlankNode( id:string ):void {
-		let idx:number = this.blankNodes.findIndex( ( blankNode:BlankNodeStatus ) => { return blankNode.id === id; } );
+		let idx:number = this.blankNodes.findIndex( ( blankNode:BlankNodeStatus ) => {
+			return blankNode.id === id;
+		} );
 		this.existsOnPointers = idx !== - 1;
 		if( this.existsOnPointers ) this.onGoToBlankNode.emit( id );
 	}
 
 	goToNamedFragment( id:string ):void {
-		let idx:number = this.namedFragments.findIndex( ( namedFragment:NamedFragmentStatus ) => { return namedFragment.name === id; } );
+		let idx:number = this.namedFragments.findIndex( ( namedFragment:NamedFragmentStatus ) => {
+			return namedFragment.name === id;
+		} );
 		this.existsOnPointers = idx !== - 1;
 		if( this.existsOnPointers ) this.onGoToNamedFragment.emit( id );
 	}

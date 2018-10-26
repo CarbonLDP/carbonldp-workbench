@@ -1,21 +1,20 @@
-import { Component, Input, Output, EventEmitter, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 
 import { Literal, LiteralStatus } from "./literal.component";
-import { Modes, JsonLDKeyword } from "../document-explorer-library";
+import { JsonLDKeyword, Modes } from "../document-explorer-library";
 
 
 /*
 *  Contains all the literals of a property.
 * */
 @Component( {
-	selector: "cw-literals",
+	selector: "app-literals",
 	templateUrl: "./literals.component.html",
 	styleUrls: [ "./literals.component.scss" ],
 } )
 
 export class LiteralsComponent implements OnInit {
-
-	modes:Modes = Modes;
+	modes:typeof Modes = Modes;
 	tempLiterals:Literal[] = [];
 	isLanguagePresent:boolean = false;
 	isEditingLiteral:boolean = false;

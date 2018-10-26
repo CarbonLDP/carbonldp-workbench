@@ -2,8 +2,6 @@ import { Component, ElementRef } from "@angular/core";
 import { Location } from "@angular/common";
 import { Router } from "@angular/router";
 
-import * as $ from "jquery";
-import "semantic-ui/semantic";
 
 import { SidebarService } from "./sidebar.service"
 
@@ -12,7 +10,7 @@ import { SidebarService } from "./sidebar.service"
 *   Sidebar of the Workbench listing all the sidebar items
 * */
 @Component( {
-	selector: "cw-sidebar",
+	selector: "app-sidebar",
 	templateUrl: "./sidebar.component.html",
 	styleUrls: [ "./sidebar.component.scss" ],
 	host: {

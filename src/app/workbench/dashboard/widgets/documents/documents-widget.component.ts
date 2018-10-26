@@ -1,17 +1,17 @@
-import { Component, Input, Output, ElementRef, HostBinding, EventEmitter } from "@angular/core";
+import { Component, ElementRef, EventEmitter, HostBinding, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 
 import { Widget } from "../widgets.component";
 import { WidgetsService } from "../widgets.service";
-import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
+import { ErrorMessageGenerator } from "app/common/components/messages-area/error/error-message-generator";
 
 
 /*
 *  Widget that displays the total number of Document in a Carbon LDP instance
 * */
 @Component( {
-	selector: "cw-documents-widget",
+	selector: "app-documents-widget",
 	templateUrl: "./documents-widget.component.html",
 	styleUrls: [ "./documents-widget.component.scss" ]
 } )

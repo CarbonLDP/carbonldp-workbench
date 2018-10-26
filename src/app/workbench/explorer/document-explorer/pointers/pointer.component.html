@@ -31,7 +31,7 @@
 			       #idInput="ngModel"
 			       [(ngModel)]="id"
 			       [hidden]="true"
-			       required cw-pointer-id>
+			       required app-pointer-id>
 			<select class="ui fluid search dropdown fragments" [hidden]="true">
 				<option value="">
 					Search or enter a fragment/blankNode
@@ -55,16 +55,16 @@
 				<optgroup label="Named Fragments">
 					<option class="item" *ngFor="let fragment of namedFragments; let i=index" value="{{fragment.name}}">
 						<span>
-							<span class="title">{{fragment.name | decodeURI | fragment}}</span>
+							<span class="title">{{fragment.name | decodeURI | getSlug}}</span>
 							<span class="description">{{fragment.name}}</span>
 						</span>
 					</option>
 				</optgroup>
 			</select>
-			<cw-error-label *ngIf="!idInput.valid">
+			<app-error-label *ngIf="!idInput.valid">
 				<p *ngIf="idInput.control.hasError('required')">Enter an @id.</p>
 				<p *ngIf="idInput.control.hasError('invalidId')">Enter a valid @id value.</p>
-			</cw-error-label>
+			</app-error-label>
 		</div>
 	</div>
 	<!-- END: EDIT mode-->

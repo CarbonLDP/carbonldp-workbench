@@ -3,10 +3,10 @@
 	<div class="stretched row document-content-wrapper">
 		<div class="error messages" *ngIf="messages.length > 0">
 			<ng-template ngFor let-message="$implicit" [ngForOf]="messages" let-i="index">
-				<cw-message [message]="message" [type]="'error'" [closable]="true"></cw-message>
+				<app-message [message]="message" [type]="'error'" [closable]="true"></app-message>
 			</ng-template>
 		</div>
-		<cw-document-treeview class="five wide column treeview-container"
+		<app-document-treeview class="five wide column treeview-container"
 		                      [refreshNodes]="onRefreshNode"
 		                      [openNode]="onOpenNode"
 
@@ -16,8 +16,8 @@
 		                      (onShowCreateAccessPointForm)="accessPointCreator.show()"
 		                      (onError)="handleExternalError($event)"
 		                      (onLoadingDocument)="onLoadingDocument($event)"
-		                      (onResolveUri)="resolveDocument($event)"></cw-document-treeview>
-		<cw-document-viewer class="eleven wide column"
+		                      (onResolveUri)="resolveDocument($event)"></app-document-treeview>
+		<app-document-viewer class="eleven wide column"
 		                    [document]="inspectingDocument"
 		                    [displaySuccessMessage]="onDisplaySuccessMessage"
 
@@ -26,15 +26,15 @@
 		                    (onOpenNode)="openNode($event)"
 		                    (onSavingDocument)="showLoading($event)"
 		                    (onLoadingDocument)="onLoadingDocument($event)"
-		                    (onRefreshDocument)="refreshDocument($event)"></cw-document-viewer>
-		<cw-document-creator #documentCreator
+		                    (onRefreshDocument)="refreshDocument($event)"></app-document-viewer>
+		<app-document-creator #documentCreator
 		                     [parentURI]="selectedDocumentURI"
-		                     (onSuccess)="onSuccessCreateDocument($event)"></cw-document-creator>
-		<cw-access-point-creator #accessPointCreator
+		                     (onSuccess)="onSuccessCreateDocument($event)"></app-document-creator>
+		<app-access-point-creator #accessPointCreator
 		                         [parentURI]="selectedDocumentURI"
-		                         (onSuccess)="onSuccessAccessPoint($event)"></cw-access-point-creator>
-		<cw-document-deleter #documentDeleter
+		                         (onSuccess)="onSuccessAccessPoint($event)"></app-access-point-creator>
+		<app-document-deleter #documentDeleter
 		                     [documentURIs]="selectedDocumentURIs"
-		                     (onSuccess)="onSuccessDeleteDocument($event)"></cw-document-deleter>
+		                     (onSuccess)="onSuccessDeleteDocument($event)"></app-document-deleter>
 	</div>
 </div>

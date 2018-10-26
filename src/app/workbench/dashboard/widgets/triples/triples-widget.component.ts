@@ -1,17 +1,17 @@
-import { Component, Input, Output, HostBinding, ElementRef, EventEmitter } from "@angular/core";
+import { Component, ElementRef, EventEmitter, HostBinding, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 
 import { Widget } from "app/workbench/dashboard/widgets/widgets.component";
 import { WidgetsService } from "../widgets.service";
-import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
+import { ErrorMessageGenerator } from "app/common/components/messages-area/error/error-message-generator";
 
 
 /*
 *  Widget that displays the existing triples in a Carbon LDP instance
 * */
 @Component( {
-	selector: "cw-triples-widget",
+	selector: "app-triples-widget",
 	templateUrl: "./triples-widget.component.html",
 	styleUrls: [ "./triples-widget.component.scss" ]
 } )

@@ -24,7 +24,7 @@
 
 	<!-- START: Grouped sidebar items -->
 	<ng-template [ngIf]="item.type === 'group'">
-		<cw-sidebar-items [items]="item.children"></cw-sidebar-items>
+		<app-sidebar-items [items]="item.children"></app-sidebar-items>
 	</ng-template>
 	<!-- END: Grouped sidebar items -->
 
@@ -43,7 +43,7 @@
 				{{item.name}}
 			</a>
 			<div class="content">
-				<cw-sidebar-items [items]="item.children"></cw-sidebar-items>
+				<app-sidebar-items [items]="item.children"></app-sidebar-items>
 			</div>
 		</a>
 	</ng-template>

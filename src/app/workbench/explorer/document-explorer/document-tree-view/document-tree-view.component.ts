@@ -8,14 +8,11 @@ import { URI } from "carbonldp/RDF/URI";
 import { SPARQLBindingObject, SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { C, LDP } from "carbonldp/Vocabularies";
 
-import * as $ from "jquery";
-import "semantic-ui/semantic";
 
 import "jstree/dist/jstree.min";
-import "!style-loader!css-loader!jstree/dist/themes/default/style.min.css";
 
 @Component( {
-	selector: "cw-document-treeview",
+	selector: "app-document-treeview",
 	templateUrl: "./document-tree-view.component.html",
 	styleUrls: [ "./document-tree-view.component.scss" ],
 } )

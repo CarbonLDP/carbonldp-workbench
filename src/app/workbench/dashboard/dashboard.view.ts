@@ -6,7 +6,7 @@ import { Widget } from "./widgets/widgets.component"
 *  The landing page of the Workbench's Dashboard
 * */
 @Component( {
-	selector: "cw-dashboard-view",
+	selector: "app-dashboard-view",
 	templateUrl: "./dashboard.view.html",
 	styleUrls: [ "./dashboard.view.scss" ],
 } )

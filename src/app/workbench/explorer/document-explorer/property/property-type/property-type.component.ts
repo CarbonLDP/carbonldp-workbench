@@ -6,7 +6,7 @@ import { LDP } from "carbonldp/Vocabularies/LDP";
 import { PropertyStatus } from "../property.component";
 
 @Component( {
-	selector: "cw-property-type",
+	selector: "app-property-type",
 	templateUrl: "./property-type.component.html",
 	styleUrls: [ "./property-type.component.scss" ],
 } )

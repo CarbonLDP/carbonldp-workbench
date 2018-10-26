@@ -1,30 +1,29 @@
-import { Component, ElementRef, Input, Output, AfterViewChecked, EventEmitter, ViewChild, ChangeDetectorRef } from "@angular/core";
+import { AfterViewChecked, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 
 import { XSD } from "carbonldp/Vocabularies/XSD";
 import { forEachOwnProperty } from "carbonldp/Utils";
 import { URI } from "carbonldp/RDF/URI";
 
-import { Modes, JsonLDKeyword } from "../document-explorer-library";
+import { JsonLDKeyword, Modes } from "../document-explorer-library";
 
 
-/*
-*  Displays the value, the type and language of a literal
-* */
+/**
+ *  Displays the value, the type and language of a literal
+ */
 @Component( {
-	selector: "tr.cw-literal",
+	selector: "tr.app-literal",
 	templateUrl: "./literal.component.html",
 	styleUrls: [ "./literal.component.scss" ]
 } )
 
 export class LiteralComponent implements AfterViewChecked {
-
 	element:ElementRef;
 	private cdRef:ChangeDetectorRef;
 
 	modes:typeof Modes = Modes;
 	dataTypes:any = this.getDataTypes();
 	isStringType:boolean = (! this.type || this.type === XSD.string);
-	languages:{ code:string, name:string }[] = [
+	languages:Array<{ code:string, name:string }> = [
 		{
 			code: "aa",
 			name: "Afar"
@@ -774,27 +773,39 @@ export class LiteralComponent implements AfterViewChecked {
 	 *  Temporarily contains all the changes made to
 	 *  the literal (value, type, language)
 	 *  before modifying the original literal.
-	 * */
+	 */
 	private tempLiteral:any = {};
 
-	private set tempValue( value:string | boolean | number ) { this.tempLiteral[ JsonLDKeyword.VALUE ] = value; }
+	private set tempValue( value:string | boolean | number ) {
+		this.tempLiteral[ JsonLDKeyword.VALUE ] = value;
+	}
 
-	private get tempValue():string | boolean | number { return this.tempLiteral[ JsonLDKeyword.VALUE ]; }
+	private get tempValue():string | boolean | number {
+		return this.tempLiteral[ JsonLDKeyword.VALUE ];
+	}
 
-	private set tempType( type:string ) { this.tempLiteral[ JsonLDKeyword.TYPE ] = type; }
+	private set tempType( type:string ) {
+		this.tempLiteral[ JsonLDKeyword.TYPE ] = type;
+	}
 
-	private get tempType():string { return this.tempLiteral[ JsonLDKeyword.TYPE ]; }
+	private get tempType():string {
+		return this.tempLiteral[ JsonLDKeyword.TYPE ];
+	}
 
-	private set tempLanguage( language:string ) { this.tempLiteral[ JsonLDKeyword.LANGUAGE ] = language; }
+	private set tempLanguage( language:string ) {
+		this.tempLiteral[ JsonLDKeyword.LANGUAGE ] = language;
+	}
 
-	private get tempLanguage():string { return this.tempLiteral[ JsonLDKeyword.LANGUAGE ]; }
+	private get tempLanguage():string {
+		return this.tempLiteral[ JsonLDKeyword.LANGUAGE ];
+	}
 
 
-	/*
-	*  Mode
-	* */
+	/**
+	 *  Mode
+	 */
 	private _mode = Modes.READ;
-	@Input() set mode( value:string ) {
+	@Input() set mode( value:Modes ) {
 		setTimeout( () => {
 			this._mode = value;
 			this.onEditMode.emit( this.mode === Modes.EDIT );
@@ -804,13 +815,17 @@ export class LiteralComponent implements AfterViewChecked {
 		}, 0 );
 	}
 
-	get mode() { return this._mode; }
+	get mode() {
+		return this._mode;
+	}
 
 	/**
 	 * Literal's Value
-	 **/
+	 */
 	private _value:string | boolean | number = "";
-	get value() { return this._value; }
+	get value() {
+		return this._value;
+	}
 
 	set value( value:string | boolean | number ) {
 		this._value = value;
@@ -818,9 +833,11 @@ export class LiteralComponent implements AfterViewChecked {
 
 	/**
 	 * Literal's Type
-	 **/
+	 */
 	private _type:string = XSD.string;
-	get type() {return this._type;}
+	get type() {
+		return this._type;
+	}
 
 	set type( type:string ) {
 		if( type === "empty" ) {
@@ -834,9 +851,11 @@ export class LiteralComponent implements AfterViewChecked {
 
 	/**
 	 * Literal Language
-	 **/
+	 */
 	private _language:string = "";
-	get language() { return this._language; }
+	get language() {
+		return this._language;
+	}
 
 	set language( language:string ) {
 		this._language = language;
@@ -846,11 +865,15 @@ export class LiteralComponent implements AfterViewChecked {
 
 	// Inputs and Outputs
 	private _literal = <LiteralStatus>{};
-	get literal() { return this._literal; }
+	get literal() {
+		return this._literal;
+	}
 
 	@Input() set literal( value:LiteralStatus ) {
 		this._literal = value;
-		if( this.literal.added !== void 0 ) { this.mode = Modes.EDIT; }
+		if( this.literal.added !== void 0 ) {
+			this.mode = Modes.EDIT;
+		}
 
 		let literalContent:Literal;
 
@@ -858,7 +881,7 @@ export class LiteralComponent implements AfterViewChecked {
 		 *  Check if its going to use the modified,
 		 *  the original or the added values of the
 		 *  literal.
-		 * */
+		 */
 		if( this.literal.modified !== void 0 ) {
 			literalContent = this.literal.modified;
 		} else if( this.literal.copy !== void 0 ) {
@@ -922,7 +945,7 @@ export class LiteralComponent implements AfterViewChecked {
 
 	/**
 	 *  Sets back the displaying content of the Value / Type / Language of a Literal
-	 * */
+	 */
 	private restoreDisplayingTokenContent( token:string ):void {
 
 		let displayingContent:string;
@@ -1038,8 +1061,12 @@ export class LiteralComponent implements AfterViewChecked {
 
 	private changeType( type:string, text?:string, choice?:JQuery ):void {
 		this.isStringType = type === XSD.string;
-		if( type === XSD.string ) { type = undefined; }
-		if( ! this.isStringType ) { this.language = undefined; }
+		if( type === XSD.string ) {
+			type = undefined;
+		}
+		if( ! this.isStringType ) {
+			this.language = undefined;
+		}
 		this.type = type;
 	}
 
@@ -1057,7 +1084,7 @@ export class LiteralComponent implements AfterViewChecked {
 				xsdDataTypes.push( {
 					title: key,
 					description: XSD[ key ],
-					value: XSD[ key ],
+					value: XSD[ key ]
 				} );
 			}
 		} );
