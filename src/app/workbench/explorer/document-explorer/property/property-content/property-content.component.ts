@@ -13,7 +13,7 @@ import { Property, PropertyStatus } from "./../property.component";
 import { JsonLDKeyword, Modes } from "./../../document-explorer-library";
 
 @Component( {
-	selector: "cw-property-content",
+	selector: "app-property-content",
 	templateUrl: "./property-content.component.html",
 	styleUrls: [ "./property-content.component.scss" ],
 } )
@@ -39,7 +39,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	addNewLiteral:EventEmitter<boolean> = new EventEmitter<boolean>();
 	addNewPointer:EventEmitter<boolean> = new EventEmitter<boolean>();
 	addNewList:EventEmitter<boolean> = new EventEmitter<boolean>();
-	modes:Modes = Modes;
+	modes:typeof Modes = Modes;
 	@ViewChild( "nameInput" ) nameInputControl;
 
 	@Input() mode:string = Modes.READ;

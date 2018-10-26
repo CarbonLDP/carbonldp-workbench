@@ -1,6 +1,6 @@
 import { CarbonLDP } from "carbonldp";
 import { URI } from "carbonldp/RDF/URI";
-import { RDFNode } from "carbonldp/RDF/Node"
+import { RDFNode } from "carbonldp/RDF/Node";
 
 import { Property, PropertyStatus } from "./property/property.component";
 
@@ -169,7 +169,9 @@ export class ResourceFeatures {
 			}
 
 			// Replace the modified property
-			idx = this.properties.findIndex( ( property:PropertyStatus ) => { return ! ! property.copy && property.copy.id === key} );
+			idx = this.properties.findIndex( ( property:PropertyStatus ) => {
+				return ! ! property.copy && property.copy.id === key;
+			} );
 			if( idx !== - 1 ) this.properties.splice( idx, 1, value );
 		} );
 
@@ -181,7 +183,9 @@ export class ResourceFeatures {
 			if( idx !== - 1 ) this.existingPropertiesNames.splice( idx, 1 );
 
 			// Find index from existing properties and delete it
-			idx = this.properties.findIndex( ( property:PropertyStatus ) => { return ! ! property.copy && property.copy.id === key} );
+			idx = this.properties.findIndex( ( property:PropertyStatus ) => {
+				return ! ! property.copy && property.copy.id === key;
+			} );
 			if( idx !== - 1 ) this.properties.splice( idx, 1 );
 		} );
 		this.resourceHasChanged = this.records.changes.size > 0 || this.records.additions.size > 0 || this.records.deletions.size > 0;
@@ -213,7 +217,7 @@ export enum JsonLDKeyword {
 }
 
 
-export class Modes {
-	static EDIT:string = "EDIT";
-	static READ:string = "READ";
+export enum Modes {
+	EDIT = "EDIT",
+	READ = "READ",
 }

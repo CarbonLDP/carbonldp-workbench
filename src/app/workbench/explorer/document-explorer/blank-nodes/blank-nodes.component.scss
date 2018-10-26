@@ -7,9 +7,11 @@
 		tr.added {
 			background-color: #D9EEFF;
 		}
+
 		tr.modified {
 			background-color: #FFFBB4;
 		}
+
 		tr, td {
 			cursor: pointer;
 		}
@@ -42,6 +44,7 @@
 	.item.added.active {
 		background-color: #D9EEFF;
 	}
+
 	.item.modified,
 	.item.modified.active {
 		background-color: #FFFBB4;

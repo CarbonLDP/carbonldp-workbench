@@ -24,7 +24,7 @@ export function inputValidationSpecs() {
 			            [(ngModel)]="internalEmail"
 			            cwValidation
 			            #email="cwValidation"
-			            required cw-email>
+			            required app-email>
                 <div class="error-message" *ngIf="! email.valid">
                     <ul>
                         <li *ngIf="email.control.hasError( 'required' )">Please provide an email address</li>

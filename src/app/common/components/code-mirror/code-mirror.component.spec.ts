@@ -14,9 +14,9 @@ export function codeMirrorSpecs() {
 
 		@Component( {
 			template: `
-				<cw-code-mirror #normal class="normal" [readOnly]="readOnly" [noCursor]="noCursor" [showLineNumbers]="showLineNumbers" [scroll]="scroll"></cw-code-mirror>
-				<cw-code-mirror #input class="input" [value]="'My passed content'"></cw-code-mirror>
-				<cw-code-mirror #projected class="projected">My projected content</cw-code-mirror>`
+				<app-code-mirror #normal class="normal" [readOnly]="readOnly" [noCursor]="noCursor" [showLineNumbers]="showLineNumbers" [scroll]="scroll"></app-code-mirror>
+				<app-code-mirror #input class="input" [value]="'My passed content'"></app-code-mirror>
+				<app-code-mirror #projected class="projected">My projected content</app-code-mirror>`
 		} )
 		class TestComponent {
 

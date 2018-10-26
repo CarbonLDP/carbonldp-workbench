@@ -16,7 +16,7 @@ import { ErrorMessageGenerator } from "app/common/components/messages-area/error
 *  Creates Access Points via the Document Explorer
 * */
 @Component( {
-	selector: "cw-access-point-creator",
+	selector: "app-access-point-creator",
 	templateUrl: "./access-point-creator.component.html",
 } )
 

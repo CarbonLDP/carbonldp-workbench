@@ -15,7 +15,7 @@ export function grayedOutSpecs() {
 		@Component( {
 			template: `
 				<h2>Something normal</h2>
-				<h2 cw-grayed-out>Something grayed out</h2>`
+				<h2 app-grayed-out>Something grayed out</h2>`
 		} )
 		class TestComponent {
 		}
@@ -39,8 +39,8 @@ export function grayedOutSpecs() {
 		it( "Should be grayed out", () => {
 
 
-			let normalH2:HTMLElement = de.query( By.css( "h2:not([cw-grayed-out])" ) ).nativeElement;
-			let grayedH2:HTMLElement = de.query( By.css( "h2[cw-grayed-out]" ) ).nativeElement;
+			let normalH2:HTMLElement = de.query( By.css( "h2:not([app-grayed-out])" ) ).nativeElement;
+			let grayedH2:HTMLElement = de.query( By.css( "h2[app-grayed-out]" ) ).nativeElement;
 
 
 			expect( normalH2.style.color ).toEqual( "" );

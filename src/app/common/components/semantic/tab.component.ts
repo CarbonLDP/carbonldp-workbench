@@ -1,6 +1,5 @@
 import { Component, HostBinding, Input } from "@angular/core";
 
-import "semantic-ui/semantic";
 
 @Component( {
 	selector: "sui-tab",

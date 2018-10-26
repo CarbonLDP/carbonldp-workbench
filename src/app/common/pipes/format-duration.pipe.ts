@@ -63,7 +63,7 @@ export class FormatDurationPipe implements PipeTransform {
 			let milliseconds = new Number( value ).toFixed( options.decimals );
 			if( options.fixedLength && messageParts.length !== 0 ) {
 				// Add left padding
-				milliseconds = `000${milliseconds}`.slice( options.decimals > 0 ? - 4 - options.decimals : -3 );
+				milliseconds = `000${milliseconds}`.slice( options.decimals > 0 ? - 4 - options.decimals : - 3 );
 				messageParts.push( `${milliseconds}ms` );
 			} else {
 				if( ! options.fixedLength && value !== 0 ) {

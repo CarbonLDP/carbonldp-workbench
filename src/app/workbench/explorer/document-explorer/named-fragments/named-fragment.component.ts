@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp/CarbonLDP";
-import { RDFNode } from "carbonldp/RDF/Node"
+import { RDFNode } from "carbonldp/RDF/Node";
 
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { Property, PropertyStatus } from "../property/property.component";
@@ -11,18 +11,17 @@ import { JsonLDKeyword, Modes, ResourceFeatures, ResourceRecords } from "../docu
 *  Displays the contents of a Named Fragment with all its properties
 * */
 @Component( {
-	selector: "cw-named-fragment",
+	selector: "app-named-fragment",
 	templateUrl: "./named-fragment.component.html",
-	styles: [ ":host { display:block; }" ],
+	styles: [ ":host { display:block; }" ]
 } )
 
 export class NamedFragmentComponent extends ResourceFeatures implements AfterViewInit {
-
 	element:ElementRef;
 	$element:JQuery;
 	carbonldp:CarbonLDP;
 
-	modes:Modes = Modes;
+	modes:typeof Modes = Modes;
 
 	private _namedFragmentHasChanged:boolean;
 	set namedFragmentHasChanged( hasChanged:boolean ) {
@@ -38,7 +37,9 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 		this.onChanges.emit( this.records );
 	}
 
-	get namedFragmentHasChanged() { return this._namedFragmentHasChanged; }
+	get namedFragmentHasChanged() {
+		return this._namedFragmentHasChanged;
+	}
 
 	@Input() blankNodes:BlankNodeStatus[] = [];
 	@Input() namedFragments:NamedFragmentStatus[] = [];
@@ -53,7 +54,9 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 		this.updateExistingProperties();
 	}
 
-	get namedFragment():NamedFragmentStatus { return this._namedFragment; }
+	get namedFragment():NamedFragmentStatus {
+		return this._namedFragment;
+	}
 
 	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
@@ -95,7 +98,7 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 
 		// Animates created property
 		setTimeout( () => {
-			let createdPropertyComponent:JQuery = this.$element.find( "cw-property.added-property" ).first();
+			let createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
 			createdPropertyComponent.addClass( "transition hidden" );
 			createdPropertyComponent.transition( { animation: "drop" } );
 		} );
@@ -115,7 +118,9 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 			delete rawNode[ key ];
 		} );
 		this.records.changes.forEach( ( property, key ) => {
-			if( property.modified.id === JsonLDKeyword.ID ) { this.namedFragment.name = property.modified.value; }
+			if( property.modified.id === JsonLDKeyword.ID ) {
+				this.namedFragment.name = property.modified.value;
+			}
 			if( property.modified.id !== property.modified.name ) {
 				delete rawNode[ key ];
 				rawNode[ property.modified.name ] = property.modified.value;
@@ -124,7 +129,9 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 			}
 		} );
 		this.records.additions.forEach( ( property, key ) => {
-			if( property.added.id === JsonLDKeyword.ID ) { this.namedFragment.name = property.modified.value; }
+			if( property.added.id === JsonLDKeyword.ID ) {
+				this.namedFragment.name = property.modified.value;
+			}
 			rawNode[ key ] = property.added.value;
 		} );
 		return rawNode;

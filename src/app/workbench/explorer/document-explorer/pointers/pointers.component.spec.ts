@@ -17,7 +17,7 @@ export function pointersSpecs() {
 		let de:DebugElement;
 
 		@Component( {
-			template: `<cw-pointers [pointers]="pointers" [canEdit]="canEdit" [onAddNewPointer]="addEmiter"></cw-pointers>`
+			template: `<app-pointers [pointers]="pointers" [canEdit]="canEdit" [onAddNewPointer]="addEmiter"></app-pointers>`
 		} )
 		class TestComponent {
 			canEdit:boolean = true;
@@ -62,7 +62,7 @@ export function pointersSpecs() {
 			comp.pointersCmp.addNewPointer();
 			fixture.detectChanges();
 
-			let addedPointer:HTMLElement = de.nativeElement.querySelector( "tr.cw-pointer.added-pointer" );
+			let addedPointer:HTMLElement = de.nativeElement.querySelector( "tr.app-pointer.added-pointer" );
 			expect( addedPointer ).not.toBeNull();
 		} );
 
@@ -74,13 +74,13 @@ export function pointersSpecs() {
 			};
 			fixture.detectChanges();
 
-			let modifiedPointer:HTMLElement = de.nativeElement.querySelector( "tr.cw-pointer.modified-pointer" );
+			let modifiedPointer:HTMLElement = de.nativeElement.querySelector( "tr.app-pointer.modified-pointer" );
 			expect( modifiedPointer ).not.toBeNull();
 		} );
 
 		it( "Should emit pointers when a pointer is saved", ( done ) => {
 
-			let pointers:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.cw-pointer" );
+			let pointers:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.app-pointer" );
 			expect( pointers.length ).toEqual( 3 );
 
 			let toModifyPointerIdx:number = 0;
@@ -101,7 +101,7 @@ export function pointersSpecs() {
 		it( "Should emit pointers when a pointer is deleted", ( done ) => {
 
 
-			let pointers:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.cw-pointer" );
+			let pointers:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.app-pointer" );
 			expect( pointers.length ).toEqual( 3 );
 
 			let toDeletePointerIdx:number = 0;
@@ -119,7 +119,7 @@ export function pointersSpecs() {
 			comp.pointersCmp.deletePointer( toDeletePointer, 0 );
 			fixture.detectChanges();
 
-			pointers = de.nativeElement.querySelectorAll( "tr.cw-pointer" );
+			pointers = de.nativeElement.querySelectorAll( "tr.app-pointer" );
 			expect( pointers.length ).toEqual( 2 );
 		} );
 
@@ -128,7 +128,7 @@ export function pointersSpecs() {
 			comp.pointersCmp.addNewPointer();
 			fixture.detectChanges();
 
-			let pointers:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.cw-pointer" );
+			let pointers:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.app-pointer" );
 			expect( pointers.length ).toEqual( 4 );
 
 			let toDeletePointerIdx:number = 0;
@@ -147,7 +147,7 @@ export function pointersSpecs() {
 
 		it( "Should not display pointer when it's been deleted", () => {
 
-			let pointers:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.cw-pointer" );
+			let pointers:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.app-pointer" );
 			expect( pointers.length ).toEqual( 3 );
 
 			let toDeletePointerIdx:number = 0;
@@ -156,7 +156,7 @@ export function pointersSpecs() {
 			comp.pointersCmp.deletePointer( toDeletePointer, 0 );
 			fixture.detectChanges();
 
-			pointers = de.nativeElement.querySelectorAll( "tr.cw-pointer" );
+			pointers = de.nativeElement.querySelectorAll( "tr.app-pointer" );
 			expect( pointers.length ).toEqual( 2 );
 		} );
 
@@ -213,7 +213,7 @@ export function pointersSpecs() {
 				fixture.detectChanges();
 				expect( value ).toBe( true );
 
-				let pointers:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.cw-pointer" );
+				let pointers:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.app-pointer" );
 				expect( pointers.length ).toEqual( 4 );
 				expect( pointers[ 0 ].classList ).toContain( "added-pointer" );
 				done();

@@ -43,12 +43,12 @@ This web app is made with the following technologies:
     process all types of files in order to produce a final optimized
     version of the bundled application.
 
-- [Typescript](https://www.typescriptlang.org/):<br>
+- [TypeScript](https://www.typescriptlang.org/):<br>
     A JavaScript superset that allows us to write JS code using types,
     allowing us to detect errors before the code reaches the prod
     environment.
 
-- [Semantic UI](https://semantic-ui.com/elements/icon.html):<br>
+- [Semantic UI](https://semantic-ui.com/):<br>
     A development framework that helps create responsive layouts using
     human-friendly HTML. It provides the styles used by the Workbench.
 
@@ -63,35 +63,28 @@ This web app is made with the following technologies:
 To develop the Workbench, there are some important technologies and tools
 that newcomer need to know. Such technologies and tools are the following:
 
-1. Package managers (NPM):<br>
+1. __Web development__:<br>
+    Meaning HTML (5+), CSS (3+) and JavaScript (ES2015+).
+
+1. __[SCSS](https://sass-lang.com/)__:<br>
+	CSS extension language that provides rich capabilities to build complex
+	applications.
+
+1. __[TypeScript](https://www.typescriptlang.org/)__:<br>
+	Language that builds on top of JavaScript adding semantics to incorporate
+	type safety to source code. Angular uses it as its main supported language.
+
+1. __Version control systems__ ([git](https://git-scm.com/)):<br>
+	Used to keep track of changes to the source code and to coordinate
+	team efforts.
+
+1. __Package managers ([npm](https://www.npmjs.com))__:<br>
     Used to install packages/libraries used in this project.
 
-2. Bundling tools (Webpack):<br>
-    Webpack is used to produce the final code optimized for multiple
-    environments. The available environments are Development mode,
-    Production mode and Test mode. Basically, it reads the module
-    imports from the ts files and groups everything in files.
-    It does the same with CSS files.
+1. __[Angular](https://angular.io/)__:<br>
+	Framework that provides common tools and patterns to ease development.
 
-3. Web Frameworks (Angular):<br>
-    Web frameworks are what are driving the modern web development which
-    provide a collection of tools and snippets of code that allows us to
-    easily create web applications. The Workbench uses Angular as its
-    web framework because it's one of the biggest frameworks that exist
-    and also because it has very big community support and it's code is
-    entirely handled and backed by Google.
-
-4. JavaScript / Typescript:<br>
-    The features of the Workbench are coded using Typescript because is
-    the language that Angular uses for its framework. Since Typescript
-    is just a superset of JavaScript and, when compiled, produces JS
-    code, knowledge on JavaScript is required.
-
-5. Basic web development (HTML, CSS, JavaScript):<br>
-    Because the Workbench is a web application, basic knowledge on web
-    application is required. This means HTML 5 tags, CSS 3, SCSS and
-    JavaScript
-
-6. Version control (Git): <br>
-    Since the Carbon LDP team has all its repositories in GitHub, Git is
-    the version control tool used by the Workbench.
+1. __[Angular CLI](https://cli.angular.io/)__:<br>
+    Command line interface that helps with building Angular applications.
+    This CLI is also in charge of processing and compiling the source
+    code into the final product (using [webpack](https://webpack.js.org/)).

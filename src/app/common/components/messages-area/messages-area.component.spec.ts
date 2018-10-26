@@ -16,7 +16,7 @@ export function messageAreaComponentSpecs() {
 		let service:MessagesAreaService;
 
 		@Component( {
-			template: `<cw-messages-area></cw-messages-area>`
+			template: `<app-messages-area></app-messages-area>`
 		} )
 		class TestComponent {
 
@@ -67,7 +67,7 @@ export function messageAreaComponentSpecs() {
 			service.addMessage( messages[ 0 ] );
 			fixture.detectChanges();
 
-			let messageDiv:HTMLElement = fixture.nativeElement.querySelector( "cw-message" );
+			let messageDiv:HTMLElement = fixture.nativeElement.querySelector( "app-message" );
 			expect( messageDiv ).toBeDefined();
 		} );
 
@@ -98,7 +98,7 @@ export function messageAreaComponentSpecs() {
 			};
 			service.addMessage( message );
 			fixture.detectChanges();
-			let messageDiv:HTMLElement = fixture.nativeElement.querySelector( "cw-message .message" );
+			let messageDiv:HTMLElement = fixture.nativeElement.querySelector( "app-message .message" );
 			expect( messageDiv.classList ).toContain( Types.INFO );
 
 			message.type = Types.ERROR;

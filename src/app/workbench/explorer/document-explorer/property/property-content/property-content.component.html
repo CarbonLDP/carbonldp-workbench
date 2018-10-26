@@ -43,7 +43,7 @@
 				       [id]="id"
 				       [originalName]="originalName"
 				       [control]="nameInput"
-				       cw-property-name
+				       app-property-name
 				       name="nameInput"
 				       #nameInput="ngModel"
 				       [(ngModel)]="propertyName"
@@ -52,7 +52,7 @@
 				<div class="ui save-cancel buttons">
 					<button class="ui button"
 					        [disabled]="!nameInput.valid"
-					        (click)="save(nameInput.value)">Save
+					        (click)="save()">Save
 					</button>
 					<div class="ui dropdown icon button">
 						<i class="dropdown icon"></i>
@@ -65,13 +65,13 @@
 
 
 			<!-- Error messages -->
-			<cw-error-label *ngIf="!nameInput.valid">
+			<app-error-label *ngIf="!nameInput.valid">
 				<p *ngIf="nameInput.control.hasError('required')">Enter a name for the property.</p>
 				<p *ngIf="nameInput.control.hasError('emptyName')">Enter a name for the property.</p>
 				<p *ngIf="nameInput.control.hasError('invalidName')">Enter a valid URL. Only alphanumeric values (a-z, A-Z, 0..9)</p>
 				<p *ngIf="nameInput.control.hasError('duplicatedHashtag')">Use only one hashtag (#) symbol.</p>
 				<p *ngIf="nameInput.control.hasError('duplicatedPropertyName')">A property with that name already exists.</p>
-			</cw-error-label>
+			</app-error-label>
 		</div>
 	</div>
 	<!-- END: EDIT mode for property id -->
@@ -129,14 +129,14 @@
 
 	<!-- Dispaly property content pointers/literals/lists -->
 	<div [hidden]="!literalsContainer.canDisplayLiterals && !pointersContainer.canDisplayPointers && lists.length===0">
-		<cw-literals #literalsContainer
+		<app-literals #literalsContainer
 		             [canEdit]="canEdit"
 		             [(literals)]="literals"
 		             [onAddNewLiteral]="addNewLiteral"
 
 		             (onLiteralsChanges)="checkForChangesOnLiterals($event)">
-		</cw-literals>
-		<cw-pointers #pointersContainer
+		</app-literals>
+		<app-pointers #pointersContainer
 		             [canEdit]="canEdit"
 		             [(pointers)]="pointers"
 		             [onAddNewPointer]="addNewPointer"
@@ -147,8 +147,8 @@
 		             (onGoToBlankNode)="goToBlankNode($event)"
 		             (onGoToNamedFragment)="goToNamedFragment($event)"
 		             (onPointersChanges)="checkForChangesOnPointers($event)">
-		</cw-pointers>
-		<cw-lists #listsContainer
+		</app-pointers>
+		<app-lists #listsContainer
 		          [canEdit]="canEdit"
 		          [(lists)]="lists"
 		          [onAddNewList]="addNewList"
@@ -159,7 +159,7 @@
 		          (onGoToBlankNode)="goToBlankNode($event)"
 		          (onGoToNamedFragment)="goToNamedFragment($event)"
 		          (onListsChanges)="checkForChangesOnLists($event)"
-		></cw-lists>
+		></app-lists>
 	</div>
 </div>
 <!-- END: Property content (Literals, Pointers and Lists) -->

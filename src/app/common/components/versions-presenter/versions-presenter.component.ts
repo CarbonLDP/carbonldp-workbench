@@ -2,10 +2,11 @@ import { Component, ElementRef } from "@angular/core";
 import { CarbonLDP } from "carbonldp";
 import { PlatformMetadata } from "carbonldp/System/PlatformMetadata";
 import { C } from "carbonldp/Vocabularies";
-import * as $ from "jquery";
+
+import workbenchPackage from "package.json";
 
 @Component( {
-	selector: "cw-versions-presenter",
+	selector: "app-versions-presenter",
 	templateUrl: "./versions-presenter.component.html",
 	styleUrls: [ "./versions-presenter.component.scss" ],
 } )
@@ -27,7 +28,7 @@ export class VersionsPresenterComponent {
 	ngOnInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.carbonldpSDK = this.carbonldp.version;
-		this.carbonldpWorkbench = process.env.PACKAGES[ "carbonldp-workbench" ];
+		this.carbonldpWorkbench = workbenchPackage.version;
 		this.carbonldpURL = this.carbonldp.baseURI;
 		this.getPlatformVersion();
 	}
