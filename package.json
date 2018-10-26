@@ -27,7 +27,6 @@
     "build:docs": "compodoc --tsconfig tsconfig.json --output docs/architecture/",
     "e2e": "ng e2e",
     "lint": "ng lint",
-    "ng": "ng",
     "test": "ng test",
     "start": "ng serve"
   },
