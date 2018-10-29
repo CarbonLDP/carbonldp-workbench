@@ -1,6 +1,6 @@
 # Workbench's Structure
 
-The application follows a ver standard Angular CLI application pattern.
+The application follows a very standard Angular CLI application pattern.
 You can read more about it in the [Angular CLI website](https://cli.angular.io/).
 
 ## Architecture
