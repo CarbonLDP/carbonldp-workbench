@@ -66,7 +66,7 @@ The following are the main rules of this convention.
     ```
 
    ```typescript
-   // users.module.html
+   // users.module.ts
    //...
    @NgModule({ ... })
    export class UsersModule { }
@@ -89,7 +89,7 @@ The following are the main rules of this convention.
     ```
 
    ```typescript
-   // users.module.html
+   // users.module.ts
    //...
    @NgModule({ ... })
    export class Users { } // Missing type
