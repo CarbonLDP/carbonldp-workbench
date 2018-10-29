@@ -149,7 +149,6 @@ The following are the main rules of this convention.
 
     When naming Routes files use dots to separate the file type from its name
 
-
     *Do*: ✅
 
     ```typescript
@@ -171,14 +170,13 @@ The following are the main rules of this convention.
     will be the landing page when visiting the following route:
     `http://lolcahost/security/`
 
-
     *Do*: ✅
 
     ```typescript
     // security.view.ts  <-- The type of the file is view
     //...
     @Component({
-        selector: "cw-security"
+        selector: "cw-security",
         template: `<cw-users></cw-users>`
     })
     export class SecurityView { }   //  <-- The classname has View
@@ -190,7 +188,7 @@ The following are the main rules of this convention.
     // security.component.ts  <-- The type of the file is component
     //...
     @Component({
-        selector: "cw-security"
+        selector: "cw-security",
         template: `<cw-users></cw-users>`
     })
     export class SecurityComponent { }  //  <-- The classname has Component
