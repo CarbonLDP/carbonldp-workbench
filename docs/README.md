@@ -37,11 +37,6 @@ This web app is made with the following technologies:
     the Workbench's features via modules you could found more information about them
     in [structure section](./structure.md)
 
-- [Webpack](https://webpack.js.org/):<br>
-    Webpack is a bundling technology that allows us to define rules to
-    process all types of files in order to produce a final optimized
-    version of the bundled application.
-
 - [TypeScript](https://www.typescriptlang.org/):<br>
     A JavaScript superset that allows us to write JS code using types,
     allowing us to detect errors before the code reaches the prod
