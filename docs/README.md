@@ -27,21 +27,15 @@ Some of the features the Workbench provides are the following:
 
 1. Overview of triples and documents stored
 2. Data stored inside the platform
-3. Security aspects for authentication and authorization
-4. A client to write and execute SPARQL queries
+3. A client to write and execute SPARQL queries
 
 This web app is made with the following technologies:
 
 - [Angular](angular.io):<br>
     A framework that handles all the logic and interfaces related with
     the features of the Workbench. Angular allows us to better organize
-    the Workbench's features via modules by providing 12 modules that
-    are listed in the [structure section](./structure.md).
-
-- [Webpack](https://webpack.js.org/):<br>
-    Webpack is a bundling technology that allows us to define rules to
-    process all types of files in order to produce a final optimized
-    version of the bundled application.
+    the Workbench's features via modules you could found more information about them
+    in [structure section](./structure.md)
 
 - [TypeScript](https://www.typescriptlang.org/):<br>
     A JavaScript superset that allows us to write JS code using types,
