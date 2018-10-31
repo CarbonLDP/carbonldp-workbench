@@ -1,5 +1,6 @@
 :host {
 	display: block;
+
 	.warning {
 		background-color: #fafad2;
 	}
@@ -16,10 +17,10 @@
 	}
 }
 
-.cw-value--bnode {
+.app-value--bnode {
 	color: #888888;
 }
 
-.cw-value--literal {
+.app-value--literal {
 	color: #2C662D;
 }

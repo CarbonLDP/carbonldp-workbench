@@ -8,11 +8,9 @@ import { DocumentsResolverService } from "./documents-resolver.service";
 import { ErrorMessageGenerator } from "app/common/components/messages-area/error/error-message-generator";
 import { Message } from "app/common/components/messages-area/message.component";
 
-import "semantic-ui/semantic";
-
 
 @Component( {
-	selector: "cw-document-explorer",
+	selector: "app-document-explorer",
 	templateUrl: "./document-explorer.component.html",
 	styleUrls: [ "./document-explorer.component.scss" ],
 } )

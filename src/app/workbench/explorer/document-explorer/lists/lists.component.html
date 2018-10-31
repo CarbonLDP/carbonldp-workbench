@@ -1,5 +1,5 @@
 <ng-template ngFor let-list="$implicit" [ngForOf]="lists" let-i="index">
-	<cw-list *ngIf="!list.deleted"
+	<app-list *ngIf="!list.deleted"
 	         [list]="list"
 	         [blankNodes]="blankNodes"
 	         [namedFragments]="namedFragments"
@@ -8,5 +8,5 @@
 	         (onSave)="saveList($event, list, i)"
 	         (onDeleteList)="deleteList($event, i)"
 	         (onGoToBlankNode)="goToBlankNode($event)"
-	         (onGoToNamedFragment)="goToNamedFragment($event)"></cw-list>
+	         (onGoToNamedFragment)="goToNamedFragment($event)"></app-list>
 </ng-template>

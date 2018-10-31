@@ -14,7 +14,7 @@ import { ErrorMessageGenerator } from "app/common/components/messages-area/error
 *   Creates Documents via the Document Explorer
 * */
 @Component( {
-	selector: "cw-document-creator",
+	selector: "app-document-creator",
 	templateUrl: "./document-creator.component.html",
 } )
 

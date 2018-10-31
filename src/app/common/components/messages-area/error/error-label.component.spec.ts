@@ -15,9 +15,9 @@ export function errorLabelSpecs() {
 		@Component( {
 			template: `
 				<h2>Something</h2>
-				<cw-error-label>
+				<app-error-label>
 					<span>Enter a valid something</span>
-				</cw-error-label>`
+				</app-error-label>`
 		} )
 		class TestComponent {
 		}
@@ -37,12 +37,12 @@ export function errorLabelSpecs() {
 		} );
 
 		it( "Should project content within", () => {
-			let errorLabel:HTMLElement = de.query( By.css( "cw-error-label" ) ).nativeElement;
+			let errorLabel:HTMLElement = de.query( By.css( "app-error-label" ) ).nativeElement;
 			expect( errorLabel.innerText ).toEqual( "Enter a valid something" );
 		} );
 
 		it( "Should have classes 'ui red basic error label'", () => {
-			let errorLabel:HTMLElement = de.query( By.css( "cw-error-label" ) ).nativeElement;
+			let errorLabel:HTMLElement = de.query( By.css( "app-error-label" ) ).nativeElement;
 			expect( errorLabel.className ).toEqual( "ui red basic error label" );
 		} );
 

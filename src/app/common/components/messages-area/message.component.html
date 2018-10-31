@@ -14,8 +14,8 @@
 
 		<li class="item" *ngFor="let error of errors; let i = index;">
 			<div>
-				<span *ngIf="!!error['https://carbonldp.com/ns/v1/platform#errorCode']">Code: {{error["https://carbonldp.com/ns/v1/platform#errorCode"][0]["@value"]}} -</span>
-				<span *ngIf="!!error['https://carbonldp.com/ns/v1/platform#errorMessage']">{{error["https://carbonldp.com/ns/v1/platform#errorMessage"][0]["@value"]}}</span>
+				<span *ngIf="!!error['https://carbonldp.com/ns/v1/platform#errorCode']">Code: {{error[ "https://carbonldp.com/ns/v1/platform#errorCode" ][ 0 ][ "@value" ]}} -</span>
+				<span *ngIf="!!error['https://carbonldp.com/ns/v1/platform#errorMessage']">{{error[ "https://carbonldp.com/ns/v1/platform#errorMessage" ][ 0 ][ "@value" ]}}</span>
 			</div>
 
 			<!-- Show validation details if present -->

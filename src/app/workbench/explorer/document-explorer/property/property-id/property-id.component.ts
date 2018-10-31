@@ -1,16 +1,16 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 
 import { URI } from "carbonldp/RDF/URI";
-import { RDFNode } from "carbonldp/RDF/Node"
+import { RDFNode } from "carbonldp/RDF/Node";
 
 import { Modes } from "../../document-explorer-library";
 import { Property, PropertyStatus } from "./../property.component";
 import { NamedFragmentStatus } from "../../named-fragments/named-fragment.component";
 
 @Component( {
-	selector: "cw-property-id",
+	selector: "app-property-id",
 	templateUrl: "./property-id.component.html",
-	styleUrls: [ "./property-id.component.scss" ],
+	styleUrls: [ "./property-id.component.scss" ]
 } )
 export class PropertyIDComponent implements AfterViewInit {
 	@Input() mode:string = Modes.READ;
@@ -33,7 +33,9 @@ export class PropertyIDComponent implements AfterViewInit {
 		this.value = property[ this.status ].value;
 	}
 
-	get property():PropertyStatus { return this._property; }
+	get property():PropertyStatus {
+		return this._property;
+	}
 
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 
@@ -45,16 +47,18 @@ export class PropertyIDComponent implements AfterViewInit {
 
 	status:string;
 	existingFragments:string[] = [];
-	tempProperty:Property = <Property>{};
+	tempProperty:Property = {} as any;
 
 	id:string;
 	originalId:string;
-	value:any[] | string = [];
+	value:string = "";
 
-	modes:Modes = Modes;
+	modes:typeof Modes = Modes;
 	@ViewChild( "idInput" ) idInputControl;
 
-	get valueHasChanged():boolean { return this.property.copy && this.property.copy.value !== this.tempProperty.value; };
+	get valueHasChanged():boolean {
+		return this.property.copy && this.property.copy.value !== this.tempProperty.value;
+	};
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -88,8 +92,10 @@ export class PropertyIDComponent implements AfterViewInit {
 	onEditId():void {
 		this.mode = Modes.EDIT;
 		this.existingFragments = [];
-		this.namedFragments.forEach( ( nameFragment:NamedFragmentStatus ) => { this.existingFragments.push( nameFragment.name ); } );
-		this.value = this.unescape( <string>this.value );
+		this.namedFragments.forEach( ( nameFragment:NamedFragmentStatus ) => {
+			this.existingFragments.push( nameFragment.name );
+		} );
+		this.value = this.unescape( this.value );
 	}
 
 	cancelModification():void {
@@ -98,7 +104,8 @@ export class PropertyIDComponent implements AfterViewInit {
 	}
 
 	saveId():void {
-		this.checkForChangesOnId( this.sanitize( <string>this.value ) ); //check changes on idInput
+		// Check changes on idInput
+		this.checkForChangesOnId( this.sanitize( this.value ) );
 		this.mode = Modes.READ;
 	}
 

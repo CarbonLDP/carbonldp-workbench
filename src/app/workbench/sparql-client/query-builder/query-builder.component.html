@@ -1,23 +1,23 @@
 <form class="ui form">
 	<!-- START: Query name -->
-	<div class="cw-name" *ngIf="query.id">
+	<div class="app-name" *ngIf="query.id">
 		<i class="star icon"></i>
-		<span class="cw-nameLabel"
-			*ngIf="state !== State.EDITING_NAME"
-			(dblclick)="editName( $event )">{{query.name}}</span>
-		<form class="cw-nameForm"
+		<span class="app-nameLabel"
+		      *ngIf="state !== State.EDITING_NAME"
+		      (dblclick)="editName( $event )">{{query.name}}</span>
+		<form class="app-nameForm"
 		      *ngIf="state === State.EDITING_NAME"
 		      (submit)="applyNameEdition( $event )">
-			<input class="cw-nameInput" type="text" name="name" title="Query name"
+			<input class="app-nameInput" type="text" name="name" title="Query name"
 			       #nameInput
 			       (blur)="applyNameEdition( $event )"
 			       (keydown.escape)="cancelNameEdition()"
 			       [(ngModel)]="query.name">
 		</form>
-		<i class="cw-nameEditButton pencil icon"
+		<i class="app-nameEditButton pencil icon"
 		   *ngIf="state !== State.EDITING_NAME"
 		   (click)="editName( $event )"></i>
-		<i class="cw-nameCancelButton check icon"
+		<i class="app-nameCancelButton check icon"
 		   *ngIf="state === State.EDITING_NAME"
 		   (click)="cancelNameEdition( $event )"></i>
 	</div>
@@ -26,8 +26,8 @@
 	<!-- START: Endpoint URI input -->
 	<div class="field">
 		<label>Endpoint URI:</label>
-		<input class="cw-endpointInput" type="text" name="endpoint" title="Query endpoint" placeholder="https://example.com/sparql/endpoint/" [(ngModel)]="query.endpoint">
-		<div class="cw-endpointMessage ui message info">
+		<input class="app-endpointInput" type="text" name="endpoint" title="Query endpoint" placeholder="https://example.com/sparql/endpoint/" [(ngModel)]="query.endpoint">
+		<div class="app-endpointMessage ui message info">
 			<ul class="list">
 				<li>Leave it blank to execute the query against the root document</li>
 				<li>Relative URIs will be resolved against the configured platform's root document</li>
@@ -39,12 +39,12 @@
 	<!-- START: Body of the query -->
 	<div class="field">
 		<label>Query:</label>
-		<cw-code-mirror
+		<app-code-mirror
 			#contentInput
 			[mode]="codeMirrorMode.SPARQL"
 			[readOnly]="loading"
 			[(value)]="query.content"
-			[showLineNumbers]="true"></cw-code-mirror>
+			[showLineNumbers]="true"></app-code-mirror>
 	</div>
 	<!-- END: Body of the query -->
 

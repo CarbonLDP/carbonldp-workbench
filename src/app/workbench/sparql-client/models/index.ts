@@ -1,7 +1,6 @@
 export * from "./sparql-query.model";
 
 
-
 export enum SPARQLType {
 	QUERY = "QUERY",
 	UPDATE = "UPDATE",

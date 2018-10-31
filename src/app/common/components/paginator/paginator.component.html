@@ -6,7 +6,7 @@
 		<a class="item"
 		   [ngClass]="{active: index === activePage}"
 		   (click)="pageClick(index)">
-			{{page+1}}
+			{{page + 1}}
 		</a>
 		<a class="icon item" [ngClass]="{disabled: activePage===(pages.length-1)}" (click)="next()" *ngIf="last">
 			<i class="right chevron icon"></i>

@@ -50,16 +50,16 @@
 		<div class="tabs">
 			<!-- START: Tab containing the data of the response when response is successful -->
 			<div *ngIf="response.result === SPARQLResponseType.Success" class="ui active tab" data-tab="first">
-				<cw-code-mirror *ngIf="!!outputformat && outputformat != sparqlFormats.table"
+				<app-code-mirror *ngIf="!!outputformat && outputformat != sparqlFormats.table"
 				                [mode]="outputformat"
 				                [readOnly]="'nocursor'"
 				                [(value)]="response.data">
-				</cw-code-mirror>
-				<cw-resultset-table *ngIf="outputformat === sparqlFormats.table"
+				</app-code-mirror>
+				<app-resultset-table *ngIf="outputformat === sparqlFormats.table"
 				                    [(resultset)]="response.resultSet"
 				                    [query]="response.query"
 				                    [prefixes]="prefixes">
-				</cw-resultset-table>
+				</app-resultset-table>
 			</div>
 			<!-- END: Tab containing the data of the response when response is successful -->
 
@@ -87,9 +87,9 @@
 
 			<!-- STARt: Tab containing the query -->
 			<div class="ui tab" data-tab="third">
-				<cw-code-mirror [mode]="codeMirrorMode.SPARQL"
+				<app-code-mirror [mode]="codeMirrorMode.SPARQL"
 				                [readOnly]="'nocursor'"
-				                [(value)]="response.query.content"></cw-code-mirror>
+				                [(value)]="response.query.content"></app-code-mirror>
 			</div>
 			<!-- END: Tab containing the query -->
 		</div>

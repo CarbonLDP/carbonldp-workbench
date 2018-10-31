@@ -11,7 +11,7 @@ import { ErrorMessageGenerator } from "app/common/components/messages-area/error
 *  Widget that displays the total number of Document in a Carbon LDP instance
 * */
 @Component( {
-	selector: "cw-documents-widget",
+	selector: "app-documents-widget",
 	templateUrl: "./documents-widget.component.html",
 	styleUrls: [ "./documents-widget.component.scss" ]
 } )

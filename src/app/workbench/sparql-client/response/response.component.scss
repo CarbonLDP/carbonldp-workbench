@@ -1,6 +1,7 @@
 :host {
 	display: block;
 	width: 100%;
+
 	.accordion {
 		padding: 0 !important;
 
@@ -21,6 +22,7 @@
 			border-color: red !important;
 		}
 	}
+
 	.tabs {
 		[data-tab="second"] {
 			max-height: 400px;

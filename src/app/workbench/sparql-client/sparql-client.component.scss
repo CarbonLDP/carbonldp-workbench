@@ -5,6 +5,7 @@
 		padding-left: 0;
 		padding-right: 0;
 	}
+
 	.query-results {
 		margin-bottom: 6%;
 		padding-left: 0;
@@ -31,7 +32,7 @@
 	}
 }
 
-.cw-savedQuery {
+.app-savedQuery {
 	// Center elements vertically
 	display: flex;
 	flex-direction: row;
@@ -43,11 +44,13 @@
 
 	// Button-like behaviour
 	cursor: pointer;
+
 	&:hover {
 		background: #464E55;
 	}
 }
-.cw-savedQuery-label {
+
+.app-savedQuery-label {
 	flex: 1 1 auto;
 
 	display: flex;
@@ -60,10 +63,12 @@
 	// Semantic UI's default line-height messes up with the vertical centering
 	line-height: normal;
 }
-.cw-savedQuery-name {
+
+.app-savedQuery-name {
 	font-size: 1.3em;
 }
-.cw-savedQuery-operation {
+
+.app-savedQuery-operation {
 	font-size: 1em;
 	font-family: monospace;
 
@@ -71,17 +76,21 @@
 	&--select {
 		color: cornflowerblue;
 	}
+
 	&--describe {
 		color: mediumpurple;
 	}
+
 	&--construct {
 		color: mediumvioletred;
 	}
+
 	&--ask {
 		color: orange;
 	}
 }
-.cw-savedQuery-deleteButton {
+
+.app-savedQuery-deleteButton {
 	flex: 0 0 auto;
 
 	margin: 0 15px;
@@ -94,7 +103,7 @@
 	line-height: normal;
 }
 
-.cw-duration-label {
+.app-duration-label {
 	display: block;
 
 	margin-bottom: 15px;

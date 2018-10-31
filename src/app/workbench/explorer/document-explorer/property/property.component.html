@@ -4,7 +4,7 @@
 
 <ng-container [ngSwitch]="propertyName">
 	<!-- START: Property @Id  -->
-	<cw-property-id *ngSwitchCase="'@id'"
+	<app-property-id *ngSwitchCase="'@id'"
 	                class="content"
 	                [mode]="mode"
 	                [documentURI]="documentURI"
@@ -15,22 +15,22 @@
 	                [property]="property"
 	                [accessPointsHasMemberRelationProperties]="accessPointsHasMemberRelationProperties"
 	                (onChangeProperty)="changeProperty( $event )">
-	</cw-property-id>
+	</app-property-id>
 	<!-- END: Property @Id  -->
 
 
 	<!-- START: Property @type  -->
-	<cw-property-type *ngSwitchCase="'@type'"
+	<app-property-type *ngSwitchCase="'@type'"
 	                  class="content"
 	                  [property]="property">
-	</cw-property-type>
+	</app-property-type>
 	<!-- END: Property @Id  -->
 
 
 	<!-- START: Normal Property -->
 	<ng-container *ngSwitchDefault>
-		<cw-property-content *ngIf="!property.deleted"
-		                     class="content cw-property-content"
+		<app-property-content *ngIf="!property.deleted"
+		                     class="content app-property-content"
 		                     [property]="property"
 		                     [mode]="mode"
 		                     [documentURI]="documentURI"
@@ -46,7 +46,7 @@
 		                     (onChangeProperty)="changeProperty( $event )"
 		                     (onDeleteProperty)="deleteProperty( $event )"
 		                     (onSaveNewProperty)="saveNewProperty( $event )">
-		</cw-property-content>
+		</app-property-content>
 	</ng-container>
 	<!-- END: Normal Property -->
 
