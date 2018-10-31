@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
-import { CarbonLDP } from "carbonldp"
-import { RDFNode } from "carbonldp/RDF/Node"
+import { CarbonLDP } from "carbonldp";
+import { RDFNode } from "carbonldp/RDF/Node";
 
 import { Modes, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
 import { DocumentsResolverService } from "../documents-resolver.service";
@@ -11,19 +11,18 @@ import { Property, PropertyStatus } from "../property/property.component";
 *  Displays the contents of a Document with all its properties
 * */
 @Component( {
-	selector: "cw-document-resource",
+	selector: "app-document-resource",
 	templateUrl: "./document-resource.component.html",
-	styles: [ ":host { display:block; }" ],
+	styles: [ ":host { display:block; }" ]
 } )
 
 export class DocumentResourceComponent extends ResourceFeatures implements AfterViewInit {
-
 	element:ElementRef;
 	$element:JQuery;
 	documentsResolverService:DocumentsResolverService;
 	carbonldp:CarbonLDP;
 
-	modes:Modes = Modes;
+	modes:typeof Modes = Modes;
 
 	private _rootHasChanged:boolean;
 	set rootHasChanged( hasChanged:boolean ) {
@@ -31,7 +30,9 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 		this.onChanges.emit( this.records );
 	}
 
-	get rootHasChanged() { return this._rootHasChanged; }
+	get rootHasChanged() {
+		return this._rootHasChanged;
+	}
 
 	@Input() displayOnly:string[] = [];
 	@Input() hiddenProperties:string[] = [];
@@ -45,7 +46,9 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 		this._rootNode = value;
 		this.records = new ResourceRecords();
 		this.getProperties()
-			.then( () => { this.updateExistingProperties();} );
+			.then( () => {
+				this.updateExistingProperties();
+			} );
 	}
 
 	get rootNode() {
@@ -101,8 +104,9 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 
 		// Animates created property
 		setTimeout( () => {
+
 			this.scrollToByClass( 'added-property' );
-			let createdPropertyComponent:JQuery = this.$element.find( "cw-property.added-property" ).first();
+			let createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
 			createdPropertyComponent.addClass( "transition hidden" );
 			createdPropertyComponent.find( 'input' ).focus();
 			createdPropertyComponent.transition( { animation: "drop" } );

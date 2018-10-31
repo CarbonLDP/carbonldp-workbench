@@ -4,9 +4,11 @@
 	.document-content-wrapper {
 		height: 96%;
 	}
+
 	.ui.segment {
 		color: #000000;
 	}
+
 	> .ui.divided.grid.segment {
 		height: 800px;
 		max-height: 800px;
@@ -21,6 +23,7 @@
 			}
 		}
 	}
+
 	.createchild.form {
 
 		.ui.saving.error.message {

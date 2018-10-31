@@ -7,7 +7,7 @@
 	</thead>
 	<tbody>
 		<ng-template ngFor let-pointer="$implicit" [ngForOf]="pointers" let-i="index">
-			<tr class="cw-pointer top aligned" [ngClass]="{'modified-pointer':!!pointer.modified, 'added-pointer':!!pointer.added}" *ngIf="!pointer.deleted"
+			<tr class="app-pointer top aligned" [ngClass]="{'modified-pointer':!!pointer.modified, 'added-pointer':!!pointer.added}" *ngIf="!pointer.deleted"
 			    [pointer]="pointer"
 			    [documentURI]="documentURI"
 			    [blankNodes]="blankNodes"

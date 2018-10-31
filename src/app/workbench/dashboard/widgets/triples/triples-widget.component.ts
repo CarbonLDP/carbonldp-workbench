@@ -11,7 +11,7 @@ import { ErrorMessageGenerator } from "app/common/components/messages-area/error
 *  Widget that displays the existing triples in a Carbon LDP instance
 * */
 @Component( {
-	selector: "cw-triples-widget",
+	selector: "app-triples-widget",
 	templateUrl: "./triples-widget.component.html",
 	styleUrls: [ "./triples-widget.component.scss" ]
 } )

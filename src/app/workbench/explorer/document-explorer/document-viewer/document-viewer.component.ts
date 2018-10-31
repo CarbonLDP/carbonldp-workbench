@@ -17,7 +17,7 @@ import { NamedFragmentStatus } from "../named-fragments/named-fragment.component
 *   Contains and displays the contents of a @graph (Document, Blank Nodes and Fragments)
 * */
 @Component( {
-	selector: "cw-document-viewer",
+	selector: "app-document-viewer",
 	host: { "[class.ui]": "true", "[class.basic]": "true", "[class.segment]": "true", },
 	templateUrl: "./document-viewer.component.html",
 	styleUrls: [ "./document-viewer.component.scss" ],

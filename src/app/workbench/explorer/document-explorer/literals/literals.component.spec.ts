@@ -17,7 +17,7 @@ export function literalsSpecs() {
 		let de:DebugElement;
 
 		@Component( {
-			template: `<cw-literals [literals]="literals" [canEdit]="canEdit" [onAddNewLiteral]="addEmiter"></cw-literals>`
+			template: `<app-literals [literals]="literals" [canEdit]="canEdit" [onAddNewLiteral]="addEmiter"></app-literals>`
 		} )
 		class TestComponent {
 			canEdit:boolean = true;
@@ -90,7 +90,7 @@ export function literalsSpecs() {
 			comp.literalsCmp.addNewLiteral();
 			fixture.detectChanges();
 
-			let addedLiteral:HTMLElement = de.nativeElement.querySelector( "tr.cw-literal.added-literal" );
+			let addedLiteral:HTMLElement = de.nativeElement.querySelector( "tr.app-literal.added-literal" );
 			expect( addedLiteral ).not.toBeNull();
 		} );
 
@@ -102,14 +102,14 @@ export function literalsSpecs() {
 			};
 			fixture.detectChanges();
 
-			let modifiedLiteral:HTMLElement = de.nativeElement.querySelector( "tr.cw-literal.modified-literal" );
+			let modifiedLiteral:HTMLElement = de.nativeElement.querySelector( "tr.app-literal.modified-literal" );
 			expect( modifiedLiteral ).not.toBeNull();
 		} );
 
 		it( "Should emit literals when a literal is saved", ( done ) => {
 
 
-			let literals:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.cw-literal" );
+			let literals:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.app-literal" );
 			expect( literals.length ).toEqual( 3 );
 
 			let toModifyLiteralIdx:number = 0;
@@ -132,7 +132,7 @@ export function literalsSpecs() {
 		it( "Should emit literals when a literal is deleted", ( done ) => {
 
 
-			let literals:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.cw-literal" );
+			let literals:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.app-literal" );
 			expect( literals.length ).toEqual( 3 );
 
 			let toDeleteLiteralIdx:number = 0;
@@ -150,7 +150,7 @@ export function literalsSpecs() {
 			comp.literalsCmp.deleteLiteral( toDeleteLiteral, 0 );
 			fixture.detectChanges();
 
-			literals = de.nativeElement.querySelectorAll( "tr.cw-literal" );
+			literals = de.nativeElement.querySelectorAll( "tr.app-literal" );
 			expect( literals.length ).toEqual( 2 );
 		} );
 
@@ -159,7 +159,7 @@ export function literalsSpecs() {
 			comp.literalsCmp.addNewLiteral();
 			fixture.detectChanges();
 
-			let literals:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.cw-literal" );
+			let literals:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.app-literal" );
 			expect( literals.length ).toEqual( 4 );
 
 			let toDeleteLiteralIdx:number = 0;
@@ -178,7 +178,7 @@ export function literalsSpecs() {
 
 		it( "Should not display literal when it's been deleted", () => {
 
-			let literals:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.cw-literal" );
+			let literals:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.app-literal" );
 			expect( literals.length ).toEqual( 3 );
 
 			let toDeleteLiteralIdx:number = 0;
@@ -187,7 +187,7 @@ export function literalsSpecs() {
 			comp.literalsCmp.deleteLiteral( toDeleteLiteral, 0 );
 			fixture.detectChanges();
 
-			literals = de.nativeElement.querySelectorAll( "tr.cw-literal" );
+			literals = de.nativeElement.querySelectorAll( "tr.app-literal" );
 			expect( literals.length ).toEqual( 2 );
 		} );
 
@@ -244,7 +244,7 @@ export function literalsSpecs() {
 				fixture.detectChanges();
 				expect( value ).toBe( true );
 
-				let literals:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.cw-literal" );
+				let literals:HTMLElement[] = de.nativeElement.querySelectorAll( "tr.app-literal" );
 				expect( literals.length ).toEqual( 4 );
 				expect( literals[ 0 ].classList ).toContain( "added-literal" );
 				done();

@@ -4,14 +4,12 @@ import { ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router } from "@
 import { RouterService } from "app/common/router.service";
 import { SidebarService } from "../sidebar/sidebar.service";
 
-import "semantic-ui/semantic";
-
 
 /*
 *   Breadcrumb of the Workbench listing all the visiting routes
 * */
 @Component( {
-	selector: "cw-breadcrumbs",
+	selector: "app-breadcrumbs",
 	templateUrl: "./breadcrumbs.component.html",
 	styleUrls: [ "./breadcrumbs.component.scss" ],
 } )

@@ -3,7 +3,7 @@ import { AbstractControl, FormControl, NG_VALIDATORS, NgControl, NgModel, Valida
 import { URI } from "carbonldp/RDF/URI";
 
 @Directive( {
-	selector: "[cw-email]",
+	selector: "[app-email]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: EmailValidator, multi: true } ]
 } )
 export class EmailValidator implements Validator {
@@ -20,7 +20,7 @@ export class EmailValidator implements Validator {
 }
 
 @Directive( {
-	selector: "[cw-slug]",
+	selector: "[app-slug]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: SlugValidator, multi: true } ]
 } )
 export class SlugValidator implements Validator {
@@ -37,7 +37,7 @@ export class SlugValidator implements Validator {
 
 
 @Directive( {
-	selector: "[cw-match]",
+	selector: "[app-match]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: MatchValidator, multi: true } ]
 } )
 export class MatchValidator implements Validator, OnChanges {
@@ -58,7 +58,7 @@ export class MatchValidator implements Validator, OnChanges {
 
 	ngOnChanges( changes:SimpleChanges ) {
 		if( ! this.control || ! changes.hasOwnProperty( "matchTo" ) ) return;
-		setTimeout( this.control.updateValueAndValidity( { onlySelf: false, emitEvent: false } ), 0 );
+		setTimeout( () => this.control.updateValueAndValidity( { onlySelf: false, emitEvent: false } ), 0 );
 	}
 
 	validate( control:AbstractControl ):{ [ key:string ]:any; } {
@@ -68,7 +68,7 @@ export class MatchValidator implements Validator, OnChanges {
 }
 
 @Directive( {
-	selector: "[cw-domain]",
+	selector: "[app-domain]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: DomainValidator, multi: true } ]
 } )
 export class DomainValidator implements Validator {
@@ -85,7 +85,7 @@ export class DomainValidator implements Validator {
 }
 
 @Directive( {
-	selector: "[cw-uri]",
+	selector: "[app-uri]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: URIValidator, multi: true } ]
 } )
 export class URIValidator implements Validator {
@@ -94,8 +94,7 @@ export class URIValidator implements Validator {
 		if( control.value ) {
 			if( control.value.match( /^(ftp|https?):\/\/(\w+:{0,1}\w*@)?((?![^\/]+\/(?:ftp|https?):)\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/ ) ) {
 				return null;
-			}
-			else {
+			} else {
 				//if( control.touched && ! ! control.value ) {
 				return { "invalidURIAddress": true };
 			}
@@ -105,7 +104,7 @@ export class URIValidator implements Validator {
 }
 
 @Directive( {
-	selector: "[cw-fragment]",
+	selector: "[app-fragment]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: FragmentValidator, multi: true } ]
 } )
 export class FragmentValidator implements Validator {
@@ -122,7 +121,7 @@ export class FragmentValidator implements Validator {
 }
 
 @Directive( {
-	selector: "[cw-uri-fragment]",
+	selector: "[app-uri-fragment]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: URIFragmentValidator, multi: true } ]
 } )
 export class URIFragmentValidator implements Validator {
@@ -141,7 +140,7 @@ export class URIFragmentValidator implements Validator {
 }
 
 @Directive( {
-	selector: '[cw-required-if]',
+	selector: '[app-required-if]',
 	providers: [ { provide: NG_VALIDATORS, useExisting: RequiredIfValidator, multi: true } ]
 } )
 export class RequiredIfValidator implements Validator {
@@ -154,7 +153,7 @@ export class RequiredIfValidator implements Validator {
 }
 
 @Directive( {
-	selector: '[cw-required]',
+	selector: '[app-required]',
 	providers: [ { provide: NG_VALIDATORS, useExisting: RequiredDirective, multi: true } ]
 } )
 export class RequiredDirective implements Validator {

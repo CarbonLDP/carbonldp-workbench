@@ -9,13 +9,10 @@ import "codemirror/mode/sparql/sparql";
 import "codemirror/mode/xml/xml";
 import "codemirror/mode/turtle/turtle";
 
-import "!style-loader!css-loader!codemirror/lib/codemirror.css";
-import "!style-loader!css-loader!codemirror/theme/mbo.css";
-
 @Component( {
-	selector: "cw-code-mirror",
+	selector: "app-code-mirror",
 	template: "<ng-content></ng-content>",
-	styleUrls: [ "./code-mirror.component.scss" ],
+	styleUrls: [ "./code-mirror.component.scss" ]
 } )
 export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	element:ElementRef;
@@ -155,27 +152,16 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	}
 }
 
-
-export class Mode {
-	static get CSS():string { return "text/css"; };
-
-	static get JAVASCRIPT():string { return "text/javascript"; }
-
-	static get JSONLD():string { return "application/ld+json"; }
-
-	static get JSONDRDF():string { return "application/json"; }
-
-	static get N3():string { return "text/turtle"; }
-
-	static get RDFXML():string { return "application/xml"; }
-
-	static get CSV():string { return "text/plain"; }
-
-	static get TSV():string { return "text/plain"; }
-
-	static get SPARQL():string { return "application/sparql-query"; }
-
-	static get XML():string { return "application/xml"; }
-
-	static get TURTLE():string { return "text/turtle"; }
+export enum Mode {
+	CSS = "text/css",
+	JAVASCRIPT = "text/javascript",
+	JSONLD = "application/ld+json",
+	JSONDRDF = "application/json",
+	N3 = "text/turtle",
+	RDFXML = "application/xml",
+	CSV = "text/plain",
+	TSV = "text/plain",
+	SPARQL = "application/sparql-query",
+	XML = "application/xml",
+	TURTLE = "text/turtle",
 }

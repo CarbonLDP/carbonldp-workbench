@@ -1,7 +1,7 @@
 import { Directive, ElementRef } from '@angular/core';
 
 @Directive( {
-	selector: '[cw-grayed-out]'
+	selector: '[app-grayed-out]'
 } )
 
 export class GrayedOutDirective {

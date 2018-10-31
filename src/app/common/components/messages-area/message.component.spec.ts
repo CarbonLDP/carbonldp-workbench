@@ -15,7 +15,7 @@ export function messageComponentSpecs() {
 		@Component( {
 			template: `
 			<div>
-				<cw-message class="first" [closable]="true" [message]="message"></cw-message>
+				<app-message class="first" [closable]="true" [message]="message"></app-message>
 			</div>`
 		} )
 		class TestComponent {

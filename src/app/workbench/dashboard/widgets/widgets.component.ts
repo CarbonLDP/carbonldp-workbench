@@ -7,7 +7,7 @@ import { MessagesAreaService } from "app/common/components/messages-area/message
 *  Displays all the Dashboard's Widgets
 * */
 @Component( {
-	selector: "cw-widgets",
+	selector: "app-widgets",
 	templateUrl: "./widgets.component.html",
 	styleUrls: [ "./widgets.component.scss" ],
 } )

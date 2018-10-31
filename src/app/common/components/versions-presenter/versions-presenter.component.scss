@@ -1,11 +1,13 @@
 :host {
-	display: block;
-	font-size: .7em;
-	position: relative;
+	display: flex;
 
-	> div.content {
-		position: absolute;
-		bottom: 0;
-		right: 10px;
-	}
+	// Align content to the right
+	flex-direction: column;
+	align-items: end;
+}
+
+.content {
+	padding: 5px;
+
+	font-size: 1rem;
 }

@@ -8,10 +8,9 @@ import { Message } from "app/common/components/messages-area/message.component";
 import { DocumentExplorerLibrary } from "app/workbench/explorer/document-explorer/document-explorer-library";
 import { ErrorMessageGenerator } from "app/common/components/messages-area/error/error-message-generator";
 
-import "semantic-ui/semantic";
 
 @Component( {
-	selector: "cw-document-deleter",
+	selector: "app-document-deleter",
 	templateUrl: "./document-deleter.component.html",
 	styleUrls: [ "./document-deleter.component.scss" ],
 } )
