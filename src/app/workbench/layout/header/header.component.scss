@@ -1,10 +1,32 @@
+.HWQZ {
+	&-logo {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+
+		width: 150px;
+
+		// semantic-ui
+		padding: 0 !important;
+
+		&-icon {
+			height: 35px;
+		}
+	}
+}
+
+
 :host {
 	display: block;
+
+	height: 60px;
 
 	.mobile.only.row {
 		.navigation.menu {
 			margin: 0;
 		}
+
 		.vertical.menu {
 			border-radius: 0;
 			border-top: 1px solid #A9A9A9;
@@ -12,6 +34,7 @@
 			display: block;
 			margin-top: 0;
 		}
+
 		.ui.dropdown.item .menu {
 			position: static;
 			margin-top: 15px;

@@ -1,14 +1,14 @@
-import { Component, EventEmitter, ViewChild, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
+import { Component, DebugElement, ViewChild } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { FormsModule } from "@angular/forms";
 
 import { ListsComponent } from "./../lists/lists.component";
-import { ListStatus, ListComponent } from "./../lists/list.component";
+import { ListComponent, ListStatus } from "./../lists/list.component";
 import { LiteralComponent } from "./../literals/literal.component";
 import { PointerComponent } from "./../pointers/pointer.component";
 import { JsonLDKeyword } from "./../document-explorer-library";
-import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
+import { LiteralValueValidator, PointerValidator } from "./../document-explorer-validators";
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
 
@@ -21,10 +21,10 @@ export function listsSpecs() {
 		let de:DebugElement;
 
 		@Component( {
-			template: `<cw-lists [documentURI]="documentURI"
+			template: `<app-lists [documentURI]="documentURI"
 								 [lists]="lists"
 								 [blankNodes]="blankNodes"
-								 [namedFragments]="namedFragments"></cw-lists>`
+								 [namedFragments]="namedFragments"></app-lists>`
 		} )
 		class TestComponent {
 
@@ -114,7 +114,7 @@ export function listsSpecs() {
 				done()
 			} );
 
-			let blankNode:HTMLElement = de.nativeElement.querySelector( "tr.cw-pointer .read-mode a" );
+			let blankNode:HTMLElement = de.nativeElement.querySelector( "tr.app-pointer .read-mode a" );
 			blankNode.click();
 		} );
 
@@ -124,7 +124,7 @@ export function listsSpecs() {
 				done()
 			} );
 
-			let namedFragment:HTMLElement = de.nativeElement.querySelectorAll( "tr.cw-pointer .read-mode a" )[ 1 ];
+			let namedFragment:HTMLElement = de.nativeElement.querySelectorAll( "tr.app-pointer .read-mode a" )[ 1 ];
 			namedFragment.click();
 		} );
 
@@ -140,9 +140,9 @@ export function listsSpecs() {
 					done();
 				} );
 
-				let deleteButton:HTMLButtonElement = de.nativeElement.querySelector( "cw-list .bottom.menu .item" );
+				let deleteButton:HTMLButtonElement = de.nativeElement.querySelector( "app-list .bottom.menu .item" );
 				deleteButton.click();
-				let confirmButton:HTMLButtonElement = de.nativeElement.querySelector( "cw-list .confirm-deletion .red.button" );
+				let confirmButton:HTMLButtonElement = de.nativeElement.querySelector( "app-list .confirm-deletion .red.button" );
 				confirmButton.click();
 			} );
 		} );
@@ -150,11 +150,11 @@ export function listsSpecs() {
 		describe( "When clicking on creating a new list", () => {
 
 			fit( "Should add a new empty list", () => {
-				let lists:HTMLElement[] = fixture.nativeElement.querySelectorAll( "cw-list" );
+				let lists:HTMLElement[] = fixture.nativeElement.querySelectorAll( "app-list" );
 				expect( lists.length ).toEqual( 1 );
 				comp.listsCmp.onAddNewList.emit( true );
 				fixture.detectChanges();
-				lists = fixture.nativeElement.querySelectorAll( "cw-list" );
+				lists = fixture.nativeElement.querySelectorAll( "app-list" );
 				expect( lists.length ).toEqual( 2 );
 			} );
 
@@ -241,9 +241,9 @@ export function listsSpecs() {
 				done();
 			} );
 
-			let deleteButton:HTMLButtonElement = de.nativeElement.querySelector( "cw-list .bottom.menu .item" );
+			let deleteButton:HTMLButtonElement = de.nativeElement.querySelector( "app-list .bottom.menu .item" );
 			deleteButton.click();
-			let confirmButton:HTMLButtonElement = de.nativeElement.querySelector( "cw-list .confirm-deletion .red.button" );
+			let confirmButton:HTMLButtonElement = de.nativeElement.querySelector( "app-list .confirm-deletion .red.button" );
 			confirmButton.click();
 		} );
 

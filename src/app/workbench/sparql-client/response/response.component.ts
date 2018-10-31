@@ -1,18 +1,38 @@
-import { Component, Input, Output, ElementRef, EventEmitter, AfterViewInit, OnInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output } from "@angular/core";
 
-import * as CodeMirrorComponent from "app/shared/code-mirror/code-mirror.component";
+import * as CodeMirrorComponent from "app/common/components/code-mirror/code-mirror.component";
 
-import * as $ from "jquery";
-import "semantic-ui/semantic";
+import { SPARQLFormats, SPARQLQuery, SPARQLType } from "../models";
 
+
+export enum SPARQLResponseType {
+	Success = "Success",
+	Error = "Error",
+}
+
+export class SPARQLClientResponse {
+	duration:number = null;
+	resultSet:any = null;
+	query:SPARQLQuery = null;
+	result:SPARQLResponseType = null;
+	isReExecuting:boolean = false;
+	data:string = null;
+
+	setData( data:any ):void {
+		if( typeof data !== "string" ) {
+			data = JSON.stringify( data, null, 2 );
+		}
+		this.data = data;
+	}
+}
 
 /*
 *   Contains and displays the response of a SPARQL query
 * */
 @Component( {
-	selector: "cw-sparql-response",
+	selector: "app-sparql-response",
 	templateUrl: "./response.component.html",
-	styleUrls: [  "./response.component.scss"  ],
+	styleUrls: [ "./response.component.scss" ],
 } )
 export class ResponseComponent implements AfterViewInit, OnInit {
 	element:ElementRef;
@@ -26,15 +46,17 @@ export class ResponseComponent implements AfterViewInit, OnInit {
 	@Output() onConfigure:EventEmitter<SPARQLClientResponse> = new EventEmitter<SPARQLClientResponse>();
 	@Output() onReExecute:EventEmitter<SPARQLClientResponse> = new EventEmitter<SPARQLClientResponse>();
 
-	sparqlFormats:SPARQLFormats = SPARQLFormats;
+	sparqlFormats:typeof SPARQLFormats = SPARQLFormats;
 
-	get codeMirrorMode():typeof CodeMirrorComponent.Mode { return CodeMirrorComponent.Mode; }
+	readonly codeMirrorMode:typeof CodeMirrorComponent.Mode = CodeMirrorComponent.Mode;
+
+	readonly SPARQLType:typeof SPARQLType = SPARQLType;
 
 	accordion:any;
 	accordionOpen:boolean = true;
 	menu:any;
 
-	get responseType():typeof SPARQLResponseType { return SPARQLResponseType; }
+	readonly SPARQLResponseType:typeof SPARQLResponseType = SPARQLResponseType;
 
 	constructor( element:ElementRef ) {
 		this.element = element;
@@ -126,56 +148,5 @@ export class ResponseComponent implements AfterViewInit, OnInit {
 			default:
 				return null;
 		}
-	}
-}
-export class SPARQLResponseType {
-	static success:string = "success";
-	static default:string = "default";
-	static error:string = "error";
-}
-
-export class SPARQLFormats {
-	static table:string = "table";
-	static xml:string = "application/xml";
-	static csv:string = "text/csv";
-	static tsv:string = "text/tsv";
-	static jsonLD:string = "application/ld+json";
-	static turtle:string = "text/turtle";
-	static jsonRDF:string = "application/rdf+json";
-	static rdfXML:string = "application/rdf+xml";
-	static n3:string = "text/n3";
-	static ntriples:string = "text/plain";
-	static trix:string = "application/trix";
-	static trig:string = "application/x-trig";
-	static binary:string = "application/x-binary-rdf.";
-	static nquads:string = "text/x-nquads";
-	static rdfa:string = "application/xhtml+xml";
-	static boolean:string = "boolean";
-	static text:string = "text/plain";
-}
-
-export interface SPARQLQuery {
-	endpoint:string;
-	type:string;
-	content:string;
-	operation:string;
-	format:string;
-	name:string;
-	id:number;
-}
-
-export class SPARQLClientResponse {
-	duration:number = null;
-	resultset:any = null;
-	query:SPARQLQuery = null;
-	result:string = null;
-	isReExecuting:boolean = false;
-	data:string = null;
-
-	setData( data:any ):void {
-		if( typeof data !== "string" ) {
-			data = JSON.stringify( data, null, 2 );
-		}
-		this.data = data;
 	}
 }

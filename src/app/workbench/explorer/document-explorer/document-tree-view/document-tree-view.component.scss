@@ -1,6 +1,7 @@
 :host {
 	display: block;
 	height: 100%;
+
 	.jstree-container-ul {
 		li {
 			a.accesspoint > .icon {
@@ -8,6 +9,7 @@
 			}
 		}
 	}
+
 	> .treeview-content {
 		overflow: scroll;
 	}

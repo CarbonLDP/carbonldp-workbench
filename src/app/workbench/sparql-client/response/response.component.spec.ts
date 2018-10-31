@@ -1,13 +1,13 @@
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
-import { By }              from "@angular/platform-browser";
-import { DebugElement }    from "@angular/core";
-import { ResponseComponent, SPARQLResponseType } from "./response.component";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
+import { DebugElement } from "@angular/core";
+import { ResponseComponent, SPARQLClientResponse, SPARQLResponseType } from "./response.component";
 
-import { SharedModule } from "app/shared/shared.module";
-import { SPARQLClientResponse } from "./response.component";
+import { AppCommonModule } from "app/common/app-common.module";
 import { ResultsetTableComponent } from "./../resultset-table/resultset-table.component";
-import { RelativizeURIPipe } from "./../resultset-table/relativize-uri.pipe";
-import { PrefixURIPipe } from "./../resultset-table/prefix-uri.pipe";
+import { RelativePipe } from "../resultset-table/relative.pipe";
+import { PrefixPipe } from "../resultset-table/prefix.pipe";
+import { QueryType, SPARQLFormats, SPARQLType } from "app/workbench/sparql-client/models";
 
 describe( "ResponseComponent", () => {
 
@@ -21,13 +21,13 @@ describe( "ResponseComponent", () => {
 	beforeEach( async( () => {
 		TestBed.configureTestingModule( {
 			imports: [
-				SharedModule.forRoot()
+				AppCommonModule.forRoot()
 			],
 			declarations: [
 				ResponseComponent,
 				ResultsetTableComponent,
-				RelativizeURIPipe,
-				PrefixURIPipe,
+				RelativePipe,
+				PrefixPipe,
 			], // declare the test component
 		} ).compileComponents();  // compile template and css
 	} ) );
@@ -38,7 +38,7 @@ describe( "ResponseComponent", () => {
 		de = fixture.debugElement;
 
 		mockedResponse.duration = 102;
-		mockedResponse.resultset = {
+		mockedResponse.resultSet = {
 			"head": {
 				"vars": [
 					"s",
@@ -270,15 +270,15 @@ describe( "ResponseComponent", () => {
 		mockedResponse.query = {
 			content: "select ?s ?p ?o where { ?s ?p ?o }",
 			endpoint: "http://localhost:8083/",
-			format: "table",
-			id: 0,
+			format: SPARQLFormats.table,
+			id: "0",
 			name: "Select all",
-			operation: "SELECT",
-			type: "Query",
+			operation: QueryType.SELECT,
+			type: SPARQLType.QUERY,
 		};
-		mockedResponse.result = SPARQLResponseType.success;
+		mockedResponse.result = SPARQLResponseType.Success;
 		mockedResponse.isReExecuting = false;
-		mockedResponse.setData( mockedResponse.resultset );
+		mockedResponse.setData( mockedResponse.resultSet );
 		let prefixes:{ [ prefix:string ]:string } = {
 			"acl": "http://www.w3.org/ns/auth/acl#",
 			"api": "http://purl.org/linked-data/api/vocab#",
@@ -387,7 +387,7 @@ describe( "ResponseComponent", () => {
 			de = fixture.debugElement;
 
 			mockedResponse.duration = 102;
-			mockedResponse.resultset = {
+			mockedResponse.resultSet = {
 				content: "There was a problem processing the request. Error: 400",
 				endpoint: "http://localhost:8083/",
 				statusCode: "400",
@@ -398,15 +398,15 @@ describe( "ResponseComponent", () => {
 			mockedResponse.query = {
 				content: "select ?s ?p ?o where { ?s ?p ?o }",
 				endpoint: "http://localhost:8083/",
-				format: "table",
-				id: 0,
+				format: SPARQLFormats.table,
+				id: "0",
 				name: "Select all",
-				operation: "SELECT",
-				type: "Query",
+				operation: QueryType.SELECT,
+				type: SPARQLType.QUERY,
 			};
-			mockedResponse.result = SPARQLResponseType.error;
+			mockedResponse.result = SPARQLResponseType.Error;
 			mockedResponse.isReExecuting = false;
-			mockedResponse.setData( mockedResponse.resultset );
+			mockedResponse.setData( mockedResponse.resultSet );
 			let prefixes:{ [ prefix:string ]:string } = {
 				"acl": "http://www.w3.org/ns/auth/acl#",
 				"api": "http://purl.org/linked-data/api/vocab#",

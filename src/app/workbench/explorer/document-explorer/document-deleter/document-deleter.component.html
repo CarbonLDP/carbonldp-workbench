@@ -1,4 +1,4 @@
-<form class="ui delete document basic modal error form" #deleteDocumentModal #deleteDocumentForm="ngForm" (submit)="onSubmitDeleteDocument(deleteDocumentFormModel.value, $event)">
+<form class="ui delete document basic modal error form" #deleteDocumentModal #deleteDocumentForm="ngForm" (submit)="onSubmitDeleteDocument()">
 	<!-- END: Header of document deleter -->
 	<div class="header">
 		<h2 class="ui inverted header"><i class="trash outline red icon"></i> Are you sure?</h2>
@@ -8,28 +8,30 @@
 
 	<!-- START: Content of document deleter -->
 	<div class="content">
-		<p class="ui description">
-			<span>You are about to delete the following document:</span><br><br>
-			<span>'{{documentURI}}'</span><br><br>
-			<span>If you delete it, all its children and its access points will also be deleted.</span><br>
-			<span>Do you really want to proceed?</span>
-		</p>
-		<cw-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage($event)" *ngIf="!!errorMessage"></cw-message>
+		<div class="ui description">
+			<p>You are about to delete the following {{ documentURIs.length === 1 ? 'document' : 'documents' }}:</p>
+			<ul class="documentList">
+				<li *ngFor="let documentURI of documentURIs">{{documentURI}}</li>
+			</ul>
+			<p>If you delete {{ documentURIs.length === 1 ? 'it' : 'them' }}, all of {{ documentURIs.length === 1 ? 'its' : 'their' }} children and access points will also be deleted.</p>
+			<p>Do you want to proceed?</p>
+		</div>
 	</div>
 	<!-- END: Content of document deleter -->
-
 
 	<!-- START: Action buttons of document deleter -->
 	<div class="actions">
 		<div class="ui button" title="Cancel deletion"
 		     [ngClass]="{disabled:isDeleting}"
 		     [attr.disabled]="isDeleting"
-		     (click)="hideDeleteDocumentForm()">No
+		     (click)="hide()">No
 		</div>
 		<div class="ui red button" title="Confirm deletion"
 		     [ngClass]="{loading:isDeleting}"
-		     (click)="onSubmitDeleteDocument(deleteDocumentForm.value, $event); clearErrorMessage()">Yes
+		     (click)="onSubmitDeleteDocument(); clearErrorMessage()">Yes
 		</div>
 	</div>
 	<!-- END: Action buttons of document deleter -->
+
+	<app-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage($event)" *ngIf="!!errorMessage"></app-message>
 </form>

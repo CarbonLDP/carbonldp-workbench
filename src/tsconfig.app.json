@@ -1,0 +1,21 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "app/*": [ "app/*" ],
+      "package.json": [ "../package.json" ]
+    },
+    "outDir": "../out-tsc/app",
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "../node_modules/@types",
+      "../typings"
+    ]
+  },
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ]
+}

@@ -10,7 +10,7 @@
 <!-- START: Properties of the Document -->
 <div class="ui divided items">
 	<ng-template ngFor let-propertyStatus="$implicit" [ngForOf]="properties" let-i="index">
-		<cw-property class="property item" *ngIf="canDisplay(propertyStatus.copy? propertyStatus.copy.name : propertyStatus.added.name)"
+		<app-property class="property item" *ngIf="canDisplay(propertyStatus.copy? propertyStatus.copy.name : propertyStatus.added.name)"
 		             [attr.data-tar]="propertyStatus.copy? propertyStatus.copy.name : propertyStatus.added.name"
 
 		             [property]="propertyStatus"
@@ -27,7 +27,7 @@
 
 		             (onGoToBlankNode)="openBlankNode( $event )"
 		             (onGoToNamedFragment)="openNamedFragment($event)">
-		</cw-property>
+		</app-property>
 	</ng-template>
 </div>
 <!-- START: Properties of the Document -->

@@ -1,3 +1,33 @@
 :host {
 	display: block;
 }
+
+.app-url {
+	// To align the icon and the link on the same row
+	display: flex;
+	flex-direction: row;
+}
+
+.app-url-icon {
+	// Separate the icon from the link
+	// Unfortunately this needs to have !important since a Semantic UI rule adds this exact property with more specificity
+	margin-right: 5px !important;
+}
+
+.app-url-linkContainer {
+	// Add some height so horizontal scrollbars fit
+	height: 35px;
+
+	overflow: auto;
+	// Avoid long URLs from being broken into multiple lines
+	white-space: nowrap;
+}
+
+.app-slug {
+	color: #FF4500;
+}
+
+// Semantic UI overrides
+/deep/ .ui.items > .item .meta * {
+	margin-right: 0;
+}

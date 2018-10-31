@@ -1,0 +1,7 @@
+:host {
+	display: block;
+
+	> app-message, app-message:first-child {
+		margin: 1em 2em 0 2em;
+	}
+}

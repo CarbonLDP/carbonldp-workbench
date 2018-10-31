@@ -1,0 +1,94 @@
+<form class="ui form">
+	<!-- START: Query name -->
+	<div class="app-name" *ngIf="query.id">
+		<i class="star icon"></i>
+		<span class="app-nameLabel"
+		      *ngIf="state !== State.EDITING_NAME"
+		      (dblclick)="editName( $event )">{{query.name}}</span>
+		<form class="app-nameForm"
+		      *ngIf="state === State.EDITING_NAME"
+		      (submit)="applyNameEdition( $event )">
+			<input class="app-nameInput" type="text" name="name" title="Query name"
+			       #nameInput
+			       (blur)="applyNameEdition( $event )"
+			       (keydown.escape)="cancelNameEdition()"
+			       [(ngModel)]="query.name">
+		</form>
+		<i class="app-nameEditButton pencil icon"
+		   *ngIf="state !== State.EDITING_NAME"
+		   (click)="editName( $event )"></i>
+		<i class="app-nameCancelButton check icon"
+		   *ngIf="state === State.EDITING_NAME"
+		   (click)="cancelNameEdition( $event )"></i>
+	</div>
+	<!-- END: Query name -->
+
+	<!-- START: Endpoint URI input -->
+	<div class="field">
+		<label>Endpoint URI:</label>
+		<input class="app-endpointInput" type="text" name="endpoint" title="Query endpoint" placeholder="https://example.com/sparql/endpoint/" [(ngModel)]="query.endpoint">
+		<div class="app-endpointMessage ui message info">
+			<ul class="list">
+				<li>Leave it blank to execute the query against the root document</li>
+				<li>Relative URIs will be resolved against the configured platform's root document</li>
+			</ul>
+		</div>
+	</div>
+	<!-- END: Endpoint URI input -->
+
+	<!-- START: Body of the query -->
+	<div class="field">
+		<label>Query:</label>
+		<app-code-mirror
+			#contentInput
+			[mode]="codeMirrorMode.SPARQL"
+			[readOnly]="loading"
+			[(value)]="query.content"
+			[showLineNumbers]="true"></app-code-mirror>
+	</div>
+	<!-- END: Body of the query -->
+
+	<!-- START: Output format of the query -->
+	<div class="field" *ngIf="query.type === SPARQLType.QUERY && availableFormats.length > 1">
+		<label>Output Format:</label>
+		<select class="ui dropdown" name="format" title="Output format"
+		        [disabled]="loading"
+		        [(ngModel)]="query.format">
+			<option *ngFor="let format of availableFormats" [value]="format">{{format}}</option>
+		</select>
+	</div>
+	<!-- END: Output format of the query -->
+
+	<!-- START: Action buttons -->
+	<div class="fields row">
+		<div class="column field">
+			<button class="ui blue button"
+			        [ngClass]="{ loading: loading }"
+			        (click)="execute.emit( query )"
+			        [disabled]="loading || ! isValid()">
+				<i class="play icon"></i>
+				Execute
+			</button>
+			<button class="ui basic button"
+			        (click)="clean.emit( query )"
+			        [disabled]="loading || ! isSavedQuery() && isEmpty()">
+				<i class="erase icon"></i>
+				Clean
+			</button>
+			<button class="ui basic button"
+			        (click)="save.emit( query )"
+			        [disabled]="loading || ( isSavedQuery() && ! hasUnsavedChanges() ) || ( ! isSavedQuery() && isEmpty() )">
+				<i class="save icon"></i>
+				Save
+			</button>
+			<button class="ui basic button"
+			        *ngIf="isSavedQuery()"
+			        (click)="clone.emit( query )"
+			        [disabled]="loading">
+				<i class="copy icon"></i>
+				Clone
+			</button>
+		</div>
+	</div>
+	<!-- END: Action buttons -->
+</form>

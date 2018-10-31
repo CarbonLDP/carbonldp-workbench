@@ -1,19 +1,16 @@
-import { Component, ElementRef, Input, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input } from "@angular/core";
 
-import { RouterService } from "app/shared/router.service";
+import { RouterService } from "app/common/router.service";
 import { HeaderItem } from "./header.service";
-
-import * as $ from "jquery";
-import "semantic-ui/semantic";
 
 
 /*
 *   Item to be displayed int the header of the Workbench
 * */
 @Component( {
-	selector: "cw-header-item",
+	selector: "app-header-item",
 	templateUrl: "./header-item.component.html",
-	styleUrls: [  "./header-item.component.scss"  ],
+	styleUrls: [ "./header-item.component.scss" ],
 } )
 export class HeaderItemComponent implements AfterViewInit {
 	@Input( "item" ) item:HeaderItem;

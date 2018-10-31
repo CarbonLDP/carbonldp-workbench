@@ -1,0 +1,1 @@
+<app-message *ngFor="let message of messages; let i=index;" [message]="message" [type]="message.type" [closable]="true" (onClose)="removeMessage(i)"></app-message>

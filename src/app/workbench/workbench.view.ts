@@ -1,5 +1,5 @@
 import { Component, EventEmitter } from "@angular/core";
-import { Router, Event, NavigationEnd } from "@angular/router";
+import { Event, NavigationEnd, Router } from "@angular/router";
 
 import { CarbonLDP } from "carbonldp";
 
@@ -12,7 +12,7 @@ import { SidebarService } from "./layout/sidebar/sidebar.service";
 *   All the Workbench routes are displayed here.
 * */
 @Component( {
-	selector: "cw-workbench",
+	selector: "app-workbench",
 	templateUrl: "./workbench.view.html",
 	styleUrls: [ "./workbench.view.scss" ],
 } )
