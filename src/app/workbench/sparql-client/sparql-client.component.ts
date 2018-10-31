@@ -14,8 +14,7 @@ import { ErrorMessageGenerator } from "app/common/components/messages-area/error
 import { SavedQueryService } from "app/workbench/sparql-client/saved-query.service";
 import { QueryType, SPARQLQuery, SPARQLType } from "app/workbench/sparql-client/models";
 
-import * as $ from "jquery";
-import "semantic-ui/semantic";
+
 import { QueryBuilderComponent } from "app/workbench/sparql-client/query-builder/query-builder.component";
 import { Profile, profile } from "app/common/fns";
 import { ActionCanceled } from "app/common/models";
@@ -42,10 +41,10 @@ enum QueryExecutionState {
 }
 
 @Component( {
-	selector: "cw-sparql-client",
+	selector: "app-sparql-client",
 	templateUrl: "./sparql-client.component.html",
 	styleUrls: [ "./sparql-client.component.scss" ],
-	providers: [ SavedQueryService ],
+	providers: [ SavedQueryService ]
 } )
 export class SPARQLClientComponent implements OnInit {
 	@Output() error:EventEmitter<any> = new EventEmitter();
@@ -107,7 +106,7 @@ export class SPARQLClientComponent implements OnInit {
 		[ "vcard", "http://www.w3.org/2001/vcard-rdf/3.0#" ],
 		[ "wot", "http://xmlns.com/wot/0.1/" ],
 		[ "xhtml", "http://www.w3.org/1999/xhtml#" ],
-		[ "xsd", "http://www.w3.org/2001/XMLSchema#" ],
+		[ "xsd", "http://www.w3.org/2001/XMLSchema#" ]
 	] );
 
 	private $element:JQuery;
@@ -128,7 +127,8 @@ export class SPARQLClientComponent implements OnInit {
 	private queryBeingSaved:SPARQLQuery;
 	private queryBeingOverwritten:SPARQLQuery;
 
-	constructor( private element:ElementRef, private carbonldp:CarbonLDP, private savedQueryService:SavedQueryService ) {}
+	constructor( private element:ElementRef, private carbonldp:CarbonLDP, private savedQueryService:SavedQueryService ) {
+	}
 
 	ngOnInit() {
 		this.$element = $( this.element.nativeElement );
@@ -143,11 +143,11 @@ export class SPARQLClientComponent implements OnInit {
 		this.initializeSemanticUIElements();
 	}
 
-	async on_queryBuilder_execute( query:SPARQLQuery ) {
+	async on_queryBuilder_execute() {
 		let response:SPARQLClientResponse;
 		try {
 			response = await this.disableInteractions( () =>
-				this.execute( query )
+				this.execute( this.query )
 			);
 		} catch( error ) {
 			if( error instanceof ActionCanceled ) {
@@ -167,7 +167,7 @@ export class SPARQLClientComponent implements OnInit {
 		if( this.queryExecutionState !== QueryExecutionState.IDLE ) this.queryExecutionState = QueryExecutionState.CANCELING;
 	}
 
-	async on_queryBuilder_clean( query:SPARQLQuery ) {
+	async on_queryBuilder_clean() {
 		if( this.queryBuilder.hasUnsavedChanges() ) {
 			if( ! await this.getConfirmationForReplacement() ) return;
 		}
@@ -188,12 +188,12 @@ export class SPARQLClientComponent implements OnInit {
 	async on_queryBuilder_save() {
 		if( ! this.queryBuilder.hasUnsavedChanges() ) return;
 		// Create a copy of the query to replace the one being used by the UI
-		const query:SPARQLQuery = Object.assign( {}, this.query );
-		this.queryBeingSaved = query;
+		const _query:SPARQLQuery = { ...this.query };
+		this.queryBeingSaved = _query;
 
-		if( query.id ) {
+		if( _query.id ) {
 			// The user is saving an already saved query
-			this.query = await this.save( query );
+			this.query = await this.save( _query );
 		} else {
 			// The user is saving a new query
 			try {
@@ -238,8 +238,8 @@ export class SPARQLClientComponent implements OnInit {
 		}
 	}
 
-	async on_queryBuilder_clone( query:SPARQLQuery ) {
-		const _clone:SPARQLQuery = Object.assign( {}, query );
+	async on_queryBuilder_clone() {
+		const _clone:SPARQLQuery = { ...this.query };
 		// Delete saved properties
 		delete _clone.id;
 		delete _clone.name;
@@ -289,7 +289,7 @@ export class SPARQLClientComponent implements OnInit {
 	}
 
 	async on_response_load( response:SPARQLClientResponse ) {
-		const query = Object.assign( {}, response.query );
+		const query = { ...response.query };
 
 		// Make the endpoint relative if it shares the platform's base
 		const base = this.carbonldp.resolve( "" );
@@ -317,9 +317,9 @@ export class SPARQLClientComponent implements OnInit {
 		}
 
 		originalResponse.duration = newResponse.duration;
-		originalResponse.resultSet = Object.assign( {}, newResponse.resultSet );
-		originalResponse.setData( Object.assign( {}, newResponse.resultSet ) );
-		originalResponse.query = Object.assign( {}, newResponse.query );
+		originalResponse.resultSet = { ...newResponse.resultSet };
+		originalResponse.setData( { ...newResponse.resultSet } );
+		originalResponse.query = { ...newResponse.query };
 	}
 
 	on_responseStack_empty() {
@@ -334,41 +334,41 @@ export class SPARQLClientComponent implements OnInit {
 		const defaultModalConfiguration = {
 			// Return false to prevent the modal from closing by default so the logic can be handled by Angular
 			onApprove: () => false,
-			onDeny: () => false,
+			onDeny: () => false
 		};
 
 		// Save modal
-		this.$saveQueryModal = this.$element.find( ".cw-saveQueryModal" );
+		this.$saveQueryModal = this.$element.find( ".app-saveQueryModal" );
 		this.$saveQueryModal.modal( defaultModalConfiguration );
 
 		// Overwrite modal
-		this.$overwriteQueryConfirmationModal = this.$element.find( ".cw-overwriteQueryConfirmationModal" );
+		this.$overwriteQueryConfirmationModal = this.$element.find( ".app-overwriteQueryConfirmationModal" );
 		this.$overwriteQueryConfirmationModal.modal( defaultModalConfiguration );
 
 		// Replace modal
-		this.$replaceQueryConfirmationModal = this.$element.find( ".cw-replaceQueryConfirmationModal" );
+		this.$replaceQueryConfirmationModal = this.$element.find( ".app-replaceQueryConfirmationModal" );
 		this.$replaceQueryConfirmationModal.modal( defaultModalConfiguration );
 
 		// Delete modal
-		this.$deleteQueryConfirmationModal = this.$element.find( ".cw-deleteQueryConfirmationModal" );
+		this.$deleteQueryConfirmationModal = this.$element.find( ".app-deleteQueryConfirmationModal" );
 		this.$deleteQueryConfirmationModal.modal( defaultModalConfiguration );
 
 		// Saved queries sidebar
-		this.$savedQueriesSidebar = this.$element.find( ".cw-savedQueries" );
+		this.$savedQueriesSidebar = this.$element.find( ".app-savedQueries" );
 		this.$savedQueriesSidebar.sidebar( {
-			context: this.$element.find( ".cw-queryBuilderCard" ),
+			context: this.$element.find( ".app-queryBuilderCard" )
 		} );
 	}
 
-	private toggleSidebar() {
+	toggleSidebar() {
 		this.$savedQueriesSidebar.sidebar( "toggle" );
 	}
 
-	private showSidebar() {
+	showSidebar() {
 		this.$savedQueriesSidebar.sidebar( "show" );
 	}
 
-	private hideSidebar() {
+	hideSidebar() {
 		this.$savedQueriesSidebar.sidebar( "hide" );
 	}
 
@@ -390,7 +390,7 @@ export class SPARQLClientComponent implements OnInit {
 			// or the query being saved shares its name only with itself
 			query.id && query.id === existingQuery.id
 		) {
-			return await this.disableInteractions( () =>
+			return this.disableInteractions( () =>
 				this.savedQueryService.save( query )
 			);
 		} else {
@@ -430,7 +430,7 @@ export class SPARQLClientComponent implements OnInit {
 	}
 
 	private loadQuery( query:SPARQLQuery ) {
-		this.query = Object.assign( {}, query );
+		this.query = { ...query };
 	}
 
 	/**
@@ -452,7 +452,7 @@ export class SPARQLClientComponent implements OnInit {
 	private resetQuery() {
 		this.query = {
 			endpoint: "",
-			content: "",
+			content: ""
 		};
 	}
 
@@ -461,7 +461,7 @@ export class SPARQLClientComponent implements OnInit {
 
 		try {
 			// Copy the query to make the response a-temporal
-			const query = Object.assign( {}, _query );
+			const query = { ..._query };
 			// Remove its saved state
 			delete query.id;
 
@@ -507,9 +507,9 @@ export class SPARQLClientComponent implements OnInit {
 
 			// To let Angular update the UI before rendering the results, the renderization needs to be executed asynchronously
 			return await new Promise<SPARQLClientResponse>( resolve => {
-				setTimeout( () =>  {
+				setTimeout( () => {
 					resolve( this.buildResponse( _profile.duration, result, SPARQLResponseType.Success, query ) );
-				}, 0 )
+				}, 0 );
 			} );
 		} finally {
 			this.queryExecutionState = QueryExecutionState.IDLE;
@@ -523,14 +523,14 @@ export class SPARQLClientComponent implements OnInit {
 	private executeCONSTRUCTFn( query:SPARQLQuery ):() => any {
 		return () => {
 			const requestOptions:RequestOptions = { headers: new Map().set( "Accept", new Header( query.format ) ) };
-			return SPARQLService.executeRawCONSTRUCTQuery( query.endpoint, query.content, requestOptions )
+			return SPARQLService.executeRawCONSTRUCTQuery( query.endpoint, query.content, requestOptions );
 		};
 	}
 
 	private executeDESCRIBEFn( query:SPARQLQuery ):() => any {
 		return () => {
 			const requestOptions:RequestOptions = { headers: new Map().set( "Accept", new Header( query.format ) ) };
-			return SPARQLService.executeRawDESCRIBEQuery( query.endpoint, query.content, requestOptions )
+			return SPARQLService.executeRawDESCRIBEQuery( query.endpoint, query.content, requestOptions );
 		};
 	}
 
@@ -555,7 +555,7 @@ export class SPARQLClientComponent implements OnInit {
 					statusCode: "",
 					statusMessage: "",
 					endpoint: "",
-					type: "error",
+					type: "error"
 				};
 			default:
 				return ErrorMessageGenerator.getErrorMessage( error );

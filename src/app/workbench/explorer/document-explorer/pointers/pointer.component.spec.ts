@@ -19,7 +19,7 @@ export function pointerSpecs() {
 		@Component( {
 			template: `
 				<table>
-					<tr class="cw-pointer" 
+					<tr class="app-pointer" 
 						[pointer]="pointerRow"
 						[blankNodes]="blankNodes" [namedFragments]="namedFragments"
 						[partOfList]="partOfList" [documentURI]="documentURI"></tr>

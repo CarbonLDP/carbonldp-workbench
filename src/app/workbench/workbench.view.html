@@ -1,17 +1,16 @@
-<cw-header></cw-header>
+<app-header></app-header>
 <div class="page-layout">
-	<cw-sidebar></cw-sidebar>
+	<app-sidebar></app-sidebar>
 	<div class="page-content">
-		<cw-breadcrumbs></cw-breadcrumbs>
-		<cw-messages-area></cw-messages-area>
+		<app-breadcrumbs></app-breadcrumbs>
+		<app-messages-area></app-messages-area>
 		<div class="scrollable-content">
 			<div class="rendered-content">
-				<div>
-					<h1>{{instance?.name}}</h1>
-					<router-outlet></router-outlet>
-				</div>
+				<router-outlet></router-outlet>
 			</div>
-			<cw-versions-presenter></cw-versions-presenter>
+			<footer class="footer">
+				<app-versions-presenter></app-versions-presenter>
+			</footer>
 		</div>
 	</div>
 </div>

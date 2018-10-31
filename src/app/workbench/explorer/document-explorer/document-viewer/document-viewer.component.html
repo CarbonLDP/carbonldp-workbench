@@ -57,10 +57,10 @@
 	<div class="ui divided items">
 
 		<!-- START: ID Property of the document -->
-		<cw-property class="property item"
+		<app-property class="property item"
 		             [documentURI]="rootNode['@id']"
 		             [property]="{copy:{id:'@id', name:'@id', value:rootNode['@id']}}">
-		</cw-property>
+		</app-property>
 		<!-- END: ID Property of the document -->
 
 
@@ -115,7 +115,7 @@
 
 					<!-- START: Tab of Document -->
 					<div class="ui active tab segment" data-tab="documentResource">
-						<cw-document-resource class="column"
+						<app-document-resource class="column"
 
 						                      [rootNode]="rootNode"
 						                      [hiddenProperties]="['@id']"
@@ -126,14 +126,14 @@
 						                      (onOpenBlankNode)="openBlankNode($event)"
 						                      (onOpenNamedFragment)="openNamedFragment($event)"
 						                      (onChanges)="registerRootNodeChanges($event)">
-						</cw-document-resource>
+						</app-document-resource>
 					</div>
 					<!-- END: Tab of Document -->
 
 
 					<!-- START: Tab of Blank Nodes -->
 					<div class="ui tab segment" data-tab="blankNodes">
-						<cw-blank-nodes class="column"
+						<app-blank-nodes class="column"
 						                [documentURI]="document['@id']"
 						                [blankNodes]="blankNodes"
 						                [namedFragments]="namedFragments"
@@ -141,14 +141,14 @@
 						                (onOpenBlankNode)="goToSection($event)"
 						                (onOpenNamedFragment)="openNamedFragment($event)"
 						                (onChanges)="registerBlankNodesChanges($event)">
-						</cw-blank-nodes>
+						</app-blank-nodes>
 					</div>
 					<!-- END: Tab of Blank Nodes -->
 
 
 					<!-- START: Tab of Named Fragments -->
 					<div class="ui tab segment" data-tab="namedFragments">
-						<cw-named-fragments class="column"
+						<app-named-fragments class="column"
 						                    [documentURI]="document['@id']"
 						                    [blankNodes]="blankNodes"
 						                    [namedFragments]="namedFragments"
@@ -156,7 +156,7 @@
 						                    (onOpenBlankNode)="openBlankNode($event)"
 						                    (onOpenNamedFragment)="goToSection($event)"
 						                    (onChanges)="registerNamedFragmentsChanges($event)">
-						</cw-named-fragments>
+						</app-named-fragments>
 					</div>
 					<!-- END: Tab of Named Fragments -->
 				</div>

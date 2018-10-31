@@ -15,7 +15,7 @@ import { JsonLDKeyword } from "../document-explorer-library";
 *   pointers in the right order
 * */
 @Component( {
-	selector: "cw-list",
+	selector: "app-list",
 	templateUrl: "./list.component.html",
 	styleUrls: [ "./list.component.scss" ],
 	host: {

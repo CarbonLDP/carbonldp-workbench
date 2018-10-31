@@ -3,12 +3,11 @@ import { AfterViewInit, Component } from "@angular/core";
 import { MessagesAreaService } from "./messages-area.service";
 import { Message } from "./message.component";
 
-import "semantic-ui/semantic";
 
 @Component( {
-	selector: "cw-messages-area",
+	selector: "app-messages-area",
 	templateUrl: "./messages-area.component.html",
-	styleUrls: [ "./messages-area.component.scss" ],
+	styleUrls: [ "./messages-area.component.scss" ]
 } )
 export class MessagesAreaComponent implements AfterViewInit {
 	messages:Message[] = [];

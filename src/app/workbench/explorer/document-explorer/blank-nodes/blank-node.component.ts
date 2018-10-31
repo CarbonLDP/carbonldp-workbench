@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { RDFNode } from "carbonldp/RDF/Node"
+import { RDFNode } from "carbonldp/RDF/Node";
 
 
 import { Property, PropertyStatus } from "../property/property.component";
@@ -11,20 +11,42 @@ import { JsonLDKeyword, Modes, ResourceFeatures, ResourceRecords } from "../docu
 *  Displays the contents of a Blank Node with all its properties
 * */
 @Component( {
-	selector: "cw-blank-node",
+	selector: "app-blank-node",
 	templateUrl: "./blank-node.component.html",
-	styles: [ ":host { display:block; }" ],
+	styles: [ ":host { display:block; }" ]
 } )
 
 export class BlankNodeComponent extends ResourceFeatures implements AfterViewInit {
+	@Input() blankNodes:BlankNodeStatus[] = [];
+	@Input() namedFragments:RDFNode[] = [];
+	@Input() canEdit:boolean = true;
+	@Input() documentURI:string = "";
+
+	private _blankNode:BlankNodeStatus;
+	@Input() set blankNode( blankNode:BlankNodeStatus ) {
+		this.canCreateNewProperty = true;
+		this._blankNode = blankNode;
+		this.rootNode = blankNode.copy;
+		if( ! ! blankNode.records ) this.records = blankNode.records;
+		this.updateExistingProperties();
+	}
+
+	get blankNode():BlankNodeStatus {
+		return this._blankNode;
+	}
+
+
+	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onChanges:EventEmitter<BlankNodeStatus> = new EventEmitter<BlankNodeStatus>();
 
 	carbonldp:CarbonLDP;
 	element:ElementRef;
 	$element:JQuery;
 
-	modes:Modes = Modes;
-	canCreateNewProperty:boolean = true;
 
+	modes:typeof Modes = Modes;
+	canCreateNewProperty:boolean = true;
 	nonEditableProperties:string[] = [ JsonLDKeyword.ID ];
 
 	private _blankNodeHasChanged:boolean;
@@ -41,26 +63,6 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 	}
 
 	get blankNodeHasChanged() { return this._blankNodeHasChanged; }
-
-	@Input() blankNodes:BlankNodeStatus[] = [];
-	@Input() namedFragments:RDFNode[] = [];
-	@Input() canEdit:boolean = true;
-	@Input() documentURI:string = "";
-
-	private _blankNode:BlankNodeStatus;
-	@Input() set blankNode( blankNode:BlankNodeStatus ) {
-		this.canCreateNewProperty = true;
-		this._blankNode = blankNode;
-		this.rootNode = blankNode.copy;
-		if( ! ! blankNode.records ) this.records = blankNode.records;
-		this.updateExistingProperties();
-	}
-
-	get blankNode():BlankNodeStatus { return this._blankNode; }
-
-	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onChanges:EventEmitter<BlankNodeStatus> = new EventEmitter<BlankNodeStatus>();
 
 
 	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
@@ -100,7 +102,7 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 
 		// Animates created property
 		setTimeout( () => {
-			let createdPropertyComponent:JQuery = this.$element.find( "cw-property.added-property" ).first();
+			let createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
 			createdPropertyComponent.addClass( "transition hidden" );
 			createdPropertyComponent.transition( { animation: "drop" } );
 		} );

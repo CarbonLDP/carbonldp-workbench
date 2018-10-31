@@ -90,7 +90,7 @@
 <div class="ui bottom attached tab segment"
      *ngFor="let namedFragment of openedNamedFragments; let i = index;" [attr.data-tab]="'named-fragment_'+getNormalizedUri(namedFragment.name)">
 	<div class="ui divided items">
-		<cw-named-fragment class="column"
+		<app-named-fragment class="column"
 		                   [documentURI]="documentURI"
 		                   [blankNodes]="blankNodes"
 		                   [namedFragment]="namedFragment"
@@ -99,7 +99,7 @@
 		                   (onOpenBlankNode)="openBlankNode( $event )"
 		                   (onOpenNamedFragment)="openNamedFragment($event)"
 		                   (onChanges)="changeNamedFragment(namedFragment, i)">
-		</cw-named-fragment>
+		</app-named-fragment>
 	</div>
 </div>
 <!-- END: Tab for opened Named Fragments -->

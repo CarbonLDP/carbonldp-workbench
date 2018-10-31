@@ -24,7 +24,7 @@ export class PrefixPipe implements PipeTransform {
 			return URI.prefix( value, prefix, prefixURI );
 		}
 
-		return `<${ value }>`;
+		return `<${value}>`;
 	}
 }
 

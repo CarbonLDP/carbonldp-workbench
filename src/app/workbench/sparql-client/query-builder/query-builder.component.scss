@@ -3,14 +3,15 @@
 }
 
 // Show the message only when the endpoint input is focused
-.cw-endpointMessage {
+.app-endpointMessage {
 	display: none;
 }
-.cw-endpointInput:focus {
+
+.app-endpointInput:focus {
 	border-bottom-left-radius: 0 !important;
 	border-bottom-right-radius: 0 !important;
 
-	~ .cw-endpointMessage {
+	~ .app-endpointMessage {
 		display: block;
 
 		margin-top: 0;
@@ -19,7 +20,7 @@
 	}
 }
 
-.cw-name {
+.app-name {
 	// Center child items vertically
 	display: flex;
 	flex-direction: row;
@@ -41,18 +42,21 @@
 	}
 
 	// Show the edit button on hover
-	&:hover .cw-nameEditButton {
+	&:hover .app-nameEditButton {
 		display: inline;
 	}
 }
-.cw-nameLabel {
+
+.app-nameLabel {
 	// Margin to align label's text with input's text
 	margin-left: 6px;
 }
-.cw-nameEditButton {
+
+.app-nameEditButton {
 	display: none;
 }
-.cw-nameInput {
+
+.app-nameInput {
 	display: inline;
 
 	padding: 5px !important;
@@ -60,6 +64,7 @@
 	// !important is required since Semantic UI rules are more specific
 	width: 200px !important;
 }
-.cw-nameEditButton {
+
+.app-nameEditButton {
 	cursor: pointer;
 }

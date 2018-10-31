@@ -1,6 +1,3 @@
-<a *ngIf="headerService.logo" class="item" [routerLink]="headerService.logo.route">
-	<img class="ui small image logo" [src]="headerService.logo.image"/>
+<a *ngIf="headerService.logo" class="HWQZ-logo" [routerLink]="headerService.logo.route">
+	<app-linear-logo class="HWQZ-logo-icon"></app-linear-logo>
 </a>
-<div class="right menu">
-	<cw-header-item *ngFor="let item of headerService.items" [item]="item"></cw-header-item>
-</div>

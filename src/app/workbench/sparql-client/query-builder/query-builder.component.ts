@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from "@angular/core";
 import { isEqual } from "lodash";
 
 import * as CodeMirrorComponent from "app/common/components/code-mirror/code-mirror.component";
@@ -12,9 +12,9 @@ enum State {
 }
 
 @Component( {
-	selector: "cw-query-builder",
+	selector: "app-query-builder",
 	templateUrl: "./query-builder.component.html",
-	styleUrls: [ "./query-builder.component.scss" ],
+	styleUrls: [ "./query-builder.component.scss" ]
 } )
 export class QueryBuilderComponent implements OnInit, OnChanges {
 	@Input() loading:boolean = false;
@@ -30,7 +30,7 @@ export class QueryBuilderComponent implements OnInit, OnChanges {
 	@ViewChild( "contentInput" ) sparqlContentInput:CodeMirrorComponent.Class;
 
 	// Make CodeMirror modes accessible to the template
-	readonly codeMirrorMode:CodeMirrorComponent.Mode = CodeMirrorComponent.Mode;
+	readonly codeMirrorMode:typeof CodeMirrorComponent.Mode = CodeMirrorComponent.Mode;
 
 	// Expose SPARQLType to the template
 	readonly SPARQLType:typeof SPARQLType = SPARQLType;
@@ -46,25 +46,25 @@ export class QueryBuilderComponent implements OnInit, OnChanges {
 			SPARQLFormats.table,
 			SPARQLFormats.xml,
 			SPARQLFormats.csv,
-			SPARQLFormats.tsv,
+			SPARQLFormats.tsv
 		],
 		[ QueryType.DESCRIBE ]: [
 			SPARQLFormats.jsonLD,
 			SPARQLFormats.turtle,
 			SPARQLFormats.jsonRDF,
 			SPARQLFormats.rdfXML,
-			SPARQLFormats.n3,
+			SPARQLFormats.n3
 		],
 		[ QueryType.CONSTRUCT ]: [
 			SPARQLFormats.jsonLD,
 			SPARQLFormats.turtle,
 			SPARQLFormats.jsonRDF,
 			SPARQLFormats.rdfXML,
-			SPARQLFormats.n3,
+			SPARQLFormats.n3
 		],
 		[ QueryType.ASK ]: [
-			SPARQLFormats.boolean,
-		],
+			SPARQLFormats.boolean
+		]
 	};
 
 	// Variable to hold the original value of the name input in case the user decides to cancel the edition
@@ -73,7 +73,8 @@ export class QueryBuilderComponent implements OnInit, OnChanges {
 	// To know if the user made changes
 	private originalQuerySnapshot:SPARQLQuery;
 
-	constructor( private changeDetectorRef:ChangeDetectorRef ) {}
+	constructor( private changeDetectorRef:ChangeDetectorRef ) {
+	}
 
 	ngOnInit() {
 		this.sparqlContentInput.valueChange.subscribe( this.handleSPARQLContentChange.bind( this ) );
@@ -96,7 +97,7 @@ export class QueryBuilderComponent implements OnInit, OnChanges {
 	}
 
 	updateSnapshot( query:SPARQLQuery ) {
-		this.originalQuerySnapshot = Object.assign( {}, query );
+		this.originalQuerySnapshot = { ...query };
 	}
 
 	isSavedQuery():boolean {
