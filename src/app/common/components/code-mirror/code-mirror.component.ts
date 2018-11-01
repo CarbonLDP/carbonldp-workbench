@@ -1,6 +1,11 @@
 import { AfterContentInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChange } from "@angular/core";
 
 import * as CodeMirror from "codemirror";
+declare module "codemirror" {
+	interface Editor {
+		markText( start:CodeMirror.Position, end:CodeMirror.Position, options:CodeMirror.TextMarkerOptions ):CodeMirror.TextMarker;
+	}
+}
 
 import "codemirror/mode/css/css";
 import "codemirror/mode/htmlmixed/htmlmixed";
