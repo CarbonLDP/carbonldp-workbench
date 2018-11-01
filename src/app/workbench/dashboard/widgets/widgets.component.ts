@@ -1,14 +1,13 @@
 import { Component, Input } from "@angular/core";
 
-import { MessagesAreaService } from "app/shared/messages-area/messages-area.service";
-
+import { MessagesAreaService } from "app/common/components/messages-area/messages-area.service";
 
 
 /*
 *  Displays all the Dashboard's Widgets
 * */
 @Component( {
-	selector: "cw-widgets",
+	selector: "app-widgets",
 	templateUrl: "./widgets.component.html",
 	styleUrls: [ "./widgets.component.scss" ],
 } )

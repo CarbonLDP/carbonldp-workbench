@@ -20,7 +20,7 @@
 	</div>
 	<div class="right menu" [ngClass]="{'added':!!list.added, 'modified':!!list.modified}" *ngIf="list.added || list.modified">
 		<div class="ui item">
-			{{ list.added? 'New!': list.modified? 'Modified':'' }}
+			{{ list.added ? 'New!' : list.modified ? 'Modified' : '' }}
 		</div>
 	</div>
 </div>
@@ -42,7 +42,7 @@
 	<!-- START: Pointers and Literals included in the list -->
 	<ng-template ngFor let-item="$implicit" [ngForOf]="tempList" let-i="index" let-isFirst="first" let-isLast="last">
 		<tr #literal
-		    class="cw-literal" [ngClass]="{'top aligned':literal.mode ==='EDIT','modified-literal':!!item.modified, 'added-literal':!!item.added}" *ngIf="!item.deleted && isLiteral(item)"
+		    class="app-literal" [ngClass]="{'top aligned':literal.mode ==='EDIT','modified-literal':!!item.modified, 'added-literal':!!item.added}" *ngIf="!item.deleted && isLiteral(item)"
 		    [literal]="item"
 		    [isPartOfList]="true"
 		    [isFirstItem]="isFirst"
@@ -55,7 +55,7 @@
 		    (onDeleteLiteral)="deleteItem($event, i)">
 		</tr>
 		<tr #pointer
-		    class="cw-pointer" [ngClass]="{'top aligned':pointer.mode ==='EDIT', 'modified-pointer':!!item.modified, 'added-pointer':!!item.added}" *ngIf="!item.deleted && isPointer(item)" colspan="0"
+		    class="app-pointer" [ngClass]="{'top aligned':pointer.mode ==='EDIT', 'modified-pointer':!!item.modified, 'added-pointer':!!item.added}" *ngIf="!item.deleted && isPointer(item)" colspan="0"
 		    [pointer]="item"
 		    [partOfList]="true"
 		    [isFirstItem]="isFirst"

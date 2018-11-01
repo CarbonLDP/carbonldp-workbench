@@ -1,7 +1,7 @@
 import { Component, } from "@angular/core";
 
 @Component( {
-	selector: "cw-explorer-view",
+	selector: "app-explorer-view",
 	templateUrl: "./explorer.view.html",
 	styles: [ ":host { display: block; }" ],
 } )

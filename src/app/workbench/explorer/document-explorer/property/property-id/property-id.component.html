@@ -1,23 +1,28 @@
 <!-- START: Display friendly name -->
 <div class="header">
-	<p>{{value | decodeURI | fragment}}</p>
+	<p>{{value | decodeURI | getSlug}}</p>
 </div>
 <!-- END: Display friendly name -->
 
-
 <!-- START: EDIT and READ modes -->
 <div class="meta">
-
 	<!-- START: READ mode -->
 	<div [hidden]="mode === modes.EDIT">
 		<p *ngIf="!isUrl(value)">
-			<i class="file outline icon"></i> {{value}}</p>
-		<p *ngIf="isUrl(value)">
-			<i class="file outline icon"></i>
-			<a class="name" [attr.href]="value" target="_blank">
-				<span class="parent-uri">{{getParentURI(value)}}</span><span class="slug">{{getSlug(value)}}</span>
-			</a>
+			<i class="file outline icon"></i> {{value}}
 		</p>
+		<div class="app-url"
+		     *ngIf="isUrl(value)">
+			<i class="app-url-icon file outline icon"></i>
+			<div class="app-url-linkContainer">
+				<a class="name" [attr.href]="value" target="_blank">
+					<span>{{getParentURI( value )}}</span>
+					<span *ngIf="URI.hasFragment( value )">#</span>
+					<span class="app-slug">{{value | getSlug}}</span>
+					<span *ngIf="value.endsWith( '/' )">/</span>
+				</a>
+			</div>
+		</div>
 	</div>
 	<!-- END: READ mode -->
 
@@ -33,8 +38,8 @@
 				       [documentURI]="documentURI"
 				       [originalId]="originalId"
 				       [control]="idInput"
-				       cw-property-id
-				       cw-uri
+				       app-property-id
+				       app-uri
 				       name="idInput"
 				       [(ngModel)]="value" #idInput="ngModel"
 				       (keyup.escape)="cancelModification()"
@@ -42,7 +47,7 @@
 				<div class="ui save-cancel buttons">
 					<button class="ui button"
 					        [disabled]="!idInput.valid"
-					        (click)="saveId(idInput.value)">Save
+					        (click)="saveId()">Save
 					</button>
 					<div class="ui dropdown icon button">
 						<i class="dropdown icon"></i>
@@ -52,13 +57,13 @@
 					</div>
 				</div>
 			</div>
-			<cw-error-label class="ui error message wide" *ngIf="!idInput.valid">
+			<app-error-label class="ui error message wide" *ngIf="!idInput.valid">
 				<p *ngIf="idInput.control.hasError('required')">Enter an id.</p>
 				<p *ngIf="idInput.control.hasError('invalidParent')">Enter a valid name for a Named Fragment. A name must contains the parent URI ({{documentURI}}<- Your fragment name ->).</p>
 				<p *ngIf="idInput.control.hasError('invalidURIAddress')">Enter a valid URL. Only alphanumeric values (a-z, A-Z, 0..9)</p>
 				<p *ngIf="idInput.control.hasError('duplicatedHashtag')">Use only one hashtag (#) symbol.</p>
 				<p *ngIf="idInput.control.hasError('duplicatedNamedFragmentName')">A Fragment with that name already exists.</p>
-			</cw-error-label>
+			</app-error-label>
 		</div>
 	</div>
 	<!-- END: EDIT mode -->

@@ -15,14 +15,14 @@
 			       [(ngModel)]="value"
 			       [control]="valueInput"
 			       [type]="type"
-			       required cw-literal-value
+			       required app-literal-value
 			       (keyup.esc)="cancelEdit()"
 			       (keyup.enter)="valueInput.valid && typeInput.valid? save() : null">
 		</div>
-		<cw-error-label *ngIf="!valueInput.valid">
+		<app-error-label *ngIf="!valueInput.valid">
 			<p *ngIf="valueInput.control.hasError('required')">A value is required.</p>
 			<p *ngIf="valueInput.control.hasError('invalidTypeError') && !valueInput.control.hasError('required')">Invalid value type, please enter a valid {{type}}.</p>
-		</cw-error-label>
+		</app-error-label>
 	</div>
 	<!-- END: EDIT mode-->
 </td>
@@ -57,9 +57,9 @@
 				</span>
 			</option>
 		</select>
-		<cw-error-label *ngIf="!typeInput.valid">
+		<app-error-label *ngIf="!typeInput.valid">
 			<p *ngIf="typeInput.control.hasError('required')">Select a type or enter your own type.</p>
-		</cw-error-label>
+		</app-error-label>
 	</div>
 	<!-- END: EDIT mode-->
 </td>

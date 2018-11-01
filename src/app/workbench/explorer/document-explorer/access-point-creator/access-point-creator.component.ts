@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 import { NgForm } from "@angular/forms";
 
 import { CarbonLDP } from "carbonldp";
@@ -7,16 +7,16 @@ import { Document } from "carbonldp/Document";
 import { AccessPoint, BaseAccessPoint } from "carbonldp/AccessPoint";
 
 import { DocumentsResolverService } from "../documents-resolver.service"
-import { Message } from "app/shared/messages-area/message.component";
+import { Message } from "app/common/components/messages-area/message.component";
 import { DocumentExplorerLibrary } from "app/workbench/explorer/document-explorer/document-explorer-library";
-import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
+import { ErrorMessageGenerator } from "app/common/components/messages-area/error/error-message-generator";
 
 
 /*
 *  Creates Access Points via the Document Explorer
 * */
 @Component( {
-	selector: "cw-access-point-creator",
+	selector: "app-access-point-creator",
 	templateUrl: "./access-point-creator.component.html",
 } )
 

@@ -1,21 +1,18 @@
-import { Component, ElementRef, AfterContentInit } from "@angular/core";
+import { AfterContentInit, Component, ElementRef } from "@angular/core";
 
 import { HeaderService } from "./header.service";
-
-import * as $ from "jquery";
-import "semantic-ui/semantic";
 
 
 /*
 *   Header of the workbench listing all the items
 * */
 @Component( {
-	selector: "cw-header",
+	selector: "app-header",
 	templateUrl: "./header.component.html",
 	styleUrls: [ "./header.component.scss" ],
 	host: {
 		class: "ui navigation inverted menu"
-	}
+	},
 } )
 export class HeaderComponent implements AfterContentInit {
 	private element:ElementRef;
@@ -29,10 +26,10 @@ export class HeaderComponent implements AfterContentInit {
 
 	ngAfterContentInit():void {
 		this.$element = $( this.element.nativeElement );
-		this.createCollapsableMenus();
+		this.createCollapsibleMenus();
 	}
 
-	createCollapsableMenus():void {
+	createCollapsibleMenus():void {
 		let verticalMenu:JQuery = this.$element.find( ".ui.vertical.menu" );
 		this.$element.find( ".item.open" ).on( "click", function( e ) {
 			e.preventDefault();

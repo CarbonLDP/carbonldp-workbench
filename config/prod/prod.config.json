@@ -1,9 +1,0 @@
-{
-	"url": {
-		"base": ""
-	},
-	"carbon": {
-		"protocol": "http",
-		"domain": "localhost:8083"
-	}
-}

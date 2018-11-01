@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { Document } from "carbonldp/Document";
@@ -6,15 +6,15 @@ import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentExplorerLibrary } from "../document-explorer-library";
 import { DocumentsResolverService } from "../documents-resolver.service"
-import { Message } from "app/shared/messages-area/message.component";
-import { ErrorMessageGenerator } from "app/shared/messages-area/error/error-message-generator";
+import { Message } from "app/common/components/messages-area/message.component";
+import { ErrorMessageGenerator } from "app/common/components/messages-area/error/error-message-generator";
 
 
 /*
 *   Creates Documents via the Document Explorer
 * */
 @Component( {
-	selector: "cw-document-creator",
+	selector: "app-document-creator",
 	templateUrl: "./document-creator.component.html",
 } )
 
@@ -62,6 +62,7 @@ export class DocumentCreatorComponent implements AfterViewInit {
 			hasMemberRelation: data.advancedOptions.hasMemberRelation
 		};
 		if( ! ! data.advancedOptions.isMemberOfRelation ) childContent[ "isMemberOfRelation" ] = data.advancedOptions.isMemberOfRelation;
+
 		this.documentsResolverService.createChild( this.parentURI, childContent, childSlug ).then( ( createdChild:Document ) => {
 			this.onSuccess.emit( createdChild );
 			this.hide();

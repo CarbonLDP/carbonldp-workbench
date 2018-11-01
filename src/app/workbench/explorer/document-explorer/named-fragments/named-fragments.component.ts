@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, OnChanges, AfterViewInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChange } from "@angular/core";
 
 import { URI } from "carbonldp/RDF/URI";
 
@@ -11,7 +11,7 @@ import { JsonLDKeyword } from "app/workbench/explorer/document-explorer/document
 *  Lists all the Named Fragments a Documents contains
 * */
 @Component( {
-	selector: "cw-named-fragments",
+	selector: "app-named-fragments",
 	templateUrl: "./named-fragments.component.html",
 	styleUrls: [ "./named-fragments.component.scss" ],
 } )

@@ -1,14 +1,14 @@
 import { XSD } from "carbonldp/Vocabularies";
-import { isDate, isString, isInteger, isNumber } from "carbonldp/Utils";
+import { isDate, isInteger, isNumber, isString } from "carbonldp/Utils";
 import { RDFLiteral } from "carbonldp/RDF/Literal";
 import { URI } from "carbonldp/RDF/URI";
 import { DocumentExplorerLibrary } from "./document-explorer-library";
 
 import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { AbstractControl, Validator, NG_VALIDATORS } from "@angular/forms";
+import { AbstractControl, NG_VALIDATORS, Validator } from "@angular/forms";
 
 @Directive( {
-	selector: "[cw-property-name]",
+	selector: "[app-property-name]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: PropertyNameValidator, multi: true } ]
 } )
 export class PropertyNameValidator implements Validator, OnChanges {
@@ -42,7 +42,7 @@ export class PropertyNameValidator implements Validator, OnChanges {
 }
 
 @Directive( {
-	selector: "[cw-property-id]",
+	selector: "[app-property-id]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: IdValidator, multi: true } ]
 } )
 export class IdValidator implements Validator, OnChanges {
@@ -79,7 +79,7 @@ export class IdValidator implements Validator, OnChanges {
 
 
 @Directive( {
-	selector: "[cw-literal-value]",
+	selector: "[app-literal-value]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: LiteralValueValidator, multi: true } ]
 } )
 
@@ -156,7 +156,7 @@ export class LiteralValueValidator implements Validator, OnChanges {
 }
 
 @Directive( {
-	selector: "[cw-pointer-id]",
+	selector: "[app-pointer-id]",
 	providers: [ { provide: NG_VALIDATORS, useExisting: PointerValidator, multi: true } ]
 } )
 export class PointerValidator implements Validator {
