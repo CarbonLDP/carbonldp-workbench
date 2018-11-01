@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { Mode } from "app/common/components/code-mirror/code-mirror.component";
+import { Mode } from "../code-mirror/code-mirror.component";
 import * as SPARQL from "sparqljs";
 
 @Component( {
