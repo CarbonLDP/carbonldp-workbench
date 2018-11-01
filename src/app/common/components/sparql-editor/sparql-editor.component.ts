@@ -55,12 +55,13 @@ export class SparqlEditorComponent implements OnInit {
 			this.errorObject = { message: "" };
 			this.errorMessage = "";
 		} catch( error ) {
+			//reset parsedQuery to empty string when has parse error to avoid conflicts
 			this.parsedQuery = "";
+			this.errorMessage = error.message;
 			if( "message" in error && error.message.startsWith( "Parse error" ) ) {
 				this.displayParseError( error );
 			} else {
-				this.errorObject = { message: "" };
-				this.errorMessage = "";
+				this.errorObject = { message: this.errorMessage };
 				console.error( "Unexpected error while parsing the query", error );
 			}
 		}

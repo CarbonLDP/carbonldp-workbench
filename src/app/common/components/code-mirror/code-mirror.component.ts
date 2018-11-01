@@ -34,7 +34,7 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	private textMarker:CodeMirror.TextMarker;
 
 	@Input() set error( { message, start, end }:ParserErrorObject ) {
-		if( message !== "" ) {
+		if( typeof start !== "undefined" ) {
 			this.clearTextMarker();
 			let options:CodeMirror.TextMarkerOptions = { className: "cw-code-mirror--syntaxError" };
 			this.textMarker = this.codeMirror.markText( start, end, options );
