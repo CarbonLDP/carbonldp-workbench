@@ -1,11 +1,7 @@
 import { AfterContentInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChange } from "@angular/core";
 
 import * as CodeMirror from "codemirror";
-declare module "codemirror" {
-	interface Editor {
-		markText( start:CodeMirror.Position, end:CodeMirror.Position, options:CodeMirror.TextMarkerOptions ):CodeMirror.TextMarker;
-	}
-}
+
 
 import "codemirror/mode/css/css";
 import "codemirror/mode/htmlmixed/htmlmixed";
@@ -13,7 +9,7 @@ import "codemirror/mode/javascript/javascript";
 import "codemirror/mode/sparql/sparql";
 import "codemirror/mode/xml/xml";
 import "codemirror/mode/turtle/turtle";
-import { ParserErrorObject } from "app/common/components/sparql-editor/sparql-editor.component";
+import { ParserErrorObject } from "./../sparql-editor/sparql-editor.component";
 
 @Component( {
 	selector: "app-code-mirror",
@@ -174,6 +170,7 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 		else this.setReadOnly( this.readOnly );
 	}
 }
+
 
 export enum Mode {
 	CSS = "text/css",
