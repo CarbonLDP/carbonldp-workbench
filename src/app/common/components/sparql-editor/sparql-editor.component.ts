@@ -20,7 +20,7 @@ export class SparqlEditorComponent implements OnInit {
 
 	private parser;
 	private generator;
-	private textMarkers = [];
+	private parsedQuery = "";
 
 	errorMessage:string = "";
 	errorObject:ParserErrorObject = { message: "" };
@@ -34,16 +34,28 @@ export class SparqlEditorComponent implements OnInit {
 	}
 
 	app_code_mirror_updateValue( lastUpdate:string ):void {
-		if( this.mode === Mode.SPARQL ) this.validateQuery( lastUpdate );
+		this.validateQuery( lastUpdate );
 		this.valueChange.emit( lastUpdate );
+	}
+
+	on_toolbar_event_handler( toolbar_event ):void {
+		switch( toolbar_event ) {
+			case "petrify":
+				if( this.parsedQuery !== "" )
+					this.value = this.generator.stringify( this.parsedQuery );
+				break;
+			default:
+				break;
+		}
 	}
 
 	private validateQuery( currentString:string ) {
 		try {
-			this.parser.parse( currentString );
+			this.parsedQuery = this.parser.parse( currentString );
 			this.errorObject = { message: "" };
 			this.errorMessage = "";
 		} catch( error ) {
+			this.parsedQuery = "";
 			if( "message" in error && error.message.startsWith( "Parse error" ) ) {
 				this.displayParseError( error );
 			} else {

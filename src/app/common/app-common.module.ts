@@ -17,6 +17,7 @@ import { SemanticModule } from "./components/semantic/semantic.module";
 // Services
 import { RouterService } from "./router.service";
 import { MessagesAreaService } from "./components/messages-area/messages-area.service";
+import { SparqlEditorToolBarComponent } from './components/sparql-editor/sparql-editor-tool-bar/sparql-editor-tool-bar.component';
 
 // Pipes
 
@@ -33,6 +34,7 @@ import { MessagesAreaService } from "./components/messages-area/messages-area.se
 		VersionsPresenterComponent,
 		SparqlEditorComponent,
 		SparqlErrorMessageAreaComponent,
+		SparqlEditorToolBarComponent,
 	],
 	providers: [],
 	exports: [
