@@ -37,6 +37,7 @@ export class SPARQLClientResponse {
 export class ResponseComponent implements AfterViewInit, OnInit {
 	element:ElementRef;
 	$element:JQuery;
+	$codeMirrorelement:JQuery<CodeMirrorElement>;
 
 	@Input() outputformat:string;
 	@Input() response:SPARQLClientResponse;
@@ -99,7 +100,7 @@ export class ResponseComponent implements AfterViewInit, OnInit {
 
 	onOpen():void {
 		this.accordionOpen = true;
-		this.$element.find( ".CodeMirror" ).each( ( i:number, element:Element ):void => {
+		this.$codeMirrorelement.find( ".CodeMirror" ).each( ( i:number, element:CodeMirrorElement ):void => {
 			element.CodeMirror.refresh();
 		} );
 	}
@@ -109,7 +110,7 @@ export class ResponseComponent implements AfterViewInit, OnInit {
 	}
 
 	onLoadTab():void {
-		this.$element.find( ".CodeMirror" ).each( ( i:number, element:Element ):void => {
+		this.$codeMirrorelement.find( ".CodeMirror" ).each( ( i:number, element:CodeMirrorElement ):void => {
 			element.CodeMirror.refresh();
 		} );
 	}
@@ -149,4 +150,8 @@ export class ResponseComponent implements AfterViewInit, OnInit {
 				return null;
 		}
 	}
+}
+
+interface CodeMirrorElement extends Element {
+	CodeMirror:CodeMirror.Editor;
 }
