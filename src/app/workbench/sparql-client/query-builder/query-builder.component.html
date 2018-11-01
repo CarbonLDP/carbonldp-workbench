@@ -39,12 +39,15 @@
 	<!-- START: Body of the query -->
 	<div class="field">
 		<label>Query:</label>
-		<app-code-mirror
+		<app-sparql-editor
 			#contentInput
 			[mode]="codeMirrorMode.SPARQL"
 			[readOnly]="loading"
 			[(value)]="query.content"
-			[showLineNumbers]="true"></app-code-mirror>
+			[showLineNumbers]="true"
+		>
+		</app-sparql-editor>
+
 	</div>
 	<!-- END: Body of the query -->
 

@@ -58,6 +58,7 @@
     "lodash": "4.17.4",
     "rxjs": "~6.3.3",
     "semantic-ui-css": "2.4.1",
+    "sparqljs": "^2.1.0",
     "typeface-lato": "0.0.54",
     "typeface-roboto": "0.0.54",
     "zone.js": "~0.8.26"

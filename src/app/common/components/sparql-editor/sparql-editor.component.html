@@ -1,0 +1,13 @@
+<app-code-mirror
+	[mode]="mode"
+	[readOnly]="readOnly"
+	[value]="value"
+	(valueChange) = "app_code_mirror_updateValue($event)"
+	[showLineNumbers]="showLineNumbers"
+	[error]="errorObject"
+>
+</app-code-mirror>
+
+<app-sparql-error-message-area [errorMessage]="errorMessage">
+
+</app-sparql-error-message-area>

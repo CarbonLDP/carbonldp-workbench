@@ -2,12 +2,14 @@ import { AfterContentInit, Component, ElementRef, EventEmitter, Input, OnChanges
 
 import * as CodeMirror from "codemirror";
 
+
 import "codemirror/mode/css/css";
 import "codemirror/mode/htmlmixed/htmlmixed";
 import "codemirror/mode/javascript/javascript";
 import "codemirror/mode/sparql/sparql";
 import "codemirror/mode/xml/xml";
 import "codemirror/mode/turtle/turtle";
+import { ParserErrorObject } from "./../sparql-editor/sparql-editor.component";
 
 @Component( {
 	selector: "app-code-mirror",
@@ -28,6 +30,23 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 
 	@Input() codeMirror:CodeMirror.Editor;
 	@Output() codeMirrorChange:EventEmitter<CodeMirror.Editor> = new EventEmitter<CodeMirror.Editor>();
+
+	private textMarker:CodeMirror.TextMarker;
+
+	@Input() set error( { message, start, end }:ParserErrorObject ) {
+		if( message !== "" ) {
+			this.clearTextMarker();
+			let options:CodeMirror.TextMarkerOptions = { className: "cw-code-mirror--syntaxError" };
+			this.textMarker = this.codeMirror.markText( start, end, options );
+		} else {
+			this.clearTextMarker();
+		}
+	}
+
+	private clearTextMarker():void {
+		if( this.textMarker )
+			this.textMarker.clear();
+	}
 
 	private internallyChanged:boolean = false;
 	private lastUpdates:string[] = [];
@@ -151,6 +170,7 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 		else this.setReadOnly( this.readOnly );
 	}
 }
+
 
 export enum Mode {
 	CSS = "text/css",
