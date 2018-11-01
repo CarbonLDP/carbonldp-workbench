@@ -23,6 +23,7 @@ export class SparqlEditorComponent implements OnInit {
 	private textMarkers = [];
 
 	errorMessage:string = "";
+	errorObject:ParserErrorObject = { message: "" };
 
 	constructor() {
 		this.parser = new SPARQL.Parser();
@@ -38,13 +39,16 @@ export class SparqlEditorComponent implements OnInit {
 	}
 
 	private validateQuery( currentString:string ) {
-		this.clearTextMarker();
 		try {
 			this.parser.parse( currentString );
+			this.errorObject = { message: "" };
+			this.errorMessage = "";
 		} catch( error ) {
 			if( "message" in error && error.message.startsWith( "Parse error" ) ) {
 				this.displayParseError( error );
 			} else {
+				this.errorObject = { message: "" };
+				this.errorMessage = "";
 				console.error( "Unexpected error while parsing the query", error );
 			}
 		}
@@ -61,14 +65,14 @@ export class SparqlEditorComponent implements OnInit {
 			ch: error.hash.loc.last_column + 1
 		};
 
-		this.errorMessage = error.message;
-		//this.textMarkers.push( this.codeMirror.markText( start, end, { className: "cw-code-mirror--syntaxError" } ) );
-	}
+		this.errorObject = { message: error.message, start: start, end: end };
 
-	private clearTextMarker():void {
-		this.textMarkers.forEach( ( marker ) => {
-			return marker.clear();
-		} );
-		this.textMarkers = [];
+		this.errorMessage = error.message;
 	}
+}
+
+export interface ParserErrorObject {
+	message:string;
+	start?:CodeMirror.Position;
+	end?:CodeMirror.Position;
 }
