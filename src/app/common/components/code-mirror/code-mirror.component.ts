@@ -29,6 +29,24 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	@Input() codeMirror:CodeMirror.Editor;
 	@Output() codeMirrorChange:EventEmitter<CodeMirror.Editor> = new EventEmitter<CodeMirror.Editor>();
 
+	private textMarkers:Array<any> = [];
+
+	@Input() set error( { message, start, end } ) {
+		if( message !== "" ) {
+			let options:CodeMirror.TextMarkerOptions = { className: "cw-code-mirror--syntaxError" };
+			this.textMarkers.push( this.codeMirror.markText( start, end, options ) );
+		} else {
+			this.clearTextMarker();
+		}
+	}
+
+	private clearTextMarker():void {
+		this.textMarkers.forEach( ( marker ) => {
+			return marker.clear();
+		} );
+		this.textMarkers = [];
+	}
+
 	private internallyChanged:boolean = false;
 	private lastUpdates:string[] = [];
 
