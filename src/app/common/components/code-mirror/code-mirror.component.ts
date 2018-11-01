@@ -8,6 +8,7 @@ import "codemirror/mode/javascript/javascript";
 import "codemirror/mode/sparql/sparql";
 import "codemirror/mode/xml/xml";
 import "codemirror/mode/turtle/turtle";
+import { ParserErrorObject } from "app/common/components/sparql-editor/sparql-editor.component";
 
 @Component( {
 	selector: "app-code-mirror",
@@ -31,7 +32,7 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 
 	private textMarker:CodeMirror.TextMarker;
 
-	@Input() set error( [ message, start, end ]:[ string, CodeMirror.Position, CodeMirror.Position ] ) {
+	@Input() set error( { message, start, end }:ParserErrorObject ) {
 		if( message !== "" ) {
 			this.clearTextMarker();
 			let options:CodeMirror.TextMarkerOptions = { className: "cw-code-mirror--syntaxError" };
