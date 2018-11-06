@@ -14,6 +14,7 @@ import { SemanticModule } from "./components/semantic/semantic.module";
 // Services
 import { RouterService } from "./router.service";
 import { MessagesAreaService } from "./components/messages-area/messages-area.service";
+import { ClazzDirective } from "app/common/directives/clazz.directive";
 
 // Pipes
 
@@ -23,6 +24,7 @@ import { MessagesAreaService } from "./components/messages-area/messages-area.se
 	],
 	declarations: [
 		ErrorLabelComponent,
+		ClazzDirective,
 		CodeMirrorComponent.Class,
 		MessageComponent,
 		MessagesAreaComponent,
@@ -32,6 +34,7 @@ import { MessagesAreaService } from "./components/messages-area/messages-area.se
 	providers: [],
 	exports: [
 		ErrorLabelComponent,
+		ClazzDirective,
 		CodeMirrorComponent.Class,
 		MessageComponent,
 		MessagesAreaComponent,

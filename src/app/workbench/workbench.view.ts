@@ -1,9 +1,8 @@
-import { Component, EventEmitter } from "@angular/core";
+import { Component } from "@angular/core";
 import { Event, NavigationEnd, Router } from "@angular/router";
 
 import { CarbonLDP } from "carbonldp";
 
-import { HeaderService } from "./layout/header/header.service";
 import { SidebarService } from "./layout/sidebar/sidebar.service";
 
 
@@ -20,15 +19,13 @@ export class WorkbenchView {
 
 	public instance:any;
 
-	private headerService:HeaderService;
 	private sidebarService:SidebarService;
 	private router:Router;
 	private carbonldp:CarbonLDP;
 	private prevUrl:string;
 	private base:string;
 
-	constructor( headerService:HeaderService, sidebarService:SidebarService, router:Router, carbonldp:CarbonLDP ) {
-		this.headerService = headerService;
+	constructor( sidebarService:SidebarService, router:Router, carbonldp:CarbonLDP ) {
 		this.sidebarService = sidebarService;
 		this.base = this.sidebarService.base;
 		this.router = router;
@@ -46,35 +43,12 @@ export class WorkbenchView {
 		} );
 	}
 
-
 	ngOnInit():void {
-		this.populateHeader();
 		this.populateSidebar();
 	}
 
 	toggleSidebar():void {
 		this.sidebarService.toggle();
-	}
-
-	private populateHeader():void {
-		this.headerService.clear();
-		this.headerService.logo = {
-			image: "assets/images/carbonldp-inverted-logo-small.png",
-			route: [ "" ]
-		};
-
-		let onLogout:EventEmitter<boolean> = new EventEmitter<boolean>();
-		onLogout.subscribe( ( event:any ) => {
-			this.router.navigate( [ "/login" ] );
-		} );
-
-		this.headerService.addItems( [
-			{
-				name: "Dashboard",
-				route: [ "" ],
-				index: 0,
-			},
-		] );
 	}
 
 	private populateSidebar():void {
