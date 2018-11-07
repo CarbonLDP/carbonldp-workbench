@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChange, SimpleChanges, OnChanges, OnInit } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp/CarbonLDP";
 import { RDFNode } from "carbonldp/RDF/Node";
@@ -16,7 +16,7 @@ import { JsonLDKeyword, Modes, ResourceFeatures, ResourceRecords } from "../docu
 	styles: [ ":host { display:block; }" ]
 } )
 
-export class NamedFragmentComponent extends ResourceFeatures implements AfterViewInit {
+export class NamedFragmentComponent extends ResourceFeatures implements AfterViewInit, OnInit, OnChanges {
 	element:ElementRef;
 	$element:JQuery;
 	carbonldp:CarbonLDP;

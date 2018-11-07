@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChange, SimpleChanges, OnChanges, OnInit } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node";
@@ -16,7 +16,7 @@ import { Property, PropertyStatus } from "../property/property.component";
 	styles: [ ":host { display:block; }" ]
 } )
 
-export class DocumentResourceComponent extends ResourceFeatures implements AfterViewInit {
+export class DocumentResourceComponent extends ResourceFeatures implements AfterViewInit,  OnInit, OnChanges {
 	element:ElementRef;
 	$element:JQuery;
 	documentsResolverService:DocumentsResolverService;

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChange, SimpleChanges, OnInit, OnChanges } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node";
@@ -16,7 +16,7 @@ import { JsonLDKeyword, Modes, ResourceFeatures, ResourceRecords } from "../docu
 	styles: [ ":host { display:block; }" ]
 } )
 
-export class BlankNodeComponent extends ResourceFeatures implements AfterViewInit {
+export class BlankNodeComponent extends ResourceFeatures implements AfterViewInit, OnInit, OnChanges{
 	@Input() blankNodes:BlankNodeStatus[] = [];
 	@Input() namedFragments:RDFNode[] = [];
 	@Input() canEdit:boolean = true;
