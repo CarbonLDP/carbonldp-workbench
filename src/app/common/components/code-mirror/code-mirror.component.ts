@@ -30,17 +30,9 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	@Input() codeMirror:CodeMirror.Editor;
 	@Output() codeMirrorChange:EventEmitter<CodeMirror.Editor> = new EventEmitter<CodeMirror.Editor>();
 
-	private textMarker:CodeMirror.TextMarker;
+	@Input() error;
 
-	@Input() set error( { message, start, end }:ParserErrorObject ) {
-		if( typeof start !== "undefined" ) {
-			this.clearTextMarker();
-			let options:CodeMirror.TextMarkerOptions = { className: "cw-code-mirror--syntaxError" };
-			this.textMarker = this.codeMirror.markText( start, end, options );
-		} else {
-			this.clearTextMarker();
-		}
-	}
+	private textMarker:CodeMirror.TextMarker;
 
 	private clearTextMarker():void {
 		if( this.textMarker )
@@ -116,6 +108,14 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 				this.lastUpdates = [];
 				this.codeMirror.setValue( changeRecord.value.currentValue );
 			}
+		}
+
+		if( "error" in changeRecord ) {
+			this.clearTextMarker();
+			const options:CodeMirror.TextMarkerOptions = { className: "cw-code-mirror--syntaxError" };
+			const change:SimpleChange = changeRecord.error;
+			const { start, end } = change.currentValue;
+			this.textMarker = this.codeMirror.markText( start, end, options );
 		}
 
 	}
