@@ -1,5 +1,5 @@
 <!-- START: Action buttons -->
-<button class="ui basic compact labeled right icon button" (click)="createProperty()" *ngIf="canEdit" [ngClass]="{disabled: !canCreateNewProperty}" [disabled]="!canCreateNewProperty">
+<button class="ui basic compact labeled right icon button" (click)="createProperty()" *ngIf="canEdit" [ngClass]="{disabled: modes.EDIT === state}" [disabled]="modes.EDIT === state">
 	<i class="plus icon"></i>
 	Add Property
 </button>
