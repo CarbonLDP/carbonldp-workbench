@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Mode, ParserErrorObject } from "../code-mirror/code-mirror.component";
 import * as SPARQL from "sparqljs";
 
@@ -7,7 +7,7 @@ import * as SPARQL from "sparqljs";
 	templateUrl: "./sparql-editor.component.html",
 	styleUrls: [ "./sparql-editor.component.scss" ]
 } )
-export class SparqlEditorComponent implements OnInit {
+export class SparqlEditorComponent {
 
 	@Input() mode:string = Mode.JAVASCRIPT;
 	@Input() readOnly:boolean = false;
@@ -28,9 +28,6 @@ export class SparqlEditorComponent implements OnInit {
 	constructor() {
 		this.parser = new SPARQL.Parser();
 		this.generator = new SPARQL.Generator();
-	}
-
-	ngOnInit() {
 	}
 
 	app_code_mirror_updateValue( lastUpdate:string ):void {

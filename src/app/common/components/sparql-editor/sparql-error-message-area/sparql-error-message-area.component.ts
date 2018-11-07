@@ -1,11 +1,11 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 @Component( {
 	selector: "app-sparql-error-message-area",
 	templateUrl: "./sparql-error-message-area.component.html",
 	styleUrls: [ "./sparql-error-message-area.component.scss" ]
 } )
-export class SparqlErrorMessageAreaComponent implements OnInit {
+export class SparqlErrorMessageAreaComponent {
 
 	private _errorMessage:string;
 	hasError:boolean;
@@ -18,10 +18,4 @@ export class SparqlErrorMessageAreaComponent implements OnInit {
 	get errorMessage() {
 		return this._errorMessage;
 	}
-
-	constructor() { }
-
-	ngOnInit() {
-	}
-
 }
