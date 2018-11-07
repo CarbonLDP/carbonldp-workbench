@@ -14,8 +14,8 @@ export class SparqlEditorToolBarComponent implements OnInit {
 	ngOnInit() {
 	}
 
-	handlePetrify() {
-		this.event_handler.emit( "petrify" )
+	handlePrettify() {
+		this.event_handler.emit( "prettify" )
 	}
 
 }
