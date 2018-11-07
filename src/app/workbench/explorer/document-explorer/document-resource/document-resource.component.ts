@@ -24,7 +24,14 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 
 	modes:typeof Modes = Modes;
 
-	canCreateNewProperty:boolean = true;
+	_state:string;
+	set state( state:string ) {
+		this._state = state;
+	};
+
+	get state() {
+		return this._state;
+	}
 
 	private _rootHasChanged:boolean;
 	set rootHasChanged( hasChanged:boolean ) {
