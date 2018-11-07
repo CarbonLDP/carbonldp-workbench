@@ -1,8 +1,4 @@
 .sparql-editor-tool-bar {
-	width: 100%;
-	background-color: #F3F4F5;
-	padding: 5px;
-
 	&__button {
 		background: transparent;
 		border: lightgrey solid 1px;
@@ -17,4 +13,11 @@
 			background: darkgrey;
 		}
 	}
+}
+
+:host{
+	width: 100%;
+	background-color: #F3F4F5;
+	padding: 5px;
+	display: block;
 }
