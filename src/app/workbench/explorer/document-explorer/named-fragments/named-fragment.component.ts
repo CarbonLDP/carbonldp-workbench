@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp/CarbonLDP";
 import { RDFNode } from "carbonldp/RDF/Node";
@@ -85,16 +85,17 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 	}
 
 	deleteProperty( property:PropertyStatus, index:number ):void {
+		this.state = Modes.READ;
 		super.deleteProperty( property, index );
 	}
 
 	addProperty( property:PropertyStatus, index:number ):void {
+		this.state = Modes.READ;
 		super.addProperty( property, index );
-		this.canCreateNewProperty = true;
 	}
 
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
-		this.canCreateNewProperty = false;
+		this.state = Modes.EDIT;
 		super.createProperty( property, propertyStatus );
 
 		// Animates created property
@@ -136,6 +137,25 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 			rawNode[ key ] = property.added.value;
 		} );
 		return rawNode;
+	}
+
+	private initData() {
+		this.state = Modes.READ;
+		this.rootNode = this.namedFragment.copy;
+		if( ! ! this.namedFragment.records ) this.records = this.namedFragment.records;
+		this.updateExistingProperties();
+	}
+
+	ngOnInit() {
+		this.initData();
+	}
+
+	ngOnChanges( changes:SimpleChanges ) {
+		if( "namedFragment" in changes ) {
+			const change:SimpleChange = changes.namedFragment;
+			this.namedFragment = change.currentValue;
+			this.initData();
+		}
 	}
 }
 

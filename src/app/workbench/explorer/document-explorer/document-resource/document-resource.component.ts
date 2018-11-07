@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node";
@@ -88,17 +88,18 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 	}
 
 	deleteProperty( property:PropertyStatus, index:number ):void {
+		this.state = Modes.READ;
 		super.deleteProperty( property, index );
 	}
 
 	addProperty( property:PropertyStatus, index:number ):void {
 		super.addProperty( property, index );
-		this.canCreateNewProperty = true;
+		this.state = Modes.READ;
 	}
 
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
-		this.canCreateNewProperty = false;
 		super.createProperty( property, propertyStatus );
+		this.state = Modes.EDIT;
 
 		// Animates created property
 		setTimeout( () => {
@@ -126,6 +127,27 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 
 	getAccessPointsHasMemberRelationProperties( documentURI:string ):Promise<string[]> {
 		return this.documentsResolverService.getAccessPointsHasMemberRelationProperties( documentURI );
+	}
+
+	private initData():void {
+		this.records = new ResourceRecords();
+		this.state = Modes.READ;
+		this.getProperties()
+			.then( () => {
+				this.updateExistingProperties();
+			} );
+	}
+
+	ngOnInit() {
+		this.initData();
+	}
+
+	ngOnChanges( changes:SimpleChanges ) {
+		if( "rootNode" in changes ) {
+			let change:SimpleChange = changes.rootNode;
+			this.rootNode = Object.assign( {}, change.currentValue );
+			this.initData();
+		}
 	}
 }
 

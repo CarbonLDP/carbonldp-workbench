@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChange, SimpleChanges } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node";
@@ -86,16 +86,17 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 	}
 
 	deleteProperty( property:PropertyStatus, index:number ):void {
+		this.state = Modes.READ;
 		super.deleteProperty( property, index );
 	}
 
 	addProperty( property:PropertyStatus, index:number ):void {
 		super.addProperty( property, index );
-		this.canCreateNewProperty = true;
+		this.state = Modes.READ;
 	}
 
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
-		this.canCreateNewProperty = true;
+		this.state = Modes.EDIT;
 		super.createProperty( property, propertyStatus );
 
 		// Animates created property
@@ -141,6 +142,25 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 	isTemporalId( property:PropertyStatus ):boolean {
 		let copyAddedOrModified:string = property.added ? "added" : property.modified ? "modified" : "copy";
 		return property[ copyAddedOrModified ].id === JsonLDKeyword.ID && property[ copyAddedOrModified ].value.startsWith( "_:New_Blank_Node_Temporal_Id_" );
+	}
+
+	private initData() {
+		this.state = Modes.READ;
+		this.rootNode = this.blankNode.copy;
+		if( ! ! this.blankNode.records ) this.records = this.blankNode.records;
+		this.updateExistingProperties();
+	}
+
+	ngOnInit() {
+		this.initData();
+	}
+
+	ngOnChanges( changes:SimpleChanges ) {
+		if( "blankNode" in changes ) {
+			let change:SimpleChange = changes.blankNode;
+			this.blankNode = Object.assign( {}, change.currentValue );
+			this.initData();
+		}
 	}
 }
 
