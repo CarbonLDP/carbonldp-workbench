@@ -22,18 +22,7 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
 
-	private _blankNode:BlankNodeStatus;
-	@Input() set blankNode( blankNode:BlankNodeStatus ) {
-		this.canCreateNewProperty = true;
-		this._blankNode = blankNode;
-		this.rootNode = blankNode.copy;
-		if( ! ! blankNode.records ) this.records = blankNode.records;
-		this.updateExistingProperties();
-	}
-
-	get blankNode():BlankNodeStatus {
-		return this._blankNode;
-	}
+	@Input() blankNode:BlankNodeStatus;
 
 
 	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();

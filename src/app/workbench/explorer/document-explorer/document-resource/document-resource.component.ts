@@ -42,21 +42,7 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 	@Input() namedFragments:RDFNode[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
-	private _rootNode:RDFNode;
-	@Input()
-	set rootNode( value:RDFNode ) {
-		this._rootNode = value;
-		this.records = new ResourceRecords();
-		this.canCreateNewProperty = true;
-		this.getProperties()
-			.then( () => {
-				this.updateExistingProperties();
-			} );
-	}
-
-	get rootNode() {
-		return this._rootNode;
-	}
+	@Input() rootNode:RDFNode;
 
 	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();

@@ -48,19 +48,7 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 	@Input() namedFragments:NamedFragmentStatus[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
-
-	private _namedFragment:NamedFragmentStatus;
-	@Input() set namedFragment( namedFragment:NamedFragmentStatus ) {
-		this._namedFragment = namedFragment;
-		this.rootNode = namedFragment.copy;
-		if( ! ! namedFragment.records ) this.records = namedFragment.records;
-		this.updateExistingProperties();
-		this.canCreateNewProperty = true;
-	}
-
-	get namedFragment():NamedFragmentStatus {
-		return this._namedFragment;
-	}
+	@Input() namedFragment:NamedFragmentStatus;
 
 	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
