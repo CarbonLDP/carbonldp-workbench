@@ -9,7 +9,6 @@ import "codemirror/mode/javascript/javascript";
 import "codemirror/mode/sparql/sparql";
 import "codemirror/mode/xml/xml";
 import "codemirror/mode/turtle/turtle";
-import { ParserErrorObject } from "./../sparql-editor/sparql-editor.component";
 
 @Component( {
 	selector: "app-code-mirror",
@@ -171,6 +170,11 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	}
 }
 
+export interface ParserErrorObject {
+	message:string;
+	start?:CodeMirror.Position;
+	end?:CodeMirror.Position;
+}
 
 export enum Mode {
 	CSS = "text/css",
@@ -185,3 +189,5 @@ export enum Mode {
 	XML = "application/xml",
 	TURTLE = "text/turtle",
 }
+
+

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-import { Mode } from "../code-mirror/code-mirror.component";
+import { Mode, ParserErrorObject } from "../code-mirror/code-mirror.component";
 import * as SPARQL from "sparqljs";
 
 @Component( {
@@ -40,7 +40,7 @@ export class SparqlEditorComponent implements OnInit {
 
 	on_toolbar_event_handler( toolbar_event ):void {
 		switch( toolbar_event ) {
-			case "petrify":
+			case "prettify":
 				if( this.parsedQuery !== "" )
 					this.value = this.generator.stringify( this.parsedQuery );
 				break;
@@ -84,8 +84,4 @@ export class SparqlEditorComponent implements OnInit {
 	}
 }
 
-export interface ParserErrorObject {
-	message:string;
-	start?:CodeMirror.Position;
-	end?:CodeMirror.Position;
-}
+
