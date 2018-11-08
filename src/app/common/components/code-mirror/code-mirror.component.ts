@@ -2,6 +2,7 @@ import { AfterContentInit, Component, ElementRef, EventEmitter, Input, OnChanges
 
 import * as CodeMirror from "codemirror";
 
+
 import "codemirror/mode/css/css";
 import "codemirror/mode/htmlmixed/htmlmixed";
 import "codemirror/mode/javascript/javascript";
@@ -28,6 +29,15 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 
 	@Input() codeMirror:CodeMirror.Editor;
 	@Output() codeMirrorChange:EventEmitter<CodeMirror.Editor> = new EventEmitter<CodeMirror.Editor>();
+
+	@Input() error;
+
+	private textMarker:CodeMirror.TextMarker;
+
+	private clearTextMarker():void {
+		if( this.textMarker )
+			this.textMarker.clear();
+	}
 
 	private internallyChanged:boolean = false;
 	private lastUpdates:string[] = [];
@@ -100,6 +110,14 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 			}
 		}
 
+		if( "error" in changeRecord ) {
+			this.clearTextMarker();
+			const options:CodeMirror.TextMarkerOptions = { className: "cw-code-mirror--syntaxError" };
+			const change:SimpleChange = changeRecord.error;
+			const { start, end } = change.currentValue;
+			this.textMarker = this.codeMirror.markText( start, end, options );
+		}
+
 	}
 
 	private normalizeTabs( value:string ):string {
@@ -152,6 +170,12 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	}
 }
 
+export interface ParserErrorObject {
+	message:string;
+	start?:CodeMirror.Position;
+	end?:CodeMirror.Position;
+}
+
 export enum Mode {
 	CSS = "text/css",
 	JAVASCRIPT = "text/javascript",
@@ -165,3 +189,5 @@ export enum Mode {
 	XML = "application/xml",
 	TURTLE = "text/turtle",
 }
+
+
