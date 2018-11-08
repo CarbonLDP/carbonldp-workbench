@@ -1,21 +1,21 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnChanges, SimpleChange, SimpleChanges } from "@angular/core";
 
 @Component( {
 	selector: "app-sparql-error-message-area",
 	templateUrl: "./sparql-error-message-area.component.html",
 	styleUrls: [ "./sparql-error-message-area.component.scss" ]
 } )
-export class SparqlErrorMessageAreaComponent {
+export class SparqlErrorMessageAreaComponent implements OnChanges {
 
-	private _errorMessage:string;
+	@Input() errorMessage;
+
 	hasError:boolean;
 
-	@Input() set errorMessage( text ) {
-		this.hasError = text.trim().length < 1;
-		this._errorMessage = text;
-	}
-
-	get errorMessage() {
-		return this._errorMessage;
+	ngOnChanges( changes:SimpleChanges ) {
+		if( "errorMessage" in changes ) {
+			const change:SimpleChange = changes.errorMessage;
+			this.errorMessage = change.currentValue;
+			this.hasError = this.errorMessage.trim().length < 1;
+		}
 	}
 }
