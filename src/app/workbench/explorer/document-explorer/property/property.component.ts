@@ -7,7 +7,7 @@ import { Modes } from "../document-explorer-library";
 
 
 @Component( {
-	selector: "cw-property",
+	selector: "app-property",
 	templateUrl: "./property.component.html",
 	styleUrls: [ "./property.component.scss" ],
 	host: {

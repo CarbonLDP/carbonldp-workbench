@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChange } from "@angular/core";
 
-import "semantic-ui/semantic";
 
 /*
 *   Displays the results of a response in a table format
 * */
 @Component( {
-	selector: "cw-resultset-table",
+	selector: "app-resultset-table",
 	templateUrl: "./resultset-table.component.html",
 	styleUrls: [ "./resultset-table.component.scss" ],
 } )

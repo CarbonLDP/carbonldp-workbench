@@ -2,19 +2,19 @@
 	display: block;
 }
 
-.cw-url {
+.app-url {
 	// To align the icon and the link on the same row
 	display: flex;
 	flex-direction: row;
 }
 
-.cw-url-icon {
+.app-url-icon {
 	// Separate the icon from the link
 	// Unfortunately this needs to have !important since a Semantic UI rule adds this exact property with more specificity
 	margin-right: 5px !important;
 }
 
-.cw-url-linkContainer {
+.app-url-linkContainer {
 	// Add some height so horizontal scrollbars fit
 	height: 35px;
 
@@ -23,7 +23,7 @@
 	white-space: nowrap;
 }
 
-.cw-slug {
+.app-slug {
 	color: #FF4500;
 }
 

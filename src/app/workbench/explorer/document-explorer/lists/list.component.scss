@@ -10,6 +10,7 @@
 	&.modified {
 		background-color: #FFFBB4;
 	}
+
 	&.added {
 		background-color: #D9EEFF;
 	}
@@ -19,7 +20,7 @@
 	table-layout: fixed;
 }
 
-.cw-pointer {
+.app-pointer {
 	.text {
 		width: 100%;
 	}
@@ -29,6 +30,7 @@
 	&.modified-pointer, &.modified-literal {
 		background-color: #FFFBB4;
 	}
+
 	&.added-pointer, &.added-literal {
 		background-color: #D9EEFF;
 	}

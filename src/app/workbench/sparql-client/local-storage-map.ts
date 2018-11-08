@@ -10,7 +10,7 @@ export class LocalStorageMap<KEY, VALUE> implements Map<KEY, VALUE> {
 	 * @param id - ID to store the map with in the LocalStorage
 	 */
 	constructor( private id:string ) {
-		if( ! ( "localStorage" in window )  ) throw new Error( "The environment doesn't support LocalStorage" );
+		if( ! ("localStorage" in window) ) throw new Error( "The environment doesn't support LocalStorage" );
 
 		this.restore();
 

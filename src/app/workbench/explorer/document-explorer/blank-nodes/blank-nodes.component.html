@@ -20,7 +20,7 @@
 	   [ngClass]="{added:!!blankNode.added, modified:!!blankNode.modified}"
 	   [attr.data-tab]="'blankNode_'+escape(blankNode.id)">
 		<p>
-			{{ getShortId(blankNode.id) }}
+			{{ getShortId( blankNode.id ) }}
 		</p>
 		<button class="circular ui icon basic mini button" (click)="closeBlankNode(blankNode, i)">
 			<i class="icon close"></i>
@@ -89,7 +89,7 @@
 <!-- START: Tab for opened Blank Nodes -->
 <div class="ui bottom attached tab segment"
      *ngFor="let blankNode of openedBlankNodes; let i = index;" [attr.data-tab]="'blankNode_'+escape(blankNode.id)">
-	<cw-blank-node class="column"
+	<app-blank-node class="column"
 	               [documentURI]="documentURI"
 	               [blankNode]="blankNode"
 	               [blankNodes]="blankNodes"
@@ -97,7 +97,7 @@
 	               (onOpenBlankNode)="openBlankNode( $event )"
 	               (onOpenNamedFragment)="openNamedFragment($event)"
 	               (onChanges)="changeBlankNode(blankNode, i)">
-	</cw-blank-node>
+	</app-blank-node>
 </div>
 <!-- END: Tab for opened Blank Nodes -->
 

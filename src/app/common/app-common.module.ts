@@ -22,19 +22,19 @@ import { MessagesAreaService } from "./components/messages-area/messages-area.se
 		CommonModule,
 	],
 	declarations: [
+		ErrorLabelComponent,
+		CodeMirrorComponent.Class,
 		MessageComponent,
 		MessagesAreaComponent,
-		CodeMirrorComponent.Class,
-		ErrorLabelComponent,
 		PaginatorComponent,
 		VersionsPresenterComponent,
 	],
 	providers: [],
 	exports: [
+		ErrorLabelComponent,
+		CodeMirrorComponent.Class,
 		MessageComponent,
 		MessagesAreaComponent,
-		CodeMirrorComponent.Class,
-		ErrorLabelComponent,
 		PaginatorComponent,
 		VersionsPresenterComponent,
 

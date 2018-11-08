@@ -8,16 +8,19 @@
 		.text .description {
 			display: none;
 		}
+
 		.item {
 			.title {
 				line-height: 1em;
 				font-size: 1.2em;
 				display: block;
 			}
+
 			.description {
 				color: gray;
 				font-size: .8em;
 			}
+
 			&[data-value='blankNodes-category'],
 			&[data-value='named-fragments-category'] {
 				text-align: center;
@@ -33,6 +36,7 @@
 		max-height: 28px;
 		margin-top: 1px;
 		float: right;
+
 		.button {
 			max-height: 13px;
 			height: 13px;

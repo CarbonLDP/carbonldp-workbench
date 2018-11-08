@@ -1,7 +1,5 @@
 import { Component, ElementRef, Input } from "@angular/core";
 
-import * as $ from "jquery";
-
 import { WidgetsService } from "../widgets.service";
 import { Widget } from "../widgets.component";
 
@@ -10,7 +8,7 @@ import { Widget } from "../widgets.component";
 *  Menu that lists all the Dashboard's Widgets
 * */
 @Component( {
-	selector: "cw-widgets-menu",
+	selector: "app-widgets-menu",
 	templateUrl: "./widgets-menu.component.html",
 	styleUrls: [ "./widgets-menu.component.scss" ],
 } )
