@@ -1,0 +1,18 @@
+<td>
+	<div class="edit-mode ui form" *ngIf="state === State.IDLE || state === State.READ; else editTypeBlock">
+		<span>{{ type }}</span>
+	</div>
+	<ng-template #editTypeBlock>
+		<input type="text" class="field cw-type-name" [(ngModel)]="type"/>
+	</ng-template>
+</td>
+<td>
+	<div *ngIf="type !== RestrictedType.RequiredSystemDocument && state === State.READ" class="cw-type-editButtons">
+		<span class="ui mini basic icon button" (click)="editType()"><i class="pencil icon"></i></span>
+		<span class="ui mini basic icon button" (click)="removeType()"><i class="remove red icon"></i></span>
+	</div>
+	<div *ngIf="state === State.EDIT" class="cw-type-editButtons">
+		<span class="ui mini basic icon button" (click)="cancelEditType()"><i class="reply icon"></i></span>
+		<span class="ui mini basic icon button" (click)="applyTypeEdition()"><i class="checkmark green icon"></i></span>
+	</div>
+</td>
