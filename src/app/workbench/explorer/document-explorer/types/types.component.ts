@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { LDP } from "carbonldp/Vocabularies/LDP";
 
 @Component( {
-	selector: "cw-types",
+	selector: "app-types",
 	templateUrl: "./types.component.html",
 	styleUrls: [ "./types.component.scss" ],
 } )

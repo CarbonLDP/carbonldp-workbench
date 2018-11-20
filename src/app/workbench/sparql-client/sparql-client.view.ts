@@ -3,7 +3,7 @@ import { Component } from "@angular/core";
 import { MessagesAreaService } from "app/common/components/messages-area/messages-area.service";
 
 @Component( {
-	selector: "cw-sparql-client-view",
+	selector: "app-sparql-client-view",
 	templateUrl: "./sparql-client.view.html",
 	styles: [ ":host { display: block; }" ],
 } )

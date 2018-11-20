@@ -17,22 +17,22 @@
 		<!-- START: Slug for the new document -->
 		<div class="field"
 		     [ngClass]="{error: !slug.valid}">
-			<label>Slug: The slug of the document you want to create: <span cw-grayed-out>(Optional)</span></label>
+			<label>Slug: The slug of the document you want to create: <span app-grayed-out>(Optional)</span></label>
 			<div class="ui fluid input">
 				<input type="text" name="slug"
 				       placeholder="Optional: Enter the slug of the child. e.g. &quot;my-child-name/&quot;"
 
 				       #slug="cwValidation" cwValidation
 
-				       cw-slug
+				       app-slug
 				       (keyup.esc)="hideForm()"
 				       [ngModel]="createChildFormModel.slug"
 				       (ngModelChange)="createChildFormModel.slug = getSanitizedSlug($event)"
 				       (blur)="slugLostFocus($event)">
 			</div>
-			<cw-error-label *ngIf="!slug.valid">
+			<app-error-label *ngIf="!slug.valid">
 				<span *ngIf="slug.control.hasError( 'invalidSlug' )">Please, provide a valid slug/name for the child document. (Only numbers and letters with dashes)</span>
-			</cw-error-label>
+			</app-error-label>
 		</div>
 		<!-- END: Slug for the new document -->
 
@@ -56,16 +56,16 @@
 
 						       #hasMemberRelation="cwValidation" cwValidation
 
-						       required cw-uri-fragment
+						       required app-uri-fragment
 						       (keyup.esc)="hideForm()"
 						       [(ngModel)]="createChildFormModel.advancedOptions.hasMemberRelation">
 					</div>
-					<cw-error-label *ngIf="!hasMemberRelation.valid">
+					<app-error-label *ngIf="!hasMemberRelation.valid">
 						<span *ngIf="hasMemberRelation.control.hasError('required')">The 'hasMemberRelation' property is required.</span>
 						<span *ngIf="hasMemberRelation.control.hasError('invalidURIAddress')">Please, provide a valid URI for the 'hasMemberRelation' property. E.g: http://www.w3.org/ns/ldp#my-member-name</span>
 						<span *ngIf="hasMemberRelation.control.hasError('missingFragment')">Please, provide a name/fragment for the 'hasMemberRelation' property. E.g: http://www.w3.org/ns/ldp#my-member-name</span>
 						<span *ngIf="hasMemberRelation.control.hasError('multipleFragment')">Please, provide only one name after the hashtag (#) for the 'hasMemberRelation' property. E.g: http://www.w3.org/ns/ldp#my-member-name</span>
-					</cw-error-label>
+					</app-error-label>
 				</div>
 				<!-- END: Input for hasMemberRelation -->
 
@@ -76,22 +76,22 @@
 				<!-- START: Input for isMemberOfRelation -->
 				<div class="field"
 				     [ngClass]="{error: !isMemberOfRelation.valid}">
-					<label><a href="https://carbonldp.com/documentation/javascript-sdk-getting-started#membership-relation" target="_blank">isMemberOfRelation</a>: The name of the property that each member will have, which links back to the document they are member of. <span cw-grayed-out>(Optional)</span></label>
+					<label><a href="https://carbonldp.com/documentation/javascript-sdk-getting-started#membership-relation" target="_blank">isMemberOfRelation</a>: The name of the property that each member will have, which links back to the document they are member of. <span app-grayed-out>(Optional)</span></label>
 					<div class="ui fluid input">
 						<input type="text" name="isMemberOfRelation"
 						       placeholder="Optional: E.g: http://www.w3.org/ns/ldp#member"
 
 						       #isMemberOfRelation="cwValidation" cwValidation
 
-						       cw-uri-fragment
+						       app-uri-fragment
 						       (keyup.esc)="hideForm()"
 						       [(ngModel)]="createChildFormModel.advancedOptions.isMemberOfRelation">
 					</div>
-					<cw-error-label *ngIf="!isMemberOfRelation.valid">
+					<app-error-label *ngIf="!isMemberOfRelation.valid">
 						<span *ngIf="isMemberOfRelation.control.hasError('invalidURIAddress')">Please, provide a valid URI for the 'isMemberOfRelation' property. E.g: http://www.w3.org/ns/ldp#my-parent-relation-name</span>
 						<span *ngIf="isMemberOfRelation.control.hasError('missingFragment')">Please, provide a name/fragment for the 'isMemberOfRelation' property. E.g: http://www.w3.org/ns/ldp#my-parent-relation-name</span>
 						<span *ngIf="isMemberOfRelation.control.hasError('multipleFragment')">Please, provide only one name after the hashtag (#) for the 'isMemberOfRelation' property. E.g: http://www.w3.org/ns/ldp#my-parent-relation-name</span>
-					</cw-error-label>
+					</app-error-label>
 				</div>
 				<!-- END: Input for isMemberOfRelation -->
 			</div>
@@ -100,7 +100,7 @@
 
 
 		<!-- START: Error messages -->
-		<cw-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage($event)" *ngIf="!!errorMessage"></cw-message>
+		<app-message [message]="errorMessage" [type]="'error'" [closable]="true" (onClose)="clearErrorMessage($event)" *ngIf="!!errorMessage"></app-message>
 		<!-- END: Error messages -->
 	</div>
 	<!-- END: Content of document creator -->

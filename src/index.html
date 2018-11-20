@@ -1,69 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/favicon/apple-touch-icon.png">
-	<link rel="icon" type="image/png" href="/assets/images/favicon/favicon-32x32.png" sizes="32x32">
-	<link rel="icon" type="image/png" href="/assets/images/favicon/favicon-16x16.png" sizes="16x16">
-	<link rel="manifest" href="/assets/images/favicon/manifest.json">
-	<link rel="mask-icon" href="/assets/images/favicon/safari-pinned-tab.svg">
-	<meta name="msapplication-TileColor" content="#da532c">
+	<meta charset="utf-8">
+	<title>Carbon LDP Workbench</title>
+	<base href="/">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png?v=vMdL4qBA0x">
+	<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png?v=vMdL4qBA0x">
+	<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png?v=vMdL4qBA0x">
+	<link rel="manifest" href="/assets/site.webmanifest?v=vMdL4qBA0x">
+	<link rel="mask-icon" href="/assets/safari-pinned-tab.svg?v=vMdL4qBA0x" color="#ff7603">
+	<link rel="shortcut icon" href="/assets/favicon.ico?v=vMdL4qBA0x">
+
+	<meta name="msapplication-TileColor" content="#ff7603">
+	<meta name="msapplication-config" content="/assets/browserconfig.xml?v=vMdL4qBA0x">
+
 	<meta name="theme-color" content="#ffffff">
 
-	<title>Carbon LDP</title>
+	<link rel="manifest" href="manifest.json">
 
-	<% if (htmlWebpackPlugin.options.metadata.isDevServer) { %>
-	<base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
-	<% } else {%>
-	<base href="--BASE_URL--">
-	<% }%>
+	<style type="text/css">
+		body {
+			margin: 0;
+			width: 100vw;
+			height: 100vh;
+			background: #90959A;
+		}
+	</style>
+</head>
+<body>
 
-	<script>
+	<app-root></app-root>
+
+	<noscript>This application requires JavaScript to be enabled/supported</noscript>
+	<script type="application/javascript">
 		__GLOBAL_CONFIG = {
-			CARBON_PROTOCOL: "--CARBON_PROTOCOL--",
-			CARBON_HOST: "--CARBON_HOST--",
+			CARBONLDP_PROTOCOL: "--CARBONLDP_PROTOCOL--",
+			CARBONLDP_HOST: "--CARBONLDP_HOST--",
 			BASE_URL: "--BASE_URL--",
 			ENV: "--ENV--"
 		};
 	</script>
-</head>
-<body>
-	<app>
-		<style>
-			html, body {
-				width: 100%;
-				height: 100%;
-			}
-
-			body {
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-
-				font-family: "Helvetica Neue Light", "HelveticaNeue-Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
-				-webkit-font-smoothing: antialiased;
-				-moz-osx-font-smoothing: grayscale;
-			}
-
-			app {
-				display: flex;
-				flex-direction: row;
-				justify-content: center;
-				align-items: center;
-			}
-
-			.loading-error {
-				display: none;
-				padding: 5px 15px;
-				background: #fff6f6;
-				color: #9f3a38;
-				border: 1px solid #9f3a38;
-			}
-		</style>
-		<img src="assets/images/loading.gif" alt="Loading..." width="32" height="33">
-		<div>Loading...</div>
-		<div class="loading-error">x_x</div>
-	</app>
 </body>
 </html>

@@ -10,14 +10,13 @@ import { List, ListStatus } from "./list.component";
 *   Contains all the lists of a property
 * */
 @Component( {
-	selector: "cw-lists",
+	selector: "app-lists",
 	templateUrl: "./lists.component.html",
 	styleUrls: [ "./lists.component.scss" ],
 } )
 
 export class ListsComponent implements OnInit {
-
-	modes:Modes = Modes;
+	modes:typeof Modes = Modes;
 	canDisplayLists:boolean = false;
 
 	@Input() documentURI:string = "";

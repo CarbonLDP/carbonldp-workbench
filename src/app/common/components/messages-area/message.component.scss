@@ -1,13 +1,16 @@
 :host {
 	display: block;
+
 	.ui.stack.accordion {
 
 		.title {
 			color: inherit;
 		}
+
 		.ui.stack.segment {
 			max-height: 150px;
 			overflow-y: scroll;
+
 			code {
 				font-size: 0.9em;
 			}

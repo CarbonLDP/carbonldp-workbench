@@ -7,9 +7,19 @@
 		Add Type
 	</button>
 	<div class="clearfix"></div>
-	<cw-types
+	<app-types
 		[types]="types"
 		(onTypesChange)="on_types_change($event)"
-	></cw-types>
+	></app-types>
+
+	<!-- START: Table with URI type -->
+	<table class="ui very compact striped small celled table">
+		<tr class="center aligned">
+			<th>@type</th>
+		</tr>
+		<tr *ngFor="let type of types; let j = index;">
+			<td>{{type}}</td>
+		</tr>
+	</table>
 	<!-- END: Table with URI type -->
 </div>

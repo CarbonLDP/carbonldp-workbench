@@ -7,7 +7,7 @@
 		</div>
 	</div>
 	<div class="ui mobile only row">
-		<div class="ui top attached compact selection dropdown">{{titles[activeTab]}}<i class="dropdown icon"></i>
+		<div class="ui top attached compact selection dropdown">{{titles[ activeTab ]}}<i class="dropdown icon"></i>
 			<div class="menu">
 				<ng-template ngFor let-title [ngForOf]="titles" let-i="index">
 					<a class="item" [class.active]="activeTab === i" (click)="onTitleClick( i );">{{title}}</a>

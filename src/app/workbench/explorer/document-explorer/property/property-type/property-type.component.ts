@@ -3,7 +3,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { PropertyStatus } from "../property.component";
 
 @Component( {
-	selector: "cw-property-type",
+	selector: "app-property-type",
 	templateUrl: "./property-type.component.html",
 	styleUrls: [ "./property-type.component.scss" ],
 } )

@@ -1,10 +1,8 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild } from "@angular/core";
 
-import * as $ from "jquery";
-import "semantic-ui/semantic";
 
 @Component( {
-	selector: "cw-message",
+	selector: "app-message",
 	templateUrl: "./message.component.html",
 	styleUrls: [ "./message.component.scss" ],
 } )

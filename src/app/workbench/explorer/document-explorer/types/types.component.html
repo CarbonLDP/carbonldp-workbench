@@ -19,7 +19,7 @@
 	</thead>
 	<tbody>
 		<ng-template ngFor let-type="$implicit" [ngForOf]="types" let-i="index">
-			<tr class="cw-type"
+			<tr class="app-type"
 			    [element]="type"
 			    (onTypeChange)="on_type_change($event, i)"
 			    (onTypeRemoved)="on_type_removed($event)"

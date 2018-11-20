@@ -8,7 +8,7 @@ enum State {
 }
 
 @Component( {
-	selector: "tr.cw-type",
+	selector: "tr.app-type",
 	templateUrl: "./type.component.html",
 	styleUrls: [ "./type.component.scss" ],
 } )

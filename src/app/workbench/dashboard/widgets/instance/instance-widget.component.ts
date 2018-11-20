@@ -11,7 +11,7 @@ import { ErrorMessageGenerator } from "app/common/components/messages-area/error
 *  Widget that displays specific data of the Carbon LDP instance
 * */
 @Component( {
-	selector: "cw-instance-widget",
+	selector: "app-instance-widget",
 	templateUrl: "./instance-widget.component.html",
 	styleUrls: [ "./instance-widget.component.scss" ],
 } )
