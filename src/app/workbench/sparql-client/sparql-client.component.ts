@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, HostListener, OnInit, Output, ViewChild } from "@angular/core";
+import { Component, ElementRef, EventEmitter, HostListener, OnDestroy, OnInit, Output, ViewChild } from "@angular/core";
 import { Observable } from "rxjs";
 import { map, share } from "rxjs/operators";
 import { isEqual, sortBy } from "lodash";
@@ -18,6 +18,9 @@ import { QueryType, SPARQLQuery, SPARQLType } from "app/workbench/sparql-client/
 import { QueryBuilderComponent } from "app/workbench/sparql-client/query-builder/query-builder.component";
 import { Profile, profile } from "app/common/fns";
 import { ActionCanceled } from "app/common/models";
+import { SparqlClientState } from "app/workbench/sparql-client/sparql-client.state";
+import { Store } from "@ngrx/store";
+import * as SparqlClientActions from "./store/actions/sparql-client.action";
 
 class ModalControl<RESULT> {
 	promise:Promise<RESULT>;
@@ -46,7 +49,7 @@ enum QueryExecutionState {
 	styleUrls: [ "./sparql-client.component.scss" ],
 	providers: [ SavedQueryService ]
 } )
-export class SPARQLClientComponent implements OnInit {
+export class SPARQLClientComponent implements OnInit, OnDestroy {
 	@Output() error:EventEmitter<any> = new EventEmitter();
 
 	@ViewChild( "queryBuilder" ) queryBuilder:QueryBuilderComponent;
@@ -127,13 +130,24 @@ export class SPARQLClientComponent implements OnInit {
 	private queryBeingSaved:SPARQLQuery;
 	private queryBeingOverwritten:SPARQLQuery;
 
-	constructor( private element:ElementRef, private carbonldp:CarbonLDP, private savedQueryService:SavedQueryService ) {
+	readonly WIP_SPARQL_Query:Observable<SPARQLQuery>;
+
+	constructor( private element:ElementRef,
+	             private carbonldp:CarbonLDP,
+	             private savedQueryService:SavedQueryService,
+	             private store:Store<SparqlClientState> ) {
+		/*init observable according to the reducer
+		defined on sparql-client.module -> StoreModule.forRoot({})*/
+		this.WIP_SPARQL_Query = store.select( "sparqlClient" );
+		//dispatch get wip query to obtain the query on the storage
+		store.dispatch( new SparqlClientActions.GetWIPQuery() );
+
 	}
 
 	ngOnInit() {
 		this.$element = $( this.element.nativeElement );
+		this.WIP_SPARQL_Query.subscribe( this.resetQuery.bind( this ) );
 
-		this.resetQuery();
 		this.savedQueries$ = this.savedQueryService
 			.getAll()
 			// Sort by name in ascending order
@@ -141,6 +155,11 @@ export class SPARQLClientComponent implements OnInit {
 			.pipe( share() );
 
 		this.initializeSemanticUIElements();
+	}
+
+	ngOnDestroy() {
+		//dispatch add wip query to save the current query on the storage
+		this.store.dispatch( new SparqlClientActions.AddWIPQuery( this.query ) );
 	}
 
 	async on_queryBuilder_execute() {
@@ -449,11 +468,9 @@ export class SPARQLClientComponent implements OnInit {
 		}
 	}
 
-	private resetQuery() {
-		this.query = {
-			endpoint: "",
-			content: ""
-		};
+	private resetQuery( query = { endpoint: "", content: "" } ) {
+		this.query = query;
+
 	}
 
 	private async execute( _query:SPARQLQuery ):Promise<SPARQLClientResponse> {
