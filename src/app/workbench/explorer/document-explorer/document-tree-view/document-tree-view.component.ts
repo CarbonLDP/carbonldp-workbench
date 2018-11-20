@@ -8,14 +8,11 @@ import { URI } from "carbonldp/RDF/URI";
 import { SPARQLBindingObject, SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { C, LDP } from "carbonldp/Vocabularies";
 
-import * as $ from "jquery";
-import "semantic-ui/semantic";
 
 import "jstree/dist/jstree.min";
-import "!style-loader!css-loader!jstree/dist/themes/default/style.min.css";
 
 @Component( {
-	selector: "cw-document-treeview",
+	selector: "app-document-treeview",
 	templateUrl: "./document-tree-view.component.html",
 	styleUrls: [ "./document-tree-view.component.scss" ],
 } )
@@ -30,22 +27,22 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	nodeChildren:JSTreeNode[] = [];
 	canDelete:boolean = true;
 
-	private _selectedURI:string = "";
+	private _selectedURIs:Array<string> = [ "" ];
 
-	set selectedURI( value:string ) {
-		this._selectedURI = value;
-		this.onSelectDocument.emit( this.selectedURI );
+	set selectedURIs( value:Array<string> ) {
+		this._selectedURIs = value;
+		this.onSelectDocuments.emit( this.selectedURIs );
 	}
 
-	get selectedURI():string {
-		return this._selectedURI;
+	get selectedURIs():Array<string> {
+		return this._selectedURIs;
 	}
 
 	public sortAscending:boolean = true;
 	public orderBy:OrderBy.CREATED | OrderBy.MODIFIED | OrderBy.SLUG = OrderBy.CREATED;
 	public orderOptions:typeof OrderBy = OrderBy;
 
-	@Input() refreshNode:EventEmitter<string> = new EventEmitter<string>();
+	@Input() refreshNodes:EventEmitter<string | string[]> = new EventEmitter<string | string[]>();
 	@Input() openNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onResolveUri:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onError:EventEmitter<Errors.HTTPError> = new EventEmitter<Errors.HTTPError>();
@@ -53,7 +50,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	@Output() onShowCreateChildForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onShowDeleteChildForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onShowCreateAccessPointForm:EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Output() onSelectDocument:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onSelectDocuments:EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
 
 	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
 		this.element = element;
@@ -63,25 +60,20 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.$tree = this.$element.find( ".treeview-content" );
+
+		// Initialize Semantic UI elements
 		this.initializeOptionsButton();
 		this.initalizeSortByButton();
+
 		this.onLoadingDocument.emit( true );
-		this.getDocumentTree().then( () => {
-			this.onLoadingDocument.emit( false );
-		} );
-		this.refreshNode.subscribe( ( nodeId:string ) => {
-			this.jsTree.select_node( nodeId );
-			this.loadNode( nodeId );
-		} );
-		this.openNode.subscribe( ( nodeId:string ) => {
-			this.jsTree.select_node( nodeId );
-		} );
+		this.getDocumentTree().then( () => this.onLoadingDocument.emit( false ) );
+
+		this.refreshNodes.subscribe( this.handleRefreshNodes.bind( this ) );
+		this.openNode.subscribe( this.handleOpenNode.bind( this ) );
 	}
 
 	getDocumentTree():Promise<Document | void> {
-		return this.carbonldp.documents.get( "" ).then( ( resolvedRoot:Document ) => {
-			return resolvedRoot.refresh();
-		} ).then( ( updatedRoot:Document ) => {
+		return this.carbonldp.documents.$get( { ensureLatest: true } ).then( ( updatedRoot:Document ) => {
 
 			let isRequiredSystemDocument:boolean = updatedRoot.types.findIndex( ( type:string ) => type === `${C.namespace}RequiredSystemDocument` ) !== - 1;
 
@@ -116,7 +108,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			"core": {
 				"data": this.resolveNodeData.bind( this ),
 				"check_callback": true,
-				"multiple": false,
+				"multiple": true,
 			},
 			"types": {
 				"loading": {
@@ -138,8 +130,12 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} ).jstree( true );
 		this.$tree.on( "select_node.jstree", (( e:Event, data:any ):void => {
 			let node:any = data.node;
-			this.selectedURI = node.id;
-			this.canDelete = ! node.data.isRequiredSystemDocument;
+			this.selectedURIs = data.selected;
+			this.canDelete = node.data.isRequiredSystemDocument
+				? false
+				: data.selected.length === 1
+					? true
+					: this.canDelete;
 		}) as any );
 		this.$tree.on( "loaded.jstree", () => {
 			this.jsTree.select_node( this.nodeChildren[ 0 ].id );
@@ -151,6 +147,24 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} );
 	}
 
+	handleRefreshNodes( nodeIDs:string | string[] ) {
+		nodeIDs = ! Array.isArray( nodeIDs ) ? [ nodeIDs ] : nodeIDs;
+		// Remove duplicates
+		nodeIDs = Array.from( new Set( nodeIDs ) );
+
+		for( let nodeID of nodeIDs ) {
+			this.loadNode( nodeID );
+		}
+
+		this.jsTree.select_node( nodeIDs );
+
+		this.selectedURIs = nodeIDs;
+	}
+
+	handleOpenNode( nodeID:string ) {
+		this.jsTree.select_node( nodeID );
+	}
+
 	loadNode( obj:any ):void {
 		let node:JSTreeNode = this.jsTree.get_node( obj );
 		this.jsTree.refresh_node( node );
@@ -159,7 +173,6 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	resolveNodeData( node:JSTreeNode, callBack:( children:JSTreeNode[] ) => {} ):void {
-
 		// If the node doesn't have an id, load the first node, else load node's children
 		if( node.id === "#" ) {
 			callBack( this.nodeChildren );
@@ -197,7 +210,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			    }
 			}
 		`;
-		return this.carbonldp.documents.executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
+		return this.carbonldp.documents.$executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
 			let nodes:Map<string, JSTreeNode> = new Map<string, JSTreeNode>();
 
 			results.bindings.forEach( ( binding:SPARQLBindingObject & BindingResult ) => this.addBindingToNodes( nodes, binding ) );
@@ -208,8 +221,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		} );
 	}
 
-	refreshSelectedNode():void {
-		this.jsTree.refresh_node( this.selectedURI );
+	refreshSelectedNodes():void {
+		for( let selectedURI of this.selectedURIs ) {
+			this.jsTree.refresh_node( selectedURI );
+		}
 	}
 
 	getSlug( node:Document | string ):string {
@@ -240,10 +255,12 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	}
 
 	reorderBranch():void {
-		let node:JSTreeNode = this.jsTree.get_node( this.selectedURI );
+		for( let selectedURI of this.selectedURIs ) {
+			let node:JSTreeNode = this.jsTree.get_node( selectedURI );
 
-		this.jsTree.sort( node, true );
-		this.jsTree.redraw_node( node, true, false, false );
+			this.jsTree.sort( node, true );
+			this.jsTree.redraw_node( node, true, false, false );
+		}
 	}
 
 	private sort( nodeAId?:string, nodeBId?:string ):number {

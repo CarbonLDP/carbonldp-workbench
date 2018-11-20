@@ -1,22 +1,26 @@
-import { Component, ElementRef, Input, Output, EventEmitter, SimpleChange, AfterViewInit, OnChanges } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChange } from "@angular/core";
 
 import { RDFNode } from "carbonldp/RDF/Node"
 
 import { BlankNodeStatus } from "./blank-node.component"
 import { JsonLDKeyword } from "../document-explorer-library";
 
-import * as $ from "jquery";
-import "semantic-ui/semantic";
-
 /*
 *  Lists all the Blank Nodes a Documents contains
 * */
 @Component( {
-	selector: "cw-blank-nodes",
+	selector: "app-blank-nodes",
 	templateUrl: "./blank-nodes.component.html",
 	styleUrls: [ "./blank-nodes.component.scss" ],
 } )
 export class BlankNodesComponent implements AfterViewInit, OnChanges {
+	@Input() blankNodes:BlankNodeStatus[] = [];
+	@Input() namedFragments:RDFNode[] = [];
+	@Input() documentURI:string = "";
+
+	@Output() onChanges:EventEmitter<BlankNodesRecords> = new EventEmitter<BlankNodesRecords>();
+	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
 	element:ElementRef;
 	$element:JQuery;
@@ -25,14 +29,6 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 	openedBlankNodes:BlankNodeStatus[] = [];
 	blankNodesRecords:BlankNodesRecords = new BlankNodesRecords();
 	askingDeletionBlankNode:BlankNodeStatus;
-
-	@Input() blankNodes:BlankNodeStatus[] = [];
-	@Input() namedFragments:RDFNode[] = [];
-	@Input() documentURI:string = "";
-
-	@Output() onChanges:EventEmitter<BlankNodesRecords> = new EventEmitter<BlankNodesRecords>();
-	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 
 	constructor( element:ElementRef ) {
 		this.element = element;

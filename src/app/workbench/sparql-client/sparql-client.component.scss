@@ -1,38 +1,11 @@
 :host {
 	display: block;
+
 	.query-builder {
 		padding-left: 0;
 		padding-right: 0;
-
-		.queries-list {
-			> p {
-				font-size: 2em;
-				color: #ffffff;
-				padding: .5em;
-			}
-			.item {
-				.name {
-					font-size: 1.3em;
-				}
-				.operation {
-					font-size: 1em;
-					font-family: monospace;
-				}
-				.operation.select {
-					color: cornflowerblue;
-				}
-				.operation.describe {
-					color: mediumpurple;
-				}
-				.operation.construct {
-					color: mediumvioletred;
-				}
-				.operation.ask {
-					color: orange;
-				}
-			}
-		}
 	}
+
 	.query-results {
 		margin-bottom: 6%;
 		padding-left: 0;
@@ -50,20 +23,88 @@
 		}
 	}
 
-	::ng-deep{
-		.o-default-prefixes {
-			.sparql {
-				code {
-					.hljs-literal {
-						color: #ffb928;
-					}
-					.hljs-attr, .hljs-string{
-						color: #00a8c6;
-					}
-				}
-
+	.saveButton {
+		.star.icon {
+			&.saved {
+				color: #ff7600;
 			}
 		}
 	}
 }
 
+.app-savedQuery {
+	// Center elements vertically
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+
+	border-bottom: 1px solid #61696E;
+
+	height: 50px;
+
+	// Button-like behaviour
+	cursor: pointer;
+
+	&:hover {
+		background: #464E55;
+	}
+}
+
+.app-savedQuery-label {
+	flex: 1 1 auto;
+
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	padding-left: 15px;
+	height: 100%;
+
+	// Semantic UI's default line-height messes up with the vertical centering
+	line-height: normal;
+}
+
+.app-savedQuery-name {
+	font-size: 1.3em;
+}
+
+.app-savedQuery-operation {
+	font-size: 1em;
+	font-family: monospace;
+
+	// Colors depending on the query's type
+	&--select {
+		color: cornflowerblue;
+	}
+
+	&--describe {
+		color: mediumpurple;
+	}
+
+	&--construct {
+		color: mediumvioletred;
+	}
+
+	&--ask {
+		color: orange;
+	}
+}
+
+.app-savedQuery-deleteButton {
+	flex: 0 0 auto;
+
+	margin: 0 15px;
+
+	// Square icon button
+	width: 1em;
+	height: 1em;
+
+	// Semantic UI's default line-height messes up with the vertical centering
+	line-height: normal;
+}
+
+.app-duration-label {
+	display: block;
+
+	margin-bottom: 15px;
+}

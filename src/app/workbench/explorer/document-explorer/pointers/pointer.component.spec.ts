@@ -1,5 +1,5 @@
-import { Component, ViewChild, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
+import { Component, DebugElement, ViewChild } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 
 import { JsonLDKeyword, Modes } from "../document-explorer-library";
@@ -19,7 +19,7 @@ export function pointerSpecs() {
 		@Component( {
 			template: `
 				<table>
-					<tr class="cw-pointer" 
+					<tr class="app-pointer" 
 						[pointer]="pointerRow"
 						[blankNodes]="blankNodes" [namedFragments]="namedFragments"
 						[partOfList]="partOfList" [documentURI]="documentURI"></tr>

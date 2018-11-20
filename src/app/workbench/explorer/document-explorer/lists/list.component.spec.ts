@@ -1,14 +1,14 @@
-import { Component, ViewChild, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
+import { Component, DebugElement, ViewChild } from "@angular/core";
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
 import { FormsModule } from "@angular/forms";
 
-import { ListStatus, ListComponent } from "./../lists/list.component";
-import { LiteralStatus, LiteralComponent } from "./../literals/literal.component";
-import { PointerStatus, PointerComponent } from "./../pointers/pointer.component";
+import { ListComponent, ListStatus } from "./../lists/list.component";
+import { LiteralComponent, LiteralStatus } from "./../literals/literal.component";
+import { PointerComponent, PointerStatus } from "./../pointers/pointer.component";
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
-import { PointerValidator, LiteralValueValidator } from "./../document-explorer-validators";
+import { LiteralValueValidator, PointerValidator } from "./../document-explorer-validators";
 import { JsonLDKeyword } from "../document-explorer-library";
 
 export function listSpecs() {
@@ -20,11 +20,11 @@ export function listSpecs() {
 		let de:DebugElement;
 
 		@Component( {
-			template: `<cw-list [documentURI]="documentURI"
+			template: `<app-list [documentURI]="documentURI"
 								[list]="list"
 								[pointers]="pointers"
 								[blankNodes]="blankNodes"
-								[namedFragments]="namedFragments"></cw-list>`
+								[namedFragments]="namedFragments"></app-list>`
 		} )
 		class TestComponent {
 
@@ -118,7 +118,7 @@ export function listSpecs() {
 				done();
 			} );
 
-			let pointerId:HTMLElement = de.nativeElement.querySelector( "tr.cw-pointer .read-mode a" );
+			let pointerId:HTMLElement = de.nativeElement.querySelector( "tr.app-pointer .read-mode a" );
 			pointerId.click();
 		} );
 
@@ -144,7 +144,7 @@ export function listSpecs() {
 				done();
 			} );
 
-			let pointerId:HTMLElement = de.nativeElement.querySelector( "tr.cw-pointer .read-mode a" );
+			let pointerId:HTMLElement = de.nativeElement.querySelector( "tr.app-pointer .read-mode a" );
 			pointerId.click();
 		} );
 
@@ -313,7 +313,7 @@ export function listSpecs() {
 			addLiteralButton.click();
 			fixture.detectChanges();
 
-			let literalStatus:HTMLElement = de.nativeElement.querySelector( "tr.cw-literal" );
+			let literalStatus:HTMLElement = de.nativeElement.querySelector( "tr.app-literal" );
 			expect( literalStatus ).not.toBeNull();
 			expect( comp.listCmp.tempList.length ).toEqual( 2 );
 		} );
@@ -333,7 +333,7 @@ export function listSpecs() {
 			addPointerButton.click();
 			fixture.detectChanges();
 
-			let pointerRow:HTMLElement = de.nativeElement.querySelectorAll( "tr.cw-pointer" )[ 0 ];
+			let pointerRow:HTMLElement = de.nativeElement.querySelectorAll( "tr.app-pointer" )[ 0 ];
 			expect( pointerRow ).not.toBeNull();
 			expect( comp.listCmp.tempList.length ).toEqual( 2 );
 		} );

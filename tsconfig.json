@@ -1,28 +1,22 @@
 {
-	"compilerOptions": {
-		"target": "es5",
-		"module": "commonjs",
-		"noImplicitAny": false,
-		"allowSyntheticDefaultImports": true,
-		"suppressImplicitAnyIndexErrors": true,
-		"sourceMap": true,
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
-		"moduleResolution": "node",
-		"lib": [ "es2015", "dom" ],
-		"baseUrl": ".",
-		"paths": {
-			"app/*": [ "src/app/*" ],
-			"semantic-ui/*": [ "src/semantic/dist/*"]
-		},
-		"typeRoots": [
-			"./node_modules/@types"
-		]
-	},
-	"compileOnSave": false,
-	"exclude": [
-		"dist",
-		"node_modules/*",
-		"node_modules/typescript"
-	]
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "module": "es2015",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2015",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./typings"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ]
+  }
 }
