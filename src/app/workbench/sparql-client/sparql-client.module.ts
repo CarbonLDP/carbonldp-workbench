@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 
@@ -16,14 +16,19 @@ import { URIPipe } from "./resultset-table/uri.pipe";
 import { ResultsetTableComponent } from "./resultset-table/resultset-table.component";
 // Modules
 import { AppCommonModule } from "app/common/app-common.module";
-
+// Store
+import { StoreModule } from "@ngrx/store";
+import { reducer } from "./store/reducers/sparql-client.reducer";
 
 @NgModule( {
 	imports: [
 		CommonModule,
 		RouterModule,
 		AppCommonModule,
-		FormsModule
+		FormsModule,
+		StoreModule.forRoot({
+			sparqlClient: reducer
+		})
 	],
 	declarations: [
 		SPARQLClientComponent,
