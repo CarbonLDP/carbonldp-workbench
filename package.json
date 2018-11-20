@@ -44,6 +44,7 @@
     "@angular/pwa": "^0.10.2",
     "@angular/router": "~7.0.0",
     "@angular/service-worker": "~7.0.0",
+    "@ngrx/store": "^6.1.2",
     "@types/codemirror": "0.0.65",
     "@types/jstree": "^3.3.37",
     "@types/node": "^10.12.0",
