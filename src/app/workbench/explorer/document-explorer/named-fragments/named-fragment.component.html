@@ -1,5 +1,5 @@
 <!-- START: Action buttons -->
-<button class="ui basic compact labeled right icon button" (click)="createProperty()" *ngIf="canEdit" [ngClass]="{disabled: modes.READ !== state}" [disabled]="modes.READ !== state">
+<button class="ui basic compact labeled right icon button" (click)="createProperty()" *ngIf="canEdit" [ngClass]="{disabled: States.READ !== state}" [disabled]="States.READ !== state">
 	<i class="plus icon"></i>
 	Add Property
 </button>
@@ -20,7 +20,7 @@
 		             [namedFragments]="namedFragments"
 		             [documentURI]="documentURI"
 		             [existingProperties]="existingPropertiesNames"
-		             [mode]="propertyStatus.isBeingCreated? modes.EDIT : modes.READ"
+		             [mode]="propertyStatus.isBeingCreated? States.EDIT : States.READ"
 
 		             (onChangeProperty)="changeProperty(propertyStatus, i)"
 		             (onDeleteProperty)="deleteProperty(propertyStatus, i)"

@@ -1,48 +1,22 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChange, SimpleChanges, OnChanges, OnInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node";
 
-import { Modes, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
+import { ResourceRecords } from "../document-explorer-library";
 import { DocumentsResolverService } from "../documents-resolver.service";
 import { Property, PropertyStatus } from "../property/property.component";
+import { ResourceFeatures, States } from "../resource-features.component";
 
-/*
-*  Displays the contents of a Document with all its properties
-* */
+/**
+ *  Displays the contents of a Document with all its properties
+ */
 @Component( {
 	selector: "app-document-resource",
 	templateUrl: "./document-resource.component.html",
 	styles: [ ":host { display:block; }" ]
 } )
-
-export class DocumentResourceComponent extends ResourceFeatures implements AfterViewInit,  OnInit, OnChanges {
-	element:ElementRef;
-	$element:JQuery;
-	documentsResolverService:DocumentsResolverService;
-	carbonldp:CarbonLDP;
-
-	modes:typeof Modes = Modes;
-
-	_state:string;
-	set state( state:string ) {
-		this._state = state;
-	};
-
-	get state() {
-		return this._state;
-	}
-
-	private _rootHasChanged:boolean;
-	set rootHasChanged( hasChanged:boolean ) {
-		this._rootHasChanged = hasChanged;
-		this.onChanges.emit( this.records );
-	}
-
-	get rootHasChanged() {
-		return this._rootHasChanged;
-	}
-
+export class DocumentResourceComponent extends ResourceFeatures implements AfterViewInit, OnInit, OnChanges {
 	@Input() displayOnly:string[] = [];
 	@Input() hiddenProperties:string[] = [];
 	@Input() blankNodes:RDFNode[] = [];
@@ -55,12 +29,25 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChanges:EventEmitter<ResourceRecords> = new EventEmitter<ResourceRecords>();
 
+	$element:JQuery;
 
-	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService, carbonldp:CarbonLDP ) {
+	private _rootHasChanged:boolean;
+	set rootHasChanged( hasChanged:boolean ) {
+		this._rootHasChanged = hasChanged;
+		this.onChanges.emit( this.records );
+	}
+
+	get rootHasChanged() {
+		return this._rootHasChanged;
+	}
+
+	constructor(
+		carbonldp:CarbonLDP,
+		private element:ElementRef,
+		private documentsResolverService:DocumentsResolverService
+	) {
 		super( carbonldp );
-		this.element = element;
-		this.documentsResolverService = documentsResolverService;
-		this.carbonldp = carbonldp;
+
 		this.insertOrder = 2;
 	}
 
@@ -83,25 +70,25 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 		return this.hiddenProperties.indexOf( propertyName ) !== - 1 ? false : true;
 	}
 
-	changeProperty( property:PropertyStatus, index:number ):void {
-		super.changeProperty( property, index );
-	}
-
 	deleteProperty( property:PropertyStatus, index:number ):void {
-		this.state = Modes.READ;
+		this.state = States.READ;
 		super.deleteProperty( property, index );
 	}
 
 	addProperty( property:PropertyStatus, index:number ):void {
 		super.addProperty( property, index );
-		this.state = Modes.READ;
+		this.state = States.READ;
 	}
 
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
 		super.createProperty( property, propertyStatus );
-		this.state = Modes.EDIT;
+		this.state = States.EDIT;
 
 		// Animates created property
+		/*
+			2018-11-09 @MiguelAraCo
+			TODO[code-quality]: Use vanilla JavaScript and CSS instead of JQuery
+		*/
 		setTimeout( () => {
 			let createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
 			createdPropertyComponent.addClass( "transition hidden" );
@@ -131,7 +118,7 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 
 	private initData():void {
 		this.records = new ResourceRecords();
-		this.state = Modes.READ;
+		this.state = States.READ;
 		this.getProperties()
 			.then( () => {
 				this.updateExistingProperties();

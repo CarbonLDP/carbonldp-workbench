@@ -1,11 +1,12 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChange, SimpleChanges, OnChanges, OnInit } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp/CarbonLDP";
 import { RDFNode } from "carbonldp/RDF/Node";
 
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { Property, PropertyStatus } from "../property/property.component";
-import { JsonLDKeyword, Modes, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
+import { JsonLDKeyword, Modes, ResourceRecords } from "../document-explorer-library";
+import { ResourceFeatures, States } from "../resource-features.component";
 
 /*
 *  Displays the contents of a Named Fragment with all its properties
@@ -19,19 +20,6 @@ import { JsonLDKeyword, Modes, ResourceFeatures, ResourceRecords } from "../docu
 export class NamedFragmentComponent extends ResourceFeatures implements AfterViewInit, OnInit, OnChanges {
 	element:ElementRef;
 	$element:JQuery;
-	carbonldp:CarbonLDP;
-
-	modes:typeof Modes = Modes;
-
-	_state:string;
-	set state( state:string ) {
-		this._state = state;
-	};
-
-	get state() {
-		return this._state;
-	}
-
 
 	private _namedFragmentHasChanged:boolean;
 	set namedFragmentHasChanged( hasChanged:boolean ) {
@@ -85,25 +73,29 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 	}
 
 	deleteProperty( property:PropertyStatus, index:number ):void {
-		this.state = Modes.READ;
+		this.state = States.READ;
 		super.deleteProperty( property, index );
 	}
 
 	addProperty( property:PropertyStatus, index:number ):void {
-		this.state = Modes.READ;
+		this.state = States.READ;
 		super.addProperty( property, index );
 	}
 
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
-		this.state = Modes.EDIT;
+		this.state = States.EDIT;
 		super.createProperty( property, propertyStatus );
 
 		// Animates created property
+		/*
+			2018-11-09 @MiguelAraCo
+			TODO[code-quality]: Use vanilla JavaScript and CSS instead of JQuery
+		*/
 		setTimeout( () => {
-			let createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
+			const createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
 			createdPropertyComponent.addClass( "transition hidden" );
 			createdPropertyComponent.transition( { animation: "drop" } );
-		} );
+		}, 0 );
 	}
 
 	updateExistingProperties():void {
@@ -140,7 +132,7 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 	}
 
 	private initData() {
-		this.state = Modes.READ;
+		this.state = States.READ;
 		this.rootNode = this.namedFragment.copy;
 		if( ! ! this.namedFragment.records ) this.records = this.namedFragment.records;
 		this.updateExistingProperties();

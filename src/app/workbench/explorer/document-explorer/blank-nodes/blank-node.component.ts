@@ -1,22 +1,23 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, SimpleChange, SimpleChanges, OnInit, OnChanges } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node";
 
 
 import { Property, PropertyStatus } from "../property/property.component";
-import { JsonLDKeyword, Modes, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
+import { JsonLDKeyword, ResourceRecords } from "../document-explorer-library";
+import { ResourceFeatures, States } from "../resource-features.component";
 
-/*
-*  Displays the contents of a Blank Node with all its properties
-* */
+/**
+ *  Displays the contents of a Blank Node with all its properties
+ */
 @Component( {
 	selector: "app-blank-node",
 	templateUrl: "./blank-node.component.html",
 	styles: [ ":host { display:block; }" ]
 } )
 
-export class BlankNodeComponent extends ResourceFeatures implements AfterViewInit, OnInit, OnChanges{
+export class BlankNodeComponent extends ResourceFeatures implements AfterViewInit, OnInit, OnChanges {
 	@Input() blankNodes:BlankNodeStatus[] = [];
 	@Input() namedFragments:RDFNode[] = [];
 	@Input() canEdit:boolean = true;
@@ -24,28 +25,13 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 
 	@Input() blankNode:BlankNodeStatus;
 
-
 	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChanges:EventEmitter<BlankNodeStatus> = new EventEmitter<BlankNodeStatus>();
 
-	carbonldp:CarbonLDP;
-	element:ElementRef;
 	$element:JQuery;
 
-
-	modes:typeof Modes = Modes;
 	nonEditableProperties:string[] = [ JsonLDKeyword.ID ];
-
-	_state:string;
-	set state( state:string ) {
-		this._state = state;
-	};
-
-	get state() {
-		return this._state;
-	}
-
 
 	private _blankNodeHasChanged:boolean;
 	set blankNodeHasChanged( hasChanged:boolean ) {
@@ -62,11 +48,11 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 
 	get blankNodeHasChanged() { return this._blankNodeHasChanged; }
 
-
-	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
+	constructor(
+		carbonldp:CarbonLDP,
+		private element:ElementRef,
+	) {
 		super( carbonldp );
-		this.element = element;
-		this.carbonldp = carbonldp;
 	}
 
 	ngAfterViewInit():void {
@@ -86,20 +72,24 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 	}
 
 	deleteProperty( property:PropertyStatus, index:number ):void {
-		this.state = Modes.READ;
+		this.state = States.READ;
 		super.deleteProperty( property, index );
 	}
 
 	addProperty( property:PropertyStatus, index:number ):void {
 		super.addProperty( property, index );
-		this.state = Modes.READ;
+		this.state = States.READ;
 	}
 
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
-		this.state = Modes.EDIT;
+		this.state = States.EDIT;
 		super.createProperty( property, propertyStatus );
 
 		// Animates created property
+		/*
+			2018-11-09 @MiguelAraCo
+			TODO[code-quality]: Use vanilla JavaScript and CSS instead of JQuery
+		*/
 		setTimeout( () => {
 			let createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
 			createdPropertyComponent.addClass( "transition hidden" );
@@ -145,7 +135,7 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 	}
 
 	private initData() {
-		this.state = Modes.READ;
+		this.state = States.READ;
 		this.rootNode = this.blankNode.copy;
 		if( ! ! this.blankNode.records ) this.records = this.blankNode.records;
 		this.updateExistingProperties();

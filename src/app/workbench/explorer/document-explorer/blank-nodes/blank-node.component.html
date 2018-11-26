@@ -1,5 +1,5 @@
 <!-- START: Blank Node buttons -->
-<button class="ui basic compact labeled right icon button" (click)="createProperty()" *ngIf="canEdit" [ngClass]="{disabled: modes.READ !== state}" [disabled]="modes.READ !== state">
+<button class="ui basic compact labeled right icon button" (click)="createProperty()" *ngIf="canEdit" [ngClass]="{disabled: States.READ !== state}" [disabled]="States.READ !== state">
 	<i class="plus icon"></i>
 	Add Property
 </button>
@@ -11,23 +11,23 @@
 	<!-- START: Properties of the Blank Node -->
 	<ng-template ngFor let-propertyStatus="$implicit" [ngForOf]="properties" let-i="index">
 		<app-property class="property item"
-		             *ngIf="!isTemporalId(propertyStatus)"
-		             [attr.data-tar]="propertyStatus.copy? propertyStatus.copy.name : propertyStatus.added.name"
+		              *ngIf="!isTemporalId(propertyStatus)"
+		              [attr.data-tar]="propertyStatus.copy? propertyStatus.copy.name : propertyStatus.added.name"
 
-		             [property]="propertyStatus"
-		             [blankNodes]="blankNodes"
-		             [namedFragments]="namedFragments"
-		             [canEdit]="canEditProperty(propertyStatus)"
-		             [documentURI]="documentURI"
-		             [existingProperties]="existingPropertiesNames"
-		             [mode]="propertyStatus.isBeingCreated? modes.EDIT : modes.READ"
+		              [property]="propertyStatus"
+		              [blankNodes]="blankNodes"
+		              [namedFragments]="namedFragments"
+		              [canEdit]="canEditProperty(propertyStatus)"
+		              [documentURI]="documentURI"
+		              [existingProperties]="existingPropertiesNames"
+		              [mode]="propertyStatus.isBeingCreated? States.EDIT : States.READ"
 
-		             (onChangeProperty)="changeProperty(propertyStatus, i)"
-		             (onDeleteProperty)="deleteProperty(propertyStatus, i)"
-		             (onSaveNewProperty)="addProperty(propertyStatus, i)"
+		              (onChangeProperty)="changeProperty(propertyStatus, i)"
+		              (onDeleteProperty)="deleteProperty(propertyStatus, i)"
+		              (onSaveNewProperty)="addProperty(propertyStatus, i)"
 
-		             (onGoToBlankNode)="openBlankNode( $event )"
-		             (onGoToNamedFragment)="openNamedFragment($event)">
+		              (onGoToBlankNode)="openBlankNode( $event )"
+		              (onGoToNamedFragment)="openNamedFragment($event)">
 		</app-property>
 	</ng-template>
 	<!-- END: Properties of the Blank Node -->
