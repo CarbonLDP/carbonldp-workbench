@@ -14,7 +14,7 @@ export enum States {
  *   to allow them to keep a record of the changes made to their properties
  */
 export abstract class ResourceFeatures {
-	States:typeof States;
+	States:typeof States = States;
 
 	state:States;
 
