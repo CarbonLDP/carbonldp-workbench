@@ -1,3 +1,5 @@
+import { Input } from "@angular/core";
+
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF/Node";
 
@@ -14,14 +16,17 @@ export enum States {
  *   to allow them to keep a record of the changes made to their properties
  */
 export abstract class ResourceFeatures {
-	States:typeof States;
+	@Input() rootNode:RDFNode;
+
+	States:typeof States = States;
 
 	state:States;
 
 	records:ResourceRecords;
-	rootNode:RDFNode;
 	properties:PropertyStatus[];
 	existingPropertiesNames:string[] = [];
+	// Index to insert new properties
+	// FIXME: Insert properties after @type (if present)
 	insertOrder:number = 1;
 	resourceHasChanged:boolean;
 	accessPointsHasMemberRelationProperties:string[] = [];
@@ -35,7 +40,6 @@ export abstract class ResourceFeatures {
 	 *   and updates the existing properties
 	 */
 	changeProperty( property:PropertyStatus, index:number ):void {
-		if( typeof this.records === "undefined" ) this.records = new ResourceRecords();
 		if( typeof property.modified !== "undefined" ) {
 			this.records.changes.set( property.modified.id, property );
 		} else if( typeof property.added === "undefined" ) {
@@ -50,12 +54,14 @@ export abstract class ResourceFeatures {
 	}
 
 
-	/*
-	*   Deletes a property from the records
-	*   and updates the existing properties
-	* */
-	deleteProperty( property:PropertyStatus, index:number ):void {
-		if( typeof this.records === "undefined" ) this.records = new ResourceRecords();
+	/**
+	 *   Deletes a property from the records
+	 *   and updates the existing properties
+	 */
+	deleteProperty( property:PropertyStatus, index:number ) {
+
+
+		// FIXME: Remove old code
 		if( typeof property.added !== "undefined" ) {
 			this.records.additions.delete( property.added.id );
 			this.properties.splice( index, 1 );
@@ -66,12 +72,11 @@ export abstract class ResourceFeatures {
 	}
 
 
-	/*
-	*   Adds a new property to the recrods
-	*   and updates the existing properties
-	* */
+	/**
+	 *   Adds a new property to the records
+	 *   and updates the existing properties
+	 */
 	addProperty( property:PropertyStatus, index:number ):void {
-		if( typeof this.records === "undefined" ) this.records = new ResourceRecords();
 		if( typeof property.added !== "undefined" ) {
 			if( property.added.id === property.added.name ) {
 				this.records.additions.set( property.added.id, property );
@@ -85,13 +90,13 @@ export abstract class ResourceFeatures {
 	}
 
 
-	/*
-	*   Creates a new empty property.
-	* */
+	/**
+	 *   Creates a new empty property.
+	 */
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
-		let numberOfProperty:number = ! ! this.records ? (this.records.additions.size + 1) : 1;
-		let newProperty:PropertyStatus = {
-			added: <Property>{
+		const numberOfProperty:number = ! ! this.records ? (this.records.additions.size + 1) : 1;
+		const newProperty:PropertyStatus = {
+			added: {
 				id: "",
 				name: `${this.carbonldp.baseURI}vocabularies/main/#newProperty${numberOfProperty}`,
 				value: []
@@ -102,18 +107,19 @@ export abstract class ResourceFeatures {
 	}
 
 
-	/*
-	*   Updates the properties and the existing properties names with the
-	*   content of the records.
-	* */
+	/**
+	 *   Updates the properties and the existing properties names with the
+	 *   content of the records.
+	 */
 	updateExistingProperties():void {
 		this.properties = [];
+
 		this.existingPropertiesNames = Object.keys( this.rootNode );
 		// Add hasMemberRelationProperties
 		this.existingPropertiesNames.splice( this.existingPropertiesNames.length - 3, 0, ...this.accessPointsHasMemberRelationProperties );
 		// Remove duplicated properties
 		this.existingPropertiesNames = this.existingPropertiesNames.filter( ( name:string, index:number, array:string[] ) => array.indexOf( name ) === index );
-		// Fill exisiting properties
+		// Fill existing properties
 		this.existingPropertiesNames.forEach( ( propName:string ) => {
 			this.properties.push( {
 				copy: {

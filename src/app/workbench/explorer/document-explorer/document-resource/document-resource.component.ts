@@ -23,7 +23,6 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 	@Input() namedFragments:RDFNode[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
-	@Input() rootNode:RDFNode;
 
 	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
@@ -53,6 +52,18 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
+	}
+
+	ngOnInit() {
+		this.initData();
+	}
+
+	ngOnChanges( changes:SimpleChanges ) {
+		if( "rootNode" in changes ) {
+			const change:SimpleChange = changes.rootNode;
+			this.rootNode = Object.assign( {}, change.currentValue );
+			this.initData();
+		}
 	}
 
 	openBlankNode( id:string ):void {
@@ -96,45 +107,21 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 		} );
 	}
 
-	updateExistingProperties():void {
+	updateExistingProperties() {
 		super.updateExistingProperties();
 		this.rootHasChanged = this.resourceHasChanged;
 	}
 
-	/*
-	*   Returns additional properties for a document. In this case Access Points
-	* */
-	getProperties():Promise<void> {
-		return this.getAccessPointsHasMemberRelationProperties( this.documentURI )
-			.then( ( accessPointsHasMemberRelationProperties:string[] ) => {
-				this.accessPointsHasMemberRelationProperties = accessPointsHasMemberRelationProperties;
-				return Promise.resolve();
-			} );
-	}
-
-	getAccessPointsHasMemberRelationProperties( documentURI:string ):Promise<string[]> {
-		return this.documentsResolverService.getAccessPointsHasMemberRelationProperties( documentURI );
-	}
-
-	private initData():void {
+	private async initData() {
 		this.records = new ResourceRecords();
 		this.state = States.READ;
-		this.getProperties()
-			.then( () => {
-				this.updateExistingProperties();
-			} );
+
+		await this.getAdditionalInformation();
+		this.updateExistingProperties();
 	}
 
-	ngOnInit() {
-		this.initData();
-	}
-
-	ngOnChanges( changes:SimpleChanges ) {
-		if( "rootNode" in changes ) {
-			let change:SimpleChange = changes.rootNode;
-			this.rootNode = Object.assign( {}, change.currentValue );
-			this.initData();
-		}
+	private async getAdditionalInformation() {
+		this.accessPointsHasMemberRelationProperties = await this.documentsResolverService.getAccessPointsHasMemberRelations( this.documentURI );
 	}
 }
 

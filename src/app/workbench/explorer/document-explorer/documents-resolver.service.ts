@@ -5,9 +5,9 @@ import { RequestOptions, RequestService, RequestUtils, Response } from "carbonld
 import { LDP } from "carbonldp/Vocabularies";
 import { RDFDocument } from "carbonldp/RDF/Document";
 import { JSONLDParser } from "carbonldp/JSONLD";
+import { Pointer } from "carbonldp/Pointer";
 import { Document } from "carbonldp/Document";
 import { BaseAccessPoint } from "carbonldp/AccessPoint";
-import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { _getErrorResponseParserFn } from "carbonldp/DocumentsRepository/Utils";
 
 @Injectable()
@@ -23,7 +23,7 @@ export class DocumentsResolverService {
 	}
 
 	get( uri:string ):Promise<RDFDocument | null> {
-		if( ! uri ) return <any> Promise.reject( new Error( "Provide the uri" ) );
+		if( ! uri ) return <any>Promise.reject( new Error( "Provide the uri" ) );
 		let requestOptions:RequestOptions = { sendCredentialsOnCORS: true, };
 		// TODO: ADD authentication `addAuthentication( requestOptions )` if authenticated
 
@@ -68,17 +68,16 @@ export class DocumentsResolverService {
 			} );
 	}
 
-	getAccessPointsHasMemberRelationProperties( documentURI:string ):Promise<string[]> {
-		return this.carbonldp.documents.$executeSELECTQuery( documentURI,
+	async getAccessPointsHasMemberRelations( documentURI:string ):Promise<string[]> {
+		const results = await this.carbonldp.documents.$executeSELECTQuery<{ accessPointURI:Pointer, propertyName:Pointer }>( documentURI,
 			`SELECT ?accessPointURI ?propertyName 
 						WHERE {
 						      ?accessPointURI <${LDP.membershipResource}> <${documentURI}>.
 					          ?accessPointURI <${LDP.hasMemberRelation}> ?propertyName
 			            }`
-		).then( ( results:SPARQLSelectResults ) => {
+		);
 
-			return results.bindings.map( ( value:{ accessPointURI:any, propertyName:any } ) => value.propertyName.id );
-		} );
+		return results.bindings.map( ( binding ) => binding.propertyName.$id );
 	}
 
 	delete( documentURI:string ):Promise<void> {
@@ -86,7 +85,7 @@ export class DocumentsResolverService {
 	}
 
 	update( uri:string, body:string ):Promise<RDFDocument> {
-		if( ! uri || ! body ) return <any> Promise.reject( new Error( "Provide the required parameters" ) );
+		if( ! uri || ! body ) return <any>Promise.reject( new Error( "Provide the required parameters" ) );
 		//Refresh document ETag
 		let eTag:string = this.documents.get( uri ).ETag;
 		return this.callUpdate( uri, body, eTag );
