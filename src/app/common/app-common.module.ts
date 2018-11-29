@@ -14,6 +14,7 @@ import { SemanticModule } from "./components/semantic/semantic.module";
 // Services
 import { RouterService } from "./router.service";
 import { MessagesAreaService } from "./components/messages-area/messages-area.service";
+import { SparqlDefaultPrefixesComponent } from './components/sparql-editor/sparql-default-prefixes/sparql-default-prefixes.component';
 
 // Pipes
 
@@ -28,6 +29,7 @@ import { MessagesAreaService } from "./components/messages-area/messages-area.se
 		MessagesAreaComponent,
 		PaginatorComponent,
 		VersionsPresenterComponent,
+		SparqlDefaultPrefixesComponent,
 	],
 	providers: [],
 	exports: [
@@ -37,6 +39,7 @@ import { MessagesAreaService } from "./components/messages-area/messages-area.se
 		MessagesAreaComponent,
 		PaginatorComponent,
 		VersionsPresenterComponent,
+		SparqlDefaultPrefixesComponent,
 
 		PipesModule,
 		DirectivesModule,
