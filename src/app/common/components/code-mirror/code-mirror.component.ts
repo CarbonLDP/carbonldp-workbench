@@ -22,6 +22,7 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 	@Input() noCursor:boolean = false;
 	@Input() showLineNumbers:boolean = true;
 	@Input() scroll:boolean = true;
+	@Input() height:string = "";
 
 	@Input() value:string = "";
 	@Output() valueChange:EventEmitter<string> = new EventEmitter<string>();
@@ -75,6 +76,10 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 			this.lastUpdates.push( lastUpdate );
 			this.valueChange.emit( lastUpdate );
 		} );
+
+		if( !! this.height){
+			this.element.nativeElement.children[ 0 ].style.height = this.height;
+		}
 	}
 
 	ngOnChanges( changeRecord:any ):void {
@@ -99,7 +104,6 @@ export class Class implements AfterContentInit, OnChanges, OnDestroy {
 				this.codeMirror.setValue( changeRecord.value.currentValue );
 			}
 		}
-
 	}
 
 	private normalizeTabs( value:string ):string {
