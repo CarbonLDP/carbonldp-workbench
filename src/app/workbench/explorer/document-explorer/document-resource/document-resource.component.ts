@@ -14,7 +14,7 @@ import { ResourceFeatures, States } from "../resource-features.component";
 @Component( {
 	selector: "app-document-resource",
 	templateUrl: "./document-resource.component.html",
-	styles: [ ":host { display:block; }" ]
+	styleUrls: [ "./document-resource.component.scss" ]
 } )
 export class DocumentResourceComponent extends ResourceFeatures implements AfterViewInit, OnInit, OnChanges {
 	@Input() displayOnly:string[] = [];
@@ -75,6 +75,11 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 		super.deleteProperty( property, index );
 	}
 
+	cancelProperty( property:PropertyStatus, index:number ):void {
+		this.state = States.READ;
+		super.cancelProperty( property, index );
+	}
+
 	addProperty( property:PropertyStatus, index:number ):void {
 		super.addProperty( property, index );
 		this.state = States.READ;
@@ -89,11 +94,13 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 			2018-11-09 @MiguelAraCo
 			TODO[code-quality]: Use vanilla JavaScript and CSS instead of JQuery
 		*/
-		setTimeout( () => {
-			let createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
-			createdPropertyComponent.addClass( "transition hidden" );
-			createdPropertyComponent.transition( { animation: "drop" } );
-		} );
+
+
+		// setTimeout( () => {
+		// 	let createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
+		// 	createdPropertyComponent.addClass( "transition hidden" );
+		// 	createdPropertyComponent.transition( { animation: "drop" } );
+		// } );
 	}
 
 	updateExistingProperties():void {

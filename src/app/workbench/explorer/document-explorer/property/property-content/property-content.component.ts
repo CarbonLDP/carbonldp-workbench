@@ -75,6 +75,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 	@Output() onGoToNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 	@Output() onDeleteProperty:EventEmitter<PropertyStatus> = new EventEmitter<PropertyStatus>();
+	@Output() onCancelProperty:EventEmitter<PropertyStatus> = new EventEmitter<PropertyStatus>();
 	@Output() onSaveNewProperty:EventEmitter<Property> = new EventEmitter<Property>();
 
 
@@ -125,7 +126,7 @@ export class PropertyContentComponent implements AfterViewInit, OnInit {
 
 	cancelModification():void {
 		if( this.nameInputControl.valid ) this.mode = Modes.READ;
-		if( this.property.isBeingCreated ) this.onDeleteProperty.emit( this.property );
+		if( this.property.isBeingCreated ) this.onCancelProperty.emit( this.property );
 	}
 
 	askToConfirmDeletion():void {

@@ -72,17 +72,18 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 	}
 
 	deleteProperty( property:PropertyStatus, index:number ):void {
-		this.state = States.READ;
 		super.deleteProperty( property, index );
+	}
+
+	cancelProperty( property:PropertyStatus, index:number ):void {
+		super.cancelProperty( property, index );
 	}
 
 	addProperty( property:PropertyStatus, index:number ):void {
 		super.addProperty( property, index );
-		this.state = States.READ;
 	}
 
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
-		this.state = States.EDIT;
 		super.createProperty( property, propertyStatus );
 
 		// Animates created property
