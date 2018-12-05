@@ -59,9 +59,8 @@ export abstract class ResourceFeatures {
 	 *   and updates the existing properties
 	 */
 	deleteProperty( property:PropertyStatus, index:number ) {
-
-
 		// FIXME: Remove old code
+		this.state = States.READ;
 		if( typeof property.added !== "undefined" ) {
 			this.records.additions.delete( property.added.id );
 			this.properties.splice( index, 1 );
@@ -71,12 +70,27 @@ export abstract class ResourceFeatures {
 		this.updateExistingProperties();
 	}
 
+	/*
+	*   Cancel a property from the records
+	*   and updates the existing properties
+	* */
+	cancelProperty( property:PropertyStatus, index:number ):void {
+		this.state = States.READ;
+		if( typeof property.added !== "undefined" ) {
+			this.records.additions.delete( property.added.id );
+			this.properties.splice( index, 1 );
+		} else if( typeof property.deleted !== "undefined" ) {
+			this.records.deletions.set( property.deleted.id, property );
+		}
+		this.updateExistingProperties();
+	}
 
 	/**
 	 *   Adds a new property to the records
 	 *   and updates the existing properties
 	 */
 	addProperty( property:PropertyStatus, index:number ):void {
+		this.state = States.READ;
 		if( typeof property.added !== "undefined" ) {
 			if( property.added.id === property.added.name ) {
 				this.records.additions.set( property.added.id, property );
@@ -94,6 +108,7 @@ export abstract class ResourceFeatures {
 	 *   Creates a new empty property.
 	 */
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
+		this.state = States.EDIT;
 		const numberOfProperty:number = ! ! this.records ? (this.records.additions.size + 1) : 1;
 		const newProperty:PropertyStatus = {
 			added: {
@@ -104,6 +119,10 @@ export abstract class ResourceFeatures {
 			isBeingCreated: true
 		};
 		this.properties.splice( this.insertOrder, 0, newProperty );
+		setTimeout( () => {
+			const $addedProperty = document.querySelector( "app-property.added-property" );
+			$addedProperty.classList.add( "drop-animation" );
+		}, 0);
 	}
 
 

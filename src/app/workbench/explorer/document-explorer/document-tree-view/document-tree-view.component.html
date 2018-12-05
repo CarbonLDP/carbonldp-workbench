@@ -1,8 +1,8 @@
-<div class="ui basic segment treeview-options">
+<div class="ui basic segment tree-view-options">
 
 	<!-- START: Create Document/AccessPoint button -->
 	<div title="Create a Document or Access Point"
-	     class="ui top left pointing dropdown mini basic black button treeview-optionsButton"
+	     class="ui top left pointing dropdown mini basic black button tree-view-optionsButton"
 	     [ngClass]="{'disabled':nodeChildren.length===0 || selectedURIs.length> 1}">
 		<i class="plus icon"></i>
 		<span class="text">New</span>
@@ -23,14 +23,14 @@
 
 
 	<!-- START: Refresh Button-->
-	<button class="ui mini basic black right aligned icon button treeview-refreshButton" title="Refresh - Or double click a node to refresh it"
+	<button class="ui mini basic black right aligned icon button tree-view-refreshButton" title="Refresh - Or double click a node to refresh it"
 	        (click)="refreshSelectedNodes()">
 		<i class="refresh icon"></i>
 	</button>
 	<!-- END: Refresh Button-->
 
 	<!-- START: Delete Button -->
-	<button class="ui mini basic red right aligned icon button treeview-deleteButton" title="Delete document"
+	<button class="ui mini basic red right aligned icon button tree-view-deleteButton" title="Delete document"
 	        [ngClass]="{disabled: (nodeChildren.length===0 || !canDelete) }"
 	        [disabled]="nodeChildren.length===0 || !canDelete"
 	        (click)="showDeleteChildForm()">
@@ -40,7 +40,7 @@
 
 
 	<!-- START: Sort & Order by options -->
-	<div class="ui top left pointing dropdown mini basic black icon right floated button treeview-sortByButton" title="Sort alphabetically"
+	<div class="ui top left pointing dropdown mini basic black icon right floated button tree-view-sortByButton" title="Sort alphabetically"
 	     [ngClass]="{'disabled':nodeChildren.length===0}">
 		<i class="sort alphabet icon"
 		   [ngClass]="{'ascending':sortAscending, 'descending':!sortAscending}"></i>
@@ -110,6 +110,6 @@
 
 </div>
 
-<div class="treeview-content">
+<div class="tree-view-content">
 	<ul></ul>
 </div>

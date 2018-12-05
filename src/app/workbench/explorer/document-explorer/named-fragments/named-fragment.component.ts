@@ -73,17 +73,18 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 	}
 
 	deleteProperty( property:PropertyStatus, index:number ):void {
-		this.state = States.READ;
 		super.deleteProperty( property, index );
 	}
 
+	cancelProperty( property:PropertyStatus, index:number ):void {
+		super.cancelProperty( property, index );
+	}
+
 	addProperty( property:PropertyStatus, index:number ):void {
-		this.state = States.READ;
 		super.addProperty( property, index );
 	}
 
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
-		this.state = States.EDIT;
 		super.createProperty( property, propertyStatus );
 
 		// Animates created property
@@ -91,11 +92,13 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 			2018-11-09 @MiguelAraCo
 			TODO[code-quality]: Use vanilla JavaScript and CSS instead of JQuery
 		*/
-		setTimeout( () => {
-			const createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
-			createdPropertyComponent.addClass( "transition hidden" );
-			createdPropertyComponent.transition( { animation: "drop" } );
-		}, 0 );
+
+
+		// setTimeout( () => {
+		// 	const createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
+		// 	createdPropertyComponent.addClass( "transition hidden" );
+		// 	createdPropertyComponent.transition( { animation: "drop" } );
+		// }, 0 );
 	}
 
 	updateExistingProperties():void {

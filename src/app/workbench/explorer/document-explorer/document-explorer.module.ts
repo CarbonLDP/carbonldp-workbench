@@ -1,6 +1,9 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+
+import { MatBadgeModule } from "@angular/material/badge";
+import { MatTabsModule } from "@angular/material/tabs";
 // Components
 import { LiteralComponent } from "./literals/literal.component";
 import { LiteralsComponent } from "./literals/literals.component";
@@ -34,6 +37,11 @@ import { IdValidator, LiteralValueValidator, PointerValidator, PropertyNameValid
 	imports: [
 		CommonModule,
 		FormsModule,
+
+		// Material UI
+		MatBadgeModule,
+		MatTabsModule,
+
 		AppCommonModule,
 	],
 	declarations: [

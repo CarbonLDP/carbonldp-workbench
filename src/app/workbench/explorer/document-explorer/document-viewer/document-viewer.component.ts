@@ -1,6 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChange, ViewChild } from "@angular/core";
-
-import { CarbonLDP } from "carbonldp";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { RDFNode } from "carbonldp/RDF/Node"
 import { RDFDocument } from "carbonldp/RDF/Document";
 import { HTTPError } from "carbonldp/HTTP/Errors";
@@ -12,10 +10,18 @@ import { NamedFragmentsComponent, NamedFragmentsRecords } from "../named-fragmen
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
 
+/**
+ * Index of tabs available in the view
+ */
+enum Tabs {
+	DOCUMENT = 0,
+	BLANK_NODES = 1,
+	NAMED_FRAGMENTS = 2,
+}
 
-/*
-*   Contains and displays the contents of a @graph (Document, Blank Nodes and Fragments)
-* */
+/**
+ * Contains and displays the contents of a @graph (Document, Blank Nodes and Fragments)
+ */
 @Component( {
 	selector: "app-document-viewer",
 	host: { "[class.ui]": "true", "[class.basic]": "true", "[class.segment]": "true", },
@@ -23,23 +29,37 @@ import { NamedFragmentStatus } from "../named-fragments/named-fragment.component
 	styleUrls: [ "./document-viewer.component.scss" ],
 } )
 
-export class DocumentViewerComponent implements AfterViewInit, OnChanges {
-	carbonldp:CarbonLDP;
-	element:ElementRef;
-	$element:JQuery;
-	$successMessage:JQuery;
-	successMessageContent:string = "";
+export class DocumentViewerComponent implements AfterViewInit {
+	@Input() displaySuccessMessage:EventEmitter<string> = new EventEmitter<string>();
 
-	sections:string[] = [ "blankNodes", "namedFragments", "documentResource" ];
+	@Input() set document( value:RDFDocument ) {
+		this._document = value;
+		this.onDocumentChange();
+	}
+	get document():RDFDocument {return this._document;}
+	private _document:RDFDocument;
+
+
+	@Output() onError:EventEmitter<HTTPError> = new EventEmitter<HTTPError>();
+	@Output() onOpenNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onRefreshNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onSavingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
+	@Output() onRefreshDocument:EventEmitter<string> = new EventEmitter<string>();
+
 	rootNode:RDFNode;
-	blankNodes:BlankNodeStatus[] = [];
-	namedFragments:NamedFragmentStatus[] = [];
-	documentURI:string = "";
-
+	blankNodes:BlankNodeStatus[];
+	namedFragments:NamedFragmentStatus[];
+	documentURI:string;
 
 	rootNodeRecords:ResourceRecords = new ResourceRecords();
 	blankNodesChanges:BlankNodesRecords = new BlankNodesRecords();
 	namedFragmentsChanges:NamedFragmentsRecords = new NamedFragmentsRecords();
+
+	activeTab:number = Tabs.DOCUMENT;
+	successMessageContent:string = "";
+
+	@ViewChild( BlankNodesComponent ) documentBlankNodes:BlankNodesComponent;
+	@ViewChild( NamedFragmentsComponent ) documentNamedFragments:NamedFragmentsComponent;
 
 	get rootNodeHasChanged():boolean { return this.rootNodeRecords.changes.size > 0 || this.rootNodeRecords.additions.size > 0 || this.rootNodeRecords.deletions.size > 0; }
 
@@ -47,107 +67,46 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 
 	get namedFragmentsHaveChanged():boolean { return this.namedFragmentsChanges.changes.size > 0 || this.namedFragmentsChanges.additions.size > 0 || this.namedFragmentsChanges.deletions.size > 0; }
 
-	get documentContentHasChanged() { return this.rootNodeHasChanged || this.blankNodesHaveChanged || this.namedFragmentsHaveChanged; }
+	get documentContentHasChanged():boolean { return this.rootNodeHasChanged || this.blankNodesHaveChanged || this.namedFragmentsHaveChanged; }
 
-	documentsResolverService:DocumentsResolverService;
-
-	@Input() uri:string;
-	@Input() displaySuccessMessage:EventEmitter<string> = new EventEmitter<string>();
-
-	private _document:RDFDocument;
-
-	@Input()
-	set document( value:RDFDocument ) {
-		this._document = value;
-		this.receiveDocument( value );
-	}
-
-	get document():RDFDocument {return this._document;}
-
-
-	@Output() onError:EventEmitter<HTTPError> = new EventEmitter<HTTPError>();
-	@Output() onOpenNode:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onRefreshNode:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Output() onSavingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Output() onRefreshDocument:EventEmitter<string> = new EventEmitter<string>();
-
-	@ViewChild( BlankNodesComponent ) documentBlankNodes:BlankNodesComponent;
-	@ViewChild( NamedFragmentsComponent ) documentNamedFragments:NamedFragmentsComponent;
-
-	private _savingDocument:boolean = false;
 	set savingDocument( value:boolean ) {
 		this._savingDocument = value;
 		this.onSavingDocument.emit( value );
 	}
-
 	get savingDocument():boolean { return this._savingDocument; }
+	private _savingDocument:boolean = false;
 
-	private _loadingDocument:boolean = false;
-	set loadingDocument( value:boolean ) {
-		this._loadingDocument = value;
-		this.onLoadingDocument.emit( value );
+	private $element:JQuery;
+	private $successMessage:JQuery;
+
+	constructor(
+		private element:ElementRef,
+		private documentsResolverService:DocumentsResolverService
+	) {
 	}
-
-	get loadingDocument():boolean { return this._loadingDocument; }
-
-
-	constructor( element:ElementRef, carbonldp:CarbonLDP, documentsResolverService:DocumentsResolverService ) {
-		this.element = element;
-		this.carbonldp = carbonldp;
-		this.documentsResolverService = documentsResolverService;
-	}
-
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.$successMessage = this.$element.find( ".success.message" );
-		this.displaySuccessMessage.subscribe( ( content:string ) => {
+		this.displaySuccessMessage.subscribe( content => {
 			this.showSuccessMessage( content, 2500 );
 		} );
 	}
 
-	ngOnChanges( changes:{ [ propName:string ]:SimpleChange } ):void {
+	/**
+	 *   Prepares the changes to properly display the new
+	 *   document contents by:
+	 *   1) setting a new root
+	 *   2) obtaining the fragments of the document
+	 *   3) clearing the old changes
+	 */
+	onDocumentChange() {
+		if( ! this.document ) return;
 
-		// In case the DocumentViewer is used by passing a URI, it can make the call to resolve the URI by itself
-		if( changes[ "uri" ] && ! ! changes[ "uri" ].currentValue && changes[ "uri" ].currentValue !== changes[ "uri" ].previousValue ) {
-			this.loadingDocument = true;
-			this.getDocument( this.uri ).then( ( document:RDFDocument ) => {
-				this.document = document;
-			} );
-		}
-	}
-
-	/*
-	*   Prepares the changes to properly display the new
-	*   document contents by:
-    *   1) setting a new root
-    *   2) obtaining the fragments of the document
-    *   3) clearing the old changes
-	* */
-	receiveDocument( document:RDFDocument ):void {
-		if( ! document ) return;
-		this.loadingDocument = true;
-		this.setRoot();
+		this.rootNode = RDFDocument.getDocumentResources( this.document )[ 0 ];
 		this.generateFragments();
 		this.clearDocumentChanges();
 		this.documentURI = this.document[ JsonLDKeyword.ID ];
-
-		setTimeout( () => {
-			this.loadingDocument = false;
-			this.goToSection( "documentResource" );
-			this.initializeTabs();
-		}, 1 );
-	}
-
-	setRoot():void {
-		this.rootNode = RDFDocument.getDocumentResources( this.document )[ 0 ];
-	}
-
-	getDocument( uri:string ):Promise<RDFDocument | void> {
-		return this.documentsResolverService.get( uri ).catch( ( error:HTTPError ) => {
-			this.onError.emit( error );
-		} );
 	}
 
 	generateFragments():void {
@@ -167,24 +126,20 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		} );
 	}
 
+	clearDocumentChanges():void {
+		this.rootNodeRecords = new ResourceRecords();
+		this.blankNodesChanges = new BlankNodesRecords();
+		this.namedFragmentsChanges = new NamedFragmentsRecords();
+	}
+
 	openBlankNode( id:string ):void {
 		this.documentBlankNodes.openBlankNode( id );
-		this.goToSection( "blankNodes" );
+		this.activeTab = Tabs.BLANK_NODES;
 	}
 
 	openNamedFragment( id:string ):void {
 		this.documentNamedFragments.openNamedFragment( id );
-		this.goToSection( "namedFragments" );
-	}
-
-	initializeTabs() {
-		this.$element.find( ".secondary.menu.document.tabs .item" ).tab();
-	}
-
-	goToSection( section:string ):void {
-		if( this.sections.indexOf( section ) === - 1 || this.loadingDocument ) return;
-		this.scrollTo( ">div:first-child" );
-		this.$element.find( ".secondary.menu.document.tabs .item" ).tab( "changeTab", section );
+		this.activeTab = Tabs.NAMED_FRAGMENTS;
 	}
 
 	registerRootNodeChanges( records:ResourceRecords ):void {
@@ -251,12 +206,6 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		} );
 	}
 
-	clearDocumentChanges():void {
-		this.rootNodeRecords = new ResourceRecords();
-		this.blankNodesChanges = new BlankNodesRecords();
-		this.namedFragmentsChanges = new NamedFragmentsRecords();
-	}
-
 	saveDocument():void {
 		this.savingDocument = true;
 
@@ -305,9 +254,9 @@ export class DocumentViewerComponent implements AfterViewInit, OnChanges {
 		} );
 	}
 
-	/*
-	*   Checks if the document has changed before refreshing it
-	* */
+	/**
+	 *   Checks if the document has changed before refreshing it
+	 */
 	private beforeRefreshDocument( documentURI:string ):void {
 		if( this.documentContentHasChanged ) {
 			this.toggleConfirmRefresh();

@@ -34,8 +34,3 @@ html, body {
 	width: 100vw;
 	height: 100vh;
 }
-
-* {
-	// A lot of components don't respect this by default which tends to force developers to write 'width: 100%' explicitly for that component
-	max-width: 100%;
-}

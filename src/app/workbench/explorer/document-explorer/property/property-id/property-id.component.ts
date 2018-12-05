@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 
 import { URI } from "carbonldp/RDF/URI";
-import { RDFNode } from "carbonldp/RDF/Node";
 
 import { Modes } from "../../document-explorer-library";
 import { Property, PropertyStatus } from "./../property.component";
@@ -13,17 +12,13 @@ import { NamedFragmentStatus } from "../../named-fragments/named-fragment.compon
 	styleUrls: [ "./property-id.component.scss" ]
 } )
 export class PropertyIDComponent implements AfterViewInit {
-	@Input() mode:string = Modes.READ;
 	@Input() documentURI:string = "";
-	@Input() blankNodes:RDFNode[] = [];
 	@Input() namedFragments:NamedFragmentStatus[] = [];
 	@Input() isPartOfNamedFragment:boolean = false;
 	@Input() canEdit:boolean = true;
-	@Input() accessPointsHasMemberRelationProperties:string[] = [];
 
-	private _property:PropertyStatus;
-	@Input()
-	set property( property:PropertyStatus ) {
+
+	@Input() set property( property:PropertyStatus ) {
 		this._property = property;
 		this.status = property.modified ? "modified" : property.copy ? "copy" : "added";
 
@@ -32,10 +27,8 @@ export class PropertyIDComponent implements AfterViewInit {
 		this.originalId = property[ this.status ].value;
 		this.value = property[ this.status ].value;
 	}
-
-	get property():PropertyStatus {
-		return this._property;
-	}
+	get property():PropertyStatus {return this._property;}
+	private _property:PropertyStatus;
 
 	@Output() onChangeProperty:EventEmitter<Property> = new EventEmitter<Property>();
 
@@ -45,6 +38,7 @@ export class PropertyIDComponent implements AfterViewInit {
 	element:ElementRef;
 	$element:JQuery;
 
+	mode:string = Modes.READ;
 	status:string;
 	existingFragments:string[] = [];
 	tempProperty:Property = {} as any;

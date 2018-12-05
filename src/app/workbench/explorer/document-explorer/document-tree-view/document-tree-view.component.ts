@@ -8,40 +8,15 @@ import { URI } from "carbonldp/RDF/URI";
 import { SPARQLBindingObject, SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
 import { C, LDP } from "carbonldp/Vocabularies";
 
-
 import "jstree/dist/jstree.min";
 
 @Component( {
-	selector: "app-document-treeview",
+	selector: "app-document-tree-view",
 	templateUrl: "./document-tree-view.component.html",
 	styleUrls: [ "./document-tree-view.component.scss" ],
 } )
 
 export class DocumentTreeViewComponent implements AfterViewInit {
-	element:ElementRef;
-	$element:JQuery;
-	carbonldp:CarbonLDP;
-
-	jsTree:JSTree;
-	$tree:JQuery;
-	nodeChildren:JSTreeNode[] = [];
-	canDelete:boolean = true;
-
-	private _selectedURIs:Array<string> = [ "" ];
-
-	set selectedURIs( value:Array<string> ) {
-		this._selectedURIs = value;
-		this.onSelectDocuments.emit( this.selectedURIs );
-	}
-
-	get selectedURIs():Array<string> {
-		return this._selectedURIs;
-	}
-
-	public sortAscending:boolean = true;
-	public orderBy:OrderBy.CREATED | OrderBy.MODIFIED | OrderBy.SLUG = OrderBy.CREATED;
-	public orderOptions:typeof OrderBy = OrderBy;
-
 	@Input() refreshNodes:EventEmitter<string | string[]> = new EventEmitter<string | string[]>();
 	@Input() openNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onResolveUri:EventEmitter<string> = new EventEmitter<string>();
@@ -52,9 +27,28 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	@Output() onShowCreateAccessPointForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSelectDocuments:EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
 
-	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
-		this.element = element;
-		this.carbonldp = carbonldp;
+	public sortAscending:boolean = true;
+	public orderBy:OrderBy.CREATED | OrderBy.MODIFIED | OrderBy.SLUG = OrderBy.CREATED;
+	public orderOptions:typeof OrderBy = OrderBy;
+
+	jsTree:JSTree;
+	$tree:JQuery;
+	nodeChildren:JSTreeNode[] = [];
+	canDelete:boolean = true;
+
+	set selectedURIs( value:string[] ) {
+		this._selectedURIs = value;
+		this.onSelectDocuments.emit( this.selectedURIs );
+	}
+	get selectedURIs():string[] {return this._selectedURIs;}
+	private _selectedURIs:string[] = [ "" ];
+
+	private $element:JQuery;
+
+	constructor(
+		private element:ElementRef,
+		private carbonldp:CarbonLDP
+	) {
 	}
 
 	ngAfterViewInit():void {

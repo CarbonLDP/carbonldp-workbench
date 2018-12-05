@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, NgZone, Output } from "@angular/core";
+import { Component, EventEmitter } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { RDFDocument } from "carbonldp/RDF/Document";
@@ -14,84 +14,68 @@ import { Message } from "app/common/components/messages-area/message.component";
 	templateUrl: "./document-explorer.component.html",
 	styleUrls: [ "./document-explorer.component.scss" ],
 } )
-
 export class DocumentExplorerComponent {
+	onRefreshNode:EventEmitter<string> = new EventEmitter<string>();
+	onOpenNode:EventEmitter<string> = new EventEmitter<string>();
+	onDisplaySuccessMessage:EventEmitter<string> = new EventEmitter<string>();
 
-	selectedDocumentURI:string = "";
-	selectedDocumentURIs:Array<string> = [ "" ];
-	loadingDocument:boolean = false;
-	savingDocument:boolean = false;
+	selectedDocumentURIs:string[] = [ "" ];
 	inspectingDocument:RDFDocument;
-	documentsResolverService:DocumentsResolverService;
 	messages:Message[] = [];
 
+	loading:boolean = false;
 
-	@Input() carbonldp:CarbonLDP;
-	@Output() onRefreshNode:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onOpenNode:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onDisplaySuccessMessage:EventEmitter<string> = new EventEmitter<string>();
-
-	private zone:NgZone;
-
-	constructor( documentsResolverService:DocumentsResolverService, zone:NgZone, carbonldp:CarbonLDP ) {
-		this.documentsResolverService = documentsResolverService;
-		this.zone = zone;
-		this.carbonldp = carbonldp;
+	constructor(
+		private carbonldp:CarbonLDP,
+		private documentsResolverService:DocumentsResolverService,
+	) {
 	}
 
-	onLoadingDocument( loadingDocument:boolean ):void {
-		setTimeout( () => {this.loadingDocument = loadingDocument;}, 1 );
+	setLoading( loading:boolean ) {
+		this.loading = loading;
 	}
 
-	showLoading( savingDocument:boolean ):void {
-		this.savingDocument = savingDocument;
+	async resolveDocument( uri:string ) {
+		this.loading = true;
+		try {
+			this.inspectingDocument = await this.documentsResolverService.get( uri );
+			this.loading = false;
+		} catch( error ) {
+			this.handleExternalError( error );
+		}
 	}
 
-	resolveDocument( uri:string ):void {
-		this.zone.run( () => {this.loadingDocument = true;} );
-		this.documentsResolverService.get( uri )
-			.catch( ( error ) => {
-				this.handleExternalError( error );
-			} ).then( ( document:RDFDocument ) => {
-			this.zone.run( () => {
-				this.inspectingDocument = document;
-				this.loadingDocument = false;
-			} );
-		} );
+	async refreshDocument( documentURI:string ) {
+		return this.resolveDocument( documentURI );
 	}
 
-	refreshDocument( documentURI:string ):void {
-		this.resolveDocument( documentURI );
-	}
-
-	refreshNode( nodeId:string ):void {
+	refreshNode( nodeId:string ) {
 		this.onRefreshNode.emit( nodeId );
 	}
 
-	openNode( nodeId:string ):void {
+	openNode( nodeId:string ) {
 		this.onOpenNode.emit( nodeId );
 	}
 
-	public changeSelection( documentURIs:Array<string> ) {
+	changeSelection( documentURIs:string[] ) {
 		this.selectedDocumentURIs = documentURIs;
-		this.selectedDocumentURI = documentURIs[ 0 ];
 	}
 
-	public onSuccessAccessPoint( $event:any ):void {
-		this.onRefreshNode.emit( this.selectedDocumentURI );
+	onSuccessAccessPoint( $event:any ) {
+		this.onRefreshNode.emit( this.selectedDocumentURIs[ 0 ] );
 		this.onDisplaySuccessMessage.emit( "<p>The Access Point was created correctly</p>" );
 	}
 
-	public onSuccessCreateDocument( $event:any ):void {
-		this.onRefreshNode.emit( this.selectedDocumentURI );
+	onSuccessCreateDocument( $event:any ) {
+		this.onRefreshNode.emit( this.selectedDocumentURIs[ 0 ] );
 		this.onDisplaySuccessMessage.emit( "<p>The child document was created correctly</p>" );
 	}
 
-	public onSuccessDeleteDocument( $event:any ):void {
+	onSuccessDeleteDocument( $event:any ) {
 		this.onRefreshNode.emit( $event );
 	}
 
-	public handleExternalError( error:HTTPError | Error ):void {
+	handleExternalError( error:HTTPError | Error ) {
 		this.messages.push( ErrorMessageGenerator.getErrorMessage( error ) );
 	}
 

@@ -1,18 +1,3 @@
-<!-- START: Loading document message -->
-<div class="ui basic segment" *ngIf="!document && loadingDocument">
-	<div class="ui icon message">
-		<i class="notched circle loading icon"></i>
-		<div class="content">
-			<div class="header">
-				Just one second
-			</div>
-			<p>Please wait while the document is being loaded...</p>
-		</div>
-	</div>
-</div>
-<!-- END: Loading document message -->
-
-
 <!-- START: Save changes button -->
 <a *ngIf="documentContentHasChanged"
    class="ui blue top right attached label saving-message"
@@ -68,7 +53,7 @@
 		<div class="item">
 			<div class="content">
 				<div class="document options">
-					<button class="ui right labeled icon basic mini button" (click)="beforeRefreshDocument( documentURI )">
+					<button class="ui right labeled icon basic mini button" (click)="beforeRefreshDocument( rootNode[ '@id' ] )">
 						<i class="refresh icon"></i>
 						Refresh
 					</button>
@@ -77,92 +62,58 @@
 		</div>
 		<!-- END: Action buttons -->
 
+		<mat-tab-group [(selectedIndex)]="activeTab">
+			<mat-tab>
+				<ng-template mat-tab-label>
+					<span [matBadgeHidden]="! rootNodeHasChanged" matBadge="✿" matBadgeOverlap="false" matBadgeColor="accent">
+						Document
+					</span>
+				</ng-template>
+				<app-document-resource class="app-document-viewer__tab"
+				                       [rootNode]="rootNode"
+				                       [hiddenProperties]="['@id']"
+				                       [blankNodes]="blankNodes"
+				                       [namedFragments]="namedFragments"
+				                       [documentURI]="rootNode['@id']"
 
-		<!-- START: Content of the Document -->
-		<div class="item">
-			<div class="content">
-				<div class="description">
+				                       (onOpenBlankNode)="openBlankNode($event)"
+				                       (onOpenNamedFragment)="openNamedFragment($event)"
+				                       (onChanges)="registerRootNodeChanges($event)">
+				</app-document-resource>
+			</mat-tab>
+			<mat-tab>
+				<ng-template mat-tab-label>
+					<span [matBadgeHidden]="! blankNodesHaveChanged" matBadge="✿" matBadgeOverlap="false" matBadgeColor="accent">
+						Blank Nodes ({{blankNodes.length}})
+					</span>
+				</ng-template>
+				<app-blank-nodes class="app-document-viewer__tab"
+				                 [documentURI]="document['@id']"
+				                 [blankNodes]="blankNodes"
+				                 [namedFragments]="namedFragments"
 
-					<!-- START: Tabs of a document (Document, Blank Nodes and Named Fragments) -->
-					<div class="ui secondary menu document tabs">
-						<a class="item active" data-tab="documentResource">
-							<div class="floating ui teal circular label marker"
-							     *ngIf="rootNodeHasChanged"
-							     title="Document's properties have changed.&#10;Modified: {{rootNodeRecords.changes.size}}&#10;Added: {{rootNodeRecords.additions.size}}&#10;Deleted: {{rootNodeRecords.deletions.size}}">
-								<i class="asterisk icon"></i>
-							</div>
-							Document
-						</a>
-						<a class="item" data-tab="blankNodes">
-							<div class="floating ui teal circular label marker"
-							     *ngIf="blankNodesHaveChanged"
-							     title="Blank nodes have changed.&#10;Modified: {{blankNodesChanges.changes.size}}&#10;Added: {{blankNodesChanges.additions.size}}&#10;Deleted: {{blankNodesChanges.deletions.size}}">
-								<i class="asterisk icon"></i>
-							</div>
-							Blank Nodes ({{blankNodes.length}})
-						</a>
-						<a class="item" data-tab="namedFragments">
-							<div class="floating ui teal circular label marker"
-							     *ngIf="namedFragmentsHaveChanged"
-							     title="Named Fragments have changed.&#10;Modified: {{namedFragmentsChanges.changes.size}}&#10;Added: {{namedFragmentsChanges.additions.size}}&#10;Deleted: {{namedFragmentsChanges.deletions.size}}">
-								<i class="asterisk icon"></i>
-							</div>
-							Named Fragments ({{namedFragments.length}})
-						</a>
-					</div>
-					<!-- END: Tabs of a document (Document, Blank Nodes and Named Fragments) -->
+				                 (onOpenBlankNode)="openBlankNode($event)"
+				                 (onOpenNamedFragment)="openNamedFragment($event)"
+				                 (onChanges)="registerBlankNodesChanges($event)">
+				</app-blank-nodes>
+			</mat-tab>
+			<mat-tab>
+				<ng-template mat-tab-label>
+					<span [matBadgeHidden]="! namedFragmentsHaveChanged" matBadge="✿" matBadgeOverlap="false" matBadgeColor="accent">
+						Named Fragments ({{namedFragments.length}})
+					</span>
+				</ng-template>
+				<app-named-fragments class="app-document-viewer__tab"
+				                     [documentURI]="document['@id']"
+				                     [blankNodes]="blankNodes"
+				                     [namedFragments]="namedFragments"
 
-
-					<!-- START: Tab of Document -->
-					<div class="ui active tab segment" data-tab="documentResource">
-						<app-document-resource class="column"
-
-						                      [rootNode]="rootNode"
-						                      [hiddenProperties]="['@id']"
-						                      [blankNodes]="blankNodes"
-						                      [namedFragments]="namedFragments"
-						                      [documentURI]="rootNode['@id']"
-
-						                      (onOpenBlankNode)="openBlankNode($event)"
-						                      (onOpenNamedFragment)="openNamedFragment($event)"
-						                      (onChanges)="registerRootNodeChanges($event)">
-						</app-document-resource>
-					</div>
-					<!-- END: Tab of Document -->
-
-
-					<!-- START: Tab of Blank Nodes -->
-					<div class="ui tab segment" data-tab="blankNodes">
-						<app-blank-nodes class="column"
-						                [documentURI]="document['@id']"
-						                [blankNodes]="blankNodes"
-						                [namedFragments]="namedFragments"
-
-						                (onOpenBlankNode)="goToSection($event)"
-						                (onOpenNamedFragment)="openNamedFragment($event)"
-						                (onChanges)="registerBlankNodesChanges($event)">
-						</app-blank-nodes>
-					</div>
-					<!-- END: Tab of Blank Nodes -->
-
-
-					<!-- START: Tab of Named Fragments -->
-					<div class="ui tab segment" data-tab="namedFragments">
-						<app-named-fragments class="column"
-						                    [documentURI]="document['@id']"
-						                    [blankNodes]="blankNodes"
-						                    [namedFragments]="namedFragments"
-
-						                    (onOpenBlankNode)="openBlankNode($event)"
-						                    (onOpenNamedFragment)="goToSection($event)"
-						                    (onChanges)="registerNamedFragmentsChanges($event)">
-						</app-named-fragments>
-					</div>
-					<!-- END: Tab of Named Fragments -->
-				</div>
-			</div>
-		</div>
-		<!-- END: Content of the Document -->
+				                     (onOpenBlankNode)="openBlankNode($event)"
+				                     (onOpenNamedFragment)="openNamedFragment($event)"
+				                     (onChanges)="registerNamedFragmentsChanges($event)">
+				</app-named-fragments>
+			</mat-tab>
+		</mat-tab-group>
 	</div>
 </div>
 <!-- END: Content of the Document -->

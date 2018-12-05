@@ -22,7 +22,7 @@ import { CarbonLDP } from "carbonldp";
 		BrowserModule,
 		AppRoutingModule,
 
-		// Enable Material UI animations
+		// Enable animations needed for Material UI
 		BrowserAnimationsModule,
 
 		ServiceWorkerModule.register( "ngsw-worker.js", { enabled: environment.production } ),
