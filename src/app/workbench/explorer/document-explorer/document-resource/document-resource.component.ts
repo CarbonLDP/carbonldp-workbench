@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { RDFNode } from "carbonldp/RDF/Node";
+import { RDFNode } from "carbonldp/RDF";
 
 import { ResourceRecords } from "../document-explorer-library";
 import { DocumentsResolverService } from "../documents-resolver.service";

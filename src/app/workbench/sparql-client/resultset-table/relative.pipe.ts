@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from "@angular/core";
 
-import { URI } from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF";
 
 /**
  * If the provided URI has the provided base, returns its relative URI

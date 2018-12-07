@@ -1,28 +1,36 @@
-:host {
-	display: block;
-	height: 100%;
+$node-height: 24px;
 
-	.jstree-container-ul {
+:host {
+	overflow-x: auto;
+}
+
+.ai {
+	&-tree {
+		ul,
 		li {
-			a.accesspoint > .icon {
-				color: orange;
+			margin-top: 0;
+			margin-bottom: 0;
+			list-style-type: none;
+		}
+
+		&__node {
+			// Material UI override
+			min-height: $node-height;
+			height: $node-height;
+
+			white-space: nowrap;
+
+			&--noChildren {
+				margin-left: $node-height;
 			}
 		}
-	}
 
-	> .tree-view-content {
-		overflow: scroll;
-	}
+		&__nodeToggle {
+			height: $node-height;
+		}
 
-	> .tree-view-options {
-		max-height: 58px;
-		margin-bottom: 0;
-		background-color: #f4f4f4;
-		border-right: 1px solid #d3d3d3;
-		border-bottom: 1px solid #d3d3d3;
-
-		> .ui.icon.button {
-			background-color: #FFFFFF;
+		&__nestedNodes {
+			padding-left: 24px;
 		}
 	}
 }

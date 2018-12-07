@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 
-import { RDFNode } from "carbonldp/RDF/Node";
+import { RDFNode } from "carbonldp/RDF";
 
 import { Modes } from "../document-explorer-library";
 import { Pointer, PointerStatus } from "./pointer.component";

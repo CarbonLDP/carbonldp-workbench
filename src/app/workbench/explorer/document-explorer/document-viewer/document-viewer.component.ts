@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
-import { RDFNode } from "carbonldp/RDF/Node"
-import { RDFDocument } from "carbonldp/RDF/Document";
+import { RDFNode } from "carbonldp/RDF"
+import { RDFDocument } from "carbonldp/RDF";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "../documents-resolver.service";

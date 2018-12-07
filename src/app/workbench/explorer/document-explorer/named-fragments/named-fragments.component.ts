@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChange } from "@angular/core";
 
-import { URI } from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF";
 
 import { NamedFragmentStatus } from "./named-fragment.component";
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";

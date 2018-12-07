@@ -1,8 +1,8 @@
 import { Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 
-import { RDFLiteral } from "carbonldp/RDF/Literal";
-import { RDFNode } from "carbonldp/RDF/Node"
+import { RDFLiteral } from "carbonldp/RDF";
+import { RDFNode } from "carbonldp/RDF"
 import { ObjectUtils } from "carbonldp/Utils";
 
 import { LiteralStatus } from "../literals/literal.component";

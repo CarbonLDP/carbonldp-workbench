@@ -25,6 +25,9 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
 // that you are using.
 @include angular-material-theme($app-theme);
 
+$material-icons-font-path: "~material-icons/iconfont/";
+@import "~material-icons/iconfont/material-icons";
+
 // ================ App specific styles
 
 @import "fonts--lato";
@@ -33,4 +36,8 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
 html, body {
 	width: 100vw;
 	height: 100vh;
+}
+
+.hidden {
+	display: none;
 }

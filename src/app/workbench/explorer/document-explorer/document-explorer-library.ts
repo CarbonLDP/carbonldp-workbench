@@ -1,4 +1,4 @@
-import { URI } from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF";
 
 import { PropertyStatus } from "./property/property.component";
 

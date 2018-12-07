@@ -1,6 +1,6 @@
 import { Component, ElementRef } from "@angular/core";
 import { CarbonLDP } from "carbonldp";
-import { PlatformMetadata } from "carbonldp/System/PlatformMetadata";
+import { PlatformMetadata } from "carbonldp/System";
 import { C } from "carbonldp/Vocabularies";
 
 import workbenchPackage from "package.json";

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
 
-import { CarbonLDP } from "carbonldp/CarbonLDP";
-import { RDFNode } from "carbonldp/RDF/Node";
+import { CarbonLDP } from "carbonldp";
+import { RDFNode } from "carbonldp/RDF";
 
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { Property, PropertyStatus } from "../property/property.component";

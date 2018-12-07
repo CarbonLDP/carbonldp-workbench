@@ -1,22 +1,94 @@
+import { merge, Observable } from "rxjs";
+import { first, flatMap } from "rxjs/operators";
+
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
+import { CollectionViewer, DataSource, SelectionChange } from "@angular/cdk/collections";
+import { NestedTreeControl } from "@angular/cdk/tree";
 
 import { CarbonLDP } from "carbonldp";
 import { Pointer } from "carbonldp/Pointer";
-import { Document } from "carbonldp/Document";
 import { Errors } from "carbonldp/HTTP";
-import { URI } from "carbonldp/RDF/URI";
-import { SPARQLBindingObject, SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
-import { C, LDP } from "carbonldp/Vocabularies";
 
-import "jstree/dist/jstree.min";
+import { DocumentTreeNode } from "./state/document-tree-node.model";
+import { DocumentTreeNodesStore } from "./state/document-tree-nodes.store";
+import { DocumentTreeNodesService } from "./state/document-tree-nodes.service";
+import { DocumentTreeNodesQuery } from "./state/document-tree-nodes.query";
+
+/**
+ * {@link DataSource} that powers the document tree. It is in charge of three things:
+ * <ul>
+ *     <li>Give the tree the data it will use to render</li>
+ *     <li>Bind to data changes to notify the tree component so it gets refreshed</li>
+ *     <li>Respond to expansion/collapse of nodes and retrieve more data if needed</li>
+ * </ul>
+ */
+export class DocumentTreeDataSource extends DataSource<DocumentTreeNode> {
+	constructor(
+		private treeControl:NestedTreeControl<DocumentTreeNode>,
+		private documentTreeNodesQuery:DocumentTreeNodesQuery,
+		private documentTreeNodesService:DocumentTreeNodesService,
+	) {
+		super();
+	}
+
+	// Called by the tree to get the data to render
+	connect( collectionViewer:CollectionViewer ):Observable<DocumentTreeNode[] | ReadonlyArray<DocumentTreeNode>> {
+		// The TreeControl's expansion is in charge of node expand/contract actions. Its changed property is an observable
+		// that emits a value every time one or more tree nodes get expanded/contracted
+		// Here we are subscribing to those changes to handle them and load data if necessary
+		this.treeControl.expansionModel.changed.subscribe( this.handleTreeChange.bind( this ) );
+
+		// The connect action is in charge of returning an Observable that will be used by the Tree as its data
+		// Here we merge two observables to emit a value whenever any of them emits one
+		// In this case, if the view changes or if there's any change in any of the tree nodes, a value will be emitted
+		return merge( collectionViewer.viewChange, this.documentTreeNodesQuery.selectAll() )
+			.pipe(
+				// Every time a value gets emitted, we discard it (since we only care about the change taking place)
+				// And we emit the document tree root nodes (which is not going to change, but the value emission will cause
+				// the tree to refresh
+				flatMap( () => this.documentTreeNodesQuery.rootNodes$ )
+			);
+	}
+
+	disconnect( collectionViewer:CollectionViewer ) {
+		// FIXME: Should we unsubscribe from any observable?
+	}
+
+	private handleTreeChange( change:SelectionChange<DocumentTreeNode> ) {
+		// In this case if there are "added" values, it means some nodes were expanded
+		if( change.added ) {
+			change.added.forEach( node => this.handleExpand( node ) );
+		}
+		// In this case if there are "removed" values, it means some nodes were collapsed
+		if( change.removed ) {
+			// Create a copy of the values array (slice) so we can modify it, then reverse it
+			// TODO: Is this actually needed?
+			change.removed.slice().reverse()
+				.forEach( node => this.handleCollapse( node ) );
+		}
+	}
+
+	private async handleExpand( node:DocumentTreeNode ) {
+		this.documentTreeNodesService.fetchChildren( node.id ).subscribe();
+	}
+
+	private handleCollapse( node:DocumentTreeNode ) {
+		// Nothing to do
+	}
+}
 
 @Component( {
 	selector: "app-document-tree-view",
 	templateUrl: "./document-tree-view.component.html",
 	styleUrls: [ "./document-tree-view.component.scss" ],
+	providers: [
+		DocumentTreeNodesStore,
+		DocumentTreeNodesQuery,
+		DocumentTreeNodesService,
+	],
 } )
-
 export class DocumentTreeViewComponent implements AfterViewInit {
+	// FIXME: Review i/o
 	@Input() refreshNodes:EventEmitter<string | string[]> = new EventEmitter<string | string[]>();
 	@Input() openNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onResolveUri:EventEmitter<string> = new EventEmitter<string>();
@@ -27,320 +99,390 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	@Output() onShowCreateAccessPointForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onSelectDocuments:EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
 
-	public sortAscending:boolean = true;
-	public orderBy:OrderBy.CREATED | OrderBy.MODIFIED | OrderBy.SLUG = OrderBy.CREATED;
-	public orderOptions:typeof OrderBy = OrderBy;
-
-	jsTree:JSTree;
-	$tree:JQuery;
-	nodeChildren:JSTreeNode[] = [];
-	canDelete:boolean = true;
-
-	set selectedURIs( value:string[] ) {
-		this._selectedURIs = value;
-		this.onSelectDocuments.emit( this.selectedURIs );
-	}
-	get selectedURIs():string[] {return this._selectedURIs;}
-	private _selectedURIs:string[] = [ "" ];
-
-	private $element:JQuery;
+	/**
+	 * Material UI trees need a TreeControl that will be in charge of controlling the tree's UI
+	 */
+	documentTreeControl:NestedTreeControl<DocumentTreeNode>;
+	/**
+	 * @see {@link DocumentTreeDataSource}
+	 */
+	documentTreeDataSource:DocumentTreeDataSource;
 
 	constructor(
 		private element:ElementRef,
-		private carbonldp:CarbonLDP
+		private carbonldp:CarbonLDP,
+		private documentTreeNodesQuery:DocumentTreeNodesQuery,
+		private documentTreeNodesService:DocumentTreeNodesService,
 	) {
+		// Thanks to the following line we can "fake" a nested node structure. By passing a function that retrieves the children of a node
+		// directly from the DocumentTreeNodesQuery, the TreeControl will traverse the tree as if the nodes were truly nested. And since
+		// the output of that function is an observable, it will always be up-to-date with what the store has
+		this.documentTreeControl = new NestedTreeControl<DocumentTreeNode>( node => this.documentTreeNodesQuery.selectChildren( node.id ) );
+		this.documentTreeDataSource = new DocumentTreeDataSource( this.documentTreeControl, this.documentTreeNodesQuery, this.documentTreeNodesService );
 	}
 
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
-		this.$tree = this.$element.find( ".treeview-content" );
-
-		// Initialize Semantic UI elements
-		this.initializeOptionsButton();
-		this.initalizeSortByButton();
-
-		this.onLoadingDocument.emit( true );
-		this.getDocumentTree().then( () => this.onLoadingDocument.emit( false ) );
-
-		this.refreshNodes.subscribe( this.handleRefreshNodes.bind( this ) );
-		this.openNode.subscribe( this.handleOpenNode.bind( this ) );
+	async ngAfterViewInit() {
+		// Initialize the tree by fetching the root document ("/") and then registering it as the root document in the {@link DocumentTreeNodesService}
+		this.documentTreeNodesService.fetchOne( "/" )
+		// We only need to do this for the first emitted value (since we know it won't change anymore)
+			.pipe( first() )
+			.subscribe( document => {
+				this.documentTreeNodesService.updateRootNodes( [ document ] );
+			} );
 	}
 
-	getDocumentTree():Promise<Document | void> {
-		return this.carbonldp.documents.$get( { ensureLatest: true } ).then( ( updatedRoot:Document ) => {
-
-			let isRequiredSystemDocument:boolean = updatedRoot.types.findIndex( ( type:string ) => type === `${C.namespace}RequiredSystemDocument` ) !== - 1;
-
-			this.nodeChildren.push( this.buildNode( this.carbonldp.baseURI, JSTreeNodeType.DEFAULT, true, isRequiredSystemDocument ) );
-
-			this.renderTree();
-
-			return updatedRoot;
-		} ).catch( ( error:Errors.HTTPError ) => {
-			this.onError.emit( error );
-		} );
-	}
-
-	buildNode( uri:string, nodeType?:string, hasChildren?:boolean, isRequiredSystemDocument?:boolean, created?:Date, modified?:Date ):JSTreeNode {
-		let node:JSTreeNode = {
-			id: uri,
-			text: this.getSlug( uri ),
-			state: { "opened": false },
-			children: hasChildren,
-			data: {},
-		};
-		node.type = (nodeType === JSTreeNodeType.ACCESS_POINT) ? JSTreeNodeType.ACCESS_POINT : JSTreeNodeType.DEFAULT;
-		node.data.id = uri;
-		node.data.isRequiredSystemDocument = ! ! isRequiredSystemDocument;
-		node.data.created = created;
-		node.data.modified = modified;
-		return node;
-	}
-
-	renderTree():void {
-		this.jsTree = this.$tree.jstree( {
-			"core": {
-				"data": this.resolveNodeData.bind( this ),
-				"check_callback": true,
-				"multiple": true,
-			},
-			"types": {
-				"loading": {
-					"icon": "spinner loading icon",
-				},
-				[ JSTreeNodeType.DEFAULT ]: {
-					"icon": "file outline icon",
-				},
-				[ JSTreeNodeType.ACCESS_POINT ]: {
-					"icon": "selected radio icon",
-					"a_attr": {
-						"class": "accesspoint",
-						"title": "The element is an AccessPoint, not a direct child of the selected document."
-					}
-				}
-			},
-			"sort": this.sort.bind( this ),
-			"plugins": [ "types", "wholerow", "sort" ],
-		} ).jstree( true );
-		this.$tree.on( "select_node.jstree", (( e:Event, data:any ):void => {
-			let node:any = data.node;
-			this.selectedURIs = data.selected;
-			this.canDelete = node.data.isRequiredSystemDocument
-				? false
-				: data.selected.length === 1
-					? true
-					: this.canDelete;
-		}) as any );
-		this.$tree.on( "loaded.jstree", () => {
-			this.jsTree.select_node( this.nodeChildren[ 0 ].id );
-			this.jsTree.open_node( this.nodeChildren[ 0 ].id );
-			this.onResolveUri.emit( <string>this.nodeChildren[ 0 ].id );
-		} );
-		this.$tree.on( "dblclick.jstree", ( e:Event ) => {
-			this.loadNode( e.target );
-		} );
-	}
-
-	handleRefreshNodes( nodeIDs:string | string[] ) {
-		nodeIDs = ! Array.isArray( nodeIDs ) ? [ nodeIDs ] : nodeIDs;
-		// Remove duplicates
-		nodeIDs = Array.from( new Set( nodeIDs ) );
-
-		for( let nodeID of nodeIDs ) {
-			this.loadNode( nodeID );
-		}
-
-		this.jsTree.select_node( nodeIDs );
-
-		this.selectedURIs = nodeIDs;
-	}
-
-	handleOpenNode( nodeID:string ) {
-		this.jsTree.select_node( nodeID );
-	}
-
-	loadNode( obj:any ):void {
-		let node:JSTreeNode = this.jsTree.get_node( obj );
-		this.jsTree.refresh_node( node );
-		this.jsTree.open_node( node );
-		this.onResolveUri.emit( node.id );
-	}
-
-	resolveNodeData( node:JSTreeNode, callBack:( children:JSTreeNode[] ) => {} ):void {
-		// If the node doesn't have an id, load the first node, else load node's children
-		if( node.id === "#" ) {
-			callBack( this.nodeChildren );
-		} else {
-			this.getNodeChildren( node.id )
-				.then( ( children:JSTreeNode[] ) => {
-					callBack( children );
-				} );
-		}
-	}
-
-	getNodeChildren( uri:string ):Promise<JSTreeNode[]> {
-		let query:string = `
-			PREFIX c:<${C.namespace}>
-			PREFIX ldp:<${LDP.namespace}>
-			
-			SELECT (STR(?p) AS ?parentPredicate) (STR(?s) AS ?subject) (STR(?p2) AS ?predicate) ?object ?isRequiredSystemDocument
-			WHERE {
-			    <${uri}> ?p ?s 
-			    VALUES (?p) {
-			        (ldp:contains)
-			        (c:accessPoint)
-			        (c:created)
-			        (c:modified)
-			    }
-			    OPTIONAL {
-			        ?s ?p2 ?object    
-			        VALUES (?p2) {
-			            (ldp:contains)
-			            (c:accessPoint)
-				        (c:created)
-				        (c:modified)
-			        }
-			        BIND( EXISTS{ ?s a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
-			    }
-			}
-		`;
-		return this.carbonldp.documents.$executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
-			let nodes:Map<string, JSTreeNode> = new Map<string, JSTreeNode>();
-
-			results.bindings.forEach( ( binding:SPARQLBindingObject & BindingResult ) => this.addBindingToNodes( nodes, binding ) );
-
-			return Array.from( nodes.values() );
-		} ).catch( ( error ) => {
-			return Promise.reject( error );
-		} );
-	}
-
-	refreshSelectedNodes():void {
-		for( let selectedURI of this.selectedURIs ) {
-			this.jsTree.refresh_node( selectedURI );
-		}
-	}
-
-	getSlug( node:Document | string ):string {
-		if( typeof node === "string" ) return URI.getSlug( node );
-		return (<Document>node).$id;
-	}
-
-	showCreateChildForm():void {
-		this.onShowCreateChildForm.emit( true );
-	}
-
-	showCreateAccessPointForm():void {
-		this.onShowCreateAccessPointForm.emit( true );
-	}
-
-	showDeleteChildForm():void {
-		this.onShowDeleteChildForm.emit( true );
-	}
-
-	changeSort( ascending:boolean ):void {
-		this.sortAscending = ascending;
-		this.reorderBranch();
-	}
-
-	changeOrderBy( orderBy:OrderBy.CREATED | OrderBy.MODIFIED | OrderBy.SLUG ):void {
-		this.orderBy = orderBy;
-		this.reorderBranch();
-	}
-
-	reorderBranch():void {
-		for( let selectedURI of this.selectedURIs ) {
-			let node:JSTreeNode = this.jsTree.get_node( selectedURI );
-
-			this.jsTree.sort( node, true );
-			this.jsTree.redraw_node( node, true, false, false );
-		}
-	}
-
-	private sort( nodeAId?:string, nodeBId?:string ):number {
-
-		let nodeA:JSTreeNode = this.jsTree.get_node( nodeAId ),
-			nodeB:JSTreeNode = this.jsTree.get_node( nodeBId );
-
-		if( typeof nodeA.data[ this.orderBy ] === "string" && typeof nodeB.data[ this.orderBy ] === "string" ) {
-			if( nodeA.data[ this.orderBy ].toLowerCase() > nodeB.data[ this.orderBy ].toLowerCase() ) return this.sortAscending ? 1 : - 1;
-			if( nodeA.data[ this.orderBy ].toLowerCase() < nodeB.data[ this.orderBy ].toLowerCase() ) return this.sortAscending ? - 1 : 1;
-		} else {
-			if( nodeA.data[ this.orderBy ] > nodeB.data[ this.orderBy ] ) return this.sortAscending ? 1 : - 1;
-			if( nodeA.data[ this.orderBy ] < nodeB.data[ this.orderBy ] ) return this.sortAscending ? - 1 : 1;
-		}
-		return 0;
-	}
-
-	private initializeOptionsButton():void {
-		this.$element.find( ".treeview-optionsButton" ).dropdown( { action: "hide" } );
-	}
-
-	private initalizeSortByButton():void {
-		this.$element.find( ".treeview-sortByButton" ).dropdown();
-	}
-
-	private addBindingToNodes( nodes:Map<string, JSTreeNode>, binding:BindingResult ):void {
-
-		if( ! binding.hasOwnProperty( "subject" ) ||
-			! binding.hasOwnProperty( "predicate" ) ||
-			binding.subject.indexOf( "/users/me/" ) !== - 1 ) return;
-
-		let node:JSTreeNode,
-			created:Date,
-			modified:Date,
-			hasChildren:boolean,
-			type:JSTreeNodeType.DEFAULT | JSTreeNodeType.ACCESS_POINT,
-			isRequiredSystemDocument:boolean = binding.isRequiredSystemDocument;
-
-		switch( binding.predicate ) {
-			case C.created:
-				created = <Date>binding.object;
-				break;
-			case C.modified:
-				modified = <Date>binding.object;
-				break;
-			case LDP.contains:
-				hasChildren = ! ! binding.object;
-				break;
-		}
-
-		// The parentPredicate indicates if the node is an Access Point or a regular node
-		switch( binding.parentPredicate ) {
-			case C.accessPoint:
-				type = JSTreeNodeType.ACCESS_POINT;
-				break;
-			case LDP.contains:
-				type = JSTreeNodeType.DEFAULT;
-				break;
-		}
-
-		if( nodes.has( binding.subject ) ) {
-
-			node = nodes.get( binding.subject );
-			node.type = type ? type : node.type;
-			node.data.id = node.id;
-			node.data.created = created ? created : node.data.created;
-			node.data.modified = modified ? modified : node.data.modified;
-			node.data.hasChildren = hasChildren;
-			node.data.isRequiredSystemDocument = isRequiredSystemDocument;
-		} else {
-
-			node = this.buildNode( binding.subject, type, hasChildren, isRequiredSystemDocument, created, modified );
-		}
-		nodes.set( binding.subject, node );
+	/**
+	 * Tells the UI if a node has children or not. Used by the component's template
+	 * @param index - The index of the node (in the node's level)
+	 * @param node - The node in question
+	 */
+	hasChildren = ( index:number, node:DocumentTreeNode ):boolean => {
+		return ! ! node.children && ! ! node.children.length;
 	}
 }
+
+// @Component( {
+// 	selector: "app-document-tree-view",
+// 	templateUrl: "./document-tree-view.component.html",
+// 	styleUrls: [ "./document-tree-view.component.scss" ],
+// 	providers: [
+// 		DocumentsStore,
+// 		DocumentsService,
+// 	],
+// } )
+// export class DocumentTreeViewComponent implements AfterViewInit {
+// 	@Input() refreshNodes:EventEmitter<string | string[]> = new EventEmitter<string | string[]>();
+// 	@Input() openNode:EventEmitter<string> = new EventEmitter<string>();
+// 	@Output() onResolveUri:EventEmitter<string> = new EventEmitter<string>();
+// 	@Output() onError:EventEmitter<Errors.HTTPError> = new EventEmitter<Errors.HTTPError>();
+// 	@Output() onLoadingDocument:EventEmitter<boolean> = new EventEmitter<boolean>();
+// 	@Output() onShowCreateChildForm:EventEmitter<boolean> = new EventEmitter<boolean>();
+// 	@Output() onShowDeleteChildForm:EventEmitter<boolean> = new EventEmitter<boolean>();
+// 	@Output() onShowCreateAccessPointForm:EventEmitter<boolean> = new EventEmitter<boolean>();
+// 	@Output() onSelectDocuments:EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
+//
+// 	public sortAscending:boolean = true;
+// 	public orderBy:OrderBy.CREATED | OrderBy.MODIFIED | OrderBy.SLUG = OrderBy.CREATED;
+// 	public orderOptions:typeof OrderBy = OrderBy;
+//
+// 	jsTree:JSTree;
+// 	$tree:JQuery;
+// 	nodeChildren:JSTreeNode[] = [];
+// 	canDelete:boolean = true;
+//
+// 	set selectedURIs( value:string[] ) {
+// 		this._selectedURIs = value;
+// 		this.onSelectDocuments.emit( this.selectedURIs );
+// 	}
+// 	get selectedURIs():string[] {return this._selectedURIs;}
+// 	private _selectedURIs:string[] = [ "" ];
+//
+// 	private $element:JQuery;
+//
+// 	treeControl:NestedTreeControl<DocumentTreeNode>;
+// 	dataSource:DocumentTreeDataSource;
+//
+// 	constructor(
+// 		private element:ElementRef,
+// 		private carbonldp:CarbonLDP,
+// 		private documentsService:DocumentsService,
+// 	) {
+// 		this.treeControl = new NestedTreeControl<DocumentTreeNode>( documentsService.getChildren.bind( documentsService ) );
+// 		this.dataSource = new DocumentTreeDataSource(this.treeControl, documentsService);
+// 	}
+//
+// 	async ngAfterViewInit() {
+// 		await this.documentsService.get( "/" );
+//
+// 		// FIXME: Remove old code
+//
+// 		this.$element = $( this.element.nativeElement );
+// 		this.$tree = this.$element.find( ".tree-view-content" );
+//
+// 		// Initialize Semantic UI elements
+// 		this.initializeOptionsButton();
+// 		this.initializeSortByButton();
+//
+// 		this.refreshNodes.subscribe( this.handleRefreshNodes.bind( this ) );
+// 		this.openNode.subscribe( this.handleOpenNode.bind( this ) );
+//
+// 		this.onLoadingDocument.emit( true );
+//
+// 		try {
+// 			await this.getDocumentTree();
+// 		} catch( error ) {
+// 			this.onError.emit( error );
+// 			return;
+// 		} finally {
+// 			this.onLoadingDocument.emit( false );
+// 		}
+// 	}
+//
+// 	async getDocumentTree() {
+// 		const document = await this.carbonldp.documents.$get( { ensureLatest: true } );
+//
+// 		const isRequiredSystemDocument:boolean = document.types.findIndex( ( type:string ) => type === `${C.namespace}RequiredSystemDocument` ) !== - 1;
+//
+// 		this.nodeChildren.push( this.buildNode( this.carbonldp.baseURI, JSTreeNodeType.DEFAULT, true, isRequiredSystemDocument ) );
+//
+// 		this.renderTree();
+// 	}
+//
+// 	buildNode( uri:string, nodeType?:string, hasChildren?:boolean, isRequiredSystemDocument?:boolean, created?:Date, modified?:Date ):JSTreeNode {
+// 		let node:JSTreeNode = {
+// 			id: uri,
+// 			text: this.getSlug( uri ),
+// 			state: { "opened": false },
+// 			children: hasChildren,
+// 			data: {},
+// 		};
+// 		node.type = (nodeType === JSTreeNodeType.ACCESS_POINT) ? JSTreeNodeType.ACCESS_POINT : JSTreeNodeType.DEFAULT;
+// 		node.data.id = uri;
+// 		node.data.isRequiredSystemDocument = ! ! isRequiredSystemDocument;
+// 		node.data.created = created;
+// 		node.data.modified = modified;
+// 		return node;
+// 	}
+//
+// 	renderTree():void {
+// 		this.jsTree = this.$tree.jstree( {
+// 			"core": {
+// 				"data": this.resolveNodeData.bind( this ),
+// 				"check_callback": true,
+// 				"multiple": true,
+// 			},
+// 			"types": {
+// 				"loading": {
+// 					"icon": "spinner loading icon",
+// 				},
+// 				[ JSTreeNodeType.DEFAULT ]: {
+// 					"icon": "file outline icon",
+// 				},
+// 				[ JSTreeNodeType.ACCESS_POINT ]: {
+// 					"icon": "selected radio icon",
+// 					"a_attr": {
+// 						"class": "accesspoint",
+// 						"title": "The element is an AccessPoint, not a direct child of the selected document."
+// 					}
+// 				}
+// 			},
+// 			"sort": this.sort.bind( this ),
+// 			"plugins": [ "types", "wholerow", "sort" ],
+// 		} ).jstree( true );
+// 		this.$tree.on( "select_node.jstree", (( e:Event, data:any ):void => {
+// 			let node:any = data.node;
+// 			this.selectedURIs = data.selected;
+// 			this.canDelete = node.data.isRequiredSystemDocument
+// 				? false
+// 				: data.selected.length === 1
+// 					? true
+// 					: this.canDelete;
+// 		}) as any );
+// 		this.$tree.on( "loaded.jstree", () => {
+// 			this.jsTree.select_node( this.nodeChildren[ 0 ].id );
+// 			this.jsTree.open_node( this.nodeChildren[ 0 ].id );
+// 			this.onResolveUri.emit( <string>this.nodeChildren[ 0 ].id );
+// 		} );
+// 		this.$tree.on( "dblclick.jstree", ( e:Event ) => {
+// 			this.loadNode( e.target );
+// 		} );
+// 	}
+//
+// 	handleRefreshNodes( nodeIDs:string | string[] ) {
+// 		nodeIDs = ! Array.isArray( nodeIDs ) ? [ nodeIDs ] : nodeIDs;
+// 		// Remove duplicates
+// 		nodeIDs = Array.from( new Set( nodeIDs ) );
+//
+// 		for( let nodeID of nodeIDs ) {
+// 			this.loadNode( nodeID );
+// 		}
+//
+// 		this.jsTree.select_node( nodeIDs );
+//
+// 		this.selectedURIs = nodeIDs;
+// 	}
+//
+// 	handleOpenNode( nodeID:string ) {
+// 		this.jsTree.select_node( nodeID );
+// 	}
+//
+// 	loadNode( obj:any ):void {
+// 		let node:JSTreeNode = this.jsTree.get_node( obj );
+// 		this.jsTree.refresh_node( node );
+// 		this.jsTree.open_node( node );
+// 		this.onResolveUri.emit( node.id );
+// 	}
+//
+// 	resolveNodeData( node:JSTreeNode, callBack:( children:JSTreeNode[] ) => {} ):void {
+// 		// If the node doesn't have an id, load the first node, else load node's children
+// 		if( node.id === "#" ) {
+// 			callBack( this.nodeChildren );
+// 		} else {
+// 			this.getNodeChildren( node.id )
+// 				.then( ( children:JSTreeNode[] ) => {
+// 					callBack( children );
+// 				} );
+// 		}
+// 	}
+//
+// 	getNodeChildren( uri:string ):Promise<JSTreeNode[]> {
+// 		let query:string = `
+// 			PREFIX c:<${C.namespace}>
+// 			PREFIX ldp:<${LDP.namespace}>
+//
+// 			SELECT (STR(?p) AS ?parentPredicate) (STR(?s) AS ?subject) (STR(?p2) AS ?predicate) ?object ?isRequiredSystemDocument
+// 			WHERE {
+// 			    <${uri}> ?p ?s
+// 			    VALUES (?p) {
+// 			        (ldp:contains)
+// 			        (c:accessPoint)
+// 			        (c:created)
+// 			        (c:modified)
+// 			    }
+// 			    OPTIONAL {
+// 			        ?s ?p2 ?object
+// 			        VALUES (?p2) {
+// 			            (ldp:contains)
+// 			            (c:accessPoint)
+// 				        (c:created)
+// 				        (c:modified)
+// 			        }
+// 			        BIND( EXISTS{ ?s a c:RequiredSystemDocument } AS ?isRequiredSystemDocument )
+// 			    }
+// 			}
+// 		`;
+// 		return this.carbonldp.documents.$executeSELECTQuery( uri, query ).then( ( results:SPARQLSelectResults ) => {
+// 			let nodes:Map<string, JSTreeNode> = new Map<string, JSTreeNode>();
+//
+// 			results.bindings.forEach( ( binding:SPARQLBindingObject & BindingResult ) => this.addBindingToNodes( nodes, binding ) );
+//
+// 			return Array.from( nodes.values() );
+// 		} ).catch( ( error ) => {
+// 			return Promise.reject( error );
+// 		} );
+// 	}
+//
+// 	refreshSelectedNodes():void {
+// 		for( let selectedURI of this.selectedURIs ) {
+// 			this.jsTree.refresh_node( selectedURI );
+// 		}
+// 	}
+//
+// 	getSlug( node:Document | string ):string {
+// 		if( typeof node === "string" ) return URI.getSlug( node );
+// 		return (<Document>node).$id;
+// 	}
+//
+// 	showCreateChildForm():void {
+// 		this.onShowCreateChildForm.emit( true );
+// 	}
+//
+// 	showCreateAccessPointForm():void {
+// 		this.onShowCreateAccessPointForm.emit( true );
+// 	}
+//
+// 	showDeleteChildForm():void {
+// 		this.onShowDeleteChildForm.emit( true );
+// 	}
+//
+// 	changeSort( ascending:boolean ):void {
+// 		this.sortAscending = ascending;
+// 		this.reorderBranch();
+// 	}
+//
+// 	changeOrderBy( orderBy:OrderBy.CREATED | OrderBy.MODIFIED | OrderBy.SLUG ):void {
+// 		this.orderBy = orderBy;
+// 		this.reorderBranch();
+// 	}
+//
+// 	reorderBranch():void {
+// 		for( let selectedURI of this.selectedURIs ) {
+// 			let node:JSTreeNode = this.jsTree.get_node( selectedURI );
+//
+// 			this.jsTree.sort( node, true );
+// 			this.jsTree.redraw_node( node, true, false, false );
+// 		}
+// 	}
+//
+// 	private sort( nodeAId?:string, nodeBId?:string ):number {
+//
+// 		let nodeA:JSTreeNode = this.jsTree.get_node( nodeAId ),
+// 			nodeB:JSTreeNode = this.jsTree.get_node( nodeBId );
+//
+// 		if( typeof nodeA.data[ this.orderBy ] === "string" && typeof nodeB.data[ this.orderBy ] === "string" ) {
+// 			if( nodeA.data[ this.orderBy ].toLowerCase() > nodeB.data[ this.orderBy ].toLowerCase() ) return this.sortAscending ? 1 : - 1;
+// 			if( nodeA.data[ this.orderBy ].toLowerCase() < nodeB.data[ this.orderBy ].toLowerCase() ) return this.sortAscending ? - 1 : 1;
+// 		} else {
+// 			if( nodeA.data[ this.orderBy ] > nodeB.data[ this.orderBy ] ) return this.sortAscending ? 1 : - 1;
+// 			if( nodeA.data[ this.orderBy ] < nodeB.data[ this.orderBy ] ) return this.sortAscending ? - 1 : 1;
+// 		}
+// 		return 0;
+// 	}
+//
+// 	private initializeOptionsButton():void {
+// 		this.$element.find( ".tree-view-optionsButton" ).dropdown( { action: "hide" } );
+// 	}
+//
+// 	private initializeSortByButton():void {
+// 		this.$element.find( ".tree-view-sortByButton" ).dropdown();
+// 	}
+//
+// 	private addBindingToNodes( nodes:Map<string, JSTreeNode>, binding:BindingResult ):void {
+//
+// 		if( ! binding.hasOwnProperty( "subject" ) ||
+// 			! binding.hasOwnProperty( "predicate" ) ||
+// 			binding.subject.indexOf( "/users/me/" ) !== - 1 ) return;
+//
+// 		let node:JSTreeNode,
+// 			created:Date,
+// 			modified:Date,
+// 			hasChildren:boolean,
+// 			type:JSTreeNodeType.DEFAULT | JSTreeNodeType.ACCESS_POINT,
+// 			isRequiredSystemDocument:boolean = binding.isRequiredSystemDocument;
+//
+// 		switch( binding.predicate ) {
+// 			case C.created:
+// 				created = <Date>binding.object;
+// 				break;
+// 			case C.modified:
+// 				modified = <Date>binding.object;
+// 				break;
+// 			case LDP.contains:
+// 				hasChildren = ! ! binding.object;
+// 				break;
+// 		}
+//
+// 		// The parentPredicate indicates if the node is an Access Point or a regular node
+// 		switch( binding.parentPredicate ) {
+// 			case C.accessPoint:
+// 				type = JSTreeNodeType.ACCESS_POINT;
+// 				break;
+// 			case LDP.contains:
+// 				type = JSTreeNodeType.DEFAULT;
+// 				break;
+// 		}
+//
+// 		if( nodes.has( binding.subject ) ) {
+//
+// 			node = nodes.get( binding.subject );
+// 			node.type = type ? type : node.type;
+// 			node.data.id = node.id;
+// 			node.data.created = created ? created : node.data.created;
+// 			node.data.modified = modified ? modified : node.data.modified;
+// 			node.data.hasChildren = hasChildren;
+// 			node.data.isRequiredSystemDocument = isRequiredSystemDocument;
+// 		} else {
+//
+// 			node = this.buildNode( binding.subject, type, hasChildren, isRequiredSystemDocument, created, modified );
+// 		}
+// 		nodes.set( binding.subject, node );
+// 	}
+// }
 
 export enum OrderBy {
 	SLUG = "id",
 	CREATED = "created",
 	MODIFIED = "modified",
-}
-
-enum JSTreeNodeType {
-	DEFAULT = "default",
-	ACCESS_POINT = "accesspoint"
 }
 
 interface BindingResult {

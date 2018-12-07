@@ -1,7 +1,7 @@
 import { Component, EventEmitter } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { RDFDocument } from "carbonldp/RDF/Document";
+import { RDFDocument } from "carbonldp/RDF";
 import { HTTPError } from "carbonldp/HTTP/Errors";
 
 import { DocumentsResolverService } from "./documents-resolver.service";

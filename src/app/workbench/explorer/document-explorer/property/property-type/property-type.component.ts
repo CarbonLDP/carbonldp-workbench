@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
 
-import { URI } from "carbonldp/RDF/URI";
-import { LDP } from "carbonldp/Vocabularies/LDP";
+import { URI } from "carbonldp/RDF";
+import { LDP } from "carbonldp/Vocabularies";
 
 import { PropertyStatus } from "../property.component";
 

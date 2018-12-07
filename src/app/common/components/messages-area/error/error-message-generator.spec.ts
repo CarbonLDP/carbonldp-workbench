@@ -1,4 +1,4 @@
-import { RequestService } from "carbonldp/HTTP/Request";
+import { RequestService } from "carbonldp/HTTP";
 
 import { HTTPError } from "carbonldp/HTTP/Errors";
 

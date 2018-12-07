@@ -2,8 +2,9 @@ import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 
-import { MatBadgeModule } from "@angular/material/badge";
-import { MatTabsModule } from "@angular/material/tabs";
+import { CdkTreeModule } from "@angular/cdk/tree";
+import { MatBadgeModule, MatButtonModule, MatIconModule, MatTabsModule, MatTreeModule } from "@angular/material";
+
 // Components
 import { LiteralComponent } from "./literals/literal.component";
 import { LiteralsComponent } from "./literals/literals.component";
@@ -39,8 +40,13 @@ import { IdValidator, LiteralValueValidator, PointerValidator, PropertyNameValid
 		FormsModule,
 
 		// Material UI
+		CdkTreeModule,
+
 		MatBadgeModule,
+		MatButtonModule,
+		MatIconModule,
 		MatTabsModule,
+		MatTreeModule,
 
 		AppCommonModule,
 	],

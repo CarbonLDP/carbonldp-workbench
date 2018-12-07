@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
-import { RDFNode } from "carbonldp/RDF/Node"
+import { RDFNode } from "carbonldp/RDF"
 
 import { NamedFragmentStatus } from "../named-fragments/named-fragment.component";
 import { Modes } from "../document-explorer-library";

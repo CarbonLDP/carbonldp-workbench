@@ -1,6 +1,6 @@
 import { Directive, Injector, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { AbstractControl, FormControl, NG_VALIDATORS, NgControl, NgModel, Validator } from "@angular/forms";
-import { URI } from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF";
 
 @Directive( {
 	selector: "[app-email]",

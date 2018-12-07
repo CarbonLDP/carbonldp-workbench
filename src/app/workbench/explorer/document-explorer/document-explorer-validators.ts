@@ -1,7 +1,7 @@
 import { XSD } from "carbonldp/Vocabularies";
 import { isDate, isInteger, isNumber, isString } from "carbonldp/Utils";
-import { RDFLiteral } from "carbonldp/RDF/Literal";
-import { URI } from "carbonldp/RDF/URI";
+import { RDFLiteral } from "carbonldp/RDF";
+import { URI } from "carbonldp/RDF";
 import { DocumentExplorerLibrary } from "./document-explorer-library";
 
 import { Directive, Input, OnChanges, SimpleChanges } from "@angular/core";
