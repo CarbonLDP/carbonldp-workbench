@@ -1,6 +1,6 @@
 import { CarbonLDP } from "carbonldp";
-import { URI } from "carbonldp/RDF/URI";
-import { RDFNode } from "carbonldp/RDF/Node";
+import { URI } from "carbonldp/RDF";
+import { RDFNode } from "carbonldp/RDF";
 
 import { Property, PropertyStatus } from "./property/property.component";
 

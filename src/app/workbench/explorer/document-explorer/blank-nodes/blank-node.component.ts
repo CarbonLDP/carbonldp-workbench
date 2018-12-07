@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { RDFNode } from "carbonldp/RDF/Node";
+import { RDFNode } from "carbonldp/RDF";
 
 
 import { Property, PropertyStatus } from "../property/property.component";

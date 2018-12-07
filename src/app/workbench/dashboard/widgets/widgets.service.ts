@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { PlatformMetadata } from "carbonldp/System/PlatformMetadata";
-import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
+import { PlatformMetadata } from "carbonldp/System";
+import { SPARQLSelectResults } from "carbonldp/SPARQL";
 import { C } from "carbonldp/Vocabularies";
 
 /*

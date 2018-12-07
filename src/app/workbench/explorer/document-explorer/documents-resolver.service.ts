@@ -3,12 +3,12 @@ import { Injectable } from "@angular/core";
 import { CarbonLDP } from "carbonldp";
 import { RequestOptions, RequestService, RequestUtils, Response } from "carbonldp/HTTP";
 import { LDP } from "carbonldp/Vocabularies";
-import { RDFDocument } from "carbonldp/RDF/Document";
+import { RDFDocument } from "carbonldp/RDF";
 import { JSONLDParser } from "carbonldp/JSONLD";
 import { Document } from "carbonldp/Document";
 import { BaseAccessPoint } from "carbonldp/AccessPoint";
-import { SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
-import { _getErrorResponseParserFn } from "carbonldp/DocumentsRepository/Utils";
+import { SPARQLSelectResults } from "carbonldp/SPARQL";
+import { _getErrorResponseParserFn } from "carbonldp/DocumentsRepository";
 
 @Injectable()
 export class DocumentsResolverService {

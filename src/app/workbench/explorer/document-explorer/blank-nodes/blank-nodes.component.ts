@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, Output, SimpleChange } from "@angular/core";
 
-import { RDFNode } from "carbonldp/RDF/Node"
+import { RDFNode } from "carbonldp/RDF"
 
 import { BlankNodeStatus } from "./blank-node.component"
 import { JsonLDKeyword } from "../document-explorer-library";

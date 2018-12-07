@@ -1,7 +1,7 @@
 import { Component, EventEmitter, HostBinding, Output } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
-import { PlatformMetadata } from "carbonldp/System/PlatformMetadata";
+import { PlatformMetadata } from "carbonldp/System";
 
 import { WidgetsService } from "../widgets.service";
 import { ErrorMessageGenerator } from "app/common/components/messages-area/error/error-message-generator";

@@ -4,7 +4,7 @@ import { map, share } from "rxjs/operators";
 import { isEqual, sortBy } from "lodash";
 
 import { CarbonLDP } from "carbonldp";
-import { SPARQLRawResults } from "carbonldp/SPARQL/RawResults";
+import { SPARQLRawResults } from "carbonldp/SPARQL";
 import { Errors, Header, RequestOptions } from "carbonldp/HTTP";
 import { SPARQLService } from "carbonldp/SPARQL";
 
