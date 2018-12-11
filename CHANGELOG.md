@@ -12,6 +12,20 @@ and this project adheres to [Semantic Versioning].
 
 <!--### Breaking Changes -->
 
+## [5.1.0] - 2018-12-06
+
+### Added
+
+- [#70](https://github.com/CarbonLDP/carbonldp-workbench/issues/70) - Document Explorer > Delete multiple documents
+- Performance and stability improvements
+
+### Fixed
+
+- [#152](https://github.com/CarbonLDP/carbonldp-workbench/issues/152) - New property names are capitalized (which is a bad practice in RDF)
+- [#145](https://github.com/CarbonLDP/carbonldp-workbench/issues/145) - Saved queries can have duplicate names
+- [#154](https://github.com/CarbonLDP/carbonldp-workbench/issues/154) - Document slugs are missing their trailing slash
+- [#139](https://github.com/CarbonLDP/carbonldp-workbench/issues/139) - SPARQL Client > Raw data tab can't be scrolled
+
 ## [5.0.0] - 2018-09-22
 
 This major version adds and removes a lot of functionalities... So many that we forgot to take track them. You'll have to discover them
@@ -36,7 +50,7 @@ on your own this time. We promise next version will have proper CHANGELOG entrie
 - Resolved #74 - Inverted success message on Documents and Access Points creation
 - Resolved #72 - CONSTRUCT and SELECT combination serve wrong output formats of CONSTRUCTS
 - Resolved #71 - The SPARQL client set disabled execute button on empty endpoint
-- Resolved #84 - Fix version displayer
+- Resolved #84 - Fix version display
 
 ### Breaking changes
 
@@ -150,8 +164,9 @@ Everything
 - Initial commit
 - Mirror `app-dev` functionality
 
-[Unreleased]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v5.0.0...HEAD
+[Unreleased]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v5.1.0...HEAD
 
+[5.1.0]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v5.0.0...v5.1.0
 [5.0.0]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v0.8.0...v5.0.0
 
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/

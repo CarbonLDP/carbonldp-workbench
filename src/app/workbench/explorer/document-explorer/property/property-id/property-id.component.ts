@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 
-import { URI } from "carbonldp/RDF/URI";
-import { RDFNode } from "carbonldp/RDF/Node";
+import { URI } from "carbonldp/RDF";
+import { RDFNode } from "carbonldp/RDF";
 
 import { Modes } from "../../document-explorer-library";
 import { Property, PropertyStatus } from "./../property.component";

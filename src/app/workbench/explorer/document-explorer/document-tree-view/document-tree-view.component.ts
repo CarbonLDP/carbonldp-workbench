@@ -4,8 +4,8 @@ import { CarbonLDP } from "carbonldp";
 import { Pointer } from "carbonldp/Pointer";
 import { Document } from "carbonldp/Document";
 import { Errors } from "carbonldp/HTTP";
-import { URI } from "carbonldp/RDF/URI";
-import { SPARQLBindingObject, SPARQLSelectResults } from "carbonldp/SPARQL/SelectResults";
+import { URI } from "carbonldp/RDF";
+import { SPARQLBindingObject, SPARQLSelectResults } from "carbonldp/SPARQL";
 import { C, LDP } from "carbonldp/Vocabularies";
 
 

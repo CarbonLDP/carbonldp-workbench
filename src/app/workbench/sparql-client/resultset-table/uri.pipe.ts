@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from "@angular/core";
 
-import { URI } from "carbonldp/RDF/URI";
+import { URI } from "carbonldp/RDF";
 
 /**
  * Formats non-prefixed URIs as Turtle-style URIs `<http://.../>`

@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 
-import { RDFLiteral } from "carbonldp/RDF/Literal";
-import { RDFList } from "carbonldp/RDF/List";
-import { URI } from "carbonldp/RDF/URI";
-import { RDFNode } from "carbonldp/RDF/Node"
+import { RDFLiteral } from "carbonldp/RDF";
+import { RDFList } from "carbonldp/RDF";
+import { URI } from "carbonldp/RDF";
+import { RDFNode } from "carbonldp/RDF"
 
 import { LiteralStatus } from "./../../literals/literal.component";
 import { PointerStatus } from "./../../pointers/pointer.component";
