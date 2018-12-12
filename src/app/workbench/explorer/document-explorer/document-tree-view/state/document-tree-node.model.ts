@@ -1,5 +1,6 @@
 export interface DocumentTreeNode {
 	id:string;
+	parent:string | null;
 	children:string[];
 	types:string[];
 	created:Date,
@@ -12,6 +13,7 @@ export interface DocumentTreeNode {
 export function createDocumentTreeNode(
 	{
 		id = null,
+		parent = null,
 		children = [],
 		types = [],
 		created = null,
@@ -20,6 +22,7 @@ export function createDocumentTreeNode(
 ):DocumentTreeNode {
 	return {
 		id,
+		parent,
 		children,
 		types,
 		created,

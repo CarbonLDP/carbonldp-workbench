@@ -1,9 +1,14 @@
 import { merge, Observable } from "rxjs";
 import { first, flatMap } from "rxjs/operators";
 
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
+import { produce } from "immer";
+
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output } from "@angular/core";
 import { CollectionViewer, DataSource, SelectionChange } from "@angular/cdk/collections";
 import { NestedTreeControl } from "@angular/cdk/tree";
+
+import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
+import { faFile } from "@fortawesome/free-regular-svg-icons";
 
 import { CarbonLDP } from "carbonldp";
 import { Pointer } from "carbonldp/Pointer";
@@ -97,7 +102,14 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	@Output() onShowCreateChildForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onShowDeleteChildForm:EventEmitter<boolean> = new EventEmitter<boolean>();
 	@Output() onShowCreateAccessPointForm:EventEmitter<boolean> = new EventEmitter<boolean>();
-	@Output() onSelectDocuments:EventEmitter<Array<string>> = new EventEmitter<Array<string>>();
+
+	@Output() onSelectDocuments:EventEmitter<string[]> = new EventEmitter<string[]>();
+	set selectedNodes( selectedNodes:string[] ) {
+		this._selectedNodes = selectedNodes;
+		this.onSelectDocuments.emit( produce( this._selectedNodes, state => {} ) );
+	}
+	get selectedNodes():string[] { return this._selectedNodes };
+	private _selectedNodes:string[] = [];
 
 	/**
 	 * Material UI trees need a TreeControl that will be in charge of controlling the tree's UI
@@ -107,6 +119,16 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	 * @see {@link DocumentTreeDataSource}
 	 */
 	documentTreeDataSource:DocumentTreeDataSource;
+
+	/**
+	 * Is the component focused?
+	 */
+	focused:boolean = false;
+
+	// Icons
+	readonly faCaretDown = faCaretDown;
+	readonly faCaretRight = faCaretRight;
+	readonly faFile = faFile;
 
 	constructor(
 		private element:ElementRef,
@@ -121,6 +143,17 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		this.documentTreeDataSource = new DocumentTreeDataSource( this.documentTreeControl, this.documentTreeNodesQuery, this.documentTreeNodesService );
 	}
 
+	/**
+	 * Event listener to detect if the component lost focus
+	 * @param event
+	 */
+	@HostListener( "document:click", [ "$event" ] )
+	onClick( event:MouseEvent ) {
+		if( ! event.target ) return;
+		this.focused = this.element.nativeElement.contains( event.target );
+	}
+
+
 	async ngAfterViewInit() {
 		// Initialize the tree by fetching the root document ("/") and then registering it as the root document in the {@link DocumentTreeNodesService}
 		this.documentTreeNodesService.fetchOne( "/" )
@@ -131,6 +164,44 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			} );
 	}
 
+	onNodeClick( $event:MouseEvent, node:DocumentTreeNode ) {
+		// See: https://stackoverflow.com/questions/37078709/angular-2-check-if-shift-key-is-down-when-an-element-is-clicked#comment89930067_45884676
+		const modifySelection = event[ "shiftKey" ] || event[ "ctrlKey" ] || event[ "metaKey" ];
+
+		if( modifySelection ) {
+			const index = this.selectedNodes.indexOf( node.id );
+			if( index > - 1 ) {
+				// The node was already in the selection
+				this.selectedNodes = produce( this.selectedNodes, selectedNodes => {
+					selectedNodes.splice( index, 1 );
+				} );
+			} else {
+				// The node wasn't in the selection
+				this.selectedNodes = produce( this.selectedNodes, selectedNodes => {
+					selectedNodes.push( node.id );
+				} );
+			}
+		} else {
+			// Since no modifier key was used, the selection will be replaced completely
+			this.selectedNodes = produce( this.selectedNodes, selectedNodes =>
+				[ node.id ]
+			);
+		}
+	}
+
+	onNodeDoubleClick( $event:MouseEvent, node:DocumentTreeNode ) {
+		// See: https://stackoverflow.com/questions/37078709/angular-2-check-if-shift-key-is-down-when-an-element-is-clicked#comment89930067_45884676
+		const modifySelection = event[ "shiftKey" ] || event[ "ctrlKey" ] || event[ "metaKey" ];
+
+		// If the user is just modifying the selection we'll swallow this event
+		if( modifySelection ) return;
+
+		// The double clicked node will become the only selected node
+		this.selectedNodes = produce( this.selectedNodes, selectedNodes => [ node.id ] );
+
+		this.documentTreeControl.toggle( node );
+	}
+
 	/**
 	 * Tells the UI if a node has children or not. Used by the component's template
 	 * @param index - The index of the node (in the node's level)
@@ -138,6 +209,18 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 	 */
 	hasChildren = ( index:number, node:DocumentTreeNode ):boolean => {
 		return ! ! node.children && ! ! node.children.length;
+	};
+
+	/**
+	 * Returns the level of the node in the tree (starting from 0 for the root)
+	 * @param node
+	 */
+	getTreeLevel( node:DocumentTreeNode ):number {
+		return this.documentTreeNodesQuery.getTreeLevel( node );
+	}
+
+	isSelected( node:DocumentTreeNode ):boolean {
+		return this.selectedNodes.includes( node.id );
 	}
 }
 

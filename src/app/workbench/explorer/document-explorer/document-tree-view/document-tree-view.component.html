@@ -1,132 +1,158 @@
 <!--<div class="ui basic segment tree-view-options">-->
 
-	<!--&lt;!&ndash; START: Create Document/AccessPoint button &ndash;&gt;-->
-	<!--<div title="Create a Document or Access Point"-->
-	     <!--class="ui top left pointing dropdown mini basic black button tree-view-optionsButton"-->
-	     <!--[ngClass]="{'disabled':nodeChildren.length===0 || selectedURIs.length> 1}">-->
-		<!--<i class="plus icon"></i>-->
-		<!--<span class="text">New</span>-->
-		<!--<div class="menu">-->
-			<!--<a class="item" (click)="showCreateChildForm()"-->
-			   <!--title="Create new Document">-->
-				<!--<i class="file outline icon"></i>-->
-				<!--Child (Document)-->
-			<!--</a>-->
-			<!--<a class="item" (click)="showCreateAccessPointForm()"-->
-			   <!--title="Create new Access Point">-->
-				<!--<i class="selected radio icon"></i>-->
-				<!--Access Point-->
-			<!--</a>-->
-		<!--</div>-->
-	<!--</div>-->
-	<!--&lt;!&ndash; END: Create Document/AccessPoint button &ndash;&gt;-->
+<!--&lt;!&ndash; START: Create Document/AccessPoint button &ndash;&gt;-->
+<!--<div title="Create a Document or Access Point"-->
+<!--class="ui top left pointing dropdown mini basic black button tree-view-optionsButton"-->
+<!--[ngClass]="{'disabled':nodeChildren.length===0 || selectedURIs.length> 1}">-->
+<!--<i class="plus icon"></i>-->
+<!--<span class="text">New</span>-->
+<!--<div class="menu">-->
+<!--<a class="item" (click)="showCreateChildForm()"-->
+<!--title="Create new Document">-->
+<!--<i class="file outline icon"></i>-->
+<!--Child (Document)-->
+<!--</a>-->
+<!--<a class="item" (click)="showCreateAccessPointForm()"-->
+<!--title="Create new Access Point">-->
+<!--<i class="selected radio icon"></i>-->
+<!--Access Point-->
+<!--</a>-->
+<!--</div>-->
+<!--</div>-->
+<!--&lt;!&ndash; END: Create Document/AccessPoint button &ndash;&gt;-->
 
 
-	<!--&lt;!&ndash; START: Refresh Button&ndash;&gt;-->
-	<!--<button class="ui mini basic black right aligned icon button tree-view-refreshButton" title="Refresh - Or double click a node to refresh it"-->
-	        <!--(click)="refreshSelectedNodes()">-->
-		<!--<i class="refresh icon"></i>-->
-	<!--</button>-->
-	<!--&lt;!&ndash; END: Refresh Button&ndash;&gt;-->
+<!--&lt;!&ndash; START: Refresh Button&ndash;&gt;-->
+<!--<button class="ui mini basic black right aligned icon button tree-view-refreshButton" title="Refresh - Or double click a node to refresh it"-->
+<!--(click)="refreshSelectedNodes()">-->
+<!--<i class="refresh icon"></i>-->
+<!--</button>-->
+<!--&lt;!&ndash; END: Refresh Button&ndash;&gt;-->
 
-	<!--&lt;!&ndash; START: Delete Button &ndash;&gt;-->
-	<!--<button class="ui mini basic red right aligned icon button tree-view-deleteButton" title="Delete document"-->
-	        <!--[ngClass]="{disabled: (nodeChildren.length===0 || !canDelete) }"-->
-	        <!--[disabled]="nodeChildren.length===0 || !canDelete"-->
-	        <!--(click)="showDeleteChildForm()">-->
-		<!--<i class="trash outline icon"></i>-->
-	<!--</button>-->
-	<!--&lt;!&ndash; END: Delete Button &ndash;&gt;-->
-
-
-	<!--&lt;!&ndash; START: Sort & Order by options &ndash;&gt;-->
-	<!--<div class="ui top left pointing dropdown mini basic black icon right floated button tree-view-sortByButton" title="Sort alphabetically"-->
-	     <!--[ngClass]="{'disabled':nodeChildren.length===0}">-->
-		<!--<i class="sort alphabet icon"-->
-		   <!--[ngClass]="{'ascending':sortAscending, 'descending':!sortAscending}"></i>-->
-		<!--<div class="menu">-->
-
-			<!--&lt;!&ndash; START: Header &ndash;&gt;-->
-			<!--<div class="header">-->
-				<!--<i class="sort alphabet icon"-->
-				   <!--[ngClass]="{'ascending':sortAscending, 'descending':!sortAscending}"></i>-->
-				<!--Order by &nbsp;-->
-				<!--<span [ngSwitch]="orderBy">-->
-					<!--<span *ngSwitchCase="orderOptions.SLUG">Slug</span>-->
-					<!--<span *ngSwitchCase="orderOptions.CREATED">Created date</span>-->
-					<!--<span *ngSwitchCase="orderOptions.MODIFIED">Modified date</span>-->
-					<!--<span *ngSwitchDefault>Slug</span>-->
-				<!--</span>-->
-			<!--</div>-->
-			<!--&lt;!&ndash; END: Header &ndash;&gt;-->
+<!--&lt;!&ndash; START: Delete Button &ndash;&gt;-->
+<!--<button class="ui mini basic red right aligned icon button tree-view-deleteButton" title="Delete document"-->
+<!--[ngClass]="{disabled: (nodeChildren.length===0 || !canDelete) }"-->
+<!--[disabled]="nodeChildren.length===0 || !canDelete"-->
+<!--(click)="showDeleteChildForm()">-->
+<!--<i class="trash outline icon"></i>-->
+<!--</button>-->
+<!--&lt;!&ndash; END: Delete Button &ndash;&gt;-->
 
 
-			<!--<div class="divider"></div>-->
+<!--&lt;!&ndash; START: Sort & Order by options &ndash;&gt;-->
+<!--<div class="ui top left pointing dropdown mini basic black icon right floated button tree-view-sortByButton" title="Sort alphabetically"-->
+<!--[ngClass]="{'disabled':nodeChildren.length===0}">-->
+<!--<i class="sort alphabet icon"-->
+<!--[ngClass]="{'ascending':sortAscending, 'descending':!sortAscending}"></i>-->
+<!--<div class="menu">-->
+
+<!--&lt;!&ndash; START: Header &ndash;&gt;-->
+<!--<div class="header">-->
+<!--<i class="sort alphabet icon"-->
+<!--[ngClass]="{'ascending':sortAscending, 'descending':!sortAscending}"></i>-->
+<!--Order by &nbsp;-->
+<!--<span [ngSwitch]="orderBy">-->
+<!--<span *ngSwitchCase="orderOptions.SLUG">Slug</span>-->
+<!--<span *ngSwitchCase="orderOptions.CREATED">Created date</span>-->
+<!--<span *ngSwitchCase="orderOptions.MODIFIED">Modified date</span>-->
+<!--<span *ngSwitchDefault>Slug</span>-->
+<!--</span>-->
+<!--</div>-->
+<!--&lt;!&ndash; END: Header &ndash;&gt;-->
 
 
-			<!--&lt;!&ndash; START: Order by options &ndash;&gt;-->
-			<!--<a class="item" (click)="changeOrderBy(orderOptions.SLUG)"-->
-			   <!--title="Order by Slug">-->
-				<!--<i class="font icon"></i>-->
-				<!--Slug-->
-				<!--<i class="check icon" *ngIf="orderBy === orderOptions.SLUG"></i>-->
-			<!--</a>-->
-			<!--<a class="item" (click)="changeOrderBy(orderOptions.CREATED)"-->
-			   <!--title="Order by Created date">-->
-				<!--<i class="calendar plus outline icon"></i>-->
-				<!--Created-->
-				<!--<i class="check icon" *ngIf="orderBy === orderOptions.CREATED"></i>-->
-			<!--</a>-->
-			<!--<a class="item" (click)="changeOrderBy(orderOptions.MODIFIED)"-->
-			   <!--title="Order by Modified date">-->
-				<!--<i class="calendar alternate outline icon"></i>-->
-				<!--Modified-->
-				<!--<i class="check icon" *ngIf="orderBy === orderOptions.MODIFIED"></i>-->
-			<!--</a>-->
-			<!--&lt;!&ndash; END: Order by options &ndash;&gt;-->
+<!--<div class="divider"></div>-->
 
 
-			<!--<div class="divider"></div>-->
+<!--&lt;!&ndash; START: Order by options &ndash;&gt;-->
+<!--<a class="item" (click)="changeOrderBy(orderOptions.SLUG)"-->
+<!--title="Order by Slug">-->
+<!--<i class="font icon"></i>-->
+<!--Slug-->
+<!--<i class="check icon" *ngIf="orderBy === orderOptions.SLUG"></i>-->
+<!--</a>-->
+<!--<a class="item" (click)="changeOrderBy(orderOptions.CREATED)"-->
+<!--title="Order by Created date">-->
+<!--<i class="calendar plus outline icon"></i>-->
+<!--Created-->
+<!--<i class="check icon" *ngIf="orderBy === orderOptions.CREATED"></i>-->
+<!--</a>-->
+<!--<a class="item" (click)="changeOrderBy(orderOptions.MODIFIED)"-->
+<!--title="Order by Modified date">-->
+<!--<i class="calendar alternate outline icon"></i>-->
+<!--Modified-->
+<!--<i class="check icon" *ngIf="orderBy === orderOptions.MODIFIED"></i>-->
+<!--</a>-->
+<!--&lt;!&ndash; END: Order by options &ndash;&gt;-->
 
 
-			<!--&lt;!&ndash; START: Sorting options &ndash;&gt;-->
-			<!--<a class="item" title="Sort Ascending"-->
-			   <!--(click)="changeSort(true)">-->
-				<!--<i class="ascending sort alphabet icon"></i>-->
-				<!--Ascending-->
-				<!--<i class="check icon" *ngIf="sortAscending"></i>-->
-			<!--</a>-->
-			<!--<a class="item" title="Sort Descending"-->
-			   <!--(click)="changeSort(false)">-->
-				<!--<i class="descending sort alphabet icon"></i>-->
-				<!--Descending-->
-				<!--<i class="check icon" *ngIf="!sortAscending"></i>-->
-			<!--</a>-->
-			<!--&lt;!&ndash; END: Sorting options &ndash;&gt;-->
+<!--<div class="divider"></div>-->
 
-		<!--</div>-->
-		<!--&lt;!&ndash; END: Sort & Order by options &ndash;&gt;-->
-	<!--</div>-->
+
+<!--&lt;!&ndash; START: Sorting options &ndash;&gt;-->
+<!--<a class="item" title="Sort Ascending"-->
+<!--(click)="changeSort(true)">-->
+<!--<i class="ascending sort alphabet icon"></i>-->
+<!--Ascending-->
+<!--<i class="check icon" *ngIf="sortAscending"></i>-->
+<!--</a>-->
+<!--<a class="item" title="Sort Descending"-->
+<!--(click)="changeSort(false)">-->
+<!--<i class="descending sort alphabet icon"></i>-->
+<!--Descending-->
+<!--<i class="check icon" *ngIf="!sortAscending"></i>-->
+<!--</a>-->
+<!--&lt;!&ndash; END: Sorting options &ndash;&gt;-->
+
+<!--</div>-->
+<!--&lt;!&ndash; END: Sort & Order by options &ndash;&gt;-->
+<!--</div>-->
 
 <!--</div>-->
 
-<mat-tree [dataSource]="documentTreeDataSource" [treeControl]="documentTreeControl" class="ai-tree">
+<mat-tree
+	class="ai-tree"
+	[ngClass]="{ 'ai-tree--unfocused': ! focused }"
+	[dataSource]="documentTreeDataSource"
+	[treeControl]="documentTreeControl"
+>
 	<!-- Non-expandable tree node -->
-	<mat-tree-node *matTreeNodeDef="let node" class="ai-tree__node ai-tree__node--noChildren mat-tree-node">
-		<li class="mat-tree-node">
-			{{ node.id | getSlug }}
+	<mat-tree-node
+		class="ai-tree__node ai-tree__node--noChildren mat-tree-node"
+		*matTreeNodeDef="let node"
+		[ngClass]="{ 'ai-tree__node--selected': isSelected( node ) }"
+	>
+		<li class="ai-tree__nodeItem mat-tree-node">
+			<div class="ai-tree__nodeContent"
+			     (click)="onNodeClick( $event, node )">
+				<!-- The '+ 1' is needed since the nodes that don't have children need to be padded for their own lack of caret -->
+				<div class="ai-tree__nodePadder" [style]="getTreeLevel( node ) + 1 | cssVar:'level'"></div>
+				<fa-icon class="ai-tree__nodeIcon"
+				         [icon]="faFile"
+				></fa-icon>
+				{{ node.id | getSlug }}
+			</div>
 		</li>
 	</mat-tree-node>
 
 	<!-- Expandable tree node -->
-	<mat-nested-tree-node *matTreeNodeDef="let node; when: hasChildren">
-		<li>
-			<div class="ai-tree__node mat-tree-node">
-				<div class="ai-tree__nodeToggle" cdkTreeNodeToggle matRipple>
-					<mat-icon class="ai-tree__nodeToggleIcon mat-icon-rtl-mirror">
-						{{documentTreeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-					</mat-icon>
-				</div>
+	<mat-nested-tree-node
+		class="ai-tree__node"
+		*matTreeNodeDef="let node; when: hasChildren"
+		[ngClass]="{ 'ai-tree__node--selected': isSelected( node ) }"
+	>
+		<li class="ai-tree__nodeItem">
+			<div class="ai-tree__nodeContent mat-tree-node"
+			     (click)="onNodeClick( $event, node )"
+			     (dblclick)="onNodeDoubleClick( $event, node )"
+			>
+				<div class="ai-tree__nodePadder" [style]="getTreeLevel( node ) | cssVar:'level'"></div>
+				<fa-icon class="ai-tree__nodeToggle" cdkTreeNodeToggle
+				         [icon]="documentTreeControl.isExpanded(node) ? faCaretDown : faCaretRight"
+				></fa-icon>
+				<fa-icon class="ai-tree__nodeIcon"
+				         [icon]="faFile"
+				></fa-icon>
 				{{ node.id | getSlug }}
 			</div>
 			<ul [class.hidden]="!documentTreeControl.isExpanded(node)" class="ai-tree__nestedNodes">
@@ -137,5 +163,5 @@
 </mat-tree>
 
 <!--<div class="tree-view-content">-->
-	<!--<ul></ul>-->
+<!--<ul></ul>-->
 <!--</div>-->

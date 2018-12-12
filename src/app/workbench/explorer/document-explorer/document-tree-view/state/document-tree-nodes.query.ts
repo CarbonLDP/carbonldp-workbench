@@ -28,4 +28,13 @@ export class DocumentTreeNodesQuery extends QueryEntity<DocumentTreeNodesState, 
 				)
 			);
 	}
+
+	getTreeLevel( node:DocumentTreeNode ):number {
+		let level:number = 0;
+		while( node.parent ) {
+			level++;
+			node = this.getEntity( node.parent );
+		}
+		return level;
+	}
 }

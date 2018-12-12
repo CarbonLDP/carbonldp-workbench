@@ -3,8 +3,9 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 
 import { CdkTreeModule } from "@angular/cdk/tree";
-import { MatBadgeModule, MatButtonModule, MatIconModule, MatTabsModule, MatTreeModule } from "@angular/material";
+import { MatBadgeModule, MatButtonModule, MatIconModule, MatRippleModule, MatTabsModule, MatTreeModule } from "@angular/material";
 
+import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 // Components
 import { LiteralComponent } from "./literals/literal.component";
 import { LiteralsComponent } from "./literals/literals.component";
@@ -45,8 +46,12 @@ import { IdValidator, LiteralValueValidator, PointerValidator, PropertyNameValid
 		MatBadgeModule,
 		MatButtonModule,
 		MatIconModule,
+		MatRippleModule,
 		MatTabsModule,
 		MatTreeModule,
+
+		// FontAwesome icons
+		FontAwesomeModule,
 
 		AppCommonModule,
 	],

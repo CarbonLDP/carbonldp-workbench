@@ -102,14 +102,10 @@ export class DocumentTreeNodesService {
 			//@formatter:on
 		).pipe(
 			map( document => {
-				// Flatten the retrieved Carbon LDP document along with its children
-				const documents = [
-					document,
-					...document.contains
+				const documentTreeNodes = [
+					this.createNode( document ),
+					...this.createChildNodes( document )
 				];
-
-				// Transform all the Carbon LDP documents into simple documents for the store
-				const documentTreeNodes = documents.map( document => this.createTreeNode( document ) );
 
 				this.documentTreeNodesStore.add( documentTreeNodes );
 
@@ -136,14 +132,12 @@ export class DocumentTreeNodesService {
 			//@formatter:on
 		).pipe(
 			map( children => {
-				// Flatten the retrieved Carbon LDP document along with its children
-				const documents = [
-					...children,
-					...children.map( document => document.contains ).reduce( ( documents, children ) => children ? documents.concat( children ) : documents, [] )
-				];
-
-				// Transform all the Carbon LDP documents into simple documents for the store
-				const documentTreeNodes = documents.map( document => this.createTreeNode( document ) );
+				const documentTreeNodes = flatten(
+					children.map( child => [
+						this.createNode( child, parentID ),
+						...this.createChildNodes( child )
+					] )
+				);
 
 				this.documentTreeNodesStore.add( documentTreeNodes );
 
@@ -157,9 +151,10 @@ export class DocumentTreeNodesService {
 		return of( null );
 	}
 
-	private createTreeNode( document:Document ):DocumentTreeNode {
+	private createNode( document:Document, parentID:string = null ):DocumentTreeNode {
 		return createDocumentTreeNode( {
 			id: document.$id,
+			parent: parentID,
 			children: document.contains
 				? document.contains.map( child => child.$id )
 				: [],
@@ -169,5 +164,11 @@ export class DocumentTreeNodesService {
 			created: document.created,
 			modified: document.modified,
 		} );
+	}
+
+	private createChildNodes( document:Document ):DocumentTreeNode[] {
+		return document.contains
+			? document.contains.map( child => this.createNode( child, document.$id ) )
+			: [];
 	}
 }
