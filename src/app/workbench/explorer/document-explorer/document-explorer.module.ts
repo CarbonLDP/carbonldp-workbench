@@ -23,7 +23,7 @@ import { BlankNodesComponent } from "./blank-nodes/blank-nodes.component";
 import { NamedFragmentComponent } from "./named-fragments/named-fragment.component";
 import { NamedFragmentsComponent } from "./named-fragments/named-fragments.component";
 import { DocumentViewerComponent } from "./document-viewer/document-viewer.component";
-import { DocumentTreeViewComponent } from "./document-tree-view/document-tree-view.component";
+import { DocumentTreeComponent } from "./document-tree/document-tree.component";
 import { DocumentExplorerComponent } from "./document-explorer.component";
 import { AccessPointCreatorComponent } from "./access-point-creator/access-point-creator.component";
 import { DocumentCreatorComponent } from "./document-creator/document-creator.component";
@@ -76,7 +76,7 @@ import { IdValidator, LiteralValueValidator, PointerValidator, PropertyNameValid
 		NamedFragmentsComponent,
 
 		DocumentViewerComponent,
-		DocumentTreeViewComponent,
+		DocumentTreeComponent,
 		DocumentResourceComponent,
 		DocumentExplorerComponent,
 		AccessPointCreatorComponent,

@@ -5,16 +5,17 @@
 				<app-message [message]="message" [type]="'error'" [closable]="true"></app-message>
 			</ng-template>
 		</div>
-		<app-document-tree-view class="five wide column treeview-container"
+		<app-document-tree class="five wide column treeview-container"
 		                       [refreshNodes]="onRefreshNode"
 		                       [openNode]="onOpenNode"
 
 		                       (onSelectDocuments)="changeSelection($event)"
+
 		                       (onShowCreateChildForm)="documentCreator.show()"
 		                       (onShowDeleteChildForm)="documentDeleter.show()"
 		                       (onShowCreateAccessPointForm)="accessPointCreator.show()"
 		                       (onError)="handleExternalError($event)"
-		                       (onResolveUri)="resolveDocument($event)"></app-document-tree-view>
+		                       (onResolveUri)="resolveDocument($event)"></app-document-tree>
 		<app-document-viewer class="eleven wide column"
 		                     [document]="inspectingDocument"
 		                     [displaySuccessMessage]="onDisplaySuccessMessage"

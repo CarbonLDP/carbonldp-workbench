@@ -1,10 +1,8 @@
-import { merge, Observable } from "rxjs";
-import { first, flatMap } from "rxjs/operators";
+import { first } from "rxjs/operators";
 
 import { produce } from "immer";
 
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, Output } from "@angular/core";
-import { CollectionViewer, DataSource, SelectionChange } from "@angular/cdk/collections";
 import { NestedTreeControl } from "@angular/cdk/tree";
 
 import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
@@ -18,81 +16,19 @@ import { DocumentTreeNode } from "./state/document-tree-node.model";
 import { DocumentTreeNodesStore } from "./state/document-tree-nodes.store";
 import { DocumentTreeNodesService } from "./state/document-tree-nodes.service";
 import { DocumentTreeNodesQuery } from "./state/document-tree-nodes.query";
-
-/**
- * {@link DataSource} that powers the document tree. It is in charge of three things:
- * <ul>
- *     <li>Give the tree the data it will use to render</li>
- *     <li>Bind to data changes to notify the tree component so it gets refreshed</li>
- *     <li>Respond to expansion/collapse of nodes and retrieve more data if needed</li>
- * </ul>
- */
-export class DocumentTreeDataSource extends DataSource<DocumentTreeNode> {
-	constructor(
-		private treeControl:NestedTreeControl<DocumentTreeNode>,
-		private documentTreeNodesQuery:DocumentTreeNodesQuery,
-		private documentTreeNodesService:DocumentTreeNodesService,
-	) {
-		super();
-	}
-
-	// Called by the tree to get the data to render
-	connect( collectionViewer:CollectionViewer ):Observable<DocumentTreeNode[] | ReadonlyArray<DocumentTreeNode>> {
-		// The TreeControl's expansion is in charge of node expand/contract actions. Its changed property is an observable
-		// that emits a value every time one or more tree nodes get expanded/contracted
-		// Here we are subscribing to those changes to handle them and load data if necessary
-		this.treeControl.expansionModel.changed.subscribe( this.handleTreeChange.bind( this ) );
-
-		// The connect action is in charge of returning an Observable that will be used by the Tree as its data
-		// Here we merge two observables to emit a value whenever any of them emits one
-		// In this case, if the view changes or if there's any change in any of the tree nodes, a value will be emitted
-		return merge( collectionViewer.viewChange, this.documentTreeNodesQuery.selectAll() )
-			.pipe(
-				// Every time a value gets emitted, we discard it (since we only care about the change taking place)
-				// And we emit the document tree root nodes (which is not going to change, but the value emission will cause
-				// the tree to refresh
-				flatMap( () => this.documentTreeNodesQuery.rootNodes$ )
-			);
-	}
-
-	disconnect( collectionViewer:CollectionViewer ) {
-		// FIXME: Should we unsubscribe from any observable?
-	}
-
-	private handleTreeChange( change:SelectionChange<DocumentTreeNode> ) {
-		// In this case if there are "added" values, it means some nodes were expanded
-		if( change.added ) {
-			change.added.forEach( node => this.handleExpand( node ) );
-		}
-		// In this case if there are "removed" values, it means some nodes were collapsed
-		if( change.removed ) {
-			// Create a copy of the values array (slice) so we can modify it, then reverse it
-			// TODO: Is this actually needed?
-			change.removed.slice().reverse()
-				.forEach( node => this.handleCollapse( node ) );
-		}
-	}
-
-	private async handleExpand( node:DocumentTreeNode ) {
-		this.documentTreeNodesService.fetchChildren( node.id ).subscribe();
-	}
-
-	private handleCollapse( node:DocumentTreeNode ) {
-		// Nothing to do
-	}
-}
+import { DocumentTreeDataSource } from "./document-tree.data-source";
 
 @Component( {
-	selector: "app-document-tree-view",
-	templateUrl: "./document-tree-view.component.html",
-	styleUrls: [ "./document-tree-view.component.scss" ],
+	selector: "app-document-tree",
+	templateUrl: "./document-tree.component.html",
+	styleUrls: [ "./document-tree.component.scss" ],
 	providers: [
 		DocumentTreeNodesStore,
 		DocumentTreeNodesQuery,
 		DocumentTreeNodesService,
 	],
 } )
-export class DocumentTreeViewComponent implements AfterViewInit {
+export class DocumentTreeComponent implements AfterViewInit {
 	// FIXME: Review i/o
 	@Input() refreshNodes:EventEmitter<string | string[]> = new EventEmitter<string | string[]>();
 	@Input() openNode:EventEmitter<string> = new EventEmitter<string>();
@@ -164,7 +100,7 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 			} );
 	}
 
-	onNodeClick( $event:MouseEvent, node:DocumentTreeNode ) {
+	onNodeClick( event:MouseEvent, node:DocumentTreeNode ) {
 		// See: https://stackoverflow.com/questions/37078709/angular-2-check-if-shift-key-is-down-when-an-element-is-clicked#comment89930067_45884676
 		const modifySelection = event[ "shiftKey" ] || event[ "ctrlKey" ] || event[ "metaKey" ];
 
@@ -189,7 +125,10 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 		}
 	}
 
-	onNodeDoubleClick( $event:MouseEvent, node:DocumentTreeNode ) {
+	onNodeDoubleClick( event:MouseEvent, node:DocumentTreeNode ) {
+		// Clear selection to avoid the double click event from selecting the text of the nodes
+		this.clearSelection();
+
 		// See: https://stackoverflow.com/questions/37078709/angular-2-check-if-shift-key-is-down-when-an-element-is-clicked#comment89930067_45884676
 		const modifySelection = event[ "shiftKey" ] || event[ "ctrlKey" ] || event[ "metaKey" ];
 
@@ -221,6 +160,14 @@ export class DocumentTreeViewComponent implements AfterViewInit {
 
 	isSelected( node:DocumentTreeNode ):boolean {
 		return this.selectedNodes.includes( node.id );
+	}
+
+	private clearSelection() {
+		if( typeof window === "undefined" ) return;
+		if( typeof window.getSelection === "undefined" ) return;
+
+		const selection = window.getSelection();
+		selection.removeAllRanges();
 	}
 }
 

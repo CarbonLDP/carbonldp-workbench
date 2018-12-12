@@ -1,0 +1,59 @@
+<div class="ai-treeContainer">
+	<mat-tree
+		class="ai-tree"
+		[ngClass]="{ 'ai-tree--unfocused': ! focused }"
+		[dataSource]="documentTreeDataSource"
+		[treeControl]="documentTreeControl"
+	>
+		<!-- Non-expandable tree node -->
+		<mat-tree-node
+			class="ai-tree__node ai-tree__node--noChildren"
+			*matTreeNodeDef="let node"
+			[ngClass]="{ 'ai-tree__node--selected': isSelected( node ) }"
+		>
+			<li class="ai-tree__nodeItem">
+				<div class="ai-tree__nodeContent"
+				     (click)="onNodeClick( $event, node )"
+				     (dblclick)="onNodeDoubleClick( $event, node )"
+				>
+					<!-- The '+ 1' is needed since the nodes that don't have children need to be padded for their own lack of caret -->
+					<fa-icon class="ai-tree__nodeIcon"
+					         [style]="getTreeLevel( node ) + 1 | cssVar:'level'"
+					         [icon]="faFile"
+					></fa-icon>
+					<div class="ai-tree__nodeLabel">
+						{{ node.id | getSlug }}
+					</div>
+				</div>
+			</li>
+		</mat-tree-node>
+
+		<!-- Expandable tree node -->
+		<mat-nested-tree-node
+			class="ai-tree__node"
+			*matTreeNodeDef="let node; when: hasChildren"
+			[ngClass]="{ 'ai-tree__node--selected': isSelected( node ) }"
+		>
+			<li class="ai-tree__nodeItem">
+				<div class="ai-tree__nodeContent"
+				     (click)="onNodeClick( $event, node )"
+				     (dblclick)="onNodeDoubleClick( $event, node )"
+				>
+					<fa-icon class="ai-tree__nodeToggle" cdkTreeNodeToggle
+					         [icon]="documentTreeControl.isExpanded(node) ? faCaretDown : faCaretRight"
+					         [style]="getTreeLevel( node ) | cssVar:'level'"
+					></fa-icon>
+					<fa-icon class="ai-tree__nodeIcon"
+					         [icon]="faFile"
+					></fa-icon>
+					<div class="ai-tree__nodeLabel">
+						{{ node.id | getSlug }}
+					</div>
+				</div>
+				<ul [class.hidden]="!documentTreeControl.isExpanded(node)" class="ai-tree__nestedNodes">
+					<ng-container matTreeNodeOutlet></ng-container>
+				</ul>
+			</li>
+		</mat-nested-tree-node>
+	</mat-tree>
+</div>
