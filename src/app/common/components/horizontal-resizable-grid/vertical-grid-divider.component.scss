@@ -1,0 +1,27 @@
+@import "~@angular/material/theming";
+@import "~app/_vars";
+
+$default-width: 1px;
+
+:host {
+	flex: 0 0 var( --width, #{$default-width} );
+
+	// Rules to create a hit box larger than the actual divider so the user can drag it more easily
+	// An increased z index so the divider's hit box is above of sibling components
+	z-index: 10;
+	margin-left: -4px;
+	margin-right: -4px;
+	padding-left: 4px;
+	padding-right: 4px;
+
+	cursor: col-resize;
+
+	display: flex;
+}
+
+.ai {
+	&-line {
+		width: var( --width, #{$default-width} );
+		background: mat-color( map-get( $app-theme, foreground ), divider );
+	}
+}

@@ -4,6 +4,11 @@
 $node-height: 24px;
 $carat-width: $node-height - 6px;
 
+:host {
+	display: flex;
+	flex-direction: column;
+}
+
 .ai {
 	&-treeContainer {
 		overflow: auto;

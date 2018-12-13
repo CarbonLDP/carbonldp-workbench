@@ -3,7 +3,7 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 
 import { CdkTreeModule } from "@angular/cdk/tree";
-import { MatBadgeModule, MatButtonModule, MatIconModule, MatRippleModule, MatTabsModule, MatTreeModule } from "@angular/material";
+import { MatBadgeModule, MatButtonModule, MatCardModule, MatIconModule, MatRippleModule, MatTabsModule, MatTreeModule } from "@angular/material";
 
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 // Components
@@ -45,6 +45,7 @@ import { IdValidator, LiteralValueValidator, PointerValidator, PropertyNameValid
 
 		MatBadgeModule,
 		MatButtonModule,
+		MatCardModule,
 		MatIconModule,
 		MatRippleModule,
 		MatTabsModule,

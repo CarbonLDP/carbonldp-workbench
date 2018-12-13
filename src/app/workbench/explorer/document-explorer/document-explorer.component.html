@@ -1,38 +1,36 @@
-<div class="ui divided grid segment" [ngClass]="{loading:loading}">
-	<div class="stretched row document-content-wrapper">
-		<div class="error messages" *ngIf="messages.length > 0">
-			<ng-template ngFor let-message="$implicit" [ngForOf]="messages" let-i="index">
-				<app-message [message]="message" [type]="'error'" [closable]="true"></app-message>
-			</ng-template>
-		</div>
-		<app-document-tree class="five wide column treeview-container"
-		                       [refreshNodes]="onRefreshNode"
-		                       [openNode]="onOpenNode"
-
-		                       (onSelectDocuments)="changeSelection($event)"
-
-		                       (onShowCreateChildForm)="documentCreator.show()"
-		                       (onShowDeleteChildForm)="documentDeleter.show()"
-		                       (onShowCreateAccessPointForm)="accessPointCreator.show()"
-		                       (onError)="handleExternalError($event)"
-		                       (onResolveUri)="resolveDocument($event)"></app-document-tree>
-		<app-document-viewer class="eleven wide column"
-		                     [document]="inspectingDocument"
-		                     [displaySuccessMessage]="onDisplaySuccessMessage"
-
-		                     (onError)="handleExternalError($event)"
-		                     (onRefreshNode)="refreshNode($event)"
-		                     (onOpenNode)="openNode($event)"
-		                     (onSavingDocument)="setLoading($event)"
-		                     (onRefreshDocument)="refreshDocument($event)"></app-document-viewer>
-		<app-document-creator #documentCreator
-		                      [parentURI]="selectedDocumentURIs[ 0 ]"
-		                      (onSuccess)="onSuccessCreateDocument($event)"></app-document-creator>
-		<app-access-point-creator #accessPointCreator
-		                          [parentURI]="selectedDocumentURIs[ 0 ]"
-		                          (onSuccess)="onSuccessAccessPoint($event)"></app-access-point-creator>
-		<app-document-deleter #documentDeleter
-		                      [documentURIs]="selectedDocumentURIs"
-		                      (onSuccess)="onSuccessDeleteDocument($event)"></app-document-deleter>
+<mat-card class="ag-rows ag-flexible">
+	<!-- FIXME -->
+	<div class="error messages" *ngIf="messages.length > 0">
+		<ng-template ngFor let-message="$implicit" [ngForOf]="messages" let-i="index">
+			<app-message [message]="message" [type]="'error'" [closable]="true"></app-message>
+		</ng-template>
 	</div>
-</div>
+
+	<div class="ai-explorer__container ag-rows ag-flexible">
+		<app-horizontal-resizable-grid class="ag-flexible">
+			<app-grid-column class="ai-explorer__sidebar ag-rows">
+				<app-document-tree
+					class="ai-documentTree ag-rows ag-flexible"
+					[refreshNodes]="onRefreshNode"
+					[openNode]="onOpenNode"
+
+					(onSelectDocuments)="changeSelection($event)"
+				></app-document-tree>
+			</app-grid-column>
+			<app-vertical-grid-divider></app-vertical-grid-divider>
+			<app-grid-column>
+				<app-document-viewer
+					class="ai-documentViewer"
+					[document]="inspectingDocument"
+					[displaySuccessMessage]="onDisplaySuccessMessage"
+
+					(onError)="handleExternalError($event)"
+					(onRefreshNode)="refreshNode($event)"
+					(onOpenNode)="openNode($event)"
+					(onSavingDocument)="setLoading($event)"
+					(onRefreshDocument)="refreshDocument($event)"
+				></app-document-viewer>
+			</app-grid-column>
+		</app-horizontal-resizable-grid>
+	</div>
+</mat-card>

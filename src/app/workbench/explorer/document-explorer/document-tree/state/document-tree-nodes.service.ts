@@ -159,7 +159,7 @@ export class DocumentTreeNodesService {
 				? document.contains.map( child => child.$id )
 				: [],
 			types: document.types
-				? document.types
+				? [...document.types]
 				: [],
 			created: document.created,
 			modified: document.modified,
