@@ -9,7 +9,10 @@
 		<mat-tree-node
 			class="ai-tree__node ai-tree__node--noChildren"
 			*matTreeNodeDef="let node"
-			[ngClass]="{ 'ai-tree__node--selected': isSelected( node ) }"
+			[ngClass]="{
+				'ai-tree__node--selected': isSelected( node ),
+				'ai-tree__node--opened': isOpened( node )
+			}"
 		>
 			<li class="ai-tree__nodeItem">
 				<div class="ai-tree__nodeContent"
@@ -32,7 +35,10 @@
 		<mat-nested-tree-node
 			class="ai-tree__node"
 			*matTreeNodeDef="let node; when: hasChildren"
-			[ngClass]="{ 'ai-tree__node--selected': isSelected( node ) }"
+			[ngClass]="{
+				'ai-tree__node--selected': isSelected( node ),
+				'ai-tree__node--opened': isOpened( node )
+			}"
 		>
 			<li class="ai-tree__nodeItem">
 				<div class="ai-tree__nodeContent"

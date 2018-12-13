@@ -1,34 +1,33 @@
 <mat-card class="ag-rows ag-flexible">
-	<!-- FIXME -->
-	<div class="error messages" *ngIf="messages.length > 0">
-		<ng-template ngFor let-message="$implicit" [ngForOf]="messages" let-i="index">
-			<app-message [message]="message" [type]="'error'" [closable]="true"></app-message>
-		</ng-template>
-	</div>
-
 	<div class="ai-explorer__container ag-rows ag-flexible">
 		<app-horizontal-resizable-grid class="ag-flexible">
 			<app-grid-column class="ai-explorer__sidebar ag-rows">
+				<div class="ai-documentActions">
+					<button class="ag-button--withIcon"
+					        mat-icon-button>
+						<fa-icon [icon]="faPlus"></fa-icon>
+					</button>
+					<button class="ag-button--withIcon"
+					        mat-icon-button>
+						<fa-icon [icon]="faSync"></fa-icon>
+					</button>
+					<button class="ag-button--withIcon"
+					        mat-icon-button
+					        color="warn">
+						<fa-icon [icon]="faTrash"></fa-icon>
+					</button>
+				</div>
 				<app-document-tree
 					class="ai-documentTree ag-rows ag-flexible"
-					[refreshNodes]="onRefreshNode"
-					[openNode]="onOpenNode"
-
-					(onSelectDocuments)="changeSelection($event)"
+					(onSelectDocuments)="on_tree_selectDocuments($event)"
+					(onOpenDocument)="on_tree_openDocument($event)"
 				></app-document-tree>
 			</app-grid-column>
 			<app-vertical-grid-divider></app-vertical-grid-divider>
 			<app-grid-column>
 				<app-document-viewer
 					class="ai-documentViewer"
-					[document]="inspectingDocument"
-					[displaySuccessMessage]="onDisplaySuccessMessage"
-
-					(onError)="handleExternalError($event)"
-					(onRefreshNode)="refreshNode($event)"
-					(onOpenNode)="openNode($event)"
-					(onSavingDocument)="setLoading($event)"
-					(onRefreshDocument)="refreshDocument($event)"
+					[document]="openDocument$ | async"
 				></app-document-viewer>
 			</app-grid-column>
 		</app-horizontal-resizable-grid>

@@ -1,10 +1,10 @@
 <table class="ui very compact striped small celled table" *ngIf="canDisplayLiterals">
 	<thead>
 		<tr class="center aligned">
-			<th class="wide" [ngClass]="{four: canDisplayLanguage, five: !canDisplayLanguage}">@value</th>
-			<th class="wide" [ngClass]="{three: canDisplayLanguage, five: !canDisplayLanguage}">@type</th>
-			<th class="two wide" *ngIf="canDisplayLanguage">@language</th>
-			<th class="one wide" *ngIf="canEdit">Actions</th>
+			<th>@value</th>
+			<th>@type</th>
+			<th *ngIf="canDisplayLanguage">@language</th>
+			<th class="ai-actionsColumn" *ngIf="canEdit">Actions</th>
 		</tr>
 	</thead>
 	<tbody>

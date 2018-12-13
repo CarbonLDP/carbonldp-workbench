@@ -74,6 +74,11 @@ $carat-width: $node-height - 6px;
 			background: mat-color( map-get( $app-theme, background ), disabled-list-option );
 		}
 
+		// Open styles
+		&__node--opened > &__nodeItem > &__nodeContent &__nodeLabel {
+			font-weight: bold;
+		}
+
 		&__nodeToggle {
 			height: $node-height;
 		}

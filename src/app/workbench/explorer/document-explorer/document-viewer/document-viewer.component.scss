@@ -1,7 +1,6 @@
 :host {
 	display: block;
 	padding: 0;
-	height: 100%;
 }
 
 .app-document-viewer {
@@ -12,11 +11,6 @@
 
 .saving-message {
 	z-index: 1;
-}
-
-.document-content {
-	overflow-y: scroll;
-	overflow-x: hidden;
 }
 
 .document.options {

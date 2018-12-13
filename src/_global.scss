@@ -8,10 +8,12 @@
 	&-columns {
 		display: flex;
 	}
+
 	// Children components are going to be rows
 	&-rows {
 		flex-direction: column;
 	}
+
 	// Children components are going to be columns
 	&-columns {
 		flex-direction: row;
@@ -20,5 +22,8 @@
 	// Behave like a flexible row
 	&-flexible {
 		flex: 1 1 auto;
+
+		// Avoid expanding more than the parent's total height/width
+		overflow: hidden;
 	}
 }

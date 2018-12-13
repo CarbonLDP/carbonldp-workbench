@@ -24,7 +24,6 @@ enum Tabs {
  */
 @Component( {
 	selector: "app-document-viewer",
-	host: { "[class.ui]": "true", "[class.basic]": "true", "[class.segment]": "true", },
 	templateUrl: "./document-viewer.component.html",
 	styleUrls: [ "./document-viewer.component.scss" ],
 } )
