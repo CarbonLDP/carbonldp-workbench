@@ -5,10 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog]
 and this project adheres to [Semantic Versioning].
 
-<!--## [Unreleased]-->
+## [Unreleased]
 <!--### Added-->
 
-<!--### Fixed-->
+### Fixed
+
+- [#179](https://github.com/CarbonLDP/carbonldp-workbench/issues/179) - Startup ENV variables aren't working
 
 <!--### Breaking Changes -->
 
