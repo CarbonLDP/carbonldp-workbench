@@ -1,39 +1,35 @@
-:host {
-	display: block;
+@import "~@angular/material/theming";
+@import "~app/vars";
 
-	.document-content-wrapper {
-		height: 96%;
-	}
+.ai {
+	&-explorer {
+		&__sidebar {
+			--width: 300px;
+		}
 
-	.ui.segment {
-		color: #000000;
-	}
-
-	> .ui.divided.grid.segment {
-		height: 800px;
-		max-height: 800px;
-
-		> .stretched.row {
-			border: 1px solid lightgray;
-			margin: 1%;
-			padding: 0;
-
-			> .treeview-container {
-				padding: 0;
-			}
+		&__documentViewer {
+			// Since the Document Explorer isn't yet compatible with the dark theme, its background needs to be white for now
+			/*
+				2018-12-17 @MiguelAraCo
+				TODO[improvement]: Remove once the document viewer is friendly with the dark theme
+			*/
+			background: white;
 		}
 	}
 
-	.createchild.form {
+	&-sidebar {
+		&__documentActions {
+			border-bottom: mat-color( map-get( $app-theme, foreground ), divider ) 1px solid;
+		}
 
-		.ui.saving.error.message {
-			text-align: left;
+		// If the sidebar is focused, highlight the documentActions toolbar
+		&.ag-focused &__documentActions {
+			background: mat-color( map-get( $app-theme, background ), card );
 		}
 	}
+}
 
-	.error.messages {
-		position: absolute;
-		z-index: 101;
-		width: 100%;
-	}
+// Overrides
+.mat-card {
+	display: flex;
 }

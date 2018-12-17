@@ -8,17 +8,7 @@
 // Be sure that you only ever include this mixin once!
 @include mat-core();
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$app-primary: mat-palette($mat-indigo);
-$app-accent: mat-palette($mat-pink, A200, A100, A400);
-
-// The warn palette is optional (defaults to red).
-$app-warn: mat-palette($mat-red);
-
-// Create the theme object (a Sass map containing all of the palettes).
-$app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+@import "~app/vars";
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -29,13 +19,11 @@ $app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
 
 @import "fonts--lato";
 @import "semantic";
+@import "material-font-awesome";
 
 html, body {
 	width: 100vw;
 	height: 100vh;
 }
 
-* {
-	// A lot of components don't respect this by default which tends to force developers to write 'width: 100%' explicitly for that component
-	max-width: 100%;
-}
+@import "global";

@@ -47,7 +47,6 @@ export class NamedFragmentsComponent implements AfterViewInit, OnChanges {
 	ngOnChanges( changes:{ [ propName:string ]:SimpleChange } ):void {
 		if( (changes[ "namedFragments" ].currentValue !== changes[ "namedFragments" ].previousValue) ) {
 			this.openedNamedFragments = [];
-			this.goToNamedFragment( "all-namedFragments" );
 			this.namedFragmentsRecords.clear();
 		}
 	}

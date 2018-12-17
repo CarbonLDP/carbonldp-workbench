@@ -1,0 +1,11 @@
+:host {
+	overflow: auto;
+}
+
+:host:last-of-type {
+	flex: 1 1 auto;
+}
+
+:host {
+	flex: 0 0 var( --width, 50% );
+}

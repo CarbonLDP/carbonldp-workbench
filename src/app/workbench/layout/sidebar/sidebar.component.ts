@@ -29,28 +29,12 @@ export class SidebarComponent {
 		this.router = router;
 		this.location = location;
 		this.sidebarService = sidebarService;
-		this.sidebarService.toggleEmitter.subscribe( ( event:any ) => {
-			this.toggle();
-		} );
 		this.sidebarService.toggledEmitter.emit( true );
 	}
 
 	ngAfterViewInit():void {
 		this.$element = $( this.element.nativeElement );
 		this.refreshAccordion();
-	}
-
-	toggle():void {
-		if( this.$element.is( ":visible" ) ) {
-			this.$element.animate( { "width": "0" }, 400, () => {
-				this.$element.hide();
-				this.sidebarService.toggledEmitter.emit( false );
-			} );
-		} else {
-			this.$element.show();
-			this.$element.animate( { "width": "182px" }, 400 );
-			this.sidebarService.toggledEmitter.emit( true );
-		}
 	}
 
 	refreshAccordion():void {

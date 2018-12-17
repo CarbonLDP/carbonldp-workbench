@@ -6,14 +6,11 @@
 	<!-- START: Property @Id  -->
 	<app-property-id *ngSwitchCase="'@id'"
 	                class="content"
-	                [mode]="mode"
 	                [documentURI]="documentURI"
-	                [blankNodes]="blankNodes"
 	                [namedFragments]="namedFragments"
 	                [isPartOfNamedFragment]="isPartOfNamedFragment"
 	                [canEdit]="canEdit"
 	                [property]="property"
-	                [accessPointsHasMemberRelationProperties]="accessPointsHasMemberRelationProperties"
 	                (onChangeProperty)="changeProperty( $event )">
 	</app-property-id>
 	<!-- END: Property @Id  -->
@@ -45,6 +42,7 @@
 		                     (onGoToNamedFragment)="goToNamedFragment( $event )"
 		                     (onChangeProperty)="changeProperty( $event )"
 		                     (onDeleteProperty)="deleteProperty( $event )"
+		                     (onCancelProperty)="cancelProperty( $event )"
 		                     (onSaveNewProperty)="saveNewProperty( $event )">
 		</app-property-content>
 	</ng-container>

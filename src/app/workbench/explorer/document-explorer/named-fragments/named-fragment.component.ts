@@ -1,11 +1,12 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF";
 
 import { BlankNodeStatus } from "../blank-nodes/blank-node.component";
 import { Property, PropertyStatus } from "../property/property.component";
-import { JsonLDKeyword, Modes, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
+import { JsonLDKeyword, Modes, ResourceRecords } from "../document-explorer-library";
+import { ResourceFeatures, States } from "../resource-features.component";
 
 /*
 *  Displays the contents of a Named Fragment with all its properties
@@ -16,12 +17,9 @@ import { JsonLDKeyword, Modes, ResourceFeatures, ResourceRecords } from "../docu
 	styles: [ ":host { display:block; }" ]
 } )
 
-export class NamedFragmentComponent extends ResourceFeatures implements AfterViewInit {
+export class NamedFragmentComponent extends ResourceFeatures implements AfterViewInit, OnInit, OnChanges {
 	element:ElementRef;
 	$element:JQuery;
-	carbonldp:CarbonLDP;
-
-	modes:typeof Modes = Modes;
 
 	private _namedFragmentHasChanged:boolean;
 	set namedFragmentHasChanged( hasChanged:boolean ) {
@@ -45,18 +43,7 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 	@Input() namedFragments:NamedFragmentStatus[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
-
-	private _namedFragment:NamedFragmentStatus;
-	@Input() set namedFragment( namedFragment:NamedFragmentStatus ) {
-		this._namedFragment = namedFragment;
-		this.rootNode = namedFragment.copy;
-		if( ! ! namedFragment.records ) this.records = namedFragment.records;
-		this.updateExistingProperties();
-	}
-
-	get namedFragment():NamedFragmentStatus {
-		return this._namedFragment;
-	}
+	@Input() namedFragment:NamedFragmentStatus;
 
 	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
@@ -89,6 +76,10 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 		super.deleteProperty( property, index );
 	}
 
+	cancelProperty( property:PropertyStatus, index:number ):void {
+		super.cancelProperty( property, index );
+	}
+
 	addProperty( property:PropertyStatus, index:number ):void {
 		super.addProperty( property, index );
 	}
@@ -97,11 +88,17 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 		super.createProperty( property, propertyStatus );
 
 		// Animates created property
-		setTimeout( () => {
-			let createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
-			createdPropertyComponent.addClass( "transition hidden" );
-			createdPropertyComponent.transition( { animation: "drop" } );
-		} );
+		/*
+			2018-11-09 @MiguelAraCo
+			TODO[code-quality]: Use vanilla JavaScript and CSS instead of JQuery
+		*/
+
+
+		// setTimeout( () => {
+		// 	const createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
+		// 	createdPropertyComponent.addClass( "transition hidden" );
+		// 	createdPropertyComponent.transition( { animation: "drop" } );
+		// }, 0 );
 	}
 
 	updateExistingProperties():void {
@@ -135,6 +132,25 @@ export class NamedFragmentComponent extends ResourceFeatures implements AfterVie
 			rawNode[ key ] = property.added.value;
 		} );
 		return rawNode;
+	}
+
+	private initData() {
+		this.state = States.READ;
+		this.rootNode = this.namedFragment.copy;
+		if( ! ! this.namedFragment.records ) this.records = this.namedFragment.records;
+		this.updateExistingProperties();
+	}
+
+	ngOnInit() {
+		this.initData();
+	}
+
+	ngOnChanges( changes:SimpleChanges ) {
+		if( "namedFragment" in changes ) {
+			const change:SimpleChange = changes.namedFragment;
+			this.namedFragment = change.currentValue;
+			this.initData();
+		}
 	}
 }
 

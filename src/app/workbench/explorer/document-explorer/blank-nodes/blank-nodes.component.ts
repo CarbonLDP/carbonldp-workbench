@@ -43,7 +43,6 @@ export class BlankNodesComponent implements AfterViewInit, OnChanges {
 	ngOnChanges( changes:{ [ propName:string ]:SimpleChange } ):void {
 		if( (changes[ "blankNodes" ].currentValue !== changes[ "blankNodes" ].previousValue) ) {
 			this.openedBlankNodes = [];
-			this.goToBlankNode( "all" );
 			this.blankNodesRecords.clear();
 		}
 	}

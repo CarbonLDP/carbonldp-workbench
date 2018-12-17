@@ -1,48 +1,36 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF";
 
 
 import { Property, PropertyStatus } from "../property/property.component";
-import { JsonLDKeyword, Modes, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
+import { JsonLDKeyword, ResourceRecords } from "../document-explorer-library";
+import { ResourceFeatures, States } from "../resource-features.component";
 
-/*
-*  Displays the contents of a Blank Node with all its properties
-* */
+/**
+ *  Displays the contents of a Blank Node with all its properties
+ */
 @Component( {
 	selector: "app-blank-node",
 	templateUrl: "./blank-node.component.html",
 	styles: [ ":host { display:block; }" ]
 } )
 
-export class BlankNodeComponent extends ResourceFeatures implements AfterViewInit {
+export class BlankNodeComponent extends ResourceFeatures implements AfterViewInit, OnInit, OnChanges {
 	@Input() blankNodes:BlankNodeStatus[] = [];
 	@Input() namedFragments:RDFNode[] = [];
 	@Input() canEdit:boolean = true;
 	@Input() documentURI:string = "";
 
-	private _blankNode:BlankNodeStatus;
-	@Input() set blankNode( blankNode:BlankNodeStatus ) {
-		this._blankNode = blankNode;
-		this.rootNode = blankNode.copy;
-		if( ! ! blankNode.records ) this.records = blankNode.records;
-		this.updateExistingProperties();
-	}
-
-	get blankNode():BlankNodeStatus {
-		return this._blankNode;
-	}
+	@Input() blankNode:BlankNodeStatus;
 
 	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onChanges:EventEmitter<BlankNodeStatus> = new EventEmitter<BlankNodeStatus>();
 
-	carbonldp:CarbonLDP;
-	element:ElementRef;
 	$element:JQuery;
 
-	modes:typeof Modes = Modes;
 	nonEditableProperties:string[] = [ JsonLDKeyword.ID ];
 
 	private _blankNodeHasChanged:boolean;
@@ -58,14 +46,13 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 		this.onChanges.emit( this.blankNode );
 	}
 
-	get blankNodeHasChanged() {
-		return this._blankNodeHasChanged;
-	}
+	get blankNodeHasChanged() { return this._blankNodeHasChanged; }
 
-	constructor( element:ElementRef, carbonldp:CarbonLDP ) {
+	constructor(
+		carbonldp:CarbonLDP,
+		private element:ElementRef,
+	) {
 		super( carbonldp );
-		this.element = element;
-		this.carbonldp = carbonldp;
 	}
 
 	ngAfterViewInit():void {
@@ -88,6 +75,10 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 		super.deleteProperty( property, index );
 	}
 
+	cancelProperty( property:PropertyStatus, index:number ):void {
+		super.cancelProperty( property, index );
+	}
+
 	addProperty( property:PropertyStatus, index:number ):void {
 		super.addProperty( property, index );
 	}
@@ -96,6 +87,10 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 		super.createProperty( property, propertyStatus );
 
 		// Animates created property
+		/*
+			2018-11-09 @MiguelAraCo
+			TODO[code-quality]: Use vanilla JavaScript and CSS instead of JQuery
+		*/
 		setTimeout( () => {
 			let createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
 			createdPropertyComponent.addClass( "transition hidden" );
@@ -138,6 +133,25 @@ export class BlankNodeComponent extends ResourceFeatures implements AfterViewIni
 	isTemporalId( property:PropertyStatus ):boolean {
 		let copyAddedOrModified:string = property.added ? "added" : property.modified ? "modified" : "copy";
 		return property[ copyAddedOrModified ].id === JsonLDKeyword.ID && property[ copyAddedOrModified ].value.startsWith( "_:New_Blank_Node_Temporal_Id_" );
+	}
+
+	private initData() {
+		this.state = States.READ;
+		this.rootNode = this.blankNode.copy;
+		if( ! ! this.blankNode.records ) this.records = this.blankNode.records;
+		this.updateExistingProperties();
+	}
+
+	ngOnInit() {
+		this.initData();
+	}
+
+	ngOnChanges( changes:SimpleChanges ) {
+		if( "blankNode" in changes ) {
+			let change:SimpleChange = changes.blankNode;
+			this.blankNode = Object.assign( {}, change.currentValue );
+			this.initData();
+		}
 	}
 }
 

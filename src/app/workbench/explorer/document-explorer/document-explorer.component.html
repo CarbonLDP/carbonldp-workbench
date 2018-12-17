@@ -1,40 +1,63 @@
-<div class="ui divided grid segment" [ngClass]="{loading:loadingDocument || savingDocument}">
-
-	<div class="stretched row document-content-wrapper">
-		<div class="error messages" *ngIf="messages.length > 0">
-			<ng-template ngFor let-message="$implicit" [ngForOf]="messages" let-i="index">
-				<app-message [message]="message" [type]="'error'" [closable]="true"></app-message>
-			</ng-template>
+<app-horizontal-resizable-grid class="ai-explorer ag-flexible">
+	<app-grid-column class="ai-explorer__sidebar ai-sidebar ag-rows" appFocused>
+		<div class="ai-sidebar__documentActions">
+			<mat-menu #createMenu="matMenu">
+				<button mat-menu-item
+				        (click)="documentCreator.show()"
+				>
+					c:Document
+				</button>
+				<button mat-menu-item
+				        (click)="accessPointCreator.show()"
+				>
+					c:AccessPoint
+				</button>
+			</mat-menu>
+			<button class="ag-button--withIcon"
+			        [matMenuTriggerFor]="createMenu"
+			        mat-icon-button
+			        [disabled]="selectedDocumentIDs.length !== 1"
+			>
+				<fa-icon [icon]="faPlus"></fa-icon>
+			</button>
+			<button class="ag-button--withIcon"
+			        mat-icon-button>
+				<fa-icon [icon]="faSync"></fa-icon>
+			</button>
+			<button class="ag-button--withIcon"
+			        mat-icon-button
+			        color="warn"
+			        [disabled]="selectedDocumentIDs.length === 0"
+			        (click)="documentDeleter.show()"
+			>
+				<fa-icon [icon]="faTrash"></fa-icon>
+			</button>
 		</div>
-		<app-document-treeview class="five wide column treeview-container"
-		                      [refreshNodes]="onRefreshNode"
-		                      [openNode]="onOpenNode"
+		<app-document-tree
+			class="ai-documentTree ag-rows ag-flexible"
+			(onSelectDocuments)="on_tree_selectDocuments($event)"
+			(onOpenDocument)="on_tree_openDocument($event)"
+			[refreshDocument]="refreshDocument$ | async"
+		></app-document-tree>
+	</app-grid-column>
+	<app-vertical-grid-divider></app-vertical-grid-divider>
+	<app-grid-column class="ai-explorer__documentViewer">
+		<app-document-viewer
+			class="ai-documentViewer"
+			[document]="openDocument$ | async"
+		></app-document-viewer>
+	</app-grid-column>
+</app-horizontal-resizable-grid>
 
-		                      (onSelectDocuments)="changeSelection($event)"
-		                      (onShowCreateChildForm)="documentCreator.show()"
-		                      (onShowDeleteChildForm)="documentDeleter.show()"
-		                      (onShowCreateAccessPointForm)="accessPointCreator.show()"
-		                      (onError)="handleExternalError($event)"
-		                      (onLoadingDocument)="onLoadingDocument($event)"
-		                      (onResolveUri)="resolveDocument($event)"></app-document-treeview>
-		<app-document-viewer class="eleven wide column"
-		                    [document]="inspectingDocument"
-		                    [displaySuccessMessage]="onDisplaySuccessMessage"
-
-		                    (onError)="handleExternalError($event)"
-		                    (onRefreshNode)="refreshNode($event)"
-		                    (onOpenNode)="openNode($event)"
-		                    (onSavingDocument)="showLoading($event)"
-		                    (onLoadingDocument)="onLoadingDocument($event)"
-		                    (onRefreshDocument)="refreshDocument($event)"></app-document-viewer>
-		<app-document-creator #documentCreator
-		                     [parentURI]="selectedDocumentURI"
-		                     (onSuccess)="onSuccessCreateDocument($event)"></app-document-creator>
-		<app-access-point-creator #accessPointCreator
-		                         [parentURI]="selectedDocumentURI"
-		                         (onSuccess)="onSuccessAccessPoint($event)"></app-access-point-creator>
-		<app-document-deleter #documentDeleter
-		                     [documentURIs]="selectedDocumentURIs"
-		                     (onSuccess)="onSuccessDeleteDocument($event)"></app-document-deleter>
-	</div>
-</div>
+<app-document-creator #documentCreator
+                      *ngIf="selectedDocumentIDs.length === 1"
+                      [parentURI]="selectedDocumentIDs[ 0 ]"
+                      (onSuccess)="on_documentCreator_success($event)"></app-document-creator>
+<app-access-point-creator #accessPointCreator
+                          *ngIf="selectedDocumentIDs.length === 1"
+                          [parentURI]="selectedDocumentIDs[ 0 ]"
+                          (onSuccess)="on_accessPointCreator_success($event)"></app-access-point-creator>
+<app-document-deleter #documentDeleter
+                      *ngIf="selectedDocumentIDs.length > 1"
+                      [documentURIs]="selectedDocumentIDs"
+                      (onSuccess)="on_documentDeleter_success($event)"></app-document-deleter>

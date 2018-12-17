@@ -1,12 +1,15 @@
 :host {
-	display: block;
+	padding: 15px 20px;
+}
 
-	.dashboard-title {
-		display: inline-block
+.ai {
+	&-widgetsMenuContainer {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
 	}
 
-	.dashboard-menu {
-		float: right;
+	&-widgets {
+		margin-top: 15px;
 	}
-
 }

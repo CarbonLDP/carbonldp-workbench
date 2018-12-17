@@ -1,4 +1,3 @@
-import { directivesSpecs } from "./directives/directives.module.spec";
 import { errorLabelSpecs } from "./components/messages-area/error/error-label.component.spec";
 import { errorMessageGeneratorSpecs } from "./components/messages-area/error/error-message-generator.spec";
 import { messageComponentSpecs } from "./components/messages-area/message.component.spec";
@@ -8,9 +7,6 @@ import { messageAreaServiceSpecs } from "./components/messages-area/messages-are
 import { codeMirrorSpecs } from "./components/code-mirror/code-mirror.component.spec";
 
 describe( "AppCommonModule", () => {
-
-	directivesSpecs();
-
 	errorLabelSpecs();
 
 	errorMessageGeneratorSpecs();

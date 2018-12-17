@@ -1,28 +1,32 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
 
 import { CarbonLDP } from "carbonldp";
 import { RDFNode } from "carbonldp/RDF";
 
-import { Modes, ResourceFeatures, ResourceRecords } from "../document-explorer-library";
+import { ResourceRecords } from "../document-explorer-library";
 import { DocumentsResolverService } from "../documents-resolver.service";
 import { Property, PropertyStatus } from "../property/property.component";
+import { ResourceFeatures, States } from "../resource-features.component";
 
-/*
-*  Displays the contents of a Document with all its properties
-* */
+/**
+ *  Displays the contents of a Document with all its properties
+ */
 @Component( {
 	selector: "app-document-resource",
 	templateUrl: "./document-resource.component.html",
-	styles: [ ":host { display:block; }" ]
+	styleUrls: [ "./document-resource.component.scss" ]
 } )
+export class DocumentResourceComponent extends ResourceFeatures implements OnInit, OnChanges {
+	@Input() displayOnly:string[] = [];
+	@Input() hiddenProperties:string[] = [];
+	@Input() blankNodes:RDFNode[] = [];
+	@Input() namedFragments:RDFNode[] = [];
+	@Input() canEdit:boolean = true;
+	@Input() documentURI:string = "";
 
-export class DocumentResourceComponent extends ResourceFeatures implements AfterViewInit {
-	element:ElementRef;
-	$element:JQuery;
-	documentsResolverService:DocumentsResolverService;
-	carbonldp:CarbonLDP;
-
-	modes:typeof Modes = Modes;
+	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
+	@Output() onChanges:EventEmitter<ResourceRecords> = new EventEmitter<ResourceRecords>();
 
 	private _rootHasChanged:boolean;
 	set rootHasChanged( hasChanged:boolean ) {
@@ -34,42 +38,26 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 		return this._rootHasChanged;
 	}
 
-	@Input() displayOnly:string[] = [];
-	@Input() hiddenProperties:string[] = [];
-	@Input() blankNodes:RDFNode[] = [];
-	@Input() namedFragments:RDFNode[] = [];
-	@Input() canEdit:boolean = true;
-	@Input() documentURI:string = "";
-	private _rootNode:RDFNode;
-	@Input()
-	set rootNode( value:RDFNode ) {
-		this._rootNode = value;
-		this.records = new ResourceRecords();
-		this.getProperties()
-			.then( () => {
-				this.updateExistingProperties();
-			} );
-	}
-
-	get rootNode() {
-		return this._rootNode;
-	}
-
-	@Output() onOpenBlankNode:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onOpenNamedFragment:EventEmitter<string> = new EventEmitter<string>();
-	@Output() onChanges:EventEmitter<ResourceRecords> = new EventEmitter<ResourceRecords>();
-
-
-	constructor( element:ElementRef, documentsResolverService:DocumentsResolverService, carbonldp:CarbonLDP ) {
+	constructor(
+		carbonldp:CarbonLDP,
+		private element:ElementRef,
+		private documentsResolverService:DocumentsResolverService
+	) {
 		super( carbonldp );
-		this.element = element;
-		this.documentsResolverService = documentsResolverService;
-		this.carbonldp = carbonldp;
+
 		this.insertOrder = 2;
 	}
 
-	ngAfterViewInit():void {
-		this.$element = $( this.element.nativeElement );
+	ngOnInit() {
+		this.initData();
+	}
+
+	ngOnChanges( changes:SimpleChanges ) {
+		if( "rootNode" in changes ) {
+			const change:SimpleChange = changes.rootNode;
+			this.rootNode = Object.assign( {}, change.currentValue );
+			this.initData();
+		}
 	}
 
 	openBlankNode( id:string ):void {
@@ -87,47 +75,41 @@ export class DocumentResourceComponent extends ResourceFeatures implements After
 		return this.hiddenProperties.indexOf( propertyName ) !== - 1 ? false : true;
 	}
 
-	changeProperty( property:PropertyStatus, index:number ):void {
-		super.changeProperty( property, index );
+	deleteProperty( property:PropertyStatus, index:number ):void {
+		this.state = States.READ;
+		super.deleteProperty( property, index );
 	}
 
-	deleteProperty( property:PropertyStatus, index:number ):void {
-		super.deleteProperty( property, index );
+	cancelProperty( property:PropertyStatus, index:number ):void {
+		this.state = States.READ;
+		super.cancelProperty( property, index );
 	}
 
 	addProperty( property:PropertyStatus, index:number ):void {
 		super.addProperty( property, index );
+		this.state = States.READ;
 	}
 
 	createProperty( property:Property, propertyStatus:PropertyStatus ):void {
 		super.createProperty( property, propertyStatus );
-
-		// Animates created property
-		setTimeout( () => {
-			let createdPropertyComponent:JQuery = this.$element.find( "app-property.added-property" ).first();
-			createdPropertyComponent.addClass( "transition hidden" );
-			createdPropertyComponent.transition( { animation: "drop" } );
-		} );
+		this.state = States.EDIT;
 	}
 
-	updateExistingProperties():void {
+	updateExistingProperties() {
 		super.updateExistingProperties();
 		this.rootHasChanged = this.resourceHasChanged;
 	}
 
-	/*
-	*   Returns additional properties for a document. In this case Access Points
-	* */
-	getProperties():Promise<void> {
-		return this.getAccessPointsHasMemberRelationProperties( this.documentURI )
-			.then( ( accessPointsHasMemberRelationProperties:string[] ) => {
-				this.accessPointsHasMemberRelationProperties = accessPointsHasMemberRelationProperties;
-				return Promise.resolve();
-			} );
+	private async initData() {
+		this.records = new ResourceRecords();
+		this.state = States.READ;
+
+		await this.getAdditionalInformation();
+		this.updateExistingProperties();
 	}
 
-	getAccessPointsHasMemberRelationProperties( documentURI:string ):Promise<string[]> {
-		return this.documentsResolverService.getAccessPointsHasMemberRelationProperties( documentURI );
+	private async getAdditionalInformation() {
+		this.accessPointsHasMemberRelationProperties = await this.documentsResolverService.getAccessPointsHasMemberRelations( this.documentURI );
 	}
 }
 

@@ -1,0 +1,20 @@
+// Material buttons with a FontAwesome icon and text
+// Material buttons put their content inside a span.mat-button-wrapper
+.mat-button,
+.mat-flat-button,
+.mat-stroked-button {
+	// Since the component may have only an icon it is ok for it to collapse
+	min-width: 0;
+
+	> .mat-button-wrapper {
+
+		// Let content take the whole height so they can center automatically
+		display: flex;
+
+		> .ng-fa-icon + *,
+		> * + .ng-fa-icon {
+			// Pad the text from the icon
+			padding-left: 5px;
+		}
+	}
+}

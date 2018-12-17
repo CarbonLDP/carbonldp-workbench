@@ -16,13 +16,13 @@ import { CarbonLDP } from "carbonldp";
 @NgModule( {
 	declarations: [
 		AppComponent,
-		NotFoundErrorView
+		NotFoundErrorView,
 	],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
 
-		// Enable Material UI animations
+		// Enable animations needed for Material UI
 		BrowserAnimationsModule,
 
 		ServiceWorkerModule.register( "ngsw-worker.js", { enabled: environment.production } ),

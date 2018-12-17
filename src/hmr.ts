@@ -20,6 +20,12 @@ export function bootstrapWithHMR<MODULE>( mainModule:NodeModule, bootstrapFn:() 
 
 	hotModuleReplacer.accept();
 
+	// Event listener to clear console after a HMR
+	// See: https://github.com/webpack/webpack-dev-server/issues/565
+	window.addEventListener( "message", event => {
+		if( "production" !== process.env.NODE_ENV ) console.clear();
+	} );
+
 	return bootstrapFn().then( ngModuleRef => {
 		hotModuleReplacer.dispose( () => {
 			const appRef:ApplicationRef = ngModuleRef.injector.get( ApplicationRef );

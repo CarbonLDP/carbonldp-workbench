@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LogoComponent } from './logo.component';
+import { HorizontalResizableGrid } from './horizontal-resizable-grid.component';
 
-describe('LinearLogoComponent', () => {
-  let component: LogoComponent;
-  let fixture: ComponentFixture<LogoComponent>;
+describe('VerticalResizerComponent', () => {
+  let component: HorizontalResizableGrid;
+  let fixture: ComponentFixture<HorizontalResizableGrid>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LogoComponent ]
+      declarations: [ HorizontalResizableGrid ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LogoComponent);
+    fixture = TestBed.createComponent(HorizontalResizableGrid);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

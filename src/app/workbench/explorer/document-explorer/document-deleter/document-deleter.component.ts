@@ -25,7 +25,7 @@ export class DocumentDeleterComponent implements AfterViewInit {
 	deleteDocumentFormModel:{ value?:any } = {};
 	isDeleting:boolean = false;
 
-	@Input() documentURIs:Array<string> = [ "" ];
+	@Input() documentURIs:Array<string> = [];
 	@Output() onSuccess:EventEmitter<any> = new EventEmitter<any>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
 

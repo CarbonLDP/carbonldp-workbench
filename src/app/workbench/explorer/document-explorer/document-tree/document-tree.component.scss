@@ -1,0 +1,138 @@
+@import "~@angular/material/theming";
+@import "~app/_vars";
+
+$node-height: 24px;
+$carat-width: $node-height - 6px;
+
+:host {
+	display: flex;
+	flex-direction: column;
+}
+
+.ai {
+	&-treeContainer {
+		overflow: auto;
+	}
+	&-tree {
+		// Make the component grow to match its contents' width
+		display: inline-block;
+
+		// If the content isn't big enough, make it at least cover the parent's width
+		min-width: 100%;
+
+		ul,
+		li {
+			margin-top: 0;
+			margin-bottom: 0;
+			padding-left: 0;
+			list-style-type: none;
+		}
+
+		&__node {
+			display: block;
+
+			// Necessary so that Firefox can calculate correctly the height
+			line-height: 0;
+		}
+
+		&__nodeItem {
+			// Make the component grow to match its contents' width
+			display: inline-block;
+
+			// If the content isn't big enough, make it at least cover the parent's width
+			min-width: 100%;
+		}
+
+		&__nodeContent {
+			display: flex;
+			flex-direction: row;
+			// The Flex container should continue to grow instead of wrapping its children
+			flex-wrap: nowrap;
+
+			// If the content isn't big enough, make it at least cover the parent's width
+			min-width: 100%;
+
+			height: $node-height;
+		}
+
+		&__nodeContent:hover {
+			cursor: pointer;
+		}
+
+		// Selection styles
+		&__nodeContent {
+			border-left: 3px solid transparent;
+		}
+		// The selector needs to specify the levels otherwise it will affect nested nodes
+		&__node--selected > &__nodeItem > &__nodeContent {
+			border-left-color: mat-color( map-get( $app-theme, accent ), default );
+			background: mat-color( map-get( $app-theme, background ), raised-button );
+		}
+		&.ag-focused &__node--selected > &__nodeItem > &__nodeContent {
+			background: mat-color( map-get( $app-theme, background ), selected-button );
+		}
+
+		// Open styles
+		&__node--opened > &__nodeItem > &__nodeContent &__nodeLabel {
+			font-weight: bold;
+		}
+
+		&__nodeToggle {
+			height: $node-height;
+		}
+
+		// The selector needs to specify the levels otherwise it will affect nested nodes
+		&__node--noChildren > &__nodeItem > &__nodeContent > &__nodeIcon,
+		&__nodeToggle {
+			// Determines the level of padding the node will add due to position in the tree
+			--level: 0;
+			margin-left: calc( var( --level ) * #{ $carat-width } );
+		}
+
+		&__nodeToggle {
+			flex: 0 0 $carat-width;
+
+			// Add some padding so it doesn't look too separated from the node's icon
+			padding-left: 7px;
+		}
+
+		&__nodeIcon {
+			flex: 0 0 $node-height;
+			// When setting the parent as inline-block it seems that it can't calculate its contents width correctly if it is
+			// only determined by the flex attribute. Defining its width explicitly solves the problem
+			width: $node-height;
+		}
+
+		&__nodeToggle,
+		&__nodeIcon {
+			height: $node-height;
+
+			// Center child element horizontally and vertically
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		&__nodeLabel {
+			white-space: nowrap;
+
+			// Reset the line-height to match the node's height
+			line-height: $node-height;
+		}
+	}
+}
+
+.mat-tree {
+	background-color: unset;
+}
+
+// Material UI adds this class automatically to mat-nested-tree-node and mat-tree-node
+.mat-tree-node {
+	// Material UI comes with an already defined min-height for tree nodes
+	display: block;
+	align-items: normal;
+	min-height: auto;
+	flex: unset;
+	overflow: unset;
+	word-wrap: unset;
+}

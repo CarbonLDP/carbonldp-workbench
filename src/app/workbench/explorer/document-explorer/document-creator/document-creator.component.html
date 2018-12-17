@@ -17,7 +17,7 @@
 		<!-- START: Slug for the new document -->
 		<div class="field"
 		     [ngClass]="{error: !slug.valid}">
-			<label>Slug: The slug of the document you want to create: <span app-grayed-out>(Optional)</span></label>
+			<label>Slug: The slug of the document you want to create: <span class="ag-secondaryText">(Optional)</span></label>
 			<div class="ui fluid input">
 				<input type="text" name="slug"
 				       placeholder="Optional: Enter the slug of the child. e.g. &quot;my-child-name/&quot;"
@@ -76,7 +76,7 @@
 				<!-- START: Input for isMemberOfRelation -->
 				<div class="field"
 				     [ngClass]="{error: !isMemberOfRelation.valid}">
-					<label><a href="https://carbonldp.com/documentation/javascript-sdk-getting-started#membership-relation" target="_blank">isMemberOfRelation</a>: The name of the property that each member will have, which links back to the document they are member of. <span app-grayed-out>(Optional)</span></label>
+					<label><a href="https://carbonldp.com/documentation/javascript-sdk-getting-started#membership-relation" target="_blank">isMemberOfRelation</a>: The name of the property that each member will have, which links back to the document they are member of. <span class="ag-secondaryText">(Optional)</span></label>
 					<div class="ui fluid input">
 						<input type="text" name="isMemberOfRelation"
 						       placeholder="Optional: E.g: http://www.w3.org/ns/ldp#member"

@@ -21,7 +21,6 @@ import { ErrorMessageGenerator } from "app/common/components/messages-area/error
 } )
 
 export class AccessPointCreatorComponent implements AfterViewInit {
-
 	private carbonldp:CarbonLDP;
 	private element:ElementRef;
 	private $element:JQuery;
@@ -38,7 +37,7 @@ export class AccessPointCreatorComponent implements AfterViewInit {
 	public visible:boolean = true;
 
 	@Input() parentURI:string = "";
-	@Output() onSuccess:EventEmitter<any> = new EventEmitter<any>();
+	@Output() onSuccess:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
 
 
@@ -65,7 +64,7 @@ export class AccessPointCreatorComponent implements AfterViewInit {
 		this.carbonldp.documents.$get( this.parentURI ).then( ( document:Document ) => {
 			return this.documentsResolverService.createAccessPoint( document, accessPoint, slug );
 		} ).then( ( document:Document ) => {
-			this.onSuccess.emit( document );
+			this.onSuccess.emit( this.parentURI );
 			form.resetForm();
 			this.hide();
 		} ).catch( ( error:Errors.HTTPError ) => {

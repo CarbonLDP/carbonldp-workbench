@@ -38,27 +38,13 @@
               "node_modules/semantic-ui-css/components/accordion.js",
               "node_modules/semantic-ui-css/components/api.js",
               "node_modules/semantic-ui-css/components/checkbox.js",
-//              "node_modules/semantic-ui-css/components/colorize.js",
               "node_modules/semantic-ui-css/components/dimmer.js",
               "node_modules/semantic-ui-css/components/dropdown.js",
-//              "node_modules/semantic-ui-css/components/embed.js",
-//              "node_modules/semantic-ui-css/components/form.js",
               "node_modules/semantic-ui-css/components/modal.js",
-//              "node_modules/semantic-ui-css/components/nag.js",
-//              "node_modules/semantic-ui-css/components/popup.js",
-//              "node_modules/semantic-ui-css/components/progress.js",
-//              "node_modules/semantic-ui-css/components/rating.js",
-//              "node_modules/semantic-ui-css/components/search.js",
-//              "node_modules/semantic-ui-css/components/shape.js",
               "node_modules/semantic-ui-css/components/sidebar.js",
-//              "node_modules/semantic-ui-css/components/site.js",
-//              "node_modules/semantic-ui-css/components/state.js",
               "node_modules/semantic-ui-css/components/sticky.js",
               "node_modules/semantic-ui-css/components/tab.js",
               "node_modules/semantic-ui-css/components/transition.js",
-//              "node_modules/semantic-ui-css/components/video.js",
-//              "node_modules/semantic-ui-css/components/visibility.js",
-//              "node_modules/semantic-ui-css/components/visit.js",
               "node_modules/jstree/dist/jstree.js"
             ]
           },
@@ -185,5 +171,8 @@
       }
     }
   },
-  "defaultProject": "carbonldp-workbench"
+  "defaultProject": "carbonldp-workbench",
+  "cli": {
+    "defaultConfiguration": "akita-schematics"
+  }
 }

@@ -1,24 +1,25 @@
-//noinspection SpellCheckingInspection
-.JUQK- {
-	&svg {
+@import "~@angular/material/theming";
+@import "~app/vars";
+
+:host {
+	width: 100%;
+}
+
+.ai {
+	&-svg {
 		max-width: 100%;
 		max-height: 100%;
 
-		&-icon {
-			fill: #ff7604;
+		&__icon {
+			fill: #FF7604;
 		}
 
-		&-icon,
-		&-carbon {
-			fill-rule: evenodd;
+		&__carbon {
+			fill: mat-color( map-get( $app-theme, foreground ), text );
 		}
 
-		&-carbon {
-			fill: #EEEEEE;
-		}
-
-		&-ldp {
-			fill: #AAAAAA;
+		&__ldp {
+			fill: mat-color( map-get( $app-theme, foreground ), secondary-text );
 		}
 	}
 }

@@ -1,6 +1,11 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+
+import { CdkTreeModule } from "@angular/cdk/tree";
+import { MatBadgeModule, MatButtonModule, MatCardModule, MatIconModule, MatMenuModule, MatRippleModule, MatTabsModule, MatTreeModule } from "@angular/material";
+
+import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 // Components
 import { LiteralComponent } from "./literals/literal.component";
 import { LiteralsComponent } from "./literals/literals.component";
@@ -18,25 +23,47 @@ import { BlankNodesComponent } from "./blank-nodes/blank-nodes.component";
 import { NamedFragmentComponent } from "./named-fragments/named-fragment.component";
 import { NamedFragmentsComponent } from "./named-fragments/named-fragments.component";
 import { DocumentViewerComponent } from "./document-viewer/document-viewer.component";
-import { DocumentTreeViewComponent } from "./document-tree-view/document-tree-view.component";
 import { DocumentExplorerComponent } from "./document-explorer.component";
 import { AccessPointCreatorComponent } from "./access-point-creator/access-point-creator.component";
 import { DocumentCreatorComponent } from "./document-creator/document-creator.component";
 import { DocumentDeleterComponent } from "./document-deleter/document-deleter.component";
+
+import { DocumentTreeComponent } from "./document-tree/document-tree.component";
+import { GetTypeIconPipe } from "./document-tree/get-type-icon.pipe";
 // Modules
 import { AppCommonModule } from "app/common/app-common.module";
 // Services
 import { DocumentsResolverService } from "./documents-resolver.service";
 // Directives
 import { IdValidator, LiteralValueValidator, PointerValidator, PropertyNameValidator } from "./document-explorer-validators";
+import { CreateDocumentDialogComponent } from "./create-document-dialog/create-document-dialog.component";
 
 @NgModule( {
 	imports: [
 		CommonModule,
 		FormsModule,
+
+		// Material UI
+		CdkTreeModule,
+
+		MatBadgeModule,
+		MatButtonModule,
+		MatCardModule,
+		MatIconModule,
+		MatMenuModule,
+		MatRippleModule,
+		MatTabsModule,
+		MatTreeModule,
+
+		// FontAwesome icons
+		FontAwesomeModule,
+
 		AppCommonModule,
 	],
 	declarations: [
+		DocumentTreeComponent,
+		GetTypeIconPipe,
+
 		LiteralComponent,
 		LiteralsComponent,
 
@@ -57,7 +84,6 @@ import { IdValidator, LiteralValueValidator, PointerValidator, PropertyNameValid
 		NamedFragmentsComponent,
 
 		DocumentViewerComponent,
-		DocumentTreeViewComponent,
 		DocumentResourceComponent,
 		DocumentExplorerComponent,
 		AccessPointCreatorComponent,
@@ -68,6 +94,7 @@ import { IdValidator, LiteralValueValidator, PointerValidator, PropertyNameValid
 		PropertyNameValidator,
 		LiteralValueValidator,
 		PointerValidator,
+		CreateDocumentDialogComponent,
 	],
 	exports: [
 		DocumentExplorerComponent,

@@ -19,7 +19,6 @@ import { ErrorMessageGenerator } from "app/common/components/messages-area/error
 } )
 
 export class DocumentCreatorComponent implements AfterViewInit {
-
 	private carbonldp:CarbonLDP;
 	private element:ElementRef;
 	private $element:JQuery;
@@ -37,9 +36,8 @@ export class DocumentCreatorComponent implements AfterViewInit {
 		}
 	};
 	@Input() parentURI:string = "";
-	@Output() onSuccess:EventEmitter<any> = new EventEmitter<any>();
+	@Output() onSuccess:EventEmitter<string> = new EventEmitter<string>();
 	@Output() onError:EventEmitter<any> = new EventEmitter<any>();
-
 
 	constructor( element:ElementRef, carbonldp:CarbonLDP, documentsResolverService:DocumentsResolverService ) {
 		this.element = element;
@@ -64,7 +62,7 @@ export class DocumentCreatorComponent implements AfterViewInit {
 		if( ! ! data.advancedOptions.isMemberOfRelation ) childContent[ "isMemberOfRelation" ] = data.advancedOptions.isMemberOfRelation;
 
 		this.documentsResolverService.createChild( this.parentURI, childContent, childSlug ).then( ( createdChild:Document ) => {
-			this.onSuccess.emit( createdChild );
+			this.onSuccess.emit( this.parentURI );
 			this.hide();
 		} ).catch( ( error:HTTPError ) => {
 			this.onError.emit( error );
