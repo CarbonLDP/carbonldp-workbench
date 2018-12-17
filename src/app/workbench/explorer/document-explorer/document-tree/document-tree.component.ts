@@ -2,13 +2,9 @@ import { first } from "rxjs/operators";
 
 import { produce } from "immer";
 
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Output } from "@angular/core";
+import { AfterViewInit, Component, EventEmitter, Input, Output } from "@angular/core";
 import { NestedTreeControl } from "@angular/cdk/tree";
-
 import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
-import { faFile } from "@fortawesome/free-regular-svg-icons";
-
-import { CarbonLDP } from "carbonldp";
 
 import { DocumentTreeNode } from "./state/document-tree-node.model";
 import { DocumentTreeNodesStore } from "./state/document-tree-nodes.store";
@@ -27,21 +23,28 @@ import { DocumentTreeDataSource } from "./document-tree.data-source";
 	],
 } )
 export class DocumentTreeComponent implements AfterViewInit {
+	@Input() set refreshDocument( documentID:string ) {
+		this.documentTreeNodesService.refresh( documentID ).subscribe();
+	}
+
 	@Output() onSelectDocuments:EventEmitter<string[]> = new EventEmitter<string[]>();
 	set selectedNodes( selectedNodes:string[] ) {
 		this._selectedNodes = selectedNodes;
-		this.onSelectDocuments.emit( produce( this._selectedNodes, state => {} ) );
+		this.onSelectDocuments.emit(
+			// Clone the selectedNodes before emitting them
+			produce( this._selectedNodes, state => {} )
+		);
 	}
 	get selectedNodes():string[] { return this._selectedNodes };
 	private _selectedNodes:string[] = [];
 
 	@Output() onOpenDocument:EventEmitter<string> = new EventEmitter<string>();
-	set openedNode ( openedNode :string ) {
-		this._openedNode  = openedNode ;
-		this.onOpenDocument.emit( this._openedNode  );
+	set openedNode( openedNode:string ) {
+		this._openedNode = openedNode;
+		this.onOpenDocument.emit( this._openedNode );
 	}
-	get openedNode ():string { return this._openedNode  };
-	private _openedNode :string;
+	get openedNode():string { return this._openedNode };
+	private _openedNode:string;
 
 	/**
 	 * Material UI trees need a TreeControl that will be in charge of controlling the tree's UI
@@ -52,19 +55,11 @@ export class DocumentTreeComponent implements AfterViewInit {
 	 */
 	documentTreeDataSource:DocumentTreeDataSource;
 
-	/**
-	 * Is the component focused?
-	 */
-	focused:boolean = false;
-
 	// Icons
 	readonly faCaretDown = faCaretDown;
 	readonly faCaretRight = faCaretRight;
-	readonly faFile = faFile;
 
 	constructor(
-		private element:ElementRef,
-		private carbonldp:CarbonLDP,
 		private documentTreeNodesQuery:DocumentTreeNodesQuery,
 		private documentTreeNodesService:DocumentTreeNodesService,
 	) {
@@ -75,17 +70,6 @@ export class DocumentTreeComponent implements AfterViewInit {
 		this.documentTreeDataSource = new DocumentTreeDataSource( this.documentTreeControl, this.documentTreeNodesQuery, this.documentTreeNodesService );
 	}
 
-	/**
-	 * Event listener to detect if the component lost focus
-	 * @param event
-	 */
-	@HostListener( "document:click", [ "$event" ] )
-	onClick( event:MouseEvent ) {
-		if( ! event.target ) return;
-		this.focused = this.element.nativeElement.contains( event.target );
-	}
-
-
 	async ngAfterViewInit() {
 		// Initialize the tree by fetching the root document ("/") and then registering it as the root document in the {@link DocumentTreeNodesService}
 		this.documentTreeNodesService.fetchOne( "/" )
@@ -93,7 +77,17 @@ export class DocumentTreeComponent implements AfterViewInit {
 			.pipe( first() )
 			.subscribe( document => {
 				this.documentTreeNodesService.updateRootNodes( [ document ] );
+				this.documentTreeControl.expand( document );
 			} );
+	}
+
+	onNodeMouseDown( event:MouseEvent, node:DocumentTreeNode ) {
+		// Avoid text from being selected on a double click (the text selection happens on the second click's mouseDown event)
+		/*
+			2018-12-17 @MiguelAraCo
+			TODO[improvement]: Find a way to prevent this without disabling text selection completely
+		*/
+		event.preventDefault();
 	}
 
 	onNodeClick( event:MouseEvent, node:DocumentTreeNode ) {
@@ -122,9 +116,6 @@ export class DocumentTreeComponent implements AfterViewInit {
 	}
 
 	onNodeDoubleClick( event:MouseEvent, node:DocumentTreeNode ) {
-		// Clear selection to avoid the double click event from selecting the text of the nodes
-		this.clearSelection();
-
 		// See: https://stackoverflow.com/questions/37078709/angular-2-check-if-shift-key-is-down-when-an-element-is-clicked#comment89930067_45884676
 		const modifySelection = event[ "shiftKey" ] || event[ "ctrlKey" ] || event[ "metaKey" ];
 
@@ -161,13 +152,5 @@ export class DocumentTreeComponent implements AfterViewInit {
 
 	isOpened( node:DocumentTreeNode ):boolean {
 		return node.id === this.openedNode;
-	}
-
-	private clearSelection() {
-		if( typeof window === "undefined" ) return;
-		if( typeof window.getSelection === "undefined" ) return;
-
-		const selection = window.getSelection();
-		selection.removeAllRanges();
 	}
 }

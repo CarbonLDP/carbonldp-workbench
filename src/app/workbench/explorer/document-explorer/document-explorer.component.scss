@@ -1,7 +1,30 @@
+@import "~@angular/material/theming";
+@import "~app/vars";
+
 .ai {
 	&-explorer {
 		&__sidebar {
 			--width: 300px;
+		}
+
+		&__documentViewer {
+			// Since the Document Explorer isn't yet compatible with the dark theme, its background needs to be white for now
+			/*
+				2018-12-17 @MiguelAraCo
+				TODO[improvement]: Remove once the document viewer is friendly with the dark theme
+			*/
+			background: white;
+		}
+	}
+
+	&-sidebar {
+		&__documentActions {
+			border-bottom: mat-color( map-get( $app-theme, foreground ), divider ) 1px solid;
+		}
+
+		// If the sidebar is focused, highlight the documentActions toolbar
+		&.ag-focused &__documentActions {
+			background: mat-color( map-get( $app-theme, background ), card );
 		}
 	}
 }

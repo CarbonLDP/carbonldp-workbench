@@ -16,7 +16,7 @@ import { CarbonLDP } from "carbonldp";
 @NgModule( {
 	declarations: [
 		AppComponent,
-		NotFoundErrorView
+		NotFoundErrorView,
 	],
 	imports: [
 		BrowserModule,

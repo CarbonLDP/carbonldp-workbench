@@ -53,8 +53,6 @@ $carat-width: $node-height - 6px;
 			min-width: 100%;
 
 			height: $node-height;
-
-			overflow: visible;
 		}
 
 		&__nodeContent:hover {
@@ -68,10 +66,10 @@ $carat-width: $node-height - 6px;
 		// The selector needs to specify the levels otherwise it will affect nested nodes
 		&__node--selected > &__nodeItem > &__nodeContent {
 			border-left-color: mat-color( map-get( $app-theme, accent ), default );
-			background: mat-color( map-get( $app-theme, background ), selected-button );
+			background: mat-color( map-get( $app-theme, background ), raised-button );
 		}
-		&--unfocused &__node--selected > &__nodeItem > &__nodeContent {
-			background: mat-color( map-get( $app-theme, background ), disabled-list-option );
+		&.ag-focused &__node--selected > &__nodeItem > &__nodeContent {
+			background: mat-color( map-get( $app-theme, background ), selected-button );
 		}
 
 		// Open styles
@@ -122,6 +120,10 @@ $carat-width: $node-height - 6px;
 			line-height: $node-height;
 		}
 	}
+}
+
+.mat-tree {
+	background-color: unset;
 }
 
 // Material UI adds this class automatically to mat-nested-tree-node and mat-tree-node

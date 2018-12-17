@@ -1,5 +1,4 @@
-<div class="dashboard">
-	<h3 class="dashboard-title">Dashboard View</h3>
-	<app-widgets-menu class="ui dropdown dashboard-menu" [(widgetsList)]="widgetsList"></app-widgets-menu>
+<div class="ai-widgetsMenuContainer">
+	<app-widgets-menu class="ai-widgetsMenu ui dropdown" [(widgetsList)]="widgetsList"></app-widgets-menu>
 </div>
-<app-widgets [(widgetsList)]="widgetsList"></app-widgets>
+<app-widgets class="ai-widgets" [(widgetsList)]="widgetsList"></app-widgets>

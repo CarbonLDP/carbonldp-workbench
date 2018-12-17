@@ -1,27 +1,25 @@
+@import "~@angular/material/theming";
+@import "~app/vars";
+
 :host {
 	width: 100%;
 }
 
-.app-logo {
-	&__svg {
+.ai {
+	&-svg {
 		max-width: 100%;
 		max-height: 100%;
 
 		&__icon {
-			fill: #ff7604;
-		}
-
-		&__icon,
-		&__carbon {
-			fill-rule: evenodd;
+			fill: #FF7604;
 		}
 
 		&__carbon {
-			fill: #EEEEEE;
+			fill: mat-color( map-get( $app-theme, foreground ), text );
 		}
 
 		&__ldp {
-			fill: #AAAAAA;
+			fill: mat-color( map-get( $app-theme, foreground ), secondary-text );
 		}
 	}
 }

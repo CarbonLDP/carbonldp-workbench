@@ -1,14 +1,17 @@
+@import "~@angular/material/theming";
+@import "~app/vars";
+
 :host {
 	flex: 1 1 100%;
 
 	display: flex;
 	flex-direction: column;
 
-	background-color: #90959A;
-	color: #ffffff;
+	background-color: mat-color( map-get( $app-theme, background ), background );
+	color: mat-color( map-get( $app-theme, foreground ), text );
 
 	app-header.ui.navigation.inverted.menu {
-		background-color: #363f48;
+		background-color: mat-color( map-get( $app-theme, background ), app-bar );
 		border-radius: 0;
 		padding: 0;
 		margin: 0;
@@ -21,7 +24,7 @@
 		border-radius: 0;
 		border-top: 1px solid rgba(255, 255, 255, 0.0784314);
 		border-right: 1px solid rgba(255, 255, 255, 0.0784314);
-		background-color: #363f48;
+		background-color: mat-color( map-get( $app-theme, background ), app-bar );
 	}
 
 	app-messages-area {
@@ -59,7 +62,6 @@
 
 		> .rendered-content {
 			flex: 1 1 auto;
-			padding: 15px 30px;
 
 			overflow: hidden;
 		}

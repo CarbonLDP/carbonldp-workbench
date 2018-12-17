@@ -1,4 +1,4 @@
-<div class="ui basic segment">
+<div>
 	<!-- START: Header of the query builder -->
 	<div class="ui top attached menu">
 		<div class="right menu">
@@ -94,7 +94,9 @@
 
 
 <!-- START: Container of Query responses -->
-<div class="ui basic segment query-results">
+<div class="ui basic segment query-results"
+     *ngIf="responses.length > 0"
+>
 	<div class="ui two columns grid basic segment title">
 		<div class="column">
 			<h3>Response Stack</h3>
@@ -104,7 +106,7 @@
 			        [disabled]="responses.length <= 0"
 			        (click)="on_responseStack_empty()">
 				<i class="trash outline icon"></i>
-				Empty Stack <span *ngIf="responses.length>0">({{responses.length}})</span>
+				Empty Stack ({{responses.length}})
 			</button>
 		</div>
 	</div>

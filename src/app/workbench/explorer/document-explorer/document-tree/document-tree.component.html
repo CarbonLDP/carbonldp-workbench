@@ -1,7 +1,7 @@
 <div class="ai-treeContainer ag-rows ag-flexible">
 	<mat-tree
 		class="ai-tree"
-		[ngClass]="{ 'ai-tree--unfocused': ! focused }"
+		appFocused
 		[dataSource]="documentTreeDataSource"
 		[treeControl]="documentTreeControl"
 	>
@@ -16,13 +16,14 @@
 		>
 			<li class="ai-tree__nodeItem">
 				<div class="ai-tree__nodeContent"
+				     (mousedown)="onNodeMouseDown( $event, node )"
 				     (click)="onNodeClick( $event, node )"
 				     (dblclick)="onNodeDoubleClick( $event, node )"
 				>
 					<!-- The '+ 1' is needed since the nodes that don't have children need to be padded for their own lack of caret -->
 					<fa-icon class="ai-tree__nodeIcon"
 					         [style]="getTreeLevel( node ) + 1 | cssVar:'level'"
-					         [icon]="faFile"
+					         [icon]="node.types | getTypeIcon"
 					></fa-icon>
 					<div class="ai-tree__nodeLabel">
 						{{ node.id | getSlug }}
@@ -42,6 +43,7 @@
 		>
 			<li class="ai-tree__nodeItem">
 				<div class="ai-tree__nodeContent"
+				     (mousedown)="onNodeMouseDown( $event, node )"
 				     (click)="onNodeClick( $event, node )"
 				     (dblclick)="onNodeDoubleClick( $event, node )"
 				>
@@ -50,7 +52,7 @@
 					         [style]="getTreeLevel( node ) | cssVar:'level'"
 					></fa-icon>
 					<fa-icon class="ai-tree__nodeIcon"
-					         [icon]="faFile"
+					         [icon]="node.types | getTypeIcon"
 					></fa-icon>
 					<div class="ai-tree__nodeLabel">
 						{{ node.id | getSlug }}

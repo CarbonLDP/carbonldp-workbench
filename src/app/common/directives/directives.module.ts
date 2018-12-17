@@ -4,7 +4,7 @@ import { CommonModule } from "@angular/common";
 import { HighlightDirective } from "./highlight.directive";
 import { DomainValidator, EmailValidator, FragmentValidator, MatchValidator, RequiredDirective, RequiredIfValidator, SlugValidator, URIFragmentValidator, URIValidator } from "./custom-validators";
 import { InputValidationDirective } from "./input-validation.directive";
-import { GrayedOutDirective } from "./grayed-out.directive";
+import { FocusedDirective } from "./focused.directive";
 
 @NgModule( {
 	imports: [
@@ -22,7 +22,7 @@ import { GrayedOutDirective } from "./grayed-out.directive";
 		InputValidationDirective,
 		RequiredIfValidator,
 		RequiredDirective,
-		GrayedOutDirective,
+		FocusedDirective,
 	],
 	exports: [
 		EmailValidator,
@@ -36,7 +36,7 @@ import { GrayedOutDirective } from "./grayed-out.directive";
 		InputValidationDirective,
 		RequiredIfValidator,
 		RequiredDirective,
-		GrayedOutDirective,
+		FocusedDirective,
 	],
 	providers: []
 } )

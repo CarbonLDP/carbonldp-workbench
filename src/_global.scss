@@ -1,3 +1,6 @@
+@import "~@angular/material/theming";
+@import "~app/vars";
+
 // Used by Material UI
 .hidden {
 	display: none;
@@ -25,5 +28,9 @@
 
 		// Avoid expanding more than the parent's total height/width
 		overflow: hidden;
+	}
+
+	&-secondaryText {
+		color: mat-color(map-get($app-theme, foreground), hint-text);
 	}
 }

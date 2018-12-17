@@ -1,35 +1,63 @@
-<mat-card class="ag-rows ag-flexible">
-	<div class="ai-explorer__container ag-rows ag-flexible">
-		<app-horizontal-resizable-grid class="ag-flexible">
-			<app-grid-column class="ai-explorer__sidebar ag-rows">
-				<div class="ai-documentActions">
-					<button class="ag-button--withIcon"
-					        mat-icon-button>
-						<fa-icon [icon]="faPlus"></fa-icon>
-					</button>
-					<button class="ag-button--withIcon"
-					        mat-icon-button>
-						<fa-icon [icon]="faSync"></fa-icon>
-					</button>
-					<button class="ag-button--withIcon"
-					        mat-icon-button
-					        color="warn">
-						<fa-icon [icon]="faTrash"></fa-icon>
-					</button>
-				</div>
-				<app-document-tree
-					class="ai-documentTree ag-rows ag-flexible"
-					(onSelectDocuments)="on_tree_selectDocuments($event)"
-					(onOpenDocument)="on_tree_openDocument($event)"
-				></app-document-tree>
-			</app-grid-column>
-			<app-vertical-grid-divider></app-vertical-grid-divider>
-			<app-grid-column>
-				<app-document-viewer
-					class="ai-documentViewer"
-					[document]="openDocument$ | async"
-				></app-document-viewer>
-			</app-grid-column>
-		</app-horizontal-resizable-grid>
-	</div>
-</mat-card>
+<app-horizontal-resizable-grid class="ai-explorer ag-flexible">
+	<app-grid-column class="ai-explorer__sidebar ai-sidebar ag-rows" appFocused>
+		<div class="ai-sidebar__documentActions">
+			<mat-menu #createMenu="matMenu">
+				<button mat-menu-item
+				        (click)="documentCreator.show()"
+				>
+					c:Document
+				</button>
+				<button mat-menu-item
+				        (click)="accessPointCreator.show()"
+				>
+					c:AccessPoint
+				</button>
+			</mat-menu>
+			<button class="ag-button--withIcon"
+			        [matMenuTriggerFor]="createMenu"
+			        mat-icon-button
+			        [disabled]="selectedDocumentIDs.length !== 1"
+			>
+				<fa-icon [icon]="faPlus"></fa-icon>
+			</button>
+			<button class="ag-button--withIcon"
+			        mat-icon-button>
+				<fa-icon [icon]="faSync"></fa-icon>
+			</button>
+			<button class="ag-button--withIcon"
+			        mat-icon-button
+			        color="warn"
+			        [disabled]="selectedDocumentIDs.length === 0"
+			        (click)="documentDeleter.show()"
+			>
+				<fa-icon [icon]="faTrash"></fa-icon>
+			</button>
+		</div>
+		<app-document-tree
+			class="ai-documentTree ag-rows ag-flexible"
+			(onSelectDocuments)="on_tree_selectDocuments($event)"
+			(onOpenDocument)="on_tree_openDocument($event)"
+			[refreshDocument]="refreshDocument$ | async"
+		></app-document-tree>
+	</app-grid-column>
+	<app-vertical-grid-divider></app-vertical-grid-divider>
+	<app-grid-column class="ai-explorer__documentViewer">
+		<app-document-viewer
+			class="ai-documentViewer"
+			[document]="openDocument$ | async"
+		></app-document-viewer>
+	</app-grid-column>
+</app-horizontal-resizable-grid>
+
+<app-document-creator #documentCreator
+                      *ngIf="selectedDocumentIDs.length === 1"
+                      [parentURI]="selectedDocumentIDs[ 0 ]"
+                      (onSuccess)="on_documentCreator_success($event)"></app-document-creator>
+<app-access-point-creator #accessPointCreator
+                          *ngIf="selectedDocumentIDs.length === 1"
+                          [parentURI]="selectedDocumentIDs[ 0 ]"
+                          (onSuccess)="on_accessPointCreator_success($event)"></app-access-point-creator>
+<app-document-deleter #documentDeleter
+                      *ngIf="selectedDocumentIDs.length > 1"
+                      [documentURIs]="selectedDocumentIDs"
+                      (onSuccess)="on_documentDeleter_success($event)"></app-document-deleter>
