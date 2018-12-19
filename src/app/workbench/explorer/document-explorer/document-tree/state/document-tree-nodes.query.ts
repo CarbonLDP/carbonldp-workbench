@@ -1,7 +1,10 @@
-import { Observable } from "rxjs";
-import { flatMap } from "rxjs/operators";
+import { Observable, Subject } from "rxjs";
+import { flatMap, map, tap } from "rxjs/operators";
 
 import { Injectable } from "@angular/core";
+
+import { SelectionChange } from "@angular/cdk/collections";
+
 import { QueryEntity } from "@datorama/akita";
 import { DocumentTreeNodesState, DocumentTreeNodesStore } from "./document-tree-nodes.store";
 import { DocumentTreeNode } from "./document-tree-node.model";
@@ -10,7 +13,11 @@ import { DocumentTreeNode } from "./document-tree-node.model";
 	providedIn: "root"
 } )
 export class DocumentTreeNodesQuery extends QueryEntity<DocumentTreeNodesState, DocumentTreeNode> {
-	rootNodes$ = this.select( state => state.rootNodes );
+	public rootNodes$ = this
+		.select( state => state.rootNodesIDs )
+		.pipe(
+			flatMap( rootNodeIDs => this.selectMany( rootNodeIDs ) ),
+		);
 
 	constructor( protected store:DocumentTreeNodesStore ) {
 		super( store );
@@ -32,9 +39,13 @@ export class DocumentTreeNodesQuery extends QueryEntity<DocumentTreeNodesState, 
 	getTreeLevel( node:DocumentTreeNode ):number {
 		let level:number = 0;
 		while( node.parent ) {
-			level++;
+			level ++;
 			node = this.getEntity( node.parent );
 		}
 		return level;
+	}
+
+	isExpanded( nodeID:string ):boolean {
+		return this.getSnapshot().expandedNodesIDs.includes( nodeID );
 	}
 }

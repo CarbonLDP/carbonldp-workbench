@@ -77,6 +77,7 @@
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/jquery": "3.3.21",
+    "@types/lodash": "4.14.119",
     "@types/node": "10.12.12",
     "akita-schematics": "^2.0.0",
     "codelyzer": "~4.5.0",

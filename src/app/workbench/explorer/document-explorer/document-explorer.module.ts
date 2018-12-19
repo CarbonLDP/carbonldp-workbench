@@ -6,7 +6,9 @@ import { CdkTreeModule } from "@angular/cdk/tree";
 import { MatBadgeModule, MatButtonModule, MatCardModule, MatIconModule, MatMenuModule, MatRippleModule, MatTabsModule, MatTreeModule } from "@angular/material";
 
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
-// Components
+
+import { AppCommonModule } from "app/common/app-common.module";
+
 import { LiteralComponent } from "./literals/literal.component";
 import { LiteralsComponent } from "./literals/literals.component";
 import { PointerComponent } from "./pointers/pointer.component";
@@ -30,11 +32,11 @@ import { DocumentDeleterComponent } from "./document-deleter/document-deleter.co
 
 import { DocumentTreeComponent } from "./document-tree/document-tree.component";
 import { GetTypeIconPipe } from "./document-tree/get-type-icon.pipe";
-// Modules
-import { AppCommonModule } from "app/common/app-common.module";
-// Services
+
+import { DocumentTreeNodesQuery, DocumentTreeNodesService, DocumentTreeNodesStore } from "./document-tree/state";
+
 import { DocumentsResolverService } from "./documents-resolver.service";
-// Directives
+
 import { IdValidator, LiteralValueValidator, PointerValidator, PropertyNameValidator } from "./document-explorer-validators";
 import { CreateDocumentDialogComponent } from "./create-document-dialog/create-document-dialog.component";
 
@@ -102,6 +104,18 @@ import { CreateDocumentDialogComponent } from "./create-document-dialog/create-d
 	providers: [],
 } )
 export class DocumentExplorerModule {
+	static forRoot():ModuleWithProviders {
+		return {
+			ngModule: DocumentExplorerModule,
+			providers: [
+				// These injectables are provided to the root component so the state persists even across changes of routes
+				// The downside is that all document trees will be linked (if necessary this can be fixed later)
+				DocumentTreeNodesStore,
+				DocumentTreeNodesQuery,
+				DocumentTreeNodesService,
+			],
+		};
+	}
 
 	static forChild():ModuleWithProviders {
 		return {

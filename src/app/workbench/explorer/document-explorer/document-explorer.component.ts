@@ -1,4 +1,6 @@
-import { Component, ViewChild, EventEmitter } from "@angular/core";
+import { merge } from "rxjs";
+
+import { Component, ViewChild } from "@angular/core";
 
 import { faPlus, faSync, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { DocumentsQuery } from "./state/documents.query";
@@ -6,6 +8,9 @@ import { DocumentsService } from "./state/documents.service";
 import { DocumentCreatorComponent } from "./document-creator/document-creator.component";
 import { DocumentDeleterComponent } from "./document-deleter/document-deleter.component";
 import { AccessPointCreatorComponent } from "./access-point-creator/access-point-creator.component";
+import { DocumentTreeComponent } from "app/workbench/explorer/document-explorer/document-tree/document-tree.component";
+import { DocumentTreeNodesService } from "app/workbench/explorer/document-explorer/document-tree/state/document-tree-nodes.service";
+import { DocumentExplorerLibrary } from "app/workbench/explorer/document-explorer/document-explorer-library";
 
 @Component( {
 	selector: "app-document-explorer",
@@ -26,8 +31,7 @@ export class DocumentExplorerComponent {
 
 	openDocument$ = this.documentsQuery.selectActive();
 
-	refreshDocument$ = new EventEmitter<string>();
-
+	@ViewChild( DocumentTreeComponent, { read: DocumentTreeNodesService } ) documentTreeNodesService:DocumentTreeNodesService;
 	@ViewChild( DocumentCreatorComponent ) documentCreator:DocumentCreatorComponent;
 	@ViewChild( AccessPointCreatorComponent ) accessPointCreator:AccessPointCreatorComponent;
 	@ViewChild( DocumentDeleterComponent ) documentDeleter:DocumentDeleterComponent;
@@ -36,6 +40,26 @@ export class DocumentExplorerComponent {
 		private documentsQuery:DocumentsQuery,
 		private documentsService:DocumentsService,
 	) {
+	}
+
+	on_createDocument_click( event:MouseEvent ) {
+		this.documentCreator.show();
+	}
+
+	on_createAccessPoint_click( event:MouseEvent ) {
+		this.accessPointCreator.show();
+	}
+
+	on_refreshDocuments_click( event:MouseEvent ) {
+		// FIXME: Use a method that allows refreshing multiple documents at once
+		merge(
+			// The array expansion is needed because the "merge" expects varargs
+			...this.selectedDocumentIDs.map( documentID => this.documentTreeNodesService.refresh( documentID ) )
+		).subscribe();
+	}
+
+	on_deleteDocuments_click( event:MouseEvent ) {
+		this.documentDeleter.show();
 	}
 
 	on_tree_selectDocuments( documentIDs:string[] ) {
@@ -49,10 +73,26 @@ export class DocumentExplorerComponent {
 	}
 
 	on_documentCreator_success( parentID:string ) {
-		this.refreshDocument$.emit( parentID );
+		this.documentTreeNodesService.refresh( parentID ).subscribe( () => {
+			// Expand the node once it finishes refreshing to show the new child
+			this.documentTreeNodesService.expand( parentID );
+		} );
 	}
 
 	on_accessPointCreator_success( parentID:string ) {
-		this.refreshDocument$.emit( parentID );
+		this.documentTreeNodesService.refresh( parentID ).subscribe();
+	}
+
+	on_documentDeleter_success( documentsIDs:string[] ) {
+		const parentIDs = [ ...new Set(
+			// FIXME: Use another method to get the parent ID
+			documentsIDs.map( DocumentExplorerLibrary.getParentURI )
+		) ];
+
+		// FIXME: Use a method that allows refreshing multiple documents at once
+		merge(
+			// The array expansion is needed because the "merge" expects varargs
+			...parentIDs.map( documentID => this.documentTreeNodesService.refresh( documentID ) )
+		).subscribe();
 	}
 }

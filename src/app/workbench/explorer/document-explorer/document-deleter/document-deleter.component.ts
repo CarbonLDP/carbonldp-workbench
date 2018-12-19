@@ -52,10 +52,7 @@ export class DocumentDeleterComponent implements AfterViewInit {
 		} );
 
 		Promise.all( deletePromises ).then( () => {
-			let parentURIs = this.documentURIs.map( ( documentURI ) => {
-				return DocumentExplorerLibrary.getParentURI( documentURI );
-			} );
-			this.onSuccess.emit( parentURIs );
+			this.onSuccess.emit( this.documentURIs );
 			this.hide();
 		} ).catch( ( error:HTTPError ) => {
 			this.onError.emit( error );

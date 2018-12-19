@@ -2,7 +2,7 @@
 
 <div align="center">
   <a href="http://carbonldp.com/" style="text-decoration: none;">
-    <img width="500" src="https://carbonldp.com/assets/images/carbon-logo-header.svg">
+    <img width="500" src="https://carbonldp.com/wp-content/uploads/2018/10/logo-official.svg">
   </a>
   <br>
   <br>

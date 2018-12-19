@@ -4,15 +4,19 @@ import { EntityState, EntityStore, StoreConfig } from "@datorama/akita";
 import { DocumentTreeNode } from "./document-tree-node.model";
 
 export interface DocumentTreeNodesState extends EntityState<DocumentTreeNode> {
-	rootNodes:DocumentTreeNode[];
+	rootNodesIDs:string[];
+	expandedNodesIDs:string[]
 }
 
-@Injectable()
+@Injectable( {
+	providedIn: "root"
+} )
 @StoreConfig( { name: "documents" } )
 export class DocumentTreeNodesStore extends EntityStore<DocumentTreeNodesState, DocumentTreeNode> {
 	constructor() {
-		super({
-			rootNodes: [],
-		});
+		super( {
+			rootNodesIDs: [],
+			expandedNodesIDs: [],
+		} );
 	}
 }

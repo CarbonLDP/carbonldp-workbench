@@ -2,31 +2,26 @@ import { first } from "rxjs/operators";
 
 import { produce } from "immer";
 
-import { AfterViewInit, Component, EventEmitter, Input, Output } from "@angular/core";
-import { NestedTreeControl } from "@angular/cdk/tree";
+import { AfterViewInit, Component, EventEmitter, Output } from "@angular/core";
 import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 
 import { DocumentTreeNode } from "./state/document-tree-node.model";
-import { DocumentTreeNodesStore } from "./state/document-tree-nodes.store";
 import { DocumentTreeNodesService } from "./state/document-tree-nodes.service";
 import { DocumentTreeNodesQuery } from "./state/document-tree-nodes.query";
 import { DocumentTreeDataSource } from "./document-tree.data-source";
+import { DocumentTreeControl } from "./document-tree.control";
 
 @Component( {
 	selector: "app-document-tree",
 	templateUrl: "./document-tree.component.html",
 	styleUrls: [ "./document-tree.component.scss" ],
 	providers: [
-		DocumentTreeNodesStore,
-		DocumentTreeNodesQuery,
-		DocumentTreeNodesService,
+		DocumentTreeControl,
+		DocumentTreeDataSource,
 	],
 } )
 export class DocumentTreeComponent implements AfterViewInit {
-	@Input() set refreshDocument( documentID:string ) {
-		this.documentTreeNodesService.refresh( documentID ).subscribe();
-	}
-
+	// FIXME: Use SelectionModel instead (don't reinvent the wheel)
 	@Output() onSelectDocuments:EventEmitter<string[]> = new EventEmitter<string[]>();
 	set selectedNodes( selectedNodes:string[] ) {
 		this._selectedNodes = selectedNodes;
@@ -46,15 +41,6 @@ export class DocumentTreeComponent implements AfterViewInit {
 	get openedNode():string { return this._openedNode };
 	private _openedNode:string;
 
-	/**
-	 * Material UI trees need a TreeControl that will be in charge of controlling the tree's UI
-	 */
-	documentTreeControl:NestedTreeControl<DocumentTreeNode>;
-	/**
-	 * @see {@link DocumentTreeDataSource}
-	 */
-	documentTreeDataSource:DocumentTreeDataSource;
-
 	// Icons
 	readonly faCaretDown = faCaretDown;
 	readonly faCaretRight = faCaretRight;
@@ -62,13 +48,11 @@ export class DocumentTreeComponent implements AfterViewInit {
 	constructor(
 		private documentTreeNodesQuery:DocumentTreeNodesQuery,
 		private documentTreeNodesService:DocumentTreeNodesService,
-	) {
-		// Thanks to the following line we can "fake" a nested node structure. By passing a function that retrieves the children of a node
-		// directly from the DocumentTreeNodesQuery, the TreeControl will traverse the tree as if the nodes were truly nested. And since
-		// the output of that function is an observable, it will always be up-to-date with what the store has
-		this.documentTreeControl = new NestedTreeControl<DocumentTreeNode>( node => this.documentTreeNodesQuery.selectChildren( node.id ) );
-		this.documentTreeDataSource = new DocumentTreeDataSource( this.documentTreeControl, this.documentTreeNodesQuery, this.documentTreeNodesService );
-	}
+		// Needed by the mat-tree component in the view
+		public documentTreeControl:DocumentTreeControl,
+		// Needed by the mat-tree component in the view
+		public documentTreeDataSource:DocumentTreeDataSource,
+	) {}
 
 	async ngAfterViewInit() {
 		// Initialize the tree by fetching the root document ("/") and then registering it as the root document in the {@link DocumentTreeNodesService}
@@ -76,7 +60,7 @@ export class DocumentTreeComponent implements AfterViewInit {
 		// We only need to do this for the first emitted value (since we know it won't change anymore)
 			.pipe( first() )
 			.subscribe( document => {
-				this.documentTreeNodesService.updateRootNodes( [ document ] );
+				this.documentTreeNodesService.updateRootNodes( [ document.id ] );
 				this.documentTreeControl.expand( document );
 			} );
 	}

@@ -1,9 +1,12 @@
 import flatten from "lodash/flatten";
+import without from "lodash/without";
 
 import { EMPTY, from, Observable, of, zip } from "rxjs";
 import { flatMap, map, take } from "rxjs/operators";
 
 import { Injectable } from "@angular/core";
+
+import { applyTransaction } from "@datorama/akita";
 
 import { CarbonLDP } from "carbonldp";
 import { Document } from "carbonldp/Document";
@@ -14,7 +17,9 @@ import { createDocumentTreeNode, DocumentTreeNode } from "./document-tree-node.m
 import { DocumentTreeNodesStore } from "./document-tree-nodes.store";
 import { DocumentTreeNodesQuery } from "./document-tree-nodes.query";
 
-@Injectable()
+@Injectable( {
+	providedIn: "root"
+} )
 export class DocumentTreeNodesService {
 	constructor(
 		private carbonldp:CarbonLDP,
@@ -31,32 +36,31 @@ export class DocumentTreeNodesService {
 		return from( this.getDocumentFromCarbon( id ) )
 			.pipe( map( document => {
 				const documentTreeNodes = [
+					...this.createChildNodes( document ),
 					this.createNode( document ),
-					...this.createChildNodes( document )
 				];
 
-				const modified:string[] = documentTreeNodes
-					.filter( node => this.documentTreeNodesQuery.hasEntity( node.id ) )
-					.map( node => {
+				const toAdd:DocumentTreeNode[] = documentTreeNodes
+					.filter( node => ! this.documentTreeNodesQuery.hasEntity( node.id ) );
+
+				const toModify:DocumentTreeNode[] = documentTreeNodes
+					.filter( node => this.documentTreeNodesQuery.hasEntity( node.id ) );
+
+				// We need to wrap all the store modifications in a transaction to avoid unnecessary emissions
+				applyTransaction( () => {
+					this.documentTreeNodesStore.add( toAdd );
+
+					toModify.forEach( node =>
 						this.documentTreeNodesStore.update( node.id, previousState => ({
 							...node,
 							// Otherwise the update will wipe the node's parent (if it has one)
 							...{ parent: previousState.parent }
-						}) );
-
-						return node.id;
-					} );
-
-				const created:string[] = documentTreeNodes
-					.filter( node => ! this.documentTreeNodesQuery.hasEntity( node.id ) )
-					.map( node => {
-						this.documentTreeNodesStore.add( node );
-						return node.id;
-					} );
+						}) ) );
+				} );
 
 				return {
-					modified,
-					created,
+					modified: toModify.map( node => node.id ),
+					created: toAdd.map( node => node.id ),
 				};
 			} ) );
 	}
@@ -98,36 +102,56 @@ export class DocumentTreeNodesService {
 		return zip( existingDocuments$, missingDocuments$ )
 			.pipe(
 				// Flatten outputs from both observables into a single array
-				map( value => flatten( value ) ),
+				map( value => flatten( value as Array<any> ) ),
 				take( 1 ),
 			);
 	}
 
-	add( document:DocumentTreeNode ) {
+	add( document:DocumentTreeNode ):void {
 		this.documentTreeNodesStore.add( document );
 	}
 
-	update( id:string, document:Partial<DocumentTreeNode> ) {
+	update( id:string, document:Partial<DocumentTreeNode> ):void {
 		this.documentTreeNodesStore.update( id, document );
 	}
 
-	remove( id:string ) {
+	remove( id:string ):void {
 		this.documentTreeNodesStore.remove( id );
 	}
 
-	updateRootNodes( rootNodes:DocumentTreeNode[] ) {
+	updateRootNodes( rootNodesIDs:string[] ):void {
 		this.documentTreeNodesStore.updateRoot( {
-			rootNodes
+			rootNodesIDs
 		} );
 	}
 
-	private onChildCreated( event:ChildCreatedEvent ) {
+	expand( nodeID:string ):void {
+		// In case
+		this.fetchChildren( nodeID ).subscribe();
+
+		this.documentTreeNodesStore.updateRoot( state => ({
+			expandedNodesIDs: [ ...state.expandedNodesIDs, nodeID ],
+		}) );
+	}
+
+	collapse( nodeID:string ):void {
+		this.documentTreeNodesStore.updateRoot( state => ({
+			expandedNodesIDs: without( state.expandedNodesIDs, nodeID ),
+		}) );
+	}
+
+	toggle( nodeID:string ):void {
+		if( this.documentTreeNodesQuery.isExpanded( nodeID ) ) this.collapse( nodeID );
+		else this.expand( nodeID );
+	}
+
+	private onChildCreated( event:ChildCreatedEvent ):void {
 		// FIXME
 		const documentCreated = event.target.$id;
 		console.log( `Document created: ${documentCreated}` );
 	}
 
-	private onChildDeleted( event:DocumentDeletedEvent ) {
+	private onChildDeleted( event:DocumentDeletedEvent ):void {
 		// FIXME
 		const documentDeleted = event.target.$id;
 		console.log( `Document deleted: ${documentDeleted}` );
