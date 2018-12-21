@@ -66,6 +66,7 @@
     "sparqler": "0.6.0",
     "typeface-lato": "0.0.54",
     "typeface-roboto": "0.0.54",
+    "uuid": "3.3.2",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
@@ -79,6 +80,7 @@
     "@types/jquery": "3.3.21",
     "@types/lodash": "4.14.119",
     "@types/node": "10.12.12",
+    "@types/uuid": "3.4.4",
     "akita-schematics": "^2.0.0",
     "codelyzer": "~4.5.0",
     "jasmine-core": "~2.99.1",

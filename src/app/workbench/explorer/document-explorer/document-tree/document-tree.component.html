@@ -11,14 +11,15 @@
 			*matTreeNodeDef="let node"
 			[ngClass]="{
 				'ai-tree__node--selected': isSelected( node ),
-				'ai-tree__node--opened': isOpened( node )
+				'ai-tree__node--opened': isOpened( node ),
+				'ai-tree__node--ghost': node.isDummy
 			}"
 		>
 			<li class="ai-tree__nodeItem">
 				<div class="ai-tree__nodeContent"
-				     (mousedown)="onNodeMouseDown( $event, node )"
-				     (click)="onNodeClick( $event, node )"
-				     (dblclick)="onNodeDoubleClick( $event, node )"
+				     (mousedown)="! node.isDummy && onNodeMouseDown( $event, node )"
+				     (click)="! node.isDummy && onNodeClick( $event, node )"
+				     (dblclick)="! node.isDummy && onNodeDoubleClick( $event, node )"
 				>
 					<!-- The '+ 1' is needed since the nodes that don't have children need to be padded for their own lack of caret -->
 					<fa-icon class="ai-tree__nodeIcon"
@@ -26,7 +27,7 @@
 					         [icon]="node.types | getTypeIcon"
 					></fa-icon>
 					<div class="ai-tree__nodeLabel">
-						{{ node.id | getSlug }}
+						{{ ! node.isDummy ? ( node.id | getSlug ) : "" }}
 					</div>
 				</div>
 			</li>
@@ -38,16 +39,18 @@
 			*matTreeNodeDef="let node; when: hasChildren"
 			[ngClass]="{
 				'ai-tree__node--selected': isSelected( node ),
-				'ai-tree__node--opened': isOpened( node )
+				'ai-tree__node--opened': isOpened( node ),
+				'ai-tree__node--ghost': node.isDummy
 			}"
 		>
 			<li class="ai-tree__nodeItem">
 				<div class="ai-tree__nodeContent"
-				     (mousedown)="onNodeMouseDown( $event, node )"
-				     (click)="onNodeClick( $event, node )"
-				     (dblclick)="onNodeDoubleClick( $event, node )"
+				     (mousedown)="! node.isDummy && onNodeMouseDown( $event, node )"
+				     (click)="! node.isDummy && onNodeClick( $event, node )"
+				     (dblclick)="! node.isDummy && onNodeDoubleClick( $event, node )"
 				>
-					<fa-icon class="ai-tree__nodeToggle" cdkTreeNodeToggle
+					<fa-icon class="ai-tree__nodeToggle"
+					         cdkTreeNodeToggle
 					         [icon]="documentTreeControl.isExpanded(node) ? faCaretDown : faCaretRight"
 					         [style]="getTreeLevel( node ) | cssVar:'level'"
 					></fa-icon>
@@ -55,7 +58,7 @@
 					         [icon]="node.types | getTypeIcon"
 					></fa-icon>
 					<div class="ai-tree__nodeLabel">
-						{{ node.id | getSlug }}
+						{{ ! node.isDummy ? ( node.id | getSlug ) : "" }}
 					</div>
 				</div>
 				<ul [class.hidden]="!documentTreeControl.isExpanded(node)" class="ai-tree__nestedNodes">

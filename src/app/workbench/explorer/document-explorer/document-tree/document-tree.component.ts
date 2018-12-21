@@ -1,12 +1,11 @@
-import { first } from "rxjs/operators";
-
 import { produce } from "immer";
 
-import { AfterViewInit, Component, EventEmitter, Output } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 
+import { CarbonLDP } from "carbonldp";
+
 import { DocumentTreeNode } from "./state/document-tree-node.model";
-import { DocumentTreeNodesService } from "./state/document-tree-nodes.service";
 import { DocumentTreeNodesQuery } from "./state/document-tree-nodes.query";
 import { DocumentTreeDataSource } from "./document-tree.data-source";
 import { DocumentTreeControl } from "./document-tree.control";
@@ -20,7 +19,7 @@ import { DocumentTreeControl } from "./document-tree.control";
 		DocumentTreeDataSource,
 	],
 } )
-export class DocumentTreeComponent implements AfterViewInit {
+export class DocumentTreeComponent {
 	// FIXME: Use SelectionModel instead (don't reinvent the wheel)
 	@Output() onSelectDocuments:EventEmitter<string[]> = new EventEmitter<string[]>();
 	set selectedNodes( selectedNodes:string[] ) {
@@ -46,24 +45,13 @@ export class DocumentTreeComponent implements AfterViewInit {
 	readonly faCaretRight = faCaretRight;
 
 	constructor(
+		private carbonldp:CarbonLDP,
 		private documentTreeNodesQuery:DocumentTreeNodesQuery,
-		private documentTreeNodesService:DocumentTreeNodesService,
 		// Needed by the mat-tree component in the view
 		public documentTreeControl:DocumentTreeControl,
 		// Needed by the mat-tree component in the view
 		public documentTreeDataSource:DocumentTreeDataSource,
 	) {}
-
-	async ngAfterViewInit() {
-		// Initialize the tree by fetching the root document ("/") and then registering it as the root document in the {@link DocumentTreeNodesService}
-		this.documentTreeNodesService.fetchOne( "/" )
-		// We only need to do this for the first emitted value (since we know it won't change anymore)
-			.pipe( first() )
-			.subscribe( document => {
-				this.documentTreeNodesService.updateRootNodes( [ document.id ] );
-				this.documentTreeControl.expand( document );
-			} );
-	}
 
 	onNodeMouseDown( event:MouseEvent, node:DocumentTreeNode ) {
 		// Avoid text from being selected on a double click (the text selection happens on the second click's mouseDown event)
@@ -76,21 +64,13 @@ export class DocumentTreeComponent implements AfterViewInit {
 
 	onNodeClick( event:MouseEvent, node:DocumentTreeNode ) {
 		// See: https://stackoverflow.com/questions/37078709/angular-2-check-if-shift-key-is-down-when-an-element-is-clicked#comment89930067_45884676
+		const addRange = event[ "shiftKey" ];
 		const modifySelection = event[ "shiftKey" ] || event[ "ctrlKey" ] || event[ "metaKey" ];
 
-		if( modifySelection ) {
-			const index = this.selectedNodes.indexOf( node.id );
-			if( index > - 1 ) {
-				// The node was already in the selection
-				this.selectedNodes = produce( this.selectedNodes, selectedNodes => {
-					selectedNodes.splice( index, 1 );
-				} );
-			} else {
-				// The node wasn't in the selection
-				this.selectedNodes = produce( this.selectedNodes, selectedNodes => {
-					selectedNodes.push( node.id );
-				} );
-			}
+		if( addRange ) {
+			this.handleAddRangeToSelection( node );
+		} else if( modifySelection ) {
+			this.handleModifySelection( node );
 		} else {
 			// Since no modifier key was used, the selection will be replaced completely
 			this.selectedNodes = produce( this.selectedNodes, selectedNodes =>
@@ -136,5 +116,53 @@ export class DocumentTreeComponent implements AfterViewInit {
 
 	isOpened( node:DocumentTreeNode ):boolean {
 		return node.id === this.openedNode;
+	}
+
+	private handleAddRangeToSelection( clickedNode:DocumentTreeNode ) {
+		if( this.selectedNodes.length === 0 ) {
+			// There were no nodes selected
+			// Set the clicked node as the only selected node
+			this.selectedNodes = produce( this.selectedNodes, () =>
+				[ clickedNode.id ]
+			);
+			return;
+		}
+
+		// We need to calculate the range of nodes to add to the selection
+		const lastSelectedNodeID = this.selectedNodes[ this.selectedNodes.length - 1 ];
+		const lastSelectedNodeIndex = this.documentTreeNodesQuery.getTreeIndex( lastSelectedNodeID );
+		const clickedNodeIndex = this.documentTreeNodesQuery.getTreeIndex( clickedNode.id );
+
+		const range = {
+			start: Math.min( lastSelectedNodeIndex, clickedNodeIndex ),
+			end: Math.max( lastSelectedNodeIndex, clickedNodeIndex ),
+		};
+
+		const nodesToAddToSelection = [];
+		this.documentTreeNodesQuery.traverseNodes( ( node, index ) => {
+			if( index >= range.start && index <= range.end ) nodesToAddToSelection.push( node.id );
+			// Return anything to stop the traversal
+			if( index > range.end ) return "BREAK";
+		} );
+
+		this.selectedNodes = produce( this.selectedNodes, selectedNodes => [
+			...selectedNodes,
+			...nodesToAddToSelection,
+		] );
+	}
+
+	private handleModifySelection( clickedNode:DocumentTreeNode ) {
+		const index = this.selectedNodes.indexOf( clickedNode.id );
+		if( index > - 1 ) {
+			// The node was already in the selection
+			this.selectedNodes = produce( this.selectedNodes, selectedNodes => {
+				selectedNodes.splice( index, 1 );
+			} );
+		} else {
+			// The node wasn't in the selection
+			this.selectedNodes = produce( this.selectedNodes, selectedNodes => {
+				selectedNodes.push( clickedNode.id );
+			} );
+		}
 	}
 }

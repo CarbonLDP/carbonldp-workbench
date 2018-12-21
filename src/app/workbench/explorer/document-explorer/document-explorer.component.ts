@@ -1,6 +1,6 @@
 import { merge } from "rxjs";
 
-import { Component, ViewChild } from "@angular/core";
+import { Component, ViewChild, ElementRef } from "@angular/core";
 
 import { faPlus, faSync, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { DocumentsQuery } from "./state/documents.query";
@@ -8,7 +8,6 @@ import { DocumentsService } from "./state/documents.service";
 import { DocumentCreatorComponent } from "./document-creator/document-creator.component";
 import { DocumentDeleterComponent } from "./document-deleter/document-deleter.component";
 import { AccessPointCreatorComponent } from "./access-point-creator/access-point-creator.component";
-import { DocumentTreeComponent } from "app/workbench/explorer/document-explorer/document-tree/document-tree.component";
 import { DocumentTreeNodesService } from "app/workbench/explorer/document-explorer/document-tree/state/document-tree-nodes.service";
 import { DocumentExplorerLibrary } from "app/workbench/explorer/document-explorer/document-explorer-library";
 
@@ -31,16 +30,16 @@ export class DocumentExplorerComponent {
 
 	openDocument$ = this.documentsQuery.selectActive();
 
-	@ViewChild( DocumentTreeComponent, { read: DocumentTreeNodesService } ) documentTreeNodesService:DocumentTreeNodesService;
 	@ViewChild( DocumentCreatorComponent ) documentCreator:DocumentCreatorComponent;
 	@ViewChild( AccessPointCreatorComponent ) accessPointCreator:AccessPointCreatorComponent;
 	@ViewChild( DocumentDeleterComponent ) documentDeleter:DocumentDeleterComponent;
 
 	constructor(
+		private elementRef:ElementRef,
 		private documentsQuery:DocumentsQuery,
 		private documentsService:DocumentsService,
-	) {
-	}
+		private documentTreeNodesService:DocumentTreeNodesService,
+	) {}
 
 	on_createDocument_click( event:MouseEvent ) {
 		this.documentCreator.show();

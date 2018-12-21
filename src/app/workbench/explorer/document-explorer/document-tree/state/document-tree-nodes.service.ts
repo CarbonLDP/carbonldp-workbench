@@ -13,7 +13,7 @@ import { Document } from "carbonldp/Document";
 import { C } from "carbonldp/Vocabularies";
 import { ChildCreatedEvent, DocumentDeletedEvent } from "carbonldp/Messaging";
 
-import { createDocumentTreeNode, DocumentTreeNode } from "./document-tree-node.model";
+import { DocumentTreeNode } from "./document-tree-node.model";
 import { DocumentTreeNodesStore } from "./document-tree-nodes.store";
 import { DocumentTreeNodesQuery } from "./document-tree-nodes.query";
 
@@ -74,10 +74,12 @@ export class DocumentTreeNodesService {
 		return this.documentTreeNodesQuery
 			.selectEntity( parentID )
 			.pipe( flatMap( parent => {
-				const missingDocumentIDs = parent.children.filter( id => ! this.documentTreeNodesQuery.hasEntity( id ) );
+				if( parent.isDummy ) return this.documentTreeNodesQuery.selectChildren( parent.id );
 
-				if( ! missingDocumentIDs.length ) return this.documentTreeNodesQuery.selectChildren( parent.id );
-				else return this.retrieveChildren( parent.id );
+				const missingDocumentIDs = parent.children.filter( id => ! this.documentTreeNodesQuery.hasRealEntity( id ) );
+
+				if( missingDocumentIDs.length ) return this.retrieveChildren( parent.id );
+				else return this.documentTreeNodesQuery.selectChildren( parent.id );
 			} ) );
 	}
 
@@ -107,8 +109,8 @@ export class DocumentTreeNodesService {
 			);
 	}
 
-	add( document:DocumentTreeNode ):void {
-		this.documentTreeNodesStore.add( document );
+	add( ...nodes:DocumentTreeNode[] ):void {
+		this.documentTreeNodesStore.add( nodes );
 	}
 
 	update( id:string, document:Partial<DocumentTreeNode> ):void {
@@ -119,18 +121,18 @@ export class DocumentTreeNodesService {
 		this.documentTreeNodesStore.remove( id );
 	}
 
-	updateRootNodes( rootNodesIDs:string[] ):void {
+	updateRootNodes( ...rootNodesIDs:string[] ):void {
 		this.documentTreeNodesStore.updateRoot( {
 			rootNodesIDs
 		} );
 	}
 
-	expand( nodeID:string ):void {
-		// In case
-		this.fetchChildren( nodeID ).subscribe();
-
+	expand( ...nodeIDs:string[] ):void {
 		this.documentTreeNodesStore.updateRoot( state => ({
-			expandedNodesIDs: [ ...state.expandedNodesIDs, nodeID ],
+			expandedNodesIDs: [
+				...state.expandedNodesIDs,
+				...nodeIDs,
+			],
 		}) );
 	}
 
@@ -181,7 +183,24 @@ export class DocumentTreeNodesService {
 					] )
 				);
 
-				this.documentTreeNodesStore.add( documentTreeNodes );
+				// FIXME: Abstract repeated logic to somewhere else
+				const toAdd:DocumentTreeNode[] = documentTreeNodes
+					.filter( node => ! this.documentTreeNodesQuery.hasEntity( node.id ) );
+
+				const toModify:DocumentTreeNode[] = documentTreeNodes
+					.filter( node => this.documentTreeNodesQuery.hasEntity( node.id ) );
+
+				// We need to wrap all the store modifications in a transaction to avoid unnecessary emissions
+				applyTransaction( () => {
+					this.documentTreeNodesStore.add( toAdd );
+
+					toModify.forEach( node =>
+						this.documentTreeNodesStore.update( node.id, previousState => ({
+							...node,
+							// Otherwise the update will wipe the node's parent (if it has one)
+							...{ parent: previousState.parent }
+						}) ) );
+				} );
 
 				return documentTreeNodes;
 			} ) );
@@ -227,7 +246,7 @@ export class DocumentTreeNodesService {
 	}
 
 	private createNode( document:Document, parentID:string = undefined ):DocumentTreeNode {
-		return createDocumentTreeNode( {
+		return DocumentTreeNode.create( {
 			id: document.$id,
 			parent: parentID,
 			children: document.contains
