@@ -1,6 +1,5 @@
 import { produce } from "immer";
-
-import { Component, EventEmitter, Output } from "@angular/core";
+import { Component, EventEmitter, Output, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { faCaretDown, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 
 import { CarbonLDP } from "carbonldp";
@@ -19,8 +18,9 @@ import { DocumentTreeControl } from "./document-tree.control";
 		DocumentTreeDataSource,
 	],
 } )
-export class DocumentTreeComponent {
+export class DocumentTreeComponent implements OnChanges {
 	// FIXME: Use SelectionModel instead (don't reinvent the wheel)
+	@Input() clearSelectedNodes:boolean = false;
 	@Output() onSelectDocuments:EventEmitter<string[]> = new EventEmitter<string[]>();
 	set selectedNodes( selectedNodes:string[] ) {
 		this._selectedNodes = selectedNodes;
@@ -163,6 +163,12 @@ export class DocumentTreeComponent {
 			this.selectedNodes = produce( this.selectedNodes, selectedNodes => {
 				selectedNodes.push( clickedNode.id );
 			} );
+		}
+	}
+
+	ngOnChanges( changes:SimpleChanges ):void {
+		if( changes[ "clearSelectedNodes" ].currentValue ) {
+			this.selectedNodes = [];
 		}
 	}
 }

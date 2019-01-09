@@ -1,6 +1,6 @@
 import { merge } from "rxjs";
 
-import { Component, ViewChild, ElementRef } from "@angular/core";
+import { Component, ViewChild, ElementRef, Output, ChangeDetectorRef, AfterViewChecked } from "@angular/core";
 
 import { faPlus, faSync, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { DocumentsQuery } from "./state/documents.query";
@@ -20,13 +20,14 @@ import { DocumentExplorerLibrary } from "app/workbench/explorer/document-explore
 		DocumentsService,
 	],
 } )
-export class DocumentExplorerComponent {
+export class DocumentExplorerComponent implements AfterViewChecked {
 	// FontAwesome icons
 	readonly faPlus = faPlus;
 	readonly faSync = faSync;
 	readonly faTrash = faTrash;
 
 	selectedDocumentIDs:string[] = [];
+	clearSelectedNodes:boolean = false;
 
 	openDocument$ = this.documentsQuery.selectActive();
 
@@ -39,6 +40,7 @@ export class DocumentExplorerComponent {
 		private documentsQuery:DocumentsQuery,
 		private documentsService:DocumentsService,
 		private documentTreeNodesService:DocumentTreeNodesService,
+		private changeDetector:ChangeDetectorRef,
 	) {}
 
 	on_createDocument_click( event:MouseEvent ) {
@@ -63,6 +65,7 @@ export class DocumentExplorerComponent {
 
 	on_tree_selectDocuments( documentIDs:string[] ) {
 		this.selectedDocumentIDs = documentIDs;
+		this.clearSelectedNodes = false;
 	}
 
 	on_tree_openDocument( documentID:string ) {
@@ -93,5 +96,11 @@ export class DocumentExplorerComponent {
 			// The array expansion is needed because the "merge" expects varargs
 			...parentIDs.map( documentID => this.documentTreeNodesService.refresh( documentID ) )
 		).subscribe();
+
+		this.clearSelectedNodes = true;
+	}
+
+	ngAfterViewChecked() {
+		this.changeDetector.detectChanges();
 	}
 }

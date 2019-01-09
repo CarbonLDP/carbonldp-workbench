@@ -40,6 +40,7 @@
 			class="ai-documentTree ag-rows ag-flexible"
 			(onSelectDocuments)="on_tree_selectDocuments($event)"
 			(onOpenDocument)="on_tree_openDocument($event)"
+			[clearSelectedNodes]="clearSelectedNodes"
 		></app-document-tree>
 	</app-grid-column>
 	<app-vertical-grid-divider></app-vertical-grid-divider>
