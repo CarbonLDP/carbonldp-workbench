@@ -50,7 +50,9 @@ export class ResultsetTableComponent implements OnChanges {
 		return resultset.results.bindings.map( ( bindingObject ) => {
 			let bindingArray:any = [];
 			for( let varName of resultset.head.vars ) {
-				bindingArray.push( bindingObject[ varName ] );
+				if( bindingObject.hasOwnProperty( varName ) ) {
+					bindingArray.push( bindingObject[ varName ] );
+				}
 			}
 			return bindingArray;
 		} );
