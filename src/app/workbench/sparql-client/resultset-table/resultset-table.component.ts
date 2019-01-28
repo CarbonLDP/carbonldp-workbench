@@ -52,6 +52,8 @@ export class ResultsetTableComponent implements OnChanges {
 			for( let varName of resultset.head.vars ) {
 				if( bindingObject.hasOwnProperty( varName ) ) {
 					bindingArray.push( bindingObject[ varName ] );
+				}else{
+					bindingArray.push(bindingObject[ varName ] = '')
 				}
 			}
 			return bindingArray;
