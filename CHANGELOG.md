@@ -5,12 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog]
 and this project adheres to [Semantic Versioning].
 
-<!--## [Unreleased]-->
-<!--### Added-->
+<!-- ## [Unreleased] -->
+<!-- ### Added -->
 
-<!--### Fixed-->
+<!-- ### Fixed -->
 
-<!--### Breaking Changes -->
+<!-- ### Breaking Changes -->
+
+## [5.1.1] - 2018-12-17
+
+### Fixed
+
+- [#179](https://github.com/CarbonLDP/carbonldp-workbench/issues/179) - Startup ENV variables aren't working
+- Minor style issues
 
 ## [5.1.0] - 2018-12-06
 
@@ -164,8 +171,9 @@ Everything
 - Initial commit
 - Mirror `app-dev` functionality
 
-[Unreleased]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v5.1.0...HEAD
+[Unreleased]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v5.1.1...HEAD
 
+[5.1.1]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v5.1.0...v5.1.1
 [5.1.0]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v5.0.0...v5.1.0
 [5.0.0]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v0.8.0...v5.0.0
 
