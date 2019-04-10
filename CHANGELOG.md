@@ -6,11 +6,13 @@ The format is based on [Keep a Changelog]
 and this project adheres to [Semantic Versioning].
 
 <!-- ## [Unreleased] -->
+
 <!-- ### Added -->
 
 <!-- ### Fixed -->
 
 <!-- ### Breaking Changes -->
+
 ## [5.2.0] - 2019-04-10
 
 ### Fixed
@@ -180,8 +182,9 @@ Everything
 - Initial commit
 - Mirror `app-dev` functionality
 
-[Unreleased]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v5.1.1...HEAD
+[Unreleased]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v5.2.0...HEAD
 
+[5.2.0]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v5.1.1...v5.2.0
 [5.1.1]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v5.1.0...v5.1.1
 [5.1.0]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v5.0.0...v5.1.0
 [5.0.0]: https://github.com/CarbonLDP/carbonldp-workbench/compare/v0.8.0...v5.0.0
