@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning].
 <!-- ### Fixed -->
 
 <!-- ### Breaking Changes -->
+## [5.2.0] - 2019-04-10
+
+### Fixed
+
+- [#182](https://github.com/CarbonLDP/carbonldp-workbench/issues/182) - Prevent SPARQL client from freezing due to empty bindings.
+
+### Added
+
+- Enable support to keep content on SPARQL Client when you navigate to another section.
 
 ## [5.1.1] - 2018-12-17
 
