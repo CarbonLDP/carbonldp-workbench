@@ -33,13 +33,13 @@ export class ResultsetTableComponent implements OnChanges {
 	}
 
 	sortColumn( columnName:string ):void {
-		if( this.sortedColumn === columnName ) this.ascending = ! this.ascending;
+		if( this.sortedColumn === columnName ) this.ascending = !this.ascending;
 		this.sortedColumn = columnName;
 
 		let index:number = this.resultset.head.vars.indexOf( columnName );
 		this.bindings.sort( ( bindingA, bindingB ) => {
-			if( ! bindingA[ index ] ) return this.ascending ? 1 : - 1;
-			if( ! bindingB[ index ] ) return this.ascending ? - 1 : 1;
+			if( !bindingA[ index ] ) return this.ascending ? 1 : - 1;
+			if( !bindingB[ index ] ) return this.ascending ? - 1 : 1;
 			if( bindingA[ index ].value > bindingB[ index ].value ) return this.ascending ? - 1 : 1;
 			if( bindingA[ index ].value < bindingB[ index ].value ) return this.ascending ? 1 : - 1;
 			return 0;
@@ -52,8 +52,8 @@ export class ResultsetTableComponent implements OnChanges {
 			for( let varName of resultset.head.vars ) {
 				if( bindingObject.hasOwnProperty( varName ) ) {
 					bindingArray.push( bindingObject[ varName ] );
-				}else{
-					bindingArray.push(bindingObject[ varName ] = '')
+				} else {
+					bindingArray.push( bindingObject[ varName ] = "" )
 				}
 			}
 			return bindingArray;
