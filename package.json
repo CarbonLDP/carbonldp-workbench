@@ -49,7 +49,7 @@
     "@types/jstree": "^3.3.37",
     "@types/node": "^10.12.0",
     "carbonldp": "5.2.0",
-    "codemirror": "5.41.0",
+    "codemirror": "5.58.2",
     "compodoc": "0.0.41",
     "core-js": "^2.5.4",
     "hammerjs": "^2.0.8",
